@@ -70,3 +70,54 @@ Chạy 500 episode, xuất báo cáo: toạ độ các điểm kẹt, seed tái 
 ```
 
 **Bẫy thường gặp:** nhờ AI "làm bot thông minh bằng ML" rồi nhận về một agent mạnh hơn người chơi rất nhiều — sau đó tốn thêm nhiều công để làm nó yếu đi một cách thú vị. Xem [[game-ai]] về việc mục tiêu không phải là mạnh.
+
+## 🎮 Unity
+
+Trong Unity, RL nghĩa là package **ML-Agents**. Trước khi cài, đọc phần "Mẫu prompt phản biện" ở tab Prompt — phần lớn trường hợp câu trả lời đúng là không dùng.
+
+**Chi phí thực tế cần biết trước**
+
+| Thứ | Thực tế |
+|---|---|
+| Cài đặt | Package Unity + môi trường Python riêng, phiên bản phải khớp |
+| Huấn luyện | Hàng giờ tới hàng ngày cho hành vi đơn giản |
+| Lặp lại | Đổi reward → huấn luyện lại từ đầu |
+| Gỡ lỗi | Gần như không có công cụ; chỉ có đồ thị reward |
+| Ship | Model `.onnx` chạy qua Sentis/Barracuda, tốn thêm bộ nhớ |
+
+So với sửa một dòng trong [[behavior-tree]] rồi bấm Play, đây là bước lùi lớn về năng suất.
+
+**Nơi RL thật sự đáng dùng trong Unity: kiểm thử tự động**
+
+```csharp
+// Agent không để chơi cùng người chơi — để TÌM LỖI
+public class BugHunterAgent : Agent {
+    public override void CollectObservations(VectorSensor sensor) {
+        sensor.AddObservation(transform.localPosition);
+        sensor.AddObservation(rb.linearVelocity);
+    }
+
+    void FixedUpdate() {
+        // Thưởng cho việc tới được chỗ BẤT THƯỜNG
+        if (!Physics.CheckSphere(transform.position, 0.1f, groundMask)
+            && transform.position.y < -5f) {
+            Debug.LogError($"Lọt địa hình tại {transform.position}");
+            AddReward(1f);                       // khuyến khích tìm thêm chỗ tương tự
+            LogRepro();
+            EndEpisode();
+        }
+        if (stuckTimer > 30f) { Debug.LogWarning($"Kẹt tại {transform.position}"); EndEpisode(); }
+    }
+}
+```
+
+Chạy 500 episode qua đêm, sáng ra có danh sách toạ độ lọt địa hình kèm seed tái hiện. Đây là ứng dụng ít hào nhoáng nhưng có ROI cao nhất.
+
+**Bẫy Unity cụ thể**
+- **Phiên bản không khớp** giữa package ML-Agents, Python package và PyTorch — nguồn lãng phí thời gian số một. Ghim phiên bản chính xác, đừng dùng `latest`.
+- **`Time.timeScale` cao để huấn luyện nhanh** làm vật lý sai lệch. Dùng `--time-scale` của trainer, không tự đặt `timeScale`.
+- **Reward hacking**: thưởng cho "gần người chơi" → agent học cách đứng dính vào người chơi mà không tấn công.
+
+**Kiểm tra nhanh**
+- Chạy được `mlagents-learn --help` trong môi trường Python của dự án?
+- Agent huấn luyện xong có **thua được** không? Nếu không, bạn phải làm nó yếu đi — và lúc đó nên xem lại có cần RL thật không.

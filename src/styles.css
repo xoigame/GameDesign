@@ -66,10 +66,17 @@ button { font-family: inherit; font-size: inherit; cursor: pointer; }
   grid-template-rows: minmax(0, 1fr);
   transition: grid-template-columns .22s ease;
 }
-.app.has-panel { grid-template-columns: 288px 1fr 470px; }
+
+.app.is-resizing {
+  transition: none;
+  cursor: col-resize;
+  user-select: none;
+}
+/* Bề rộng panel kéo được; --panel-w do App đặt, fallback là mặc định. */
+.app.has-panel { grid-template-columns: 288px 1fr var(--panel-w, 470px); }
 
 @media (max-width: 1280px) {
-  .app.has-panel { grid-template-columns: 288px 1fr 400px; }
+  .app.has-panel { grid-template-columns: 288px 1fr var(--panel-w, 400px); }
 }
 
 /* Layout mobile nằm ở CUỐI file — xem phần "MOBILE". */
@@ -793,10 +800,10 @@ button { font-family: inherit; font-size: inherit; cursor: pointer; }
 
 /* Chế độ song ngữ cần panel rộng hơn: hai cột 210px mỗi bên là không đọc nổi. */
 @media (min-width: 1400px) {
-  .app.has-panel.lang-both { grid-template-columns: 288px 1fr 820px; }
+  .app.has-panel.lang-both { grid-template-columns: 288px 1fr var(--panel-w, 820px); }
 }
 @media (min-width: 1100px) and (max-width: 1399px) {
-  .app.has-panel.lang-both { grid-template-columns: 260px 1fr 640px; }
+  .app.has-panel.lang-both { grid-template-columns: 260px 1fr var(--panel-w, 640px); }
 }
 
 /* Hai cột chỉ bật khi panel thực sự đủ rộng — dưới ngưỡng thì xếp chồng.
@@ -815,4 +822,51 @@ button { font-family: inherit; font-size: inherit; cursor: pointer; }
     border-top: none; margin-top: 0; padding-top: 22px;
   }
   .bi-col + .bi-col .bi-tag { left: 22px; top: 0; }
+}
+
+/* --------------------- tay nắm kéo đổi bề rộng panel ---------------------- */
+
+.panel-resizer {
+  position: absolute;
+  top: 0; bottom: 0;
+  right: var(--panel-w, 470px);      /* nằm đúng mép trái của panel */
+  width: 10px;
+  margin-right: -5px;                /* vùng bắt rộng hơn vạch nhìn thấy */
+  z-index: 30;
+  cursor: col-resize;
+  touch-action: none;                /* để pointermove không bị cuộn trang nuốt */
+  background: transparent;
+  border: none; padding: 0;
+}
+.app.lang-both .panel-resizer { right: var(--panel-w, 820px); }
+
+/* Vạch mảnh, chỉ hiện khi rê tới hoặc đang kéo */
+.panel-resizer::after {
+  content: '';
+  position: absolute;
+  left: 4px; top: 0; bottom: 0;
+  width: 2px;
+  background: transparent;
+  transition: background .12s;
+}
+.panel-resizer:hover::after,
+.app.is-resizing .panel-resizer::after { background: var(--accent); }
+
+/* Chấm nắm ở giữa cho dễ thấy là kéo được */
+.panel-resizer::before {
+  content: '';
+  position: absolute;
+  left: 1px; top: 50%; transform: translateY(-50%);
+  width: 8px; height: 46px;
+  border-radius: 5px;
+  background: var(--line-2);
+  opacity: 0;
+  transition: opacity .12s;
+}
+.panel-resizer:hover::before,
+.app.is-resizing .panel-resizer::before { opacity: 1; }
+
+/* Mobile: panel là overlay toàn màn hình nên không kéo được */
+@media (max-width: 900px) {
+  .panel-resizer { display: none; }
 }

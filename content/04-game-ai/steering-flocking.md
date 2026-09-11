@@ -75,3 +75,75 @@ KHÔNG lặp O(n²).
 ```
 
 **Bẫy thường gặp:** dùng Seek thuần → agent chạy quá đích rồi quay lại, rung mãi. Luôn nêu Arrive và bán kính hãm.
+
+## 🎮 Unity
+
+Steering trong Unity thường nằm **giữa** pathfinding và Rigidbody. Điểm khó là đừng để nó đánh nhau với `NavMeshAgent`.
+
+**Component & nơi đặt**
+- `Steering.cs` — tính vector, C# thuần được
+- `Boid.cs` — MonoBehaviour, áp lực lên `Rigidbody`/`CharacterController`
+- `SteeringConfig` (ScriptableObject) — trọng số từng hành vi
+
+**Code**
+
+```csharp
+public static class Steering {
+    // Arrive: giảm tốc trong bán kính hãm. KHÔNG dùng Seek thuần —
+    // agent sẽ chạy quá đích rồi rung quanh nó mãi.
+    public static Vector3 Arrive(Vector3 pos, Vector3 target, Vector3 vel,
+                                 float maxSpeed, float slowRadius) {
+        Vector3 toTarget = target - pos;
+        float dist = toTarget.magnitude;
+        if (dist < 0.01f) return -vel;
+        float desiredSpeed = maxSpeed * Mathf.Min(1f, dist / slowRadius);
+        return toTarget / dist * desiredSpeed - vel;
+    }
+
+    public static Vector3 Separation(Vector3 pos, IReadOnlyList<Vector3> neighbours, float radius) {
+        Vector3 force = Vector3.zero;
+        foreach (var n in neighbours) {
+            Vector3 away = pos - n;
+            float d = away.magnitude;
+            if (d > 0.001f && d < radius) force += away / (d * d);   // càng gần càng mạnh
+        }
+        return force;
+    }
+}
+```
+
+**Truy vấn lân cận — đừng lặp O(n²)**
+
+```csharp
+// 60 boid × 60 = 3600 phép so sánh mỗi tick. Dùng spatial hash hoặc:
+readonly Collider[] buf = new Collider[16];
+int n = Physics.OverlapSphereNonAlloc(transform.position, cfg.neighbourRadius,
+                                      buf, cfg.boidMask);
+```
+
+`OverlapSphereNonAlloc` dùng buffer có sẵn, không cấp phát. Bản `OverlapSphere` (không `NonAlloc`) tạo mảng mới mỗi lần gọi.
+
+**Đừng trộn với NavMeshAgent một cách ngây thơ**
+
+`NavMeshAgent` đã tự điều khiển vị trí. Muốn thêm steering thì:
+
+```csharp
+agent.updatePosition = false;        // tắt điều khiển vị trí của agent
+agent.updateRotation = false;
+// lấy hướng gợi ý từ agent, cộng thêm lực steering, tự di chuyển
+Vector3 desired = agent.desiredVelocity + separationForce;
+controller.Move(desired * Time.deltaTime);
+agent.nextPosition = transform.position;   // đồng bộ lại cho agent
+```
+
+Quên `agent.nextPosition` là nguồn bug "NPC giật về chỗ cũ".
+
+**Bẫy Unity cụ thể**
+- **Seek thuần thay vì Arrive** — agent rung quanh đích. Lỗi phổ biến nhất.
+- **`OverlapSphere` không NonAlloc** trong `Update` — cấp phát mỗi frame mỗi boid.
+- **Trọng số cộng thẳng** khi có chướng ngại: lực tránh phải **ưu tiên có chặn**, không cộng, nếu không boid đi xuyên tường.
+
+**Kiểm tra nhanh**
+- 60 boid: Profiler dưới 1ms, GC Alloc 0 B?
+- Cho đàn đi tới một điểm: chúng dừng gọn hay rung quanh đích?
+- Thả một bức tường vào giữa: có con nào đi xuyên không?

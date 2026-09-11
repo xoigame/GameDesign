@@ -78,3 +78,59 @@ Khuyến nghị MỘT cái, nêu rõ đánh đổi. Chưa viết code.
 **Bẫy thường gặp:** AI mặc định đề xuất GOAP hoặc machine learning vì nghe "thông minh hơn". Với 90% game indie, câu trả lời đúng là FSM hoặc Behavior Tree. Ràng buộc *"tôi cần chỉnh tay được"* thường tự loại GOAP và RL ra.
 
 **Nhớ yêu cầu phần sân khấu:** AI thông minh mà người chơi không nhận ra thì bằng không. Luôn thêm: *"mỗi khi NPC đổi ý định, phát tín hiệu người chơi thấy được — lời thoại, biểu tượng, đổi tư thế."*
+
+## 🎮 Unity
+
+Unity không có hệ AI dựng sẵn nào đáng dùng cho gameplay — `Animator` state machine là để hiển thị, không phải để ra quyết định. Bạn sẽ tự viết, và đó là chuyện tốt.
+
+**Bố cục thư mục khuyến nghị**
+
+```
+Assets/Scripts/AI/
+├── Core/            ← C# thuần: State, BTNode, Blackboard, Scorer
+├── Behaviours/      ← state/node cụ thể của game
+├── Perception/      ← Perception.cs, ghi vào blackboard
+├── Data/            ← EnemyConfig (ScriptableObject)
+└── Debug/           ← gizmo, overlay
+```
+
+**Ba thứ dựng trước, dùng cho mọi kiến trúc**
+
+```csharp
+// 1. Blackboard — nơi duy nhất chứa trạng thái AI
+public class Blackboard {
+    readonly Dictionary<string, object> data = new();
+    public T Get<T>(string k) => data.TryGetValue(k, out var v) ? (T)v : default;
+    public void Set<T>(string k, T v) => data[k] = v;
+}
+
+// 2. Tick có điều tiết — KHÔNG chạy AI mỗi frame
+public abstract class AiBrain : MonoBehaviour {
+    [SerializeField] protected float tickHz = 10f;
+    float timer;
+    void Start() => timer = Random.Range(0f, 1f / tickHz);   // lệch pha
+    void Update() {
+        timer -= Time.deltaTime;
+        if (timer > 0f) return;
+        timer += 1f / tickHz;
+        Think(1f / tickHz);
+    }
+    protected abstract void Think(float dt);
+}
+
+// 3. Gizmo hiển thị "AI đang nghĩ gì"
+#if UNITY_EDITOR
+void OnDrawGizmosSelected() =>
+    UnityEditor.Handles.Label(transform.position + Vector3.up * 2f, DebugLabel);
+#endif
+```
+
+**Bẫy Unity cụ thể**
+- **Đừng dùng Animator Controller làm FSM gameplay.** Không test được, không in ra được, và trộn hiển thị với luật chơi.
+- **`Random.Range` lúc `Start()` để lệch pha tick** — thiếu nó thì 30 NPC cùng tick một frame, Profiler thấy spike đều đặn.
+- **AI đọc `player.transform` trực tiếp = gian lận.** Mọi thứ phải đi qua [[perception]].
+
+**Kiểm tra nhanh**
+- Chọn một NPC trong Scene view: có thấy nó đang ở trạng thái/hành động nào không?
+- Profiler với 30 NPC: mục AI dưới 2ms/frame?
+- `grep -r "using UnityEngine" Assets/Scripts/AI/Core/` → nên rỗng.

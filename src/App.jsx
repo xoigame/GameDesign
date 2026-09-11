@@ -14,12 +14,25 @@ const norm = (s) =>
 /** Các mức cỡ chữ cho phần đọc. 1 = mặc định. */
 export const FONT_STEPS = [0.9, 1, 1.15, 1.3, 1.5]
 
+/** Giới hạn bề rộng panel khi kéo. */
+const PANEL_MIN = 320
+const PANEL_MAX = 1200
+
 function readLang() {
   try {
     const v = localStorage.getItem('gdb:lang')
     if (v === 'vi' || v === 'en' || v === 'both') return v
   } catch { /* private mode */ }
   return 'vi'
+}
+
+/** Bề rộng panel người dùng đã kéo. null = dùng mặc định theo chế độ. */
+function readPanelW() {
+  try {
+    const v = Number(localStorage.getItem('gdb:panelW'))
+    if (v >= PANEL_MIN && v <= PANEL_MAX) return v
+  } catch { /* private mode */ }
+  return null
 }
 
 function readFontScale() {
@@ -49,11 +62,49 @@ export default function App() {
   const [navOpen, setNavOpen] = useState(false)   // drawer sidebar trên mobile
   const [fontScale, setFontScale] = useState(readFontScale)
   const [lang, setLang] = useState(readLang)
+  const [panelW, setPanelW] = useState(readPanelW)
+  const [resizing, setResizing] = useState(false)
 
   useEffect(() => {
     try { localStorage.setItem('gdb:lang', lang) } catch { /* private mode */ }
     document.documentElement.lang = lang === 'en' ? 'en' : 'vi'
   }, [lang])
+
+  useEffect(() => {
+    const root = document.documentElement
+    if (panelW === null) root.style.removeProperty('--panel-w')
+    else root.style.setProperty('--panel-w', panelW + 'px')
+    try {
+      if (panelW === null) localStorage.removeItem('gdb:panelW')
+      else localStorage.setItem('gdb:panelW', String(panelW))
+    } catch { /* private mode */ }
+  }, [panelW])
+
+  /**
+   * Kéo mép trái panel để đổi bề rộng.
+   * Dùng Pointer Events nên chạy cả chuột lẫn cảm ứng; setPointerCapture giữ
+   * được sự kiện kể cả khi con trỏ đi ra ngoài phần tử.
+   */
+  const startResize = useCallback((e) => {
+    e.preventDefault()
+    e.currentTarget.setPointerCapture(e.pointerId)
+    setResizing(true)
+
+    const onMove = (ev) => {
+      // panel nằm sát mép phải: bề rộng = khoảng cách từ con trỏ tới mép phải
+      const w = Math.round(window.innerWidth - ev.clientX)
+      setPanelW(Math.min(PANEL_MAX, Math.max(PANEL_MIN, w)))
+    }
+    const onUp = () => {
+      setResizing(false)
+      window.removeEventListener('pointermove', onMove)
+      window.removeEventListener('pointerup', onUp)
+      window.removeEventListener('pointercancel', onUp)
+    }
+    window.addEventListener('pointermove', onMove)
+    window.addEventListener('pointerup', onUp)
+    window.addEventListener('pointercancel', onUp)
+  }, [])
   const searchRef = useRef(null)
 
   // Cỡ chữ áp qua biến CSS --fs; mọi rule chữ trong panel nhân với nó.
@@ -228,7 +279,7 @@ export default function App() {
   const selected = selectedId ? nodesById.get(selectedId) : null
 
   return (
-    <div className={'app' + (selected ? ' has-panel' : '') + (navOpen ? ' nav-open' : '') + (lang === 'both' ? ' lang-both' : '')}>
+    <div className={'app' + (selected ? ' has-panel' : '') + (navOpen ? ' nav-open' : '') + (lang === 'both' ? ' lang-both' : '') + (resizing ? ' is-resizing' : '')}>
       {navOpen && (
         <button className="scrim" onClick={() => setNavOpen(false)} aria-label="Đóng menu" />
       )}
@@ -301,6 +352,20 @@ export default function App() {
           />
         </ReactFlowProvider>
       </main>
+
+      {selected && (
+        <div
+          className="panel-resizer"
+          onPointerDown={startResize}
+          onDoubleClick={() => setPanelW(null)}
+          role="separator"
+          aria-orientation="vertical"
+          aria-label={lang === 'en' ? 'Resize panel' : 'Kéo để đổi bề rộng panel'}
+          title={lang === 'en'
+            ? 'Drag to resize · double-click to reset'
+            : 'Kéo để đổi bề rộng · bấm đúp để về mặc định'}
+        />
+      )}
 
       {selected && (
         <DetailPanel

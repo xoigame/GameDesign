@@ -122,3 +122,95 @@ Ngoài ra:
 ```
 
 Phần mô phỏng là chỗ AI tiết kiệm nhiều thời gian nhất — nó cho bạn thấy Director hành xử thế nào *trước khi* bạn chơi thử hàng chục ván.
+
+## 🎮 Unity
+
+AI Director là hệ thống cấp scene, không gắn vào NPC. Trong Unity nó là một singleton nhẹ.
+
+**Component & nơi đặt**
+- `Director.cs` — một GameObject trong scene, `DontDestroyOnLoad` nếu cần xuyên màn
+- `DirectorConfig` (ScriptableObject) — ngưỡng pha, ngân sách spawn
+- `SpawnPoint.cs` — đánh dấu vị trí, Director chọn từ đây
+
+**Code**
+
+```csharp
+public enum DirectorPhase { BuildUp, SustainPeak, PeakFade, Relax }
+
+public class Director : MonoBehaviour, IDirectorSignal {
+    [SerializeField] DirectorConfig cfg;
+
+    public float Intensity { get; private set; }      // 0..1 — adaptive music đọc cái này
+    public DirectorPhase Phase { get; private set; }
+    float phaseTimer, phaseTarget;
+    int spawnBudget;
+
+    void Update() {
+        float dt = Time.deltaTime;
+        Intensity = Mathf.Clamp01(Intensity + IntensityDelta() * dt);
+        phaseTimer += dt;
+
+        switch (Phase) {
+            case DirectorPhase.BuildUp:
+                spawnBudget = Mathf.RoundToInt(Mathf.Lerp(2, cfg.maxBudget, Intensity));
+                if (Intensity > 0.85f) Go(DirectorPhase.SustainPeak, Random.Range(3f, 5f));
+                break;
+            case DirectorPhase.SustainPeak:
+                spawnBudget = cfg.maxBudget;
+                if (phaseTimer > phaseTarget) Go(DirectorPhase.PeakFade, 0f);
+                break;
+            case DirectorPhase.PeakFade:
+                spawnBudget = 0;
+                if (Intensity < 0.3f) Go(DirectorPhase.Relax, Random.Range(30f, 45f));
+                break;
+            case DirectorPhase.Relax:
+                spawnBudget = 0;                       // im lặng CÓ CHỦ Ý
+                if (phaseTimer > phaseTarget) Go(DirectorPhase.BuildUp, 0f);
+                break;
+        }
+    }
+
+    void Go(DirectorPhase p, float target) { Phase = p; phaseTimer = 0f; phaseTarget = target; }
+
+    float IntensityDelta() =>
+        damageTakenLastSecond * 0.25f + enemiesNearby * 0.03f - 0.06f;
+}
+```
+
+**Spawn theo ngân sách, không theo số lượng**
+
+```csharp
+[System.Serializable] public struct EnemyCost { public GameObject prefab; public int cost; }
+
+void SpawnWave() {
+    int budget = spawnBudget;
+    var pool = cfg.enemies.Where(e => e.cost <= budget).ToArray();
+    while (budget > 0 && pool.Length > 0) {
+        var pick = pool[Random.Range(0, pool.Length)];
+        if (pick.cost > budget) break;
+        EnemyPool.Get(pick.prefab, PickSpawnPoint());
+        budget -= pick.cost;
+        pool = cfg.enemies.Where(e => e.cost <= budget).ToArray();
+    }
+}
+```
+
+Ngân sách tự sinh đội hình đa dạng: 12 điểm có thể là 6 goblin, hoặc 1 brute, hoặc 2 cung thủ + 1 goblin.
+
+**Bẫy Unity cụ thể**
+- **LINQ trong `SpawnWave`** cấp phát mỗi lần gọi. Chấp nhận được vì spawn thưa, nhưng đừng đưa vào `Update`.
+- **Spawn ngoài tầm nhìn camera** — kiểm tra bằng `GeometryUtility.TestPlanesAABB`, không dùng khoảng cách. Quái xuất hiện trước mắt người chơi phá vỡ ảo giác.
+- **`Time.timeScale` bằng 0 khi hitstop** → Director cũng dừng. Đúng, nhưng nhớ là `phaseTimer` không nhích trong lúc đó.
+
+**Debug overlay**
+
+```csharp
+void OnGUI() => GUI.Label(new Rect(10, 10, 400, 60),
+    $"Phase {Phase}  ({phaseTimer:F1}/{phaseTarget:F1}s)\n" +
+    $"Intensity {Intensity:F2}   Budget {spawnBudget}");
+```
+
+**Kiểm tra nhanh**
+- Chơi 5 phút: pha Relax có bao giờ ngắn hơn 25 giây không? (không được)
+- Đứng yên không làm gì: Intensity có tụt về 0 không?
+- Nhạc có đổi lớp theo Intensity không? Xem [[adaptive-music]].

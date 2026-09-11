@@ -110,3 +110,80 @@ Cài đặt GOAP planner (C#, không phụ thuộc Unity API trong phần planne
 ```
 
 Điều kiện "vượt giới hạn thì trả về kế hoạch tốt nhất, không null" quan trọng: NPC không có kế hoạch sẽ đứng im, và đó là lỗi trông tệ hơn nhiều so với một kế hoạch dưới tối ưu.
+
+## 🎮 Unity
+
+GOAP trong Unity chạy được, nhưng **phần planner phải là C# thuần** để test và giới hạn được chi phí.
+
+**Component & nơi đặt**
+- `AI/Core/Goap/` — Planner, WorldState, GoapAction (không `using UnityEngine`)
+- `GoapAgent.cs` — MonoBehaviour, gọi planner và thực thi kế hoạch
+- Mỗi hành động cấp thấp hiện thực bằng một subtree BT hoặc coroutine
+
+**WorldState nên là bitmask, không phải Dictionary**
+
+```csharp
+// 64 điều kiện boolean trong một ulong — so sánh và merge bằng phép bit
+public readonly struct WorldState {
+    public readonly ulong values;   // giá trị
+    public readonly ulong mask;     // bit nào có nghĩa
+
+    public bool Satisfies(WorldState goal) =>
+        (values & goal.mask) == (goal.values & goal.mask);
+
+    public WorldState Apply(WorldState effect) =>
+        new((values & ~effect.mask) | effect.values, mask | effect.mask);
+}
+```
+
+`Dictionary<string, bool>` cấp phát và so sánh chậm — với A* mở rộng hàng chục node mỗi lần lập kế hoạch, khác biệt rất rõ trên Profiler.
+
+**Planner có giới hạn cứng**
+
+```csharp
+public bool TryPlan(WorldState start, WorldState goal, List<GoapAction> outPlan) {
+    open.Clear(); closed.Clear(); outPlan.Clear();
+    int expanded = 0;
+    GoapNode bestSoFar = null;
+
+    while (open.Count > 0) {
+        if (++expanded > MaxExpansions) break;        // trần cứng
+        var node = open.Pop();
+        if (node.depth > MaxDepth) continue;
+        if (node.state.Satisfies(goal)) { Unwind(node, outPlan); return true; }
+        if (bestSoFar == null || node.h < bestSoFar.h) bestSoFar = node;
+        ExpandNeighbours(node);
+    }
+
+    // Vượt giới hạn: trả kế hoạch TỐT NHẤT tìm được, KHÔNG trả về false.
+    // NPC không có kế hoạch sẽ đứng im — lỗi trông tệ hơn kế hoạch dưới tối ưu.
+    if (bestSoFar != null) { Unwind(bestSoFar, outPlan); return outPlan.Count > 0; }
+    return false;
+}
+```
+
+**Chỉ lập kế hoạch lại khi cần**
+
+```csharp
+void OnWorldStateChanged() => needsReplan = true;    // event, KHÔNG poll
+
+protected override void Think(float dt) {
+    if (needsReplan || plan.Count == 0) {
+        needsReplan = false;
+        if (!planner.TryPlan(Sense(), goal, plan)) { Idle(); return; }
+    }
+    ExecuteCurrentStep(dt);
+}
+```
+
+Lập kế hoạch mỗi frame là cách nhanh nhất để GOAP ăn hết ngân sách CPU.
+
+**Bẫy Unity cụ thể**
+- **Cấp phát trong vòng lặp A\*.** Dùng object pool cho `GoapNode`, `List` cấp phát sẵn và `Clear()` thay vì `new`.
+- **Planner phụ thuộc `UnityEngine`** → không test EditMode được, mất đi lợi thế lớn nhất.
+- **Không giới hạn độ sâu** → một hành động có tiền đề vòng tròn làm treo game.
+
+**Kiểm tra nhanh**
+- Unit test EditMode: 5 kịch bản, có 1 kịch bản không có kế hoạch khả thi.
+- Profiler: `TryPlan` cấp phát 0 B?
+- Cướp mất điều kiện giữa chừng (vứt súng đi): NPC có lập lại kế hoạch không?

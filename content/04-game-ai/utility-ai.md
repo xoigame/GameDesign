@@ -123,3 +123,90 @@ Ràng buộc:
 ```
 
 Yêu cầu **debug overlay** không phải phụ kiện — với Utility AI, không nhìn được bảng điểm thì không tinh chỉnh được gì cả.
+
+## 🎮 Unity
+
+Utility AI hợp với Unity một cách tự nhiên: `AnimationCurve` chính là công cụ vẽ đường cong chấm điểm.
+
+**Component & nơi đặt**
+- `Consideration` (ScriptableObject) — một asset mỗi yếu tố, chứa `AnimationCurve`
+- `UtilityAction` (ScriptableObject) — danh sách consideration nhân với nhau
+- `UtilityBrain.cs` — chấm điểm mỗi tick, chọn cao nhất
+
+**Code**
+
+```csharp
+[CreateAssetMenu(menuName = "AI/Consideration")]
+public class Consideration : ScriptableObject {
+    public string inputKey;                 // đọc từ blackboard
+    public AnimationCurve curve = AnimationCurve.Linear(0, 0, 1, 1);
+    public float Evaluate(Blackboard bb) =>
+        Mathf.Clamp01(curve.Evaluate(Mathf.Clamp01(bb.Get<float>(inputKey))));
+}
+
+[CreateAssetMenu(menuName = "AI/Utility Action")]
+public class UtilityAction : ScriptableObject {
+    public Consideration[] considerations;
+    public float weight = 1f;
+
+    public float Score(Blackboard bb) {
+        float s = weight;
+        foreach (var c in considerations) {
+            s *= c.Evaluate(bb);
+            if (s <= 0f) return 0f;          // thoát sớm: một yếu tố = 0 là loại
+        }
+        // bù cho việc nhân nhiều yếu tố, nếu không điểm luôn bị kéo về 0
+        return considerations.Length > 1
+            ? Mathf.Pow(s, 1f / considerations.Length)
+            : s;
+    }
+}
+```
+
+```csharp
+public class UtilityBrain : AiBrain {
+    [SerializeField] UtilityAction[] actions;
+    [SerializeField] float inertiaBonus = 1.15f;
+    [SerializeField] float minCommitSeconds = 2f;
+
+    UtilityAction current; float heldFor;
+    public string DebugLabel => current ? current.name : "-";
+
+    protected override void Think(float dt) {
+        heldFor += dt;
+        if (current != null && heldFor < minCommitSeconds) return;
+
+        UtilityAction best = null; float bestScore = 0f;
+        foreach (var a in actions) {
+            float s = a.Score(bb);
+            if (a == current) s *= inertiaBonus;      // chống dao động
+            if (s > bestScore) { bestScore = s; best = a; }
+        }
+        if (best != current) { current = best; heldFor = 0f; }
+    }
+}
+```
+
+**Debug overlay — bắt buộc**
+
+```csharp
+void OnGUI() {
+    if (!Application.isEditor) return;
+    float y = 10;
+    foreach (var a in actions)
+        GUI.Label(new Rect(10, y += 18, 300, 18),
+                  $"{a.name,-16} {a.Score(bb):F3}{(a == current ? "  ←" : "")}");
+}
+```
+
+Với Utility AI, **không nhìn được bảng điểm thì không tinh chỉnh được gì**. Đây là phần quan trọng nhất của mục này, không phải phần thuật toán.
+
+**Bẫy Unity cụ thể**
+- **Quên bù luỹ thừa** → 5 yếu tố mỗi cái 0.8 cho điểm 0.33, mọi action đều gần 0 và lựa chọn thành ngẫu nhiên.
+- **`AnimationCurve.Evaluate` ngoài khoảng [0,1]** trả giá trị ngoại suy kỳ lạ. Luôn `Clamp01` đầu vào.
+- **ScriptableObject dùng chung giữa các NPC** — đúng như vậy, nhưng nghĩa là không được lưu trạng thái runtime vào đó. Xem [[data-driven-design]].
+
+**Kiểm tra nhanh**
+- Bật overlay: điểm có thay đổi hợp lý khi tình huống đổi không?
+- Hai action điểm sát nhau: NPC có rung không? (quán tính + cam kết tối thiểu phải chặn được)
+- Thêm action thứ 10: có phải sửa action nào cũ không? (không được)

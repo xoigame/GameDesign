@@ -105,3 +105,99 @@ Ràng buộc:
 ```
 
 Ràng buộc *hysteresis* và *node không giữ state* là hai thứ AI hay bỏ sót nhất nếu không nêu rõ.
+
+## 🎮 Unity
+
+Unity không có Behavior Tree sẵn (trừ package thử nghiệm và asset trả phí). Tự viết khoảng 150 dòng là đủ và dễ kiểm soát hơn.
+
+**Component & nơi đặt**
+- `BTNode.cs`, `Selector.cs`, `Sequence.cs` — C# thuần trong `AI/Core/`
+- `EnemyBT.cs` — MonoBehaviour dựng cây trong `Awake`, tick 10Hz
+- `EnemyConfig` (ScriptableObject) — ngưỡng, khoảng cách, hysteresis
+
+**Code**
+
+```csharp
+public enum BTStatus { Success, Failure, Running }
+
+public abstract class BTNode {
+    public abstract BTStatus Tick(Blackboard bb);
+    public virtual void Abort(Blackboard bb) { }      // dọn khi bị ngắt
+}
+
+public class Selector : BTNode {
+    readonly BTNode[] children;
+    int running = -1;
+    public Selector(params BTNode[] c) => children = c;
+
+    public override BTStatus Tick(Blackboard bb) {
+        for (int i = 0; i < children.Length; i++) {
+            var s = children[i].Tick(bb);
+            if (s == BTStatus.Running) {
+                // nhánh ưu tiên cao hơn giành quyền -> huỷ nhánh đang chạy
+                if (running != -1 && running != i) children[running].Abort(bb);
+                running = i;
+                return BTStatus.Running;
+            }
+            if (s == BTStatus.Success) { running = -1; return BTStatus.Success; }
+        }
+        running = -1;
+        return BTStatus.Failure;
+    }
+}
+
+public class Condition : BTNode {
+    readonly System.Func<Blackboard, bool> test;
+    public Condition(System.Func<Blackboard, bool> t) => test = t;
+    public override BTStatus Tick(Blackboard bb) =>
+        test(bb) ? BTStatus.Success : BTStatus.Failure;
+}
+```
+
+```csharp
+public class EnemyBT : AiBrain {
+    [SerializeField] EnemyConfig cfg;
+    BTNode root;
+    Blackboard bb = new();
+
+    void Awake() {
+        // Cây dựng bằng code, đọc từ trên xuống = thứ tự ưu tiên
+        root = new Selector(
+            new Sequence(                                   // Chạy trốn
+                new Condition(b => LowHealthWithHysteresis(b)),
+                new FindCover(cfg), new MoveTo()),
+            new Sequence(                                   // Tấn công
+                new Condition(b => b.Get<float>("awareness") >= 1f),
+                new Condition(b => b.Get<float>("dist") < cfg.attackRange),
+                new FaceTarget(), new Attack(cfg)),
+            new Sequence(                                   // Truy đuổi
+                new Condition(b => b.Get<float>("awareness") >= 1f),
+                new MoveTo()),
+            new Patrol(cfg));                               // dự phòng, LUÔN chạy được
+    }
+
+    protected override void Think(float dt) {
+        bb.Set("dt", dt);
+        root.Tick(bb);
+    }
+
+    // Hysteresis: vào chế độ chạy trốn ở 25% máu, thoát ở 40%
+    bool fleeing;
+    bool LowHealthWithHysteresis(Blackboard b) {
+        float hp = b.Get<float>("hp01");
+        fleeing = fleeing ? hp < cfg.fleeExit : hp < cfg.fleeEnter;
+        return fleeing;
+    }
+}
+```
+
+**Bẫy Unity cụ thể**
+- **Quên `Abort`.** Khi nhánh ưu tiên cao giành quyền, nhánh đang `Running` phải được dọn — nếu không coroutine/NavMeshAgent của nó vẫn chạy ngầm. Đây là bug BT phổ biến nhất trong Unity.
+- **Không có nhánh dự phòng** → BT trả `Failure` → NPC đứng đờ. Node cuối cùng phải luôn thành công.
+- **Tick mỗi frame.** BT duyệt lại từ gốc mỗi tick; 10Hz là đủ và rẻ hơn 6 lần.
+- **Perception gọi trong điều kiện** → raycast nhiều lần mỗi tick. Cache vào blackboard một lần, điều kiện chỉ đọc.
+
+**Kiểm tra nhanh**
+- In ra đường đi trong cây (node nào Running) lên gizmo — không thấy thì không gỡ lỗi được.
+- Hạ máu NPC dao động quanh 25%: nó có rung giữa chạy trốn và tấn công không? (không được)
+- Chặn hết chỗ nấp: NPC có chuyển sang nhánh khác chứ không đứng im?

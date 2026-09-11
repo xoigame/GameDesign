@@ -4,7 +4,7 @@
 > Đây là mục lục phẳng của toàn bộ kho kiến thức, dành cho AI agent (Codex / Claude Code)
 > đọc nhanh trước khi mở từng file `content/**/*.md` chi tiết.
 
-Cập nhật: `2026-09-11T03:54:21.871Z` · 58 node · 45 deep · 13 stub · 36552 từ
+Cập nhật: `2026-09-11T04:08:42.441Z` · 58 node · 45 deep · 13 stub · 38302 từ
 
 Mức độ: **21 cơ bản** · 25 trung cấp · 12 chuyên sâu
 
@@ -109,17 +109,17 @@ thức cơ bản (ai cũng nên đọc), trung cấp (cần nền), hay chuyên 
     - ◐ `#38` **Audio Design** `#audio-design` 🤖 — Thiết kế SFX — layering, biến thể chống lặp, chia dải tần, và vì sao âm thanh là phản hồi rẻ nhất. → `content/08-presentation/audio-design.md`
     - ○ `#39` **Audio Implementation** `#audio-implementation` 🤖 🎮 — Kiến trúc bus, mixing, ducking, âm thanh không gian — phần kỹ thuật quyết định game nghe sạch hay đục. → `content/08-presentation/audio-implementation.md`
     - ○ `#40` **Adaptive Music** `#adaptive-music` 🤖 — Nhạc thay đổi theo trạng thái game — vertical layering, horizontal resequencing, và bài toán chuyển mượt. → `content/08-presentation/adaptive-music.md`
-  - ● `#41` **AI trong Game** `#game-ai` 🤖 🇬🇧 — AI điều khiển NPC và gameplay — FSM, Behavior Tree, GOAP, Utility AI, pathfinding, AI Director, LLM-NPC. → `content/04-game-ai/index.md`
+  - ● `#41` **AI trong Game** `#game-ai` 🤖 🎮 🇬🇧 — AI điều khiển NPC và gameplay — FSM, Behavior Tree, GOAP, Utility AI, pathfinding, AI Director, LLM-NPC. → `content/04-game-ai/index.md`
     - ◐ `#42` **Finite State Machine** `#fsm` 🤖 🎮 — Máy trạng thái hữu hạn — kiến trúc AI đơn giản nhất, đủ dùng cho phần lớn kẻ địch nhỏ, và giới hạn của nó. → `content/04-game-ai/fsm.md`
-    - ◐ `#43` **Behavior Tree** `#behavior-tree` 🤖 — Cây hành vi — chuẩn công nghiệp cho AI NPC: cấu trúc node, blackboard, và cách tránh cây phình to. → `content/04-game-ai/behavior-tree.md`
-    - ○ `#49` **GOAP** `#goap` 🤖 — Goal-Oriented Action Planning — NPC tự tìm chuỗi hành động để đạt mục tiêu, thay vì làm theo kịch bản. → `content/04-game-ai/goap.md`
-    - ○ `#47` **Utility AI** `#utility-ai` 🤖 — Chấm điểm mọi lựa chọn rồi chọn cái cao nhất — kiến trúc linh hoạt nhất cho NPC có nhiều nhu cầu cạnh tranh. → `content/04-game-ai/utility-ai.md`
+    - ◐ `#43` **Behavior Tree** `#behavior-tree` 🤖 🎮 — Cây hành vi — chuẩn công nghiệp cho AI NPC: cấu trúc node, blackboard, và cách tránh cây phình to. → `content/04-game-ai/behavior-tree.md`
+    - ○ `#49` **GOAP** `#goap` 🤖 🎮 — Goal-Oriented Action Planning — NPC tự tìm chuỗi hành động để đạt mục tiêu, thay vì làm theo kịch bản. → `content/04-game-ai/goap.md`
+    - ○ `#47` **Utility AI** `#utility-ai` 🤖 🎮 — Chấm điểm mọi lựa chọn rồi chọn cái cao nhất — kiến trúc linh hoạt nhất cho NPC có nhiều nhu cầu cạnh tranh. → `content/04-game-ai/utility-ai.md`
     - ◐ `#45` **Pathfinding** `#pathfinding` 🤖 🎮 — A*, NavMesh, flow field, hierarchical — chọn đúng thuật toán tìm đường cho quy mô của bạn. → `content/04-game-ai/pathfinding.md`
-    - ○ `#48` **AI Director** `#ai-director` 🤖 — AI ở tầng hệ thống điều tiết nhịp độ cả trận — mô hình Left 4 Dead và cách tự dựng một cái. → `content/04-game-ai/ai-director.md`
-    - ○ `#50` **LLM-driven NPC** `#llm-npc` 🤖 — Dùng mô hình ngôn ngữ cho NPC — kiến trúc, chi phí, độ trễ, và những rào cản thật sự chưa ai giải xong. → `content/04-game-ai/llm-npc.md`
+    - ○ `#48` **AI Director** `#ai-director` 🤖 🎮 — AI ở tầng hệ thống điều tiết nhịp độ cả trận — mô hình Left 4 Dead và cách tự dựng một cái. → `content/04-game-ai/ai-director.md`
+    - ○ `#50` **LLM-driven NPC** `#llm-npc` 🤖 🎮 — Dùng mô hình ngôn ngữ cho NPC — kiến trúc, chi phí, độ trễ, và những rào cản thật sự chưa ai giải xong. → `content/04-game-ai/llm-npc.md`
     - ◐ `#44` **Perception & Senses** `#perception` _(stub — cần viết thêm)_ 🤖 🎮 — Tầm nhìn, thính giác, trí nhớ — hệ thống làm cho AI vừa công bằng vừa trông có vẻ công bằng. → `content/04-game-ai/perception.md`
-    - ○ `#46` **Steering & Flocking** `#steering-flocking` _(stub — cần viết thêm)_ 🤖 — Chuyển động mượt và hành vi bầy đàn — seek, flee, arrive, separation, và ba luật của Boids. → `content/04-game-ai/steering-flocking.md`
-    - ○ `#51` **Machine Learning & RL** `#ml-rl` _(stub — cần viết thêm)_ 🤖 — Học tăng cường và ML-Agents trong game — khi nào đáng dùng, và vì sao thường thì không. → `content/04-game-ai/ml-rl.md`
+    - ○ `#46` **Steering & Flocking** `#steering-flocking` _(stub — cần viết thêm)_ 🤖 🎮 — Chuyển động mượt và hành vi bầy đàn — seek, flee, arrive, separation, và ba luật của Boids. → `content/04-game-ai/steering-flocking.md`
+    - ○ `#51` **Machine Learning & RL** `#ml-rl` _(stub — cần viết thêm)_ 🤖 🎮 — Học tăng cường và ML-Agents trong game — khi nào đáng dùng, và vì sao thường thì không. → `content/04-game-ai/ml-rl.md`
   - ● `#9` **Làm game với AI** `#ai-assisted-dev` 🤖 — Dùng Codex/Claude để thực sự làm ra game — quy trình, cách viết GDD cho AI đọc, prompt pattern, và rào chắn an toàn. → `content/05-ai-assisted-dev/index.md`
     - ● `#10` **Quy trình làm game với AI** `#ai-workflow` 🤖 — Từ ý tưởng tới build chạy được — chia giai đoạn, chia nhỏ nhiệm vụ, và giữ quyền kiểm soát. → `content/05-ai-assisted-dev/ai-workflow.md`
     - ● `#11` **GDD cho AI đọc** `#gdd-for-ai` 🤖 — Viết tài liệu thiết kế mà máy thực thi được — cấu trúc, mức độ cụ thể, và những gì AI luôn bịa nếu bạn không nói. → `content/05-ai-assisted-dev/gdd-for-ai.md`

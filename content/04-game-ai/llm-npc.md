@@ -142,3 +142,63 @@ Ràng buộc vận hành:
 ```
 
 **Bẫy thường gặp:** để LLM giữ trí nhớ. Nó sẽ mâu thuẫn với chính nó trong 10 phút và người chơi mất hết niềm tin vào thế giới. Sự thật phải nằm trong DB.
+
+## 🎮 Unity
+
+Trong Unity, phần khó không phải gọi API mà là **không làm đứng game khi chờ mạng**.
+
+**Component & nơi đặt**
+- `LlmClient.cs` — `UnityWebRequest`, không chặn main thread
+- `DialogueGate.cs` — tầng luật: kiểm tra schema, lọc, quyết định fallback
+- `NpcFacts` (ScriptableObject hoặc save data) — nguồn sự thật, **không** để LLM nhớ
+
+**Gọi API không chặn**
+
+```csharp
+public async Task<NpcReply> AskAsync(string prompt, CancellationToken ct) {
+    using var req = new UnityWebRequest(endpoint, "POST");
+    req.uploadHandler = new UploadHandlerRaw(Encoding.UTF8.GetBytes(prompt));
+    req.downloadHandler = new DownloadHandlerBuffer();
+    req.SetRequestHeader("Content-Type", "application/json");
+    req.timeout = 2;                                    // giây — cứng
+
+    var op = req.SendWebRequest();
+    while (!op.isDone) {
+        if (ct.IsCancellationRequested) { req.Abort(); return NpcReply.Fallback; }
+        await Task.Yield();                             // nhường frame, KHÔNG chặn
+    }
+    if (req.result != UnityWebRequest.Result.Success) return NpcReply.Fallback;
+    return Validate(req.downloadHandler.text);
+}
+```
+
+**Tầng luật — LLM không được quyết định hành vi**
+
+```csharp
+NpcReply Validate(string json) {
+    NpcReply r;
+    try { r = JsonUtility.FromJson<NpcReply>(json); }
+    catch { return NpcReply.Fallback; }
+
+    // action PHẢI trùng quyết định của BT/FSM. Lệch -> vứt.
+    if (r.action != decidedAction) return NpcReply.Fallback;
+    if (!System.Enum.IsDefined(typeof(Emotion), r.emotion)) return NpcReply.Fallback;
+    if (r.dialogue.Length > 200) r.dialogue = r.dialogue[..200];
+    return r;
+}
+```
+
+**API key — không nhúng vào build**
+
+Key trong `Resources/` hoặc `PlayerPrefs` là key công khai: build client dễ dàng bị bóc. Cách duy nhất an toàn là **proxy server của bạn** giữ key, client gọi proxy. Nếu chưa có proxy, đừng ship tính năng này.
+
+**Bẫy Unity cụ thể**
+- **`await` trong Unity không tự quay về main thread** ở mọi ngữ cảnh. Chạm `Transform`/`UI` sau `await` phải chắc đang ở main thread — `Task.Yield()` trong PlayerLoop thì an toàn, `Task.Run` thì không.
+- **Quên `CancellationToken`** → NPC chết/scene unload mà request vẫn chạy, callback chạm object đã huỷ → `MissingReferenceException`.
+- **`JsonUtility` không đọc được mảng ở cấp gốc** và bỏ qua trường thiếu mà không báo. Với schema phức tạp dùng thư viện JSON khác.
+- **Không có fallback** → người chơi đứng nhìn NPC im lặng 2 giây. Luôn có câu viết sẵn.
+
+**Kiểm tra nhanh**
+- Rút mạng giữa hội thoại: game có tiếp tục bình thường không?
+- Bật Profiler lúc gọi API: main thread có khựng không?
+- Sửa response giả thành `action` sai: có bị chặn không?
