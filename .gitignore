@@ -1,0 +1,11 @@
+node_modules/
+dist/
+.DS_Store
+*.log
+.vite/
+
+# Sách/tài liệu nguồn: nặng và thường có bản quyền.
+# Chỉ theo dõi README.md và _catalog.md trong sources/.
+sources/*
+!sources/README.md
+!sources/_catalog.md

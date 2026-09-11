@@ -1,0 +1,75 @@
+---
+id: root
+title: GameDesign Brain
+icon: 🧠
+summary: Kho kiến thức mindmap về Game Design và AI trong game — đồng thời là bộ não thiết kế cho AI agent đọc trước khi sinh code.
+status: deep
+read: 10
+level: basic
+order: 0
+tags: [meta]
+---
+
+Đây là **bộ não trung tâm**: một nơi vừa để con người học và tra cứu, vừa để AI agent (Codex, Claude Code, Cursor…) đọc rồi dựng game thật.
+
+## Kho này giải quyết chuyện gì
+
+Khi nhờ AI viết game, vấn đề lớn nhất không phải là AI code kém — mà là **AI không biết bạn muốn gì**. Prompt kiểu "làm cho tôi game bắn súng" cho ra thứ generic, vì mọi quyết định thiết kế đều bị AI bịa ra.
+
+Kho này lấp đúng khoảng trống đó theo hai lớp:
+
+1. **Lớp kiến thức** (nhánh 1–6) — nguyên lý game design và AI in game. Đây là vốn hiểu biết chung: AI đọc để có chung ngôn ngữ và chuẩn mực với bạn.
+2. **Lớp bản thiết kế** ([[blueprints]]) — GDD của game cụ thể bạn đang làm. Đây mới là thứ AI thực thi.
+
+Thiếu lớp 1, AI làm ra game "đúng yêu cầu nhưng chán". Thiếu lớp 2, AI không có gì để làm.
+
+## Bảy nhánh
+
+| Nhánh | Nội dung | Dùng khi |
+|---|---|---|
+| [[foundations]] | Nền tảng thiết kế: core loop, động lực người chơi, MDA, game feel | Bắt đầu một ý tưởng game mới |
+| [[systems]] | Systems design: kinh tế, tiến trình, combat, cân bằng số | Thiết kế các hệ thống chạy trong game |
+| [[content-design]] | Level, màn chơi, procedural, narrative, UX | Đổ nội dung vào bộ khung hệ thống |
+| [[game-ai]] | AI điều khiển NPC/gameplay: FSM, Behavior Tree, GOAP, Utility AI, pathfinding | Làm cho enemy/NPC thông minh |
+| [[ai-assisted-dev]] | Dùng AI (Codex/Claude) để **làm** game | Muốn AI code hộ mà kết quả dùng được |
+| [[production]] | Kiến trúc, data-driven, đo đạc, hiệu năng | Biến prototype thành sản phẩm |
+| [[blueprints]] | GDD của game thật + template | Bắt tay vào một dự án cụ thể |
+
+Phân biệt quan trọng: **[[game-ai]] là AI *trong* game** (con quái biết né đạn). **[[ai-assisted-dev]] là AI *làm ra* game** (Claude viết script cho con quái đó). Hai thứ hoàn toàn khác nhau, đừng lẫn.
+
+## Cách dùng
+
+**Đọc/duyệt:** `npm run dev` rồi lang thang trên mindmap. Click node để đọc, `/` để tìm kiếm.
+
+**Mở rộng:** tạo file `.md` mới trong `content/<nhánh>/`, khai frontmatter, lưu lại. Mindmap tự cập nhật — không cần khai báo node ở đâu khác. Xem quy ước ở `content/_SCHEMA.md`.
+
+**Cho AI đọc:** nói với agent *"đọc `AI_CONTEXT.md` trước"*. File đó chỉ đường tới `KNOWLEDGE_INDEX.md` (mục lục tự sinh) và các file chi tiết. Hoặc bấm **Copy cho AI** ở panel bên phải để lấy đúng một nhánh mà dán vào chat.
+
+## Nguyên tắc bất di bất dịch
+
+> **Markdown trong `content/` là nguồn chân lý duy nhất.**
+> `public/data/graph.json` và `KNOWLEDGE_INDEX.md` đều do máy sinh ra. Sửa tay vào chúng sẽ mất sạch ở lần build kế tiếp.
+
+Trạng thái node: `deep` = đã viết đủ dùng · `stub` = mới có khung, cần bồi đắp. Node stub hiện viền đứt trên mindmap — đó là danh sách việc cần làm của chính kho này.
+
+## 🤖 Prompt cho AI
+
+Node gốc không phải chỗ để viết prompt cụ thể. Nhưng mọi prompt gửi AI về dự án game đều nên mở đầu bằng **một khối định vị** như dưới đây — nó ngăn AI mặc định về "game trung bình của ngành".
+
+**Mẫu mở đầu cho mọi phiên làm việc**
+
+```
+Kho kiến thức thiết kế: E:/XoiGame/GameDesign
+Đọc AI_CONTEXT.md trước, rồi KNOWLEDGE_INDEX.md để biết có những node nào.
+
+GDD của dự án: content/07-blueprints/<ten-game>.md
+Ba mục sau là RÀNG BUỘC CỨNG, vi phạm thì phải dừng và hỏi tôi:
+  - Design Pillars
+  - Bất biến (INV-xx)
+  - Không thuộc phạm vi
+
+Trước khi chọn kỹ thuật cho <việc cần làm>, đọc node liên quan trong kho
+và nói cho tôi biết bạn chọn cái nào, vì sao.
+```
+
+**Bẫy lớn nhất:** dán cả 22.000 từ kiến thức vào chat. Vừa tốn token vừa làm loãng tín hiệu. Hãy để agent **đọc file theo nhu cầu** — chỉ dán khi agent không truy cập được ổ đĩa.

@@ -1,0 +1,27 @@
+{
+  "name": "gamedesign-brain",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "description": "Knowledge base mindmap ve Game Design & AI in Games - dong thoi la bo nao thiet ke cho AI coding agent doc.",
+  "scripts": {
+    "dev": "node scripts/dev.mjs",
+    "graph": "node scripts/build-graph.mjs",
+    "graph:watch": "node scripts/build-graph.mjs --watch",
+    "build": "node scripts/build-graph.mjs && vite build",
+    "preview": "vite preview",
+    "check": "node scripts/build-graph.mjs --strict"
+  },
+  "dependencies": {
+    "@xyflow/react": "^12.3.5",
+    "d3-hierarchy": "^3.1.2",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "react-markdown": "^9.0.1",
+    "remark-gfm": "^4.0.0"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-react": "^4.3.4",
+    "vite": "^5.4.11"
+  }
+}
