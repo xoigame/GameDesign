@@ -253,3 +253,223 @@ Sau khi viết, liệt kê mọi Graphic còn Raycast Target bật và mọi ch�
 ```
 
 **Bẫy thường gặp:** AI tách Canvas đúng nhưng đặt `HealthBar` (đổi mỗi lần nhận sát thương) **cùng Canvas** với `DamageNumber` (đổi mỗi frame) vì "cùng là combat UI". Kết quả: thanh máu vẫn bị rebuild mỗi frame khi có số bay. Tách theo **tần suất đổi**, không theo chủ đề — kiểm tra bằng `Canvas.BuildBatch` trong Profiler, không kiểm tra bằng đọc tên Canvas.
+
+## 💻 Code
+
+Demo dựng một HUD máu theo MVP trên UGUI: Canvas tách theo tần suất đổi, vùng bấm bám `Screen.safeArea`, View không cấp phát và chỉ đụng Graphic khi giá trị đổi, Presenter throttle 10 Hz. Kiểm chứng được bằng `Canvas.BuildBatch` trong Profiler và Device Simulator.
+
+**Setup**
+
+<figure class="fig">
+<svg viewBox="0 0 660 380" role="img" aria-label="Hierarchy UI_Root với Canvas_Static, Canvas_HUD chứa SafeArea, HP_Group, HP_Bar, HP_Text; Inspector hiện Canvas Scaler, Canvas, Image, TMP, HudView, HudPresenter">
+  <rect x="10" y="10" width="200" height="360" rx="8" class="fig-box"/>
+  <text x="22" y="32" class="fig-label" font-size="13" font-weight="600">Hierarchy</text>
+  <line x1="10" y1="42" x2="210" y2="42" class="fig-line"/>
+  <rect x="16" y="50" width="188" height="18" rx="4" fill="#b197fc" opacity="0.18"/>
+  <text x="22" y="63" class="fig-label" font-size="12" font-weight="600">▾ UI_Root  (HudPresenter)</text>
+  <text x="30" y="81" class="fig-label" font-size="12">▾ Canvas_Static</text>
+  <text x="46" y="97" class="fig-muted" font-size="11">Frame_BG  (Image, ngoài SafeArea)</text>
+  <rect x="16" y="102" width="188" height="18" rx="4" fill="#6ea8fe" opacity="0.18"/>
+  <text x="30" y="115" class="fig-label" font-size="12" font-weight="600">▾ Canvas_HUD</text>
+  <text x="42" y="131" class="fig-label" font-size="12">▾ SafeArea  (SafeAreaFitter)</text>
+  <text x="54" y="147" class="fig-label" font-size="12">▾ HP_Group  (HudView)</text>
+  <text x="66" y="163" class="fig-muted" font-size="11">HP_Bar  (Image Filled)</text>
+  <text x="66" y="179" class="fig-muted" font-size="11">HP_Text  (TMP)</text>
+  <text x="30" y="197" class="fig-muted" font-size="11">EventSystem</text>
+  <line x1="10" y1="210" x2="210" y2="210" class="fig-line"/>
+  <text x="22" y="230" class="fig-muted" font-size="11">Canvas_Static: không bao giờ dirty</text>
+  <text x="22" y="248" class="fig-muted" font-size="11">Canvas_HUD: đổi ≤ 10 Hz (throttle)</text>
+  <text x="22" y="266" class="fig-muted" font-size="11">Frame_BG ngoài SafeArea → tràn màn</text>
+  <text x="22" y="284" class="fig-muted" font-size="11">Bar/Text trong SafeArea → né notch</text>
+  <text x="22" y="316" class="fig-muted" font-size="11">Device Simulator:</text>
+  <text x="22" y="332" class="fig-muted" font-size="11">iPhone 15 · Galaxy S24 U · iPad</text>
+  <text x="22" y="356" class="fig-muted" font-size="11">Demo: J −7 · K +15 · giữ H −1/frame</text>
+  <rect x="226" y="10" width="424" height="360" rx="8" class="fig-box"/>
+  <text x="238" y="32" class="fig-label" font-size="13" font-weight="600">Inspector — 6 component chính</text>
+  <line x1="226" y1="42" x2="650" y2="42" class="fig-line"/>
+  <rect x="234" y="50" width="408" height="18" rx="3" fill="#6ea8fe" opacity="0.22"/>
+  <text x="242" y="63" class="fig-label" font-size="12" font-weight="600">Canvas Scaler  ·  Canvas_Static (và Canvas_HUD)</text>
+  <text x="250" y="82" class="fig-muted" font-size="11">UI Scale Mode</text><text x="440" y="82" class="fig-label" font-size="11">Scale With Screen Size</text>
+  <text x="250" y="98" class="fig-muted" font-size="11">Reference Resolution</text><text x="440" y="98" class="fig-label" font-size="11">X 1920   Y 1080</text>
+  <text x="250" y="114" class="fig-muted" font-size="11">Match Width Or Height</text><text x="440" y="114" class="fig-label" font-size="11">0.5</text>
+  <rect x="234" y="124" width="408" height="18" rx="3" fill="#6ea8fe" opacity="0.22"/>
+  <text x="242" y="137" class="fig-label" font-size="12" font-weight="600">Canvas  ·  Canvas_HUD</text>
+  <text x="250" y="156" class="fig-muted" font-size="11">Render Mode</text><text x="440" y="156" class="fig-label" font-size="11">Screen Space – Overlay</text>
+  <text x="250" y="172" class="fig-muted" font-size="11">Pixel Perfect</text><text x="440" y="172" class="fig-label" font-size="11">☐</text>
+  <rect x="234" y="182" width="408" height="18" rx="3" fill="#51cf9b" opacity="0.22"/>
+  <text x="242" y="195" class="fig-label" font-size="12" font-weight="600">Image  ·  HP_Bar</text>
+  <text x="250" y="214" class="fig-muted" font-size="11">Image Type / Fill Method</text><text x="440" y="214" class="fig-label" font-size="11">Filled  /  Horizontal</text>
+  <text x="250" y="230" class="fig-muted" font-size="11">Raycast Target</text><text x="440" y="230" class="fig-label" font-size="11">☐</text>
+  <rect x="234" y="240" width="408" height="18" rx="3" fill="#51cf9b" opacity="0.22"/>
+  <text x="242" y="253" class="fig-label" font-size="12" font-weight="600">TextMeshPro – Text (UI)  ·  HP_Text</text>
+  <text x="250" y="272" class="fig-muted" font-size="11">Raycast Target</text><text x="440" y="272" class="fig-label" font-size="11">☐</text>
+  <rect x="234" y="282" width="408" height="18" rx="3" fill="#ffd43b" opacity="0.22"/>
+  <text x="242" y="295" class="fig-label" font-size="12" font-weight="600">Hud View (Script)  ·  HP_Group</text>
+  <text x="250" y="314" class="fig-muted" font-size="11">Fill / Label</text><text x="440" y="314" class="fig-label" font-size="11">HP_Bar  /  HP_Text</text>
+  <rect x="234" y="324" width="408" height="18" rx="3" fill="#b197fc" opacity="0.22"/>
+  <text x="242" y="337" class="fig-label" font-size="12" font-weight="600">Hud Presenter (Script)  ·  UI_Root</text>
+  <text x="250" y="356" class="fig-muted" font-size="11">View / Max Hp / Push Interval</text><text x="440" y="356" class="fig-label" font-size="11">HP_Group  /  100  /  0.1</text>
+</svg>
+<figcaption>Canvas_Static và Canvas_HUD là hai Canvas gốc riêng, cùng thiết lập Scaler (hoặc lồng Canvas_HUD vào Canvas_Static để kế thừa Scaler — vẫn cô lập rebuild). Mọi Graphic tắt Raycast Target vì HUD này không bấm được.</figcaption>
+</figure>
+
+**Script**
+
+```csharp
+// SafeAreaFitter.cs — Unity 6 (6000.x). Gắn lên RectTransform con trực tiếp của Canvas_HUD; mọi thứ bấm được là con của nó.
+using UnityEngine;
+
+[RequireComponent(typeof(RectTransform))]
+[ExecuteAlways]                                   // áp dụng cả trong Edit Mode để thấy ngay khi đổi thiết bị trong Device Simulator
+public class SafeAreaFitter : MonoBehaviour
+{
+    RectTransform rt;
+    Rect lastSafe;
+    Vector2Int lastScreen;
+    ScreenOrientation lastOrientation;
+
+    void Awake()    { rt = GetComponent<RectTransform>(); Apply(); }
+    void OnEnable() { Apply(); }
+
+    void Update()
+    {
+        // Ba phép so sánh struct mỗi frame — rẻ. Phải kiểm trong Update vì một số Android trả
+        // safeArea = cả màn hình ở frame đầu, và xoay máy không có callback riêng.
+        if (Screen.safeArea != lastSafe
+            || Screen.width != lastScreen.x || Screen.height != lastScreen.y
+            || Screen.orientation != lastOrientation)
+            Apply();
+    }
+
+    void Apply()
+    {
+        if (rt == null) rt = GetComponent<RectTransform>();
+        lastSafe = Screen.safeArea;
+        lastScreen = new Vector2Int(Screen.width, Screen.height);
+        lastOrientation = Screen.orientation;
+        if (lastScreen.x == 0 || lastScreen.y == 0) return;   // Editor đôi lúc trả 0 khi chưa có Game view
+
+        Vector2 min = lastSafe.position;
+        Vector2 max = lastSafe.position + lastSafe.size;
+        min.x /= lastScreen.x; min.y /= lastScreen.y;
+        max.x /= lastScreen.x; max.y /= lastScreen.y;
+
+        rt.anchorMin = min;
+        rt.anchorMax = max;
+        rt.offsetMin = rt.offsetMax = Vector2.zero;           // anchor lo hết, không còn offset tay
+    }
+}
+```
+
+```csharp
+// HudView.cs — View thuần: chỉ vẽ, không biết PlayerHealth là gì. Test được không cần gameplay bằng menu chuột phải.
+using TMPro;
+using UnityEngine;
+using UnityEngine.UI;
+
+public class HudView : MonoBehaviour
+{
+    [SerializeField] Image fill;            // HP_Bar — Image Type: Filled, Fill Method: Horizontal, Raycast Target tắt
+    [SerializeField] TMP_Text label;        // HP_Text — Raycast Target tắt
+
+    int lastCur = int.MinValue, lastMax = int.MinValue;
+
+    public void SetHealth(int cur, int max)
+    {
+        if (cur == lastCur && max == lastMax) return;    // không đổi → không đụng Graphic → Canvas không dirty
+        lastCur = cur; lastMax = max;
+
+        fill.fillAmount = max > 0 ? (float)cur / max : 0f;
+        label.SetText("{0}/{1}", cur, max);              // TMP format số vào buffer nội bộ: 0 B alloc
+    }
+
+    [ContextMenu("Render 37/100 (test View không cần gameplay)")]
+    void DebugRender() => SetHealth(37, 100);
+}
+```
+
+```csharp
+// HudPresenter.cs — nghe event từ model, đẩy vào View với throttle 10 Hz. Model PlayerHealth giả lập nằm cuối file.
+using UnityEngine;
+using UnityEngine.InputSystem;
+
+public class HudPresenter : MonoBehaviour
+{
+    [SerializeField] HudView view;
+    [SerializeField, Min(1)] int maxHp = 100;
+    [SerializeField, Min(0f)] float pushInterval = 0.1f;   // Canvas_HUD đổi tối đa 10 lần/giây
+
+    PlayerHealth model;
+    bool dirty;
+    int pendingCur, pendingMax;
+    float nextPush;
+
+    void Awake() => model = new PlayerHealth(maxHp);
+
+    void OnEnable()
+    {
+        model.Changed += OnHealthChanged;
+        OnHealthChanged(model.Current, model.Max);
+        Flush();                                          // lần đầu đẩy ngay, không đợi throttle
+    }
+
+    void OnDisable() => model.Changed -= OnHealthChanged;
+
+    void OnHealthChanged(int cur, int max)
+    {
+        pendingCur = cur; pendingMax = max; dirty = true; // chỉ ghi nhớ giá trị mới nhất, không đụng View ở đây
+    }
+
+    void Update()
+    {
+        // Input demo: J trừ 7, K hồi 15, giữ H trừ 1 mỗi frame (60 event/giây) để thấy throttle làm việc
+        var kb = Keyboard.current;
+        if (kb != null)
+        {
+            if (kb.jKey.wasPressedThisFrame) model.Damage(7);
+            if (kb.kKey.wasPressedThisFrame) model.Heal(15);
+            if (kb.hKey.isPressed) model.Damage(1);
+        }
+
+        if (dirty && Time.unscaledTime >= nextPush) Flush();
+    }
+
+    void Flush()
+    {
+        view.SetHealth(pendingCur, pendingMax);
+        dirty = false;
+        nextPush = Time.unscaledTime + pushInterval;
+    }
+}
+
+/// Model giả lập — plain C#, không MonoBehaviour. Dự án thật thay bằng model / event channel của bạn (xem unity-design-patterns).
+public class PlayerHealth
+{
+    public int Current { get; private set; }
+    public int Max { get; private set; }
+    public event System.Action<int, int> Changed;
+
+    public PlayerHealth(int max) { Max = max; Current = max; }
+
+    public void Damage(int amount)
+    {
+        int next = Mathf.Max(0, Current - amount);
+        if (next == Current) return;                      // đã 0 máu: không bắn event thừa
+        Current = next; Changed?.Invoke(Current, Max);
+    }
+
+    public void Heal(int amount)
+    {
+        int next = Mathf.Min(Max, Current + amount);
+        if (next == Current) return;
+        Current = next; Changed?.Invoke(Current, Max);
+    }
+}
+```
+
+**Chạy thử**
+- Play, không bấm gì: Profiler ▸ UI ▸ `Canvas.BuildBatch` = 0 lần/giây cho cả hai Canvas. Nhấn J: text `93/100`, `fillAmount` 0.93, chỉ Canvas_HUD rebuild **một** lần; Canvas_Static vẫn 0.
+- Giữ H trong 1 giây: model bắn ~60 event nhưng Canvas_HUD chỉ rebuild ~10 lần (Push Interval 0.1). Đặt Push Interval = 0 → ~60 lần. Nhấn K khi đã 100 máu: không có event, không rebuild.
+- Profiler ▸ Memory ▸ GC Alloc của `HudView.SetHealth` = 0 B. Thử đổi thành `label.text = $"{cur}/{max}"` để thấy ~40–60 B mỗi lần gọi.
+- Device Simulator iPhone 15 landscape → xoay portrait: khung `SafeArea` co lại ngay frame kế, HP_Bar/HP_Text không dưới notch hay thanh home; Frame_BG (ngoài SafeArea) vẫn tràn hết màn.
+- Không Play, chuột phải header Hud View ▸ "Render 37/100": HUD hiện `37/100` — View chạy độc lập gameplay. Bật Pixel Perfect trên Canvas_HUD rồi giữ H: rebuild tăng gấp đôi vì snap vị trí mỗi frame.

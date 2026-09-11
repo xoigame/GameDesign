@@ -182,3 +182,208 @@ Không thêm package. Không đụng Player Settings ngoài các mục nêu trê
 ```
 
 **Bẫy thường gặp:** AI thêm `[Preserve]` lên **class** DTO nhưng stripping vẫn xoá **constructor không tham số** và property setter không ai gọi trực tiếp → JSON deserialize thành object với mọi trường default, không exception. Trông như "save file rỗng" trong khi file trên đĩa đầy dữ liệu. Với DTO, dùng `preserve="all"` ở cấp type trong `link.xml`, và test load trên bản Release.
+
+## 💻 Code
+
+Demo dựng một **script build Android chạy được từ menu và từ CI** (`-executeMethod`), ép đúng các Player Settings hay bị quên (IL2CPP, ARM64, stripping Medium, Vulkan + GLES3), in Build Report với 10 asset to nhất, và một `link.xml` giữ những gì stripping hay xoá nhầm. Kiểm chứng: CI đỏ khi build fail, log có bảng asset.
+
+**Setup**
+
+<figure class="fig">
+<svg viewBox="0 0 660 370" role="img" aria-label="Project có Assets/Editor/BuildScript.cs, Assets/link.xml và thư mục Builds/Android; menu Build ▸ Android Release; panel Player Settings Android với IL2CPP, ARM64, Managed Stripping Medium, Min API 24, Graphics APIs Vulkan và OpenGLES3; panel Build Report với tổng kích cỡ và top asset">
+  <rect x="10" y="10" width="200" height="350" rx="8" class="fig-box"/>
+  <text x="22" y="32" class="fig-label" font-size="13" font-weight="600">Project</text>
+  <line x1="10" y1="42" x2="210" y2="42" class="fig-line"/>
+  <text x="22" y="64" class="fig-muted" font-size="12">▾ Assets</text>
+  <rect x="16" y="72" width="188" height="20" rx="4" fill="#6ea8fe" opacity="0.18"/>
+  <text x="38" y="87" class="fig-label" font-size="12" font-weight="600">Editor/BuildScript.cs</text>
+  <text x="38" y="107" class="fig-muted" font-size="12">link.xml</text>
+  <text x="38" y="125" class="fig-muted" font-size="12">Scenes/Boot.unity, Game.unity</text>
+  <text x="22" y="147" class="fig-muted" font-size="12">▾ Builds/Android  (gitignore)</text>
+  <text x="38" y="165" class="fig-muted" font-size="11">game-123.aab</text>
+  <text x="38" y="181" class="fig-muted" font-size="11">game-123.symbols.zip</text>
+  <text x="22" y="209" class="fig-label" font-size="12" font-weight="600">Menu</text>
+  <text x="22" y="227" class="fig-muted" font-size="11">Build ▸ Android Release</text>
+  <text x="22" y="243" class="fig-muted" font-size="11">(CI gọi BuildScript.BuildAndroidCI)</text>
+  <rect x="16" y="256" width="188" height="96" rx="4" class="fig-box"/>
+  <text x="22" y="272" class="fig-label" font-size="11" font-weight="600">Build Profile ▸ Android-Release</text>
+  <text x="22" y="288" class="fig-muted" font-size="10">Scene List: Boot, Game</text>
+  <text x="22" y="302" class="fig-muted" font-size="10">Build App Bundle (.aab)  ☑ (theo -aab)</text>
+  <text x="22" y="316" class="fig-muted" font-size="10">Development Build  ☐</text>
+  <text x="22" y="330" class="fig-muted" font-size="10">Version 1.4.123  ·  Bundle Code 123</text>
+  <text x="22" y="344" class="fig-muted" font-size="10">Create symbols.zip  Debugging (bật tay)</text>
+  <rect x="226" y="10" width="424" height="350" rx="8" class="fig-box"/>
+  <text x="238" y="32" class="fig-label" font-size="13" font-weight="600">Player Settings ▸ Android  (script ép lại mỗi lần build)</text>
+  <line x1="226" y1="42" x2="650" y2="42" class="fig-line"/>
+  <rect x="234" y="50" width="408" height="18" rx="3" fill="#6ea8fe" opacity="0.22"/>
+  <text x="242" y="63" class="fig-label" font-size="12" font-weight="600">Other Settings ▸ Configuration</text>
+  <text x="250" y="82" class="fig-muted" font-size="11">Scripting Backend</text><text x="440" y="82" class="fig-label" font-size="11">IL2CPP</text>
+  <text x="250" y="98" class="fig-muted" font-size="11">Target Architectures</text><text x="440" y="98" class="fig-label" font-size="11">ARM64 ☑   ARMv7 ☐   x86-64 ☐</text>
+  <text x="250" y="114" class="fig-muted" font-size="11">Managed Stripping Level</text><text x="440" y="114" class="fig-label" font-size="11">Medium</text>
+  <text x="250" y="130" class="fig-muted" font-size="11">Minimum API Level</text><text x="440" y="130" class="fig-label" font-size="11">Android 7.0 (API 24)</text>
+  <text x="250" y="146" class="fig-muted" font-size="11">Target API Level</text><text x="440" y="146" class="fig-label" font-size="11">Automatic (highest installed)</text>
+  <rect x="234" y="156" width="408" height="18" rx="3" fill="#b197fc" opacity="0.22"/>
+  <text x="242" y="169" class="fig-label" font-size="12" font-weight="600">Other Settings ▸ Rendering</text>
+  <text x="250" y="188" class="fig-muted" font-size="11">Auto Graphics API</text><text x="440" y="188" class="fig-label" font-size="11">☐</text>
+  <text x="250" y="204" class="fig-muted" font-size="11">Graphics APIs (thứ tự thử)</text><text x="440" y="204" class="fig-label" font-size="11">1. Vulkan   2. OpenGLES3</text>
+  <text x="250" y="220" class="fig-muted" font-size="11">Texture Compression</text><text x="440" y="220" class="fig-label" font-size="11">ASTC</text>
+  <rect x="234" y="230" width="408" height="18" rx="3" fill="#51cf9b" opacity="0.22"/>
+  <text x="242" y="243" class="fig-label" font-size="12" font-weight="600">Build Report  (log sau build)</text>
+  <text x="250" y="262" class="fig-muted" font-size="11">Result / Time</text><text x="440" y="262" class="fig-label" font-size="11">Succeeded   /   00:18:42</text>
+  <text x="250" y="278" class="fig-muted" font-size="11">Total Size</text><text x="440" y="278" class="fig-label" font-size="11">87.4 MB   (0 error, 3 warning)</text>
+  <text x="250" y="294" class="fig-muted" font-size="11">Top assets (packedAssets)</text><text x="440" y="294" class="fig-label" font-size="11">6.2 MB  T_Env_Atlas.png</text>
+  <text x="440" y="310" class="fig-label" font-size="11">4.1 MB  bgm_main.ogg</text>
+  <text x="440" y="326" fill="#ff8787" font-size="11">3.9 MB  UI_Splash_4096.png  ← RGBA32?</text>
+  <text x="440" y="342" class="fig-label" font-size="11">2.5 MB  T_Hero_Albedo.png  …</text>
+  <text x="250" y="342" class="fig-muted" font-size="10">Editor.log cũng có bảng này</text>
+</svg>
+<figcaption>Script không tin Player Settings đang lưu trong repo — mỗi lần build nó ép lại các mục ở panel giữa, nên ai đó đổi tay trong Editor cũng không lọt vào bản CI.</figcaption>
+</figure>
+
+**Script**
+
+```csharp
+// Assets/Editor/BuildScript.cs — Unity 6 (6000.x). Phải nằm trong thư mục Editor/ (hoặc asmdef Editor-only) vì dùng UnityEditor.
+// Menu: Build ▸ Android Release.  CI: -executeMethod BuildScript.BuildAndroidCI -buildNumber 123 [-aab]  (xem dòng lệnh dưới)
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Text;
+using UnityEditor;
+using UnityEditor.Build;
+using UnityEditor.Build.Reporting;
+using UnityEngine;
+using UnityEngine.Rendering;
+
+public static class BuildScript
+{
+    const string OutputDir = "Builds/Android";
+    const string VersionPrefix = "1.4.";          // bundleVersion = 1.4.<buildNumber>
+
+    [MenuItem("Build/Android Release")]
+    public static void BuildAndroidReleaseMenu()
+        => Build(buildNumber: PlayerSettings.Android.bundleVersionCode + 1, appBundle: false, exitOnFail: false);
+
+    /// <summary>Điểm vào cho CI. Không có tham số — -executeMethod chỉ gọi được static void không tham số.</summary>
+    public static void BuildAndroidCI()
+    {
+        string arg = GetArg("-buildNumber") ?? Environment.GetEnvironmentVariable("BUILD_NUMBER") ?? "1";
+        if (!int.TryParse(arg, out int buildNumber)) buildNumber = 1;
+        Build(buildNumber, appBundle: HasArg("-aab"), exitOnFail: true);
+    }
+
+    static void Build(int buildNumber, bool appBundle, bool exitOnFail)
+    {
+        // --- Ép Player Settings: không tin giá trị đang lưu, ai đó có thể đã đổi tay ---
+        var android = NamedBuildTarget.Android;
+        PlayerSettings.SetScriptingBackend(android, ScriptingImplementation.IL2CPP);
+        PlayerSettings.SetManagedStrippingLevel(android, ManagedStrippingLevel.Medium);   // Low cho bản Dev
+        PlayerSettings.SetIl2CppCodeGeneration(android, Il2CppCodeGeneration.OptimizeSpeed); // Dev: OptimizeSize (build nhanh hơn ~30%)
+        PlayerSettings.Android.targetArchitectures = AndroidArchitecture.ARM64;            // KHÔNG ARMv7: +40% kích cỡ cho máy trước 2015
+        PlayerSettings.Android.minSdkVersion = AndroidSdkVersions.AndroidApiLevel24;
+        PlayerSettings.SetUseDefaultGraphicsAPIs(BuildTarget.Android, false);
+        PlayerSettings.SetGraphicsAPIs(BuildTarget.Android, new[] { GraphicsDeviceType.Vulkan, GraphicsDeviceType.OpenGLES3 });
+
+        PlayerSettings.Android.bundleVersionCode = Math.Max(1, buildNumber);              // tăng theo CI, không tay
+        PlayerSettings.bundleVersion = VersionPrefix + buildNumber;
+        EditorUserBuildSettings.buildAppBundle = appBundle;                               // .aab cho Play, .apk cho adb install
+        // Symbols: Unity 6 dùng UnityEditor.Android.UserBuildSettings.DebugSymbols.level (cần Android module) — để tay trong Build Profile cho demo gọn.
+
+        ApplyKeystoreFromEnv();
+
+        string ext = appBundle ? "aab" : "apk";
+        Directory.CreateDirectory(OutputDir);
+        var options = new BuildPlayerOptions
+        {
+            scenes = EditorBuildSettings.scenes.Where(s => s.enabled).Select(s => s.path).ToArray(),
+            locationPathName = Path.Combine(OutputDir, $"game-{buildNumber}.{ext}"),
+            target = BuildTarget.Android,
+            options = BuildOptions.None          // Dev: BuildOptions.Development | BuildOptions.ConnectWithProfiler
+        };
+
+        BuildReport report = BuildPipeline.BuildPlayer(options);
+        LogSummary(report);
+
+        if (report.summary.result != BuildResult.Succeeded && exitOnFail)
+            EditorApplication.Exit(1);           // CI phải thấy fail; không có dòng này log đỏ nhưng job xanh
+    }
+
+    static void ApplyKeystoreFromEnv()
+    {
+        // CẤM hardcode, CẤM commit keystore. Thiếu biến → ký debug key, chỉ dùng để test cài máy.
+        string path = Environment.GetEnvironmentVariable("ANDROID_KEYSTORE_PATH");
+        if (string.IsNullOrEmpty(path)) { Debug.LogWarning("[Build] Không có ANDROID_KEYSTORE_PATH → ký debug key"); return; }
+        PlayerSettings.Android.useCustomKeystore = true;
+        PlayerSettings.Android.keystoreName = path;
+        PlayerSettings.Android.keystorePass = Environment.GetEnvironmentVariable("ANDROID_KEYSTORE_PASS");
+        PlayerSettings.Android.keyaliasName = Environment.GetEnvironmentVariable("ANDROID_KEYALIAS_NAME");
+        PlayerSettings.Android.keyaliasPass = Environment.GetEnvironmentVariable("ANDROID_KEYALIAS_PASS");
+    }
+
+    static void LogSummary(BuildReport report)
+    {
+        BuildSummary s = report.summary;
+        var sb = new StringBuilder(2048);
+        sb.AppendLine($"[Build] {s.result}  size {s.totalSize / (1024.0 * 1024.0):F1} MB  time {s.totalTime:hh\\:mm\\:ss}  " +
+                      $"errors {s.totalErrors}  warnings {s.totalWarnings}  → {s.outputPath}");
+
+        // Gom mọi PackedAssetInfo theo đường dẫn asset gốc (một texture có thể nằm trong nhiều file), lấy 10 to nhất
+        var bySource = new Dictionary<string, ulong>();
+        foreach (PackedAssets pack in report.packedAssets)
+            foreach (PackedAssetInfo info in pack.contents)
+            {
+                string key = string.IsNullOrEmpty(info.sourceAssetPath) ? $"<{info.type?.Name}>" : info.sourceAssetPath;
+                bySource[key] = bySource.TryGetValue(key, out var v) ? v + info.packedSize : info.packedSize;
+            }
+        sb.AppendLine("[Build] Top 10 asset theo kích cỡ đóng gói:");
+        foreach (var kv in bySource.OrderByDescending(kv => kv.Value).Take(10))
+            sb.AppendLine($"  {kv.Value / (1024.0 * 1024.0),7:F2} MB  {kv.Key}");
+
+        if (s.result == BuildResult.Succeeded) Debug.Log(sb.ToString()); else Debug.LogError(sb.ToString());
+        File.WriteAllText(Path.Combine(OutputDir, "last-build-report.txt"), sb.ToString());   // artifact cho CI đính kèm
+    }
+
+    // -executeMethod không truyền tham số → tự đọc từ dòng lệnh: "-buildNumber 123"
+    static string GetArg(string name)
+    {
+        string[] args = Environment.GetCommandLineArgs();
+        for (int i = 0; i < args.Length - 1; i++)
+            if (string.Equals(args[i], name, StringComparison.OrdinalIgnoreCase)) return args[i + 1];
+        return null;
+    }
+
+    static bool HasArg(string name) => Environment.GetCommandLineArgs().Any(a => string.Equals(a, name, StringComparison.OrdinalIgnoreCase));
+}
+```
+
+```xml
+<!-- Assets/link.xml — Managed Stripping Medium xoá code "không ai gọi"; những gì được gọi qua reflection phải khai ở đây. -->
+<linker>
+  <!-- JSON serializer tạo type bằng Activator/reflection: giữ nguyên assembly cho chắc (giá: ~600KB) -->
+  <assembly fullname="Newtonsoft.Json" preserve="all"/>
+
+  <!-- DTO save: preserve="all" ở cấp TYPE giữ cả constructor rỗng và property setter — [Preserve] trên class thì KHÔNG -->
+  <assembly fullname="Game.Runtime">
+    <type fullname="Game.Save.SaveData" preserve="all"/>
+    <type fullname="Game.Save.SaveData/InventorySlot" preserve="all"/>   <!-- nested type dùng dấu / -->
+  </assembly>
+
+  <!-- Renderer Feature chỉ được tham chiếu từ asset Universal Renderer (không từ code) — Strip Engine Code có thể bỏ -->
+  <assembly fullname="Unity.RenderPipelines.Universal.Runtime">
+    <type fullname="UnityEngine.Rendering.Universal.DecalRendererFeature" preserve="all"/>
+  </assembly>
+</linker>
+```
+
+```bash
+# CI (Windows runner). Linux/macOS: thay Unity.exe bằng đường dẫn Unity của bạn, cú pháp arg giống nhau.
+"C:/Program Files/Unity/Hub/Editor/6000.0.40f1/Editor/Unity.exe" -batchmode -nographics -quit -projectPath "%CD%" -buildTarget Android -executeMethod BuildScript.BuildAndroidCI -buildNumber 123 -aab -logFile -
+```
+
+**Chạy thử**
+- Menu `Build ▸ Android Release` trong Editor: Console hiện `[Build] Succeeded  size … MB  time …` và bảng 10 asset — dòng nào là `.png` trên 3 MB thì mở Build Report Inspector kiểm format (RGBA32 chưa Platform Override là nghi phạm số một). File `Builds/Android/last-build-report.txt` cũng có bảng này.
+- Sau build, mở Player Settings ▸ Android: Scripting Backend đã là **IL2CPP**, ARMv7 **bỏ chọn**, Managed Stripping **Medium**, Graphics APIs **Vulkan, OpenGLES3** — dù trước đó bạn cố đổi tay. Đây là điểm mấu chốt: cấu hình sống trong script, không trong ổ đĩa của ai.
+- Chạy dòng lệnh CI với `-buildNumber 123`: `bundleVersionCode` = 123, tên file `game-123.aab`, `bundleVersion` = `1.4.123`. Bỏ `-aab` → ra `.apk` cài được bằng `adb install`.
+- Cố ý đổi `locationPathName` sang ổ không tồn tại (`Z:/...`) rồi chạy CI: process kết thúc với **exit code 1** (`echo %ERRORLEVEL%` / `echo $?`) — đó là thứ làm job CI đỏ; bỏ `EditorApplication.Exit(1)` thì exit code vẫn 0 dù log đầy lỗi.
+- Cài bản Release lên máy thật, load một save thật: mọi trường của `SaveData` có giá trị. Xoá dòng `Game.Save.SaveData` khỏi `link.xml`, build lại, load save: object rỗng nhưng **không exception** — đúng bẫy ở mục 🤖.

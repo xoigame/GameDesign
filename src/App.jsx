@@ -152,7 +152,7 @@ export default function App() {
         // kể cả khi đang xem bản tiếng Việt
         const en = n.i18n.en
         const hay = norm(
-          [n.title, n.summary, n.tags.join(' '), n.id, n.body, n.aiPrompt, n.unity,
+          [n.title, n.summary, n.tags.join(' '), n.id, n.body, n.aiPrompt, n.unity, n.code,
            en && en.title, en && en.summary, en && en.body].filter(Boolean).join(' ')
         )
         if (!hay.includes(q)) continue

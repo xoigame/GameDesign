@@ -685,6 +685,7 @@ button { font-family: inherit; font-size: inherit; cursor: pointer; }
 .ptab.on { color: var(--fg); border-bottom-color: var(--accent); }
 .ptab-prompt.on { color: #c4aeff; border-bottom-color: #b197fc; }
 .ptab-unity.on  { color: #7fe3ef; border-bottom-color: #4dd4e0; }
+.ptab-code.on   { color: #8fe3b8; border-bottom-color: #51cf9b; }
 
 .tab-pane { margin-bottom: 8px; }
 .pane-head {
@@ -714,6 +715,15 @@ button { font-family: inherit; font-size: inherit; cursor: pointer; }
 .unity-md code { background: rgba(77,212,224,.12); color: #b8eef5; }
 .unity-md pre { border-color: rgba(77,212,224,.22); }
 .unity-md pre code { background: none; color: #c8d3e8; }
+
+.code-pane .btn {
+  background: rgba(81,207,155,.16); border-color: rgba(81,207,155,.45); color: #8fe3b8;
+}
+.code-pane .btn:hover { background: rgba(81,207,155,.28); }
+.code-md h3 { color: #8fe3b8; }
+.code-md code { background: rgba(81,207,155,.12); color: #c6f1dc; }
+.code-md pre { border-color: rgba(81,207,155,.22); }
+.code-md pre code { background: none; color: #c8d3e8; }
 
 @media (max-width: 900px) {
   .ptab { padding: 11px 12px; font-size: 13px; }

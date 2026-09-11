@@ -201,3 +201,230 @@ Kèm: cách test bằng Multiplayer Play Mode với 1 host + 2 client và Networ
 ```
 
 **Bẫy thường gặp:** AI đăng ký `Hp.OnValueChanged` trong `OnNetworkSpawn` và dừng ở đó — client vào giữa trận nhận giá trị hiện tại **không qua sự kiện**, nên thanh máu hiện 100 trong khi server nói 35. Chạy 2 client cùng lúc từ đầu thì hoàn toàn đúng; chỉ lộ khi có người vào sau — đúng kịch bản ít ai test.
+
+## 💻 Code
+
+Demo dựng di chuyển server-authoritative bằng NGO 2.x không dùng NetworkTransform: owner gửi *input* lên server qua `[Rpc(SendTo.Server)]`, server mô phỏng và ghi vị trí vào `NetworkVariable` chỉ server được ghi, owner dự đoán tại chỗ rồi hiệu chỉnh mềm khi lệch quá 0.5 m, client khác nội suy — chạy được ngay trong Multiplayer Play Mode với 2 người chơi.
+
+**Setup**
+
+<figure class="fig">
+<svg viewBox="0 0 660 360" role="img" aria-label="Hierarchy có NetworkManager với UnityTransport và NetBootstrap, prefab Player có NetworkObject và NetPlayer; Multiplayer Play Mode một host một client; Inspector hiện Network Manager, Unity Transport, Net Bootstrap và Net Player">
+  <rect x="10" y="10" width="200" height="340" rx="8" class="fig-box"/>
+  <text x="22" y="32" class="fig-label" font-size="13" font-weight="600">Hierarchy</text>
+  <line x1="10" y1="42" x2="210" y2="42" class="fig-line"/>
+  <rect x="16" y="52" width="188" height="20" rx="4" fill="#6ea8fe" opacity="0.18"/>
+  <text x="22" y="67" class="fig-label" font-size="12" font-weight="600">▾ NetworkManager</text>
+  <text x="38" y="88" class="fig-muted" font-size="11">NetworkManager, UnityTransport</text>
+  <text x="38" y="104" class="fig-muted" font-size="11">NetBootstrap</text>
+  <text x="22" y="124" class="fig-muted" font-size="12">Ground  (Plane)</text>
+  <text x="22" y="142" class="fig-muted" font-size="12">Main Camera</text>
+  <line x1="10" y1="158" x2="210" y2="158" class="fig-line"/>
+  <text x="22" y="178" class="fig-label" font-size="12" font-weight="600">Assets / Prefabs</text>
+  <rect x="16" y="186" width="188" height="20" rx="4" fill="#b197fc" opacity="0.18"/>
+  <text x="22" y="201" class="fig-label" font-size="12" font-weight="600">▾ Player  (prefab)</text>
+  <text x="38" y="222" class="fig-muted" font-size="11">NetworkObject</text>
+  <text x="38" y="238" class="fig-muted" font-size="11">NetPlayer</text>
+  <text x="38" y="254" class="fig-muted" font-size="11">Capsule mesh — KHÔNG collider</text>
+  <line x1="10" y1="270" x2="210" y2="270" class="fig-line"/>
+  <text x="22" y="290" class="fig-label" font-size="12" font-weight="600">Multiplayer Play Mode</text>
+  <text x="22" y="308" class="fig-muted" font-size="11">Player 1 (Editor) → bấm Host</text>
+  <text x="22" y="324" class="fig-muted" font-size="11">Player 2 (virtual) → bấm Client</text>
+  <text x="22" y="340" class="fig-muted" font-size="11">Network Simulator: 150 ms / 3%</text>
+  <rect x="226" y="10" width="424" height="340" rx="8" class="fig-box"/>
+  <text x="238" y="32" class="fig-label" font-size="13" font-weight="600">Inspector</text>
+  <line x1="226" y1="42" x2="650" y2="42" class="fig-line"/>
+  <rect x="234" y="50" width="408" height="18" rx="3" fill="#6ea8fe" opacity="0.22"/>
+  <text x="242" y="63" class="fig-label" font-size="12" font-weight="600">Network Manager</text>
+  <text x="250" y="82" class="fig-muted" font-size="11">Player Prefab</text><text x="440" y="82" class="fig-label" font-size="11">Player</text>
+  <text x="250" y="98" class="fig-muted" font-size="11">Tick Rate</text><text x="440" y="98" class="fig-label" font-size="11">30</text>
+  <text x="250" y="114" class="fig-muted" font-size="11">Auto Spawn Player Prefab Client Side</text><text x="440" y="114" class="fig-label" font-size="11">☑</text>
+  <text x="250" y="130" class="fig-muted" font-size="11">Network Prefabs Lists</text><text x="440" y="130" class="fig-label" font-size="11">DefaultNetworkPrefabs (có Player)</text>
+  <rect x="234" y="140" width="408" height="18" rx="3" fill="#51cf9b" opacity="0.22"/>
+  <text x="242" y="153" class="fig-label" font-size="12" font-weight="600">Unity Transport</text>
+  <text x="250" y="172" class="fig-muted" font-size="11">Protocol Type</text><text x="440" y="172" class="fig-label" font-size="11">Unity Transport</text>
+  <text x="250" y="188" class="fig-muted" font-size="11">Address / Port</text><text x="440" y="188" class="fig-label" font-size="11">127.0.0.1   /   7777</text>
+  <rect x="234" y="198" width="408" height="18" rx="3" fill="#ffd43b" opacity="0.22"/>
+  <text x="242" y="211" class="fig-label" font-size="12" font-weight="600">Net Bootstrap (Script)</text>
+  <text x="250" y="230" class="fig-muted" font-size="11">Address / Port</text><text x="440" y="230" class="fig-label" font-size="11">127.0.0.1   /   7777</text>
+  <rect x="234" y="240" width="408" height="18" rx="3" fill="#b197fc" opacity="0.22"/>
+  <text x="242" y="253" class="fig-label" font-size="12" font-weight="600">Net Player (Script)  (prefab Player)</text>
+  <text x="250" y="272" class="fig-muted" font-size="11">Network Object</text><text x="440" y="272" class="fig-label" font-size="11">cùng GameObject, Spawn With Observers ☑</text>
+  <text x="250" y="288" class="fig-muted" font-size="11">Move Speed</text><text x="440" y="288" class="fig-label" font-size="11">5</text>
+  <text x="250" y="304" class="fig-muted" font-size="11">Reconcile Threshold</text><text x="440" y="304" class="fig-label" font-size="11">0.5</text>
+  <text x="250" y="320" class="fig-muted" font-size="11">Snap Distance</text><text x="440" y="320" class="fig-label" font-size="11">3</text>
+  <text x="250" y="336" class="fig-muted" font-size="11">Interp Speed</text><text x="440" y="336" class="fig-label" font-size="11">15</text>
+</svg>
+<figcaption>Prefab Player phải nằm trong Network Prefabs List giống hệt ở mọi bên. Không có NetworkTransform — vị trí đi qua NetworkVariable do script ghi. Capsule không có collider để demo không đụng PhysX.</figcaption>
+</figure>
+
+**Script**
+
+```csharp
+// NetPlayer.cs — Unity 6 (6000.x), Netcode for GameObjects 2.x (package com.unity.netcode.gameobjects).
+// Server-authoritative movement: owner gửi INPUT lên server bằng Rpc, server mô phỏng và ghi vị trí vào
+// NetworkVariable (Server write); owner dự đoán tại chỗ rồi hiệu chỉnh mềm; client khác nội suy.
+// Đặt trên prefab Player cùng NetworkObject; prefab này là Player Prefab của NetworkManager.
+// Test: Window ▸ Multiplayer Play Mode, Editor làm Host + 1 virtual player làm Client (cùng máy nên 127.0.0.1 đủ).
+using Unity.Netcode;
+using UnityEngine;
+
+public class NetPlayer : NetworkBehaviour
+{
+    [Header("Mô phỏng — server và prediction dùng CHUNG một hàm")]
+    [SerializeField] float moveSpeed = 5f;
+
+    [Header("Owner: hiệu chỉnh về vị trí server")]
+    [SerializeField] float reconcileThreshold = 0.5f;   // lệch quá mức này mới kéo về
+    [SerializeField] float snapDistance = 3f;           // lệch quá mức này thì teleport — server đã dịch chuyển bạn
+
+    [Header("Client khác: nội suy")]
+    [SerializeField] float interpSpeed = 15f;
+
+    // Trạng thái: CHỈ server ghi, mọi người đọc. Late joiner nhận giá trị hiện tại lúc spawn.
+    readonly NetworkVariable<Vector3> netPos = new(
+        Vector3.zero, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
+
+    Vector2 inputThisFrame;      // owner: đọc ở Update, tiêu thụ ở FixedUpdate
+    Vector2 serverInput;         // server: input mới nhất nhận được từ owner của object này
+    Vector3 serverPos;           // server: vị trí mô phỏng
+    Vector3 predictedPos;        // owner: vị trí dự đoán
+
+    public float LastError { get; private set; }   // owner: |predicted − server|, để hiện debug
+
+    /// Hàm mô phỏng THUẦN: cùng input + cùng dt → cùng kết quả. Không đọc Time, không random, không đụng transform.
+    static Vector3 Step(Vector3 pos, Vector2 input, float speed, float dt)
+        => pos + new Vector3(input.x, 0f, input.y) * (speed * dt);
+
+    public override void OnNetworkSpawn()
+    {
+        if (IsServer)
+        {
+            serverPos = new Vector3(OwnerClientId * 2f, 1f, 0f);   // xếp hàng theo clientId để không chồng nhau
+            netPos.Value = serverPos;
+        }
+        predictedPos = netPos.Value;
+        transform.position = netPos.Value;
+
+        var r = GetComponent<Renderer>();
+        if (r != null) r.material.color = IsOwner ? new Color(0.43f, 0.66f, 1f) : new Color(1f, 0.53f, 0.53f);   // mình xanh, người khác đỏ
+    }
+
+    void Update()
+    {
+        if (!IsSpawned) return;
+
+        if (IsOwner)
+        {
+            // input đọc mỗi frame render rồi giữ lại cho FixedUpdate — không đọc trong FixedUpdate
+            var kb = UnityEngine.InputSystem.Keyboard.current;
+            inputThisFrame = kb == null ? Vector2.zero : new Vector2(
+                (kb.dKey.isPressed ? 1f : 0f) - (kb.aKey.isPressed ? 1f : 0f),
+                (kb.wKey.isPressed ? 1f : 0f) - (kb.sKey.isPressed ? 1f : 0f));
+            transform.position = predictedPos;                                   // hiện ngay, không chờ server
+        }
+        else
+        {
+            // người khác chạy sau server ~1–2 tick, đổi lại luôn mượt
+            transform.position = Vector3.Lerp(transform.position, netPos.Value, interpSpeed * Time.deltaTime);
+        }
+    }
+
+    void FixedUpdate()
+    {
+        if (!IsSpawned) return;
+        float dt = Time.fixedDeltaTime;
+
+        if (IsOwner)
+        {
+            Vector2 input = Vector2.ClampMagnitude(inputThisFrame, 1f);
+            if (IsServer) serverInput = input;            // host: chính mình là server, không cần Rpc
+            else SubmitInputRpc(input);                   // client: gửi Ý ĐỊNH, không bao giờ gửi vị trí
+
+            predictedPos = Step(predictedPos, input, moveSpeed, dt);    // prediction: cùng hàm Step với server
+            Reconcile(dt);
+        }
+
+        if (IsServer)
+        {
+            serverPos = Step(serverPos, serverInput, moveSpeed, dt);
+            netPos.Value = serverPos;                     // delta chỉ đi lên mạng khi đổi, theo Tick Rate 30 — không theo 50Hz của FixedUpdate
+        }
+    }
+
+    void Reconcile(float dt)
+    {
+        Vector3 server = netPos.Value;
+        LastError = Vector3.Distance(predictedPos, server);
+        if (LastError > snapDistance) predictedPos = server;                                  // server đã dịch chuyển bạn: teleport
+        else if (LastError > reconcileThreshold)
+            predictedPos = Vector3.MoveTowards(predictedPos, server, moveSpeed * 2f * dt);    // kéo mềm, không giật
+        // Dưới ngưỡng: chấp nhận lệch nhỏ — đó là giá của prediction không tick-stamp, không chạy lại input.
+    }
+
+    [Rpc(SendTo.Server)]
+    void SubmitInputRpc(Vector2 input, RpcParams rpcParams = default)
+    {
+        if (rpcParams.Receive.SenderClientId != OwnerClientId) return;   // không điều khiển thay người khác
+        serverInput = Vector2.ClampMagnitude(input, 1f);                 // client gửi (100, 100) vẫn chỉ được 1
+    }
+
+    void OnGUI()
+    {
+        if (!IsOwner || !IsSpawned) return;
+        GUI.Label(new Rect(10, 70, 420, 20), $"prediction error: {LastError:F3} m    server pos: {netPos.Value}");
+    }
+}
+```
+
+```csharp
+// NetBootstrap.cs — đặt cùng GameObject NetworkManager. Nút Host/Client bằng OnGUI để demo không cần Canvas.
+// UnityTransport 127.0.0.1:7777 — đủ cho Multiplayer Play Mode trên một máy; mạng thật thay bằng Unity Relay.
+using Unity.Netcode;
+using Unity.Netcode.Transports.UTP;
+using UnityEngine;
+
+public class NetBootstrap : MonoBehaviour
+{
+    [SerializeField] string address = "127.0.0.1";
+    [SerializeField] ushort port = 7777;
+
+    void OnGUI()
+    {
+        var nm = NetworkManager.Singleton;
+        if (nm == null) return;
+
+        GUILayout.BeginArea(new Rect(10, 10, 420, 50));
+        GUILayout.BeginHorizontal();
+
+        if (!nm.IsClient && !nm.IsServer)
+        {
+            if (GUILayout.Button("Host"))   { Configure(nm); nm.StartHost(); }
+            if (GUILayout.Button("Client")) { Configure(nm); nm.StartClient(); }
+        }
+        else
+        {
+            string role  = nm.IsHost ? "Host" : nm.IsServer ? "Server" : "Client";
+            string peers = nm.IsServer ? $"{nm.ConnectedClientsIds.Count} kết nối" : "đã nối server";   // ConnectedClientsIds chỉ đọc được ở server
+            GUILayout.Label($"{role} · clientId {nm.LocalClientId} · {peers}");
+            if (GUILayout.Button("Shutdown")) nm.Shutdown();
+        }
+
+        GUILayout.EndHorizontal();
+        GUILayout.EndArea();
+    }
+
+    void Configure(NetworkManager nm)
+    {
+        var utp = nm.GetComponent<UnityTransport>();
+        utp.SetConnectionData(address, port);      // client: địa chỉ để nối tới; host: địa chỉ lắng nghe
+    }
+}
+```
+
+**Chạy thử**
+- Play trong Editor, bấm Host: một capsule xanh xuất hiện ở (0, 1, 0); WASD đi ngay, nhãn `prediction error` = 0.000 m vì host chính là server.
+- Mở Multiplayer Play Mode, bật Player 2, bấm Client trong cửa sổ đó: capsule thứ hai ở (2, 1, 0) — xanh trong cửa sổ Player 2, đỏ trong cửa sổ host. WASD ở Player 2: nhân vật đi ngay không trễ; trong cửa sổ host nó đi mượt, chậm hơn ~1–2 tick (33–67 ms).
+- Thêm Network Simulator 150 ms / 3% loss cho Player 2, chạy thẳng: `prediction error` ổn định quanh 0.6–0.8 m và thấy kéo mềm nhẹ mỗi lần đổi hướng — đúng bệnh của prediction không tick-stamp; đó là lý do CSP thật phải gửi `(tick, input)` và chạy lại buffer (xem thân bài).
+- Trong cửa sổ Player 2, chọn capsule của mình và kéo Position X lên 50 trong Inspector: ngay bước FixedUpdate kế nó bị kéo về vị trí server (lệch > 3 m → snap). Client không có quyền với vị trí — chỉ có quyền với input.
+- Sửa `SubmitInputRpc` gửi `new Vector2(100f, 0f)`: nhân vật vẫn đi đúng 5 m/s vì server `ClampMagnitude` — client nói gì cũng chỉ là ý định. Bấm Shutdown ở host: cả hai capsule biến mất ở cả hai cửa sổ.

@@ -250,3 +250,288 @@ Không mã hoá ở bước này.
 ```
 
 **Bẫy thường gặp:** AI cho `SaveData` chứa `Dictionary<string,int> inventory` rồi "serialize" bằng `JsonUtility` — biên dịch được, `ToJson` cho ra `{}` không lỗi, test trong Editor có vẻ ổn vì dữ liệu còn trong RAM. Người chơi mở lại app: inventory trống. Kiểm tra bằng cách **in JSON ra và đọc bằng mắt** sau lần ghi đầu tiên, đừng tin round-trip trong cùng phiên.
+
+## 💻 Code
+
+Demo dựng `SaveSystem` static ghi atomic qua `.tmp` → `File.Replace` (giữ `.bak`), nạp theo chuỗi chính → bak, và migration v1→v2→v3 với version đọc trước bằng `JsonUtility.FromJson<VersionOnly>`. `SaveDebugMenu` cho menu chuột phải để phá file, ghi fixture v1 và nạp lại — kiểm chứng được là file cụt không làm mất tiến trình và save cũ đi qua đúng từng bước migrate.
+
+**Setup**
+
+<figure class="fig">
+<svg viewBox="0 0 660 330" role="img" aria-label="Hierarchy có SaveDebug với danh sách Context Menu và ba file trong thư mục saves; Inspector hiện SaveDebugMenu với Slot 0 và Autosave Interval 30, đường dẫn persistentDataPath ba nền tảng và Console mong đợi">
+  <rect x="10" y="10" width="200" height="310" rx="8" class="fig-box"/>
+  <text x="22" y="32" class="fig-label" font-size="13" font-weight="600">Hierarchy</text>
+  <line x1="10" y1="42" x2="210" y2="42" class="fig-line"/>
+  <text x="22" y="64" class="fig-muted" font-size="12">▾ SaveDemo</text>
+  <rect x="16" y="72" width="188" height="20" rx="4" fill="#6ea8fe" opacity="0.18"/>
+  <text x="22" y="87" class="fig-label" font-size="12" font-weight="600">▸ SaveDebug</text>
+  <text x="22" y="108" class="fig-muted" font-size="11">Main Camera</text>
+  <text x="22" y="140" class="fig-label" font-size="12" font-weight="600">Context menu (⋮ trên component)</text>
+  <text x="34" y="158" class="fig-muted" font-size="11">Save</text>
+  <text x="34" y="176" class="fig-muted" font-size="11">Load</text>
+  <text x="34" y="194" class="fig-muted" font-size="11">Progress: +100 gold, level +1</text>
+  <text x="34" y="212" font-size="11" fill="#ff8787">Corrupt main file (cắt nửa)</text>
+  <text x="34" y="230" font-size="11" fill="#b197fc">Write v1 fixture</text>
+  <text x="22" y="262" class="fig-label" font-size="12" font-weight="600">saves/ sau 2 lần Save</text>
+  <text x="34" y="280" class="fig-muted" font-size="11">slot0.json</text>
+  <text x="34" y="298" class="fig-muted" font-size="11">slot0.json.bak</text>
+  <text x="34" y="314" class="fig-muted" font-size="11">slot0.json.tmp  (chỉ lúc đang ghi)</text>
+  <rect x="226" y="10" width="424" height="310" rx="8" class="fig-box"/>
+  <text x="238" y="32" class="fig-label" font-size="13" font-weight="600">Inspector — SaveDebug</text>
+  <line x1="226" y1="42" x2="650" y2="42" class="fig-line"/>
+  <rect x="234" y="50" width="408" height="18" rx="3" fill="#6ea8fe" opacity="0.22"/>
+  <text x="242" y="63" class="fig-label" font-size="12" font-weight="600">Save Debug Menu (Script)</text>
+  <text x="250" y="82" class="fig-muted" font-size="11">Slot</text><text x="440" y="82" class="fig-label" font-size="11">0</text>
+  <text x="250" y="98" class="fig-muted" font-size="11">Autosave Interval</text><text x="440" y="98" class="fig-label" font-size="11">30</text>
+  <text x="250" y="114" class="fig-muted" font-size="11">Data (runtime, không serialize)</text><text x="440" y="114" class="fig-label" font-size="11">v3 · level 1 · gold 0</text>
+  <rect x="234" y="124" width="408" height="18" rx="3" fill="#51cf9b" opacity="0.22"/>
+  <text x="242" y="137" class="fig-label" font-size="12" font-weight="600">persistentDataPath/saves/</text>
+  <text x="250" y="156" class="fig-muted" font-size="11">Windows</text><text x="320" y="156" class="fig-label" font-size="11">%USERPROFILE%\AppData\LocalLow\&lt;Company&gt;\&lt;Product&gt;\saves\</text>
+  <text x="250" y="172" class="fig-muted" font-size="11">Android</text><text x="320" y="172" class="fig-label" font-size="11">/storage/emulated/0/Android/data/&lt;package&gt;/files/saves/</text>
+  <text x="250" y="188" class="fig-muted" font-size="11">iOS</text><text x="320" y="188" class="fig-label" font-size="11">&lt;App&gt;/Documents/saves/   (mặc định lên iCloud backup)</text>
+  <text x="250" y="204" class="fig-muted" font-size="11">Editor dùng đường dẫn Windows/macOS với Company/Product của project — khác build.</text>
+  <rect x="234" y="214" width="408" height="18" rx="3" fill="#ffd43b" opacity="0.22"/>
+  <text x="242" y="227" class="fig-label" font-size="12" font-weight="600">Console mong đợi sau Corrupt → Load</text>
+  <text x="250" y="246" font-size="11" fill="#ff8787">[Save] Không nạp được slot0.json: JSON parse error…</text>
+  <text x="250" y="262" class="fig-muted" font-size="11">[Save] Nạp từ slot0.json.bak · level 2 · gold 100 · unlock 1</text>
+  <text x="250" y="286" class="fig-label" font-size="11" font-weight="600">Sau Write v1 fixture → Load</text>
+  <text x="250" y="302" class="fig-muted" font-size="11">[Save] migrate → v2   ·   [Save] migrate → v3   ·   gold 121 · unlock 2</text>
+</svg>
+<figcaption>Một GameObject, một script. Mọi việc ghi/đọc là static trong <code>SaveSystem</code> nên gọi được từ <code>OnApplicationPause</code> hay EditMode test mà không cần scene.</figcaption>
+</figure>
+
+**Script**
+
+```csharp
+// SaveData.cs — Unity 6 (6000.x). Class PHẲNG cho JsonUtility: field public, không property, không Dictionary, không DateTime.
+using System;
+using System.Collections.Generic;
+
+[Serializable]
+public sealed class SaveData
+{
+    public int version = SaveSystem.CurrentVersion;
+    public long savedAtUnixMs;                    // long, KHÔNG DateTime
+    public ProgressData progress = new();
+    public SettingsData settings = new();
+    public List<string> unlockedIds = new();      // id string ổn định, KHÔNG tham chiếu asset
+
+    // Field cũ, chỉ migration đọc. Không xoá — save v1/v2 ngoài kia vẫn phải đi qua đúng con đường này.
+    public float legacy_coins;                    // v1: vàng là float ở gốc
+    public List<int> legacy_unlockIndices;        // v2: unlock bằng chỉ số bảng
+}
+
+[Serializable]
+public sealed class ProgressData
+{
+    public int level = 1;
+    public int gold;
+    public double playtimeSec;                    // đơn điệu tăng — tiêu chí giải quyết conflict cloud
+    public string checkpointId = "";
+}
+
+[Serializable]
+public sealed class SettingsData
+{
+    public float musicVolume = 0.8f;
+    public float sfxVolume = 1f;
+    public string language = "vi";
+}
+
+/// <summary>Chỉ đọc version — biết JSON thuộc phiên bản nào trước khi parse toàn bộ.</summary>
+[Serializable]
+public sealed class VersionOnly { public int version; }
+```
+
+```csharp
+// SaveSystem.cs — Unity 6 (6000.x). Static: ghi atomic (.tmp → Replace, giữ .bak), nạp có fallback, migrate theo chuỗi.
+using System;
+using System.IO;
+using UnityEngine;
+
+public static class SaveSystem
+{
+    public const int CurrentVersion = 3;
+
+    public static string Dir => Path.Combine(Application.persistentDataPath, "saves");
+    public static string PathFor(int slot) => Path.Combine(Dir, $"slot{slot}.json");
+
+    public static void Save(int slot, SaveData data)
+    {
+        data.version = CurrentVersion;
+        data.savedAtUnixMs = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
+        string json = JsonUtility.ToJson(data, prettyPrint: true);   // đọc được bằng mắt; release bỏ prettyPrint
+        WriteAtomic(PathFor(slot), json);
+    }
+
+    /// <summary>Thử file chính rồi .bak. Trả null nếu cả hai hỏng; loadedFrom cho biết đã phải lùi bản hay chưa.</summary>
+    public static SaveData Load(int slot, out string loadedFrom)
+    {
+        string main = PathFor(slot);
+        foreach (var p in new[] { main, main + ".bak" })
+        {
+            var d = TryRead(p);
+            if (d == null) continue;
+            loadedFrom = p;
+            return d;
+        }
+        loadedFrom = null;
+        return null;
+    }
+
+    static void WriteAtomic(string path, string json)
+    {
+        Directory.CreateDirectory(Path.GetDirectoryName(path));
+        string tmp = path + ".tmp";
+        File.WriteAllText(tmp, json);                    // app bị giết ở đây: file chính còn nguyên
+        if (!File.Exists(path)) { File.Move(tmp, path); return; }
+        try
+        {
+            File.Replace(tmp, path, path + ".bak");      // hoán đổi nguyên tử, bản cũ thành .bak
+        }
+        catch (PlatformNotSupportedException)            // lối thoát KHÔNG nguyên tử cho nền tảng lạ
+        {
+            File.Copy(path, path + ".bak", overwrite: true);
+            File.Delete(path);
+            File.Move(tmp, path);
+        }
+    }
+
+    static SaveData TryRead(string path)
+    {
+        if (!File.Exists(path)) return null;
+        try
+        {
+            string json = File.ReadAllText(path);
+            if (string.IsNullOrWhiteSpace(json)) throw new InvalidDataException("file rỗng");
+
+            int v = JsonUtility.FromJson<VersionOnly>(json).version;   // đọc version trước, chưa đụng phần còn lại
+            if (v <= 0) throw new InvalidDataException("thiếu version");
+            if (v > CurrentVersion) throw new InvalidDataException($"save từ bản mới hơn (v{v} > v{CurrentVersion}) — không ghi đè");
+
+            return Migrate(JsonUtility.FromJson<SaveData>(json));
+        }
+        catch (Exception e)                              // file cụt → ArgumentException "JSON parse error"
+        {
+            Debug.LogWarning($"[Save] Không nạp được {Path.GetFileName(path)}: {e.Message}");
+            return null;
+        }
+    }
+
+    static SaveData Migrate(SaveData d)
+    {
+        while (d.version < CurrentVersion)
+        {
+            switch (d.version)
+            {
+                case 1: From1To2(d); break;
+                case 2: From2To3(d); break;
+                default: throw new InvalidDataException($"thiếu bước migrate từ v{d.version}");
+            }
+            d.version++;
+            Debug.Log($"[Save] migrate → v{d.version}");
+        }
+        return d;
+    }
+
+    // v1 lưu vàng là float 'coins' ở gốc → v2 chuyển sang progress.gold (int)
+    static void From1To2(SaveData d)
+    {
+        d.progress.gold = Mathf.RoundToInt(d.legacy_coins);
+        d.legacy_coins = 0f;
+    }
+
+    // v2 lưu unlock bằng chỉ số bảng → v3 bằng id string. Bảng cũ đóng băng ở đây, KHÔNG đọc từ ItemDatabase hiện tại.
+    static readonly string[] legacyItemTable = { "sword_basic", "bow_short", "potion_small", "shield_wood" };
+    static void From2To3(SaveData d)
+    {
+        if (d.legacy_unlockIndices != null)
+            foreach (int i in d.legacy_unlockIndices)
+                if (i >= 0 && i < legacyItemTable.Length && !d.unlockedIds.Contains(legacyItemTable[i]))
+                    d.unlockedIds.Add(legacyItemTable[i]);   // chỉ số ngoài bảng: bỏ qua, KHÔNG crash
+        d.legacy_unlockIndices = null;
+    }
+}
+```
+
+```csharp
+// SaveDebugMenu.cs — Unity 6 (6000.x). Trên GameObject "SaveDebug". Chuột phải header component (⋮) để Save/Load/phá file.
+using System.IO;
+using UnityEngine;
+
+public sealed class SaveDebugMenu : MonoBehaviour
+{
+    [SerializeField, Min(0)] int slot = 0;
+    [SerializeField, Min(5f)] float autosaveInterval = 30f;   // giây, đo bằng unscaled — pause không hoãn autosave
+
+    public SaveData Data { get; private set; } = new();
+    float autosaveTimer;
+
+    void Start()
+    {
+        Debug.Log($"[Save] persistentDataPath = {Application.persistentDataPath}");
+        LoadNow();
+    }
+
+    void Update()
+    {
+        Data.progress.playtimeSec += Time.unscaledDeltaTime;
+        autosaveTimer += Time.unscaledDeltaTime;
+        if (autosaveTimer >= autosaveInterval) { autosaveTimer = 0f; SaveNow(); }
+    }
+
+    void OnApplicationPause(bool paused) { if (paused) SaveNow(); }   // Android: điểm lưu đáng tin cuối cùng, đồng bộ
+    void OnApplicationQuit() => SaveNow();                             // desktop; mobile hầu như không gọi
+
+    [ContextMenu("Save")]
+    void SaveNow()
+    {
+        SaveSystem.Save(slot, Data);
+        long bytes = new FileInfo(SaveSystem.PathFor(slot)).Length;
+        Debug.Log($"[Save] Đã ghi slot {slot} · v{Data.version} · {bytes} B · gold {Data.progress.gold}");
+    }
+
+    [ContextMenu("Load")]
+    void LoadNow()
+    {
+        Data = SaveSystem.Load(slot, out var from) ?? new SaveData();
+        Debug.Log(from == null
+            ? "[Save] Không có save nạp được — tạo mới"
+            : $"[Save] Nạp từ {Path.GetFileName(from)} · level {Data.progress.level} · gold {Data.progress.gold} · unlock {Data.unlockedIds.Count}");
+    }
+
+    [ContextMenu("Progress: +100 gold, level +1")]
+    void Progress()
+    {
+        Data.progress.gold += 100;
+        Data.progress.level++;
+        Data.unlockedIds.Add($"item_{Data.progress.level}");
+    }
+
+    [ContextMenu("Corrupt main file (cắt nửa)")]
+    void Corrupt()
+    {
+        string p = SaveSystem.PathFor(slot);
+        if (!File.Exists(p)) { Debug.LogWarning("[Save] Chưa có file để phá — Save trước"); return; }
+        string json = File.ReadAllText(p);
+        File.WriteAllText(p, json.Substring(0, json.Length / 2));   // giả lập app bị giết giữa lúc ghi KHÔNG atomic
+        Debug.Log("[Save] Đã cắt nửa file chính — Load sẽ phải lùi về .bak");
+    }
+
+    [ContextMenu("Write v1 fixture")]
+    void WriteV1()
+    {
+        string p = SaveSystem.PathFor(slot);
+        Directory.CreateDirectory(Path.GetDirectoryName(p));
+        File.WriteAllText(p, "{\"version\":1,\"legacy_coins\":120.7,\"legacy_unlockIndices\":[0,2,7]}");
+        Debug.Log("[Save] Đã ghi save v1 giả — Load để xem migrate v1→v2→v3");
+    }
+}
+```
+
+**Chạy thử**
+- Play: Console in `persistentDataPath` và `Không có save nạp được — tạo mới`. Chuột phải component ▸ Save: `Đã ghi slot 0 · v3 · ~300 B`; mở đường dẫn đó thấy `saves/slot0.json` đọc được bằng mắt, có `"version": 3` và `"progress": {…}`.
+- Progress rồi Save lần 2: thư mục giờ có thêm `slot0.json.bak` (bản gold 0). Corrupt → Load: một warning `Không nạp được slot0.json: JSON parse error` rồi `Nạp từ slot0.json.bak · level 1 · gold 0` — mất một bước tiến, không mất tất cả. Bỏ `.bak` đi (xoá tay) và Corrupt lần nữa: Load trả về `tạo mới` — đó là lý do có bản backup.
+- Write v1 fixture → Load: hai dòng `migrate → v2`, `migrate → v3`, rồi `gold 121 · unlock 2` (120.7 làm tròn; chỉ số 7 ngoài bảng bị bỏ, `[0,2]` thành `sword_basic`, `potion_small`). Save ngay: file giờ là v3 với `"legacy_coins": 0` và `"legacy_unlockIndices": []` — field legacy vẫn có mặt, đúng thiết kế.
+- Sửa tay file thành `"version": 99` → Load: warning `save từ bản mới hơn (v99 > v3) — không ghi đè`, nạp `.bak` hoặc tạo mới. Lưu ý autosave 30 giây sau **sẽ** ghi đè file chính (bản v99 chuyển thành `.bak`) — dự án thật phải khoá ghi khi gặp ca này.
+- Đặt `Autosave Interval` 5, bấm Esc để `Time.timeScale = 0` (nếu có GameFlow) hoặc gõ `Time.timeScale = 0` trong Console: log `Đã ghi` vẫn đều 5 giây một lần vì đếm bằng `unscaledDeltaTime`. Trên Android: nhận thưởng → Home ngay → kill từ Recent Apps → mở lại: gold còn, vì `OnApplicationPause(true)` đã ghi đồng bộ.

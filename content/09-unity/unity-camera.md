@@ -178,3 +178,179 @@ Viết CameraDirector.cs với Switch(cam), Shake(force). Liệt kê từng comp
 ```
 
 **Bẫy thường gặp:** AI thêm Impulse cho rung nhưng để `Brain.IgnoreTimeScale = false`, rồi hitstop `timeScale = 0` làm rung **đứng hình ở đỉnh biên độ** trong 90ms — camera lệch cứng rồi bật về, trông như lag thay vì lực. Chạy thử không hitstop thì hoàn toàn bình thường, nên không ai thấy tới khi ghép hai hệ thống.
+
+## 💻 Code
+
+Demo dựng ba `CinemachineCamera` (Follow / Aim / Boss) đổi bằng Priority qua một `CameraDirector` duy nhất, rung bằng Impulse với ngân sách force 0.3 / 1.0 / 2.0 và một hệ số trợ năng ở `Listener.Gain`, và `CinemachineTargetGroup` thêm boss vào khung khi vào trận — kiểm chứng được bằng thanh blend trong Inspector của Brain.
+
+**Setup**
+
+<figure class="fig">
+<svg viewBox="0 0 660 380" role="img" aria-label="Hierarchy có Main Camera với CinemachineBrain và Impulse Listener, ba camera CM_Follow CM_Aim CM_Boss, BossGroup, CameraDirector, Player và Boss; Inspector hiện CinemachineCamera và Position Composer của CM_Follow, Brain của Main Camera và script Camera Director">
+  <rect x="10" y="10" width="200" height="360" rx="8" class="fig-box"/>
+  <text x="22" y="32" class="fig-label" font-size="13" font-weight="600">Hierarchy</text>
+  <line x1="10" y1="42" x2="210" y2="42" class="fig-line"/>
+  <text x="22" y="64" class="fig-muted" font-size="12">▾ Main Camera</text>
+  <text x="38" y="82" class="fig-muted" font-size="11">CinemachineBrain</text>
+  <text x="38" y="98" class="fig-muted" font-size="11">CinemachineImpulseListener</text>
+  <rect x="16" y="108" width="188" height="20" rx="4" fill="#6ea8fe" opacity="0.18"/>
+  <text x="22" y="123" class="fig-label" font-size="12" font-weight="600">CM_Follow   (priority 10)</text>
+  <text x="22" y="144" class="fig-muted" font-size="12">CM_Aim       (20 khi bật, còn lại 0)</text>
+  <text x="22" y="162" class="fig-muted" font-size="12">CM_Boss      (30 khi bật, còn lại 0)</text>
+  <text x="22" y="180" class="fig-muted" font-size="12">BossGroup  (TargetGroup)</text>
+  <rect x="16" y="188" width="188" height="20" rx="4" fill="#b197fc" opacity="0.18"/>
+  <text x="22" y="203" class="fig-label" font-size="12" font-weight="600">CameraDirector (+ ImpulseSource)</text>
+  <text x="22" y="224" class="fig-muted" font-size="12">Player  (Rigidbody, Interpolate)</text>
+  <text x="22" y="242" class="fig-muted" font-size="12">Boss</text>
+  <line x1="10" y1="258" x2="210" y2="258" class="fig-line"/>
+  <text x="22" y="278" class="fig-label" font-size="12" font-weight="600">Brain chọn priority cao nhất</text>
+  <text x="22" y="296" class="fig-muted" font-size="11">Follow  10   luôn bật</text>
+  <text x="22" y="312" class="fig-muted" font-size="11">Aim     20   giữ chuột phải</text>
+  <text x="22" y="328" class="fig-muted" font-size="11">Boss    30   khi vào boss</text>
+  <text x="22" y="344" class="fig-muted" font-size="11">Blend giữa hai camera: 0.6 s</text>
+  <text x="22" y="362" class="fig-muted" font-size="10">Package: com.unity.cinemachine 3.x</text>
+  <rect x="226" y="10" width="424" height="360" rx="8" class="fig-box"/>
+  <text x="238" y="32" class="fig-label" font-size="13" font-weight="600">Inspector</text>
+  <line x1="226" y1="42" x2="650" y2="42" class="fig-line"/>
+  <rect x="234" y="50" width="408" height="18" rx="3" fill="#6ea8fe" opacity="0.22"/>
+  <text x="242" y="63" class="fig-label" font-size="12" font-weight="600">Cinemachine Camera  (CM_Follow)</text>
+  <text x="250" y="82" class="fig-muted" font-size="11">Priority</text><text x="440" y="82" class="fig-label" font-size="11">10</text>
+  <text x="250" y="98" class="fig-muted" font-size="11">Tracking Target</text><text x="440" y="98" class="fig-label" font-size="11">Player</text>
+  <rect x="234" y="108" width="408" height="18" rx="3" fill="#51cf9b" opacity="0.22"/>
+  <text x="242" y="121" class="fig-label" font-size="12" font-weight="600">Position Composer  (CM_Follow)</text>
+  <text x="250" y="140" class="fig-muted" font-size="11">Damping</text><text x="440" y="140" class="fig-label" font-size="11">X 0.5   Y 0.5   Z 0.5</text>
+  <text x="250" y="156" class="fig-muted" font-size="11">Composition ▸ Dead Zone</text><text x="440" y="156" class="fig-label" font-size="11">☑   0.1 × 0.2</text>
+  <text x="250" y="172" class="fig-muted" font-size="11">Look-ahead ▸ Time / Smoothing</text><text x="440" y="172" class="fig-label" font-size="11">0.3 s   /   10</text>
+  <text x="250" y="188" class="fig-muted" font-size="11">Composition ▸ Hard Limits</text><text x="440" y="188" class="fig-label" font-size="11">☑   0.8 × 0.8</text>
+  <rect x="234" y="198" width="408" height="18" rx="3" fill="#ffd43b" opacity="0.22"/>
+  <text x="242" y="211" class="fig-label" font-size="12" font-weight="600">Cinemachine Brain  (Main Camera)</text>
+  <text x="250" y="230" class="fig-muted" font-size="11">Default Blend</text><text x="440" y="230" class="fig-label" font-size="11">Ease In Out   0.6 s</text>
+  <text x="250" y="246" class="fig-muted" font-size="11">Update Method / Blend Update</text><text x="440" y="246" class="fig-label" font-size="11">Smart Update / Late Update</text>
+  <text x="250" y="262" class="fig-muted" font-size="11">Ignore Time Scale</text><text x="440" y="262" class="fig-label" font-size="11">☑   (script đặt ở Awake)</text>
+  <text x="250" y="278" class="fig-muted" font-size="11">Impulse Listener ▸ Gain</text><text x="440" y="278" class="fig-label" font-size="11">1.0   (= Shake Scale)</text>
+  <rect x="234" y="288" width="408" height="18" rx="3" fill="#b197fc" opacity="0.22"/>
+  <text x="242" y="301" class="fig-label" font-size="12" font-weight="600">Camera Director (Script)  (CameraDirector)</text>
+  <text x="250" y="320" class="fig-muted" font-size="11">Follow / Aim / Boss Cam</text><text x="440" y="320" class="fig-label" font-size="11">CM_Follow / CM_Aim / CM_Boss</text>
+  <text x="250" y="336" class="fig-muted" font-size="11">Boss Group / Impulse Source</text><text x="440" y="336" class="fig-label" font-size="11">BossGroup / Bump 0.2 s (cùng GO)</text>
+  <text x="250" y="352" class="fig-muted" font-size="11">Shake Scale</text><text x="440" y="352" class="fig-label" font-size="11">1.0</text>
+</svg>
+<figcaption>CM_Boss có Tracking Target = BossGroup và bật Group Framing trên Position Composer. Priority của Aim/Boss về 0 khi không dùng để Brain không bao giờ chọn nhầm. Rigidbody Player phải bật Interpolate.</figcaption>
+</figure>
+
+**Script**
+
+```csharp
+// CameraDirector.cs — Unity 6 (6000.x), Cinemachine 3.x (com.unity.cinemachine, namespace Unity.Cinemachine).
+// KHÔNG biên dịch trên Cinemachine 2.x (CinemachineVirtualCamera / FramingTransposer). Đặt trên GameObject
+// "CameraDirector" cùng với một CinemachineImpulseSource (Impulse Shape: Bump, Duration 0.2 s).
+using Unity.Cinemachine;
+using UnityEngine;
+
+[RequireComponent(typeof(CinemachineImpulseSource))]
+public class CameraDirector : MonoBehaviour
+{
+    public enum State { Follow, Aim, Boss }
+
+    [Header("Cinemachine")]
+    [SerializeField] CinemachineBrain brain;                  // trên Main Camera
+    [SerializeField] CinemachineImpulseListener listener;     // extension trên Main Camera
+    [SerializeField] CinemachineCamera followCam;             // priority 10, luôn bật
+    [SerializeField] CinemachineCamera aimCam;                // priority 20 khi bật
+    [SerializeField] CinemachineCamera bossCam;               // priority 30 khi bật, Tracking Target = BossGroup
+    [SerializeField] CinemachineTargetGroup bossGroup;
+
+    [Header("Priority — Brain chọn số cao nhất đang bật")]
+    [SerializeField] int followPriority = 10;
+    [SerializeField] int aimPriority = 20;
+    [SerializeField] int bossPriority = 30;
+
+    [Header("Rung")]
+    [Range(0f, 1f)] [SerializeField] float shakeScale = 1f;   // trợ năng: nhân MỘT lần ở Listener.Gain, không ở từng nguồn
+
+    [Header("Demo")]
+    [SerializeField] Transform player;
+    [SerializeField] Transform demoBoss;
+
+    CinemachineImpulseSource impulse;
+    public State Current { get; private set; }
+
+    void Awake()
+    {
+        impulse = GetComponent<CinemachineImpulseSource>();
+        brain.IgnoreTimeScale = true;                  // rung và blend vẫn chạy khi hitstop timeScale = 0
+        SetShakeScale(shakeScale);
+
+        // Priority cố định theo trạng thái; camera không hoạt động về 0 để Brain không bao giờ chọn nhầm.
+        followCam.Priority = followPriority;           // CM3: gán int được nhờ implicit conversion sang PrioritySettings
+        aimCam.Priority = 0;
+        bossCam.Priority = 0;
+
+        if (bossGroup.Targets.Count == 0) bossGroup.AddMember(player, 1f, 1f);   // người chơi luôn là thành viên, weight 1
+        Current = State.Follow;
+    }
+
+    /// Điểm DUY NHẤT đổi trạng thái camera. Không GameObject nào khác được đụng Priority.
+    public void Set(State state)
+    {
+        if (state == Current) return;
+        aimCam.Priority  = state == State.Aim  ? aimPriority  : 0;
+        bossCam.Priority = state == State.Boss ? bossPriority : 0;
+        Current = state;
+    }
+
+    public void EnterBoss(Transform boss)
+    {
+        bossGroup.AddMember(boss, 0.6f, 3f);           // weight 0.6 < 1: khung nghiêng về người chơi
+        Set(State.Boss);
+    }
+
+    public void ExitBoss(Transform boss)
+    {
+        bossGroup.RemoveMember(boss);
+        Set(State.Follow);
+    }
+
+    /// Điểm DUY NHẤT được rung camera. force 0.3 đòn nhẹ / 1.0 đòn nặng / 2.0 kết liễu (tỉ lệ 1:3:6).
+    public void Shake(float force) => impulse.GenerateImpulseWithForce(force);
+
+    public void SetShakeScale(float scale)
+    {
+        shakeScale = Mathf.Clamp01(scale);
+        listener.Gain = shakeScale;                    // 0 = tắt hẳn mọi rung, kể cả boss chết — một nút vặn duy nhất
+    }
+
+    // --- demo input: thay bằng InputReader trong dự án thật (xem unity-input) ---
+    void Update()
+    {
+        var kb = UnityEngine.InputSystem.Keyboard.current;
+        var mouse = UnityEngine.InputSystem.Mouse.current;
+        if (kb == null || mouse == null) return;
+
+        if (Current != State.Boss)                     // đang boss thì Aim bị khoá — trạng thái cao hơn thắng
+            Set(mouse.rightButton.isPressed ? State.Aim : State.Follow);
+
+        if (kb.bKey.wasPressedThisFrame)
+        {
+            if (Current == State.Boss) ExitBoss(demoBoss);
+            else EnterBoss(demoBoss);
+        }
+
+        if (kb.fKey.wasPressedThisFrame)     Shake(0.3f);   // đòn nhẹ
+        if (kb.spaceKey.wasPressedThisFrame) Shake(1f);     // đòn nặng
+        if (kb.kKey.wasPressedThisFrame)     Shake(2f);     // kết liễu
+        if (kb.digit0Key.wasPressedThisFrame) SetShakeScale(shakeScale > 0f ? 0f : 1f);   // bật/tắt trợ năng
+    }
+
+    void OnValidate()
+    {
+        if (listener != null) listener.Gain = Mathf.Clamp01(shakeScale);   // kéo slider trong Editor thấy ngay
+    }
+}
+```
+
+**Chạy thử**
+- Play, giữ chuột phải: Inspector của CinemachineBrain hiện thanh blend `CM_Follow → CM_Aim` chạy trong 0.6 s, mục Live Camera đổi. Nhả: blend ngược, cũng 0.6 s. Đổi Default Blend thành Cut: đổi tức thì.
+- Nhấn B: `BossGroup ▸ Targets` từ 1 lên 2 thành viên (Player weight 1 radius 1, Boss weight 0.6 radius 3), CM_Boss Priority 30 → camera lùi ra bao cả hai, tâm khung lệch về Player. Giữ chuột phải lúc này: không đổi — Aim bị khoá bởi trạng thái Boss. Nhấn B lần nữa: Boss rời group, về Follow.
+- Nhấn F / Space / K: biên độ rung tăng theo 0.3 / 1.0 / 2.0 và dứt sau ~0.2 s (Bump). Nhấn 0: Shake Scale về 0, ba phím rung không còn tác dụng dù `GenerateImpulseWithForce` vẫn được gọi — chỉ có một chỗ để tắt.
+- Nhấn Space rồi ngay lập tức gõ `Time.timeScale = 0` (hoặc pause bằng nút ▮▮ rồi Step): rung vẫn chạy hết vì `IgnoreTimeScale`. Tắt cờ này: camera đứng kẹt lệch ở đỉnh biên độ cho tới khi resume.
+- Player chạy bằng Rigidbody thẳng 5 s trên màn 144Hz: nền không rung bậc. Tắt Interpolate trên Rigidbody: rung — chứng minh vấn đề nằm ở Rigidbody, không phải ở Damping của Composer.

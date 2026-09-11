@@ -202,3 +202,227 @@ Sau khi viết, liệt kê mọi transition trong đồ thị mà code còn ph�
 ```
 
 **Bẫy thường gặp:** AI dùng `CrossFade(hash, 0.1f)` và bảo là "blend 100ms". Đó là 0.1 **độ dài clip đích** — với clip Hurt 0.25s là 25ms, với clip Death 2s là 200ms. Kết quả chạy được, trông gần đúng, nhưng cảm giác lệch không đều và không ai tìm ra vì sao. Bắt AI dùng `CrossFadeInFixedTime` và ghi đơn vị giây vào tên tham số.
+
+## 💻 Code
+
+Demo dựng một nhân vật 3D chạy bằng Rigidbody mà Animator chỉ *hiển thị*: tham số qua hash, chuyển Attack/Hit bằng `CrossFadeInFixedTime` tính bằng giây, Animator cập nhật theo nhịp physics, và hitbox là collider con bật đúng 4 bước FixedUpdate — kết thúc đòn báo qua `OnStateExit`, không tin Animation Event.
+
+**Setup**
+
+<figure class="fig">
+<svg viewBox="0 0 660 360" role="img" aria-label="Hierarchy có Player với Rigidbody và CharacterAnimator, child Model có Animator và AttackHitboxRelay, child Hitbox_Sword; Inspector hiện Rigidbody, Character Animator, Animator và Relay; panel transition Idle sang Run">
+  <rect x="10" y="10" width="200" height="340" rx="8" class="fig-box"/>
+  <text x="22" y="32" class="fig-label" font-size="13" font-weight="600">Hierarchy</text>
+  <line x1="10" y1="42" x2="210" y2="42" class="fig-line"/>
+  <rect x="16" y="52" width="188" height="20" rx="4" fill="#6ea8fe" opacity="0.18"/>
+  <text x="22" y="67" class="fig-label" font-size="12" font-weight="600">▾ Player  (Rigidbody, Capsule)</text>
+  <text x="38" y="88" class="fig-muted" font-size="12">▾ Model  (Animator + Relay)</text>
+  <text x="54" y="106" class="fig-muted" font-size="11">Armature, Mesh</text>
+  <text x="38" y="124" class="fig-muted" font-size="12">Hitbox_Sword  (Trigger, tắt)</text>
+  <text x="22" y="144" class="fig-muted" font-size="12">Ground  (Layer: Ground)</text>
+  <line x1="10" y1="160" x2="210" y2="160" class="fig-line"/>
+  <text x="22" y="180" class="fig-label" font-size="12" font-weight="600">Transition Idle → Run</text>
+  <text x="22" y="198" class="fig-muted" font-size="11">Has Exit Time</text><text x="150" y="198" class="fig-label" font-size="11">☐</text>
+  <text x="22" y="214" class="fig-muted" font-size="11">Fixed Duration ☑</text><text x="150" y="214" class="fig-label" font-size="11">0.1 s</text>
+  <text x="22" y="230" class="fig-muted" font-size="11">Interruption Source</text><text x="150" y="230" class="fig-label" font-size="11">None</text>
+  <text x="22" y="246" class="fig-muted" font-size="11">Conditions</text><text x="150" y="246" class="fig-label" font-size="11">Speed &gt; 0.1</text>
+  <line x1="10" y1="262" x2="210" y2="262" class="fig-line"/>
+  <text x="22" y="282" class="fig-label" font-size="12" font-weight="600">Clip Attack — Animation Event</text>
+  <text x="22" y="300" class="fig-muted" font-size="11">frame 6: OnAttackHitFrame()</text>
+  <text x="22" y="316" class="fig-muted" font-size="11">→ AttackHitboxRelay (Model)</text>
+  <text x="22" y="332" class="fig-muted" font-size="11">→ CharacterAnimator (Player)</text>
+  <rect x="226" y="10" width="424" height="340" rx="8" class="fig-box"/>
+  <text x="238" y="32" class="fig-label" font-size="13" font-weight="600">Inspector — Player / Model</text>
+  <line x1="226" y1="42" x2="650" y2="42" class="fig-line"/>
+  <rect x="234" y="50" width="408" height="18" rx="3" fill="#6ea8fe" opacity="0.22"/>
+  <text x="242" y="63" class="fig-label" font-size="12" font-weight="600">Rigidbody  (Player)</text>
+  <text x="250" y="82" class="fig-muted" font-size="11">Interpolate</text><text x="440" y="82" class="fig-label" font-size="11">Interpolate</text>
+  <text x="250" y="98" class="fig-muted" font-size="11">Constraints ▸ Freeze Rotation</text><text x="440" y="98" class="fig-label" font-size="11">X ☑  Y ☑  Z ☑</text>
+  <rect x="234" y="108" width="408" height="18" rx="3" fill="#ffd43b" opacity="0.22"/>
+  <text x="242" y="121" class="fig-label" font-size="12" font-weight="600">Character Animator (Script)  (Player)</text>
+  <text x="250" y="140" class="fig-muted" font-size="11">Anim</text><text x="440" y="140" class="fig-label" font-size="11">Model (Animator)</text>
+  <text x="250" y="156" class="fig-muted" font-size="11">Attack Fade / Hit Fade</text><text x="440" y="156" class="fig-label" font-size="11">0.05 s   /   0 s</text>
+  <text x="250" y="172" class="fig-muted" font-size="11">Hitbox</text><text x="440" y="172" class="fig-label" font-size="11">Hitbox_Sword (BoxCollider)</text>
+  <text x="250" y="188" class="fig-muted" font-size="11">Hitbox Active Frames</text><text x="440" y="188" class="fig-label" font-size="11">4</text>
+  <text x="250" y="204" class="fig-muted" font-size="11">Ground Mask / Check Radius</text><text x="440" y="204" class="fig-label" font-size="11">Ground   /   0.2</text>
+  <rect x="234" y="214" width="408" height="18" rx="3" fill="#51cf9b" opacity="0.22"/>
+  <text x="242" y="227" class="fig-label" font-size="12" font-weight="600">Animator  (Model)</text>
+  <text x="250" y="246" class="fig-muted" font-size="11">Controller</text><text x="440" y="246" class="fig-label" font-size="11">PlayerAC</text>
+  <text x="250" y="262" class="fig-muted" font-size="11">Apply Root Motion</text><text x="440" y="262" class="fig-label" font-size="11">☐</text>
+  <text x="250" y="278" class="fig-muted" font-size="11">Update Mode</text><text x="440" y="278" class="fig-label" font-size="11">Fixed  (2022: Animate Physics)</text>
+  <text x="250" y="294" class="fig-muted" font-size="11">Culling Mode</text><text x="440" y="294" class="fig-label" font-size="11">Cull Update Transforms</text>
+  <rect x="234" y="304" width="408" height="18" rx="3" fill="#b197fc" opacity="0.22"/>
+  <text x="242" y="317" class="fig-label" font-size="12" font-weight="600">Attack Hitbox Relay (Script)  (Model)</text>
+  <text x="250" y="336" class="fig-muted" font-size="11">Target</text><text x="440" y="336" class="fig-label" font-size="11">Player (Character Animator)</text>
+</svg>
+<figcaption>Animator ở child Model nên Animation Event chỉ gọi được hàm trên Model — relay chuyển tiếp lên script ở root. Update Mode Fixed vì nhân vật đi bằng Rigidbody; state Attack gắn thêm AttackStateBehaviour.</figcaption>
+</figure>
+
+**Script**
+
+```csharp
+// CharacterAnimator.cs — Unity 6 (6000.x). Đặt trên root Player (có Rigidbody). Animator nằm ở child "Model".
+// Animator Controller cần tham số: Speed (Float), Grounded (Bool), VerticalSpeed (Float) và các state
+// Idle, Run (Blend Tree 1D theo Speed), Jump, Fall, Attack, Hit. Không có tham số Trigger nào.
+using System.Collections;
+using UnityEngine;
+using UnityEngine.Scripting;
+
+[RequireComponent(typeof(Rigidbody))]
+public class CharacterAnimator : MonoBehaviour
+{
+    [Header("Tham chiếu")]
+    [SerializeField] Animator anim;                 // Animator ở child Model
+    [SerializeField] Collider hitbox;               // BoxCollider isTrigger, tắt sẵn, child Hitbox_Sword
+
+    [Header("Blend — đơn vị GIÂY")]
+    [SerializeField] float attackFade = 0.05f;
+    [SerializeField] float hitFade = 0f;
+    [SerializeField] float speedDamp = 0.1f;
+
+    [Header("Hitbox")]
+    [SerializeField] int hitboxActiveFrames = 4;    // số bước FixedUpdate hitbox mở
+
+    [Header("Ground check")]
+    [SerializeField] LayerMask groundMask;
+    [SerializeField] float groundCheckRadius = 0.2f;
+
+    // Hash một lần — lỗi chính tả nằm ở đúng một chỗ, không rải "Atack" khắp 12 file
+    static readonly int SpeedHash         = Animator.StringToHash("Speed");
+    static readonly int GroundedHash      = Animator.StringToHash("Grounded");
+    static readonly int VerticalSpeedHash = Animator.StringToHash("VerticalSpeed");
+    static readonly int AttackState       = Animator.StringToHash("Attack");
+    static readonly int HitState          = Animator.StringToHash("Hit");
+
+    Rigidbody rb;
+    Coroutine hitboxRoutine;
+
+    public bool IsAttacking { get; private set; }
+
+    void Awake()
+    {
+        rb = GetComponent<Rigidbody>();
+        rb.interpolation = RigidbodyInterpolation.Interpolate;
+
+        // Animator cập nhật cùng nhịp physics khi nhân vật chạy bằng Rigidbody — hết rung lệch 50/60Hz.
+        anim.updateMode = AnimatorUpdateMode.Fixed;                    // 2022 LTS: AnimatorUpdateMode.AnimatePhysics
+        anim.cullingMode = AnimatorCullingMode.CullUpdateTransforms;   // ngoài màn hình vẫn chạy state machine, không ghi bone
+        anim.applyRootMotion = false;                                  // code-driven: Rigidbody là chủ transform
+
+        hitbox.enabled = false;
+    }
+
+    void Update()
+    {
+        // Presentation đọc từ physics, không phải ngược lại.
+        Vector3 v = rb.linearVelocity;                                 // 2022 LTS: rb.velocity
+        float planar = new Vector2(v.x, v.z).magnitude;
+        anim.SetFloat(SpeedHash, planar, speedDamp, Time.deltaTime);   // bản có damp: Walk → Run không nhảy phựt
+        anim.SetFloat(VerticalSpeedHash, v.y);
+        anim.SetBool(GroundedHash, CheckGround());
+
+        // --- demo input: thay bằng InputReader trong dự án thật (xem unity-input) ---
+        var mouse = UnityEngine.InputSystem.Mouse.current;
+        if (mouse != null && mouse.leftButton.wasPressedThisFrame) PlayAttack();
+        var kb = UnityEngine.InputSystem.Keyboard.current;
+        if (kb != null && kb.hKey.wasPressedThisFrame) PlayHit();
+    }
+
+    public void PlayAttack()
+    {
+        // InFixedTime: 0.05 GIÂY dù clip đích dài bao nhiêu. CrossFade thường = 0.05 × độ dài clip đích.
+        anim.CrossFadeInFixedTime(AttackState, attackFade, 0);
+        IsAttacking = true;
+    }
+
+    public void PlayHit()
+    {
+        anim.CrossFadeInFixedTime(HitState, hitFade, 0, 0f);   // cắt thẳng, từ frame 0
+        CancelAttack();                                        // bị đánh thì hitbox phải tắt ngay lập tức
+    }
+
+    /// Gọi từ Animation Event trên clip Attack (qua AttackHitboxRelay ở child Model).
+    /// [Preserve] để IL2CPP stripping không xoá hàm chỉ được gọi bằng tên qua reflection.
+    [Preserve]
+    public void OnAttackHitFrame()
+    {
+        if (hitboxRoutine != null) StopCoroutine(hitboxRoutine);
+        hitboxRoutine = StartCoroutine(HitboxWindow());
+    }
+
+    /// Gọi từ AttackStateBehaviour.OnStateExit — LUÔN chạy dù transition cắt ngang (Animation Event thì không).
+    public void OnAttackAnimEnded()
+    {
+        IsAttacking = false;
+        CancelAttack();
+    }
+
+    void CancelAttack()
+    {
+        if (hitboxRoutine != null) { StopCoroutine(hitboxRoutine); hitboxRoutine = null; }
+        hitbox.enabled = false;
+    }
+
+    IEnumerator HitboxWindow()
+    {
+        hitbox.enabled = true;
+        for (int i = 0; i < hitboxActiveFrames; i++) yield return new WaitForFixedUpdate();  // đếm theo bước physics, không theo frame render
+        hitbox.enabled = false;
+        hitboxRoutine = null;
+    }
+
+    bool CheckGround()
+    {
+        Vector3 feet = transform.position + Vector3.up * (groundCheckRadius * 0.9f);
+        return Physics.CheckSphere(feet, groundCheckRadius, groundMask, QueryTriggerInteraction.Ignore);
+    }
+
+    void OnDrawGizmosSelected()
+    {
+        if (hitbox == null) return;
+        Gizmos.color = hitbox.enabled ? Color.red : Color.gray;
+        Gizmos.DrawWireSphere(hitbox.transform.position, 0.3f);
+    }
+}
+```
+
+```csharp
+// AttackHitboxRelay.cs — đặt trên child Model (cùng GameObject với Animator).
+// Animation Event chỉ gọi được hàm trên GameObject có Animator, nên relay chuyển tiếp lên CharacterAnimator ở root.
+using UnityEngine;
+using UnityEngine.Scripting;
+
+public class AttackHitboxRelay : MonoBehaviour
+{
+    [SerializeField] CharacterAnimator target;   // để trống thì tự tìm ở parent
+
+    void Awake()
+    {
+        if (target == null) target = GetComponentInParent<CharacterAnimator>();
+    }
+
+    [Preserve]
+    public void OnAttackHitFrame() => target.OnAttackHitFrame();   // tên hàm = tên trong Animation Event; đổi một bên là gãy, không có lỗi biên dịch
+}
+```
+
+```csharp
+// AttackStateBehaviour.cs — gắn lên state Attack trong Animator (Add Behaviour).
+// OnStateExit LUÔN chạy dù state bị Hit cắt ngang giữa chừng — thứ Animation Event không đảm bảo.
+using UnityEngine;
+
+public class AttackStateBehaviour : StateMachineBehaviour
+{
+    public override void OnStateExit(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
+    {
+        animator.GetComponentInParent<CharacterAnimator>()?.OnAttackAnimEnded();   // chỉ chạy lúc thoát state, GetComponent ở đây chấp nhận được
+    }
+}
+```
+
+**Chạy thử**
+- Kéo Player chạy (đặt `Linear Velocity` trong Inspector chế độ Debug, hoặc thêm script di chuyển): tham số `Speed` trong cửa sổ Animator tăng mượt trong ~0.1s rồi đứng đúng bằng tốc độ ngang — không nhảy phựt từ 0 lên 5.
+- Click chuột trái: state Attack sáng trong cửa sổ Animator sau ≤ 1 frame; từ lúc Animation Event chạy, gizmo hitbox đỏ đúng 4 bước FixedUpdate (= 80ms với Fixed Timestep 0.02) rồi xám lại. Đổi `Hitbox Active Frames` thành 8 khi đang Play: cửa sổ dài gấp đôi.
+- Nhấn H giữa lúc Attack: state Hit cắt thẳng từ frame 0, hitbox tắt ngay trong cùng frame — không có frame nào gizmo đỏ khi đang Hit, và `IsAttacking` về false nhờ `OnStateExit`.
+- Đổi Update Mode `Fixed` → `Normal` và chạy ở màn 144Hz: nhân vật đi bằng Rigidbody thấy rung bậc 50/144; trả lại `Fixed` là hết.
+- Đổi tên hàm trong `AttackHitboxRelay` thành `OnAttackHitFrame2`: code vẫn biên dịch, Console báo `'Model' AnimationEvent 'OnAttackHitFrame' has no receiver!` khi đánh — đó là toàn bộ cảnh báo bạn nhận được từ Animation Event; kết thúc đòn vẫn báo đúng qua `OnStateExit`.

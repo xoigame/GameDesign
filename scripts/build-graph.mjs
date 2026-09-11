@@ -121,6 +121,8 @@ const SECTIONS = [
     required: true,
   },
   { key: 'unity', re: /^##[ \t]*(?:🎮[ \t]*)?Unity[ \t]*$/, required: false },
+  // Tab Code: script demo chạy được + sơ đồ Inspector. Dùng chủ yếu ở nhánh 09-unity.
+  { key: 'code', re: /^##[ \t]*(?:💻[ \t]*)?(?:Code|Code demo)[ \t]*$/, required: false },
 ]
 
 /** Mức độ kiến thức. Chấp nhận cả tiếng Việt lẫn tiếng Anh trong frontmatter. */
@@ -221,6 +223,7 @@ function build({ strict = false, quiet = false } = {}) {
       body: sections.body,
       aiPrompt: sections.aiPrompt,
       unity: sections.unity,
+      code: sections.code,
       path: rel,
     }
   }
@@ -249,7 +252,7 @@ function build({ strict = false, quiet = false } = {}) {
       )
     }
 
-    const { body, aiPrompt, unity } = extractSections(parsed.body)
+    const { body, aiPrompt, unity, code } = extractSections(parsed.body)
 
     const segments = rel.split('/')
     const fileName = segments[segments.length - 1].replace(/\.md$/, '')
@@ -301,11 +304,12 @@ function build({ strict = false, quiet = false } = {}) {
       order: typeof data.order === 'number' ? data.order : 999,
       collapsed: data.collapsed === true,
       path: rel,
-      words: countWords(body) + countWords(aiPrompt) + countWords(unity),
+      words: countWords(body) + countWords(aiPrompt) + countWords(unity) + countWords(code),
       body,
       aiPrompt,
       unity,
-      // { en: {title, summary, body, aiPrompt, unity} } — thiếu thì UI tự lùi về bản gốc
+      code,
+      // { en: {title, summary, body, aiPrompt, unity, code} } — thiếu thì UI tự lùi về bản gốc
       i18n: translations.get(rel) || {},
     })
   }
@@ -408,7 +412,7 @@ function build({ strict = false, quiet = false } = {}) {
 
   // wiki-link [[id]] trong body và trong mục Prompt cho AI
   for (const node of nodes.values()) {
-    const matches = (node.body + '\n' + node.aiPrompt).matchAll(/\[\[([A-Za-z0-9-]+)\]\]/g)
+    const matches = (node.body + '\n' + node.aiPrompt + '\n' + node.code).matchAll(/\[\[([A-Za-z0-9-]+)\]\]/g)
     for (const m of matches) {
       const target = slugify(m[1])
       if (!nodes.has(target)) {
@@ -472,6 +476,7 @@ function build({ strict = false, quiet = false } = {}) {
       relations: relations.length,
       withPrompt: list.length - missingPrompt.length,
       withUnity: list.filter((n) => n.unity).length,
+      withCode: list.filter((n) => n.code).length,
       translated: Object.fromEntries(
         TRANSLATED_LANGS.map((lg) => [lg, list.filter((n) => n.i18n[lg]).length])
       ),
@@ -498,7 +503,7 @@ function build({ strict = false, quiet = false } = {}) {
     console.log(
       '[graph] ' + s.nodes + ' node · ' + s.branches + ' nhánh · ' +
       s.deep + ' deep / ' + s.stub + ' stub · ' + s.relations + ' liên kết · ' +
-      s.withPrompt + '/' + s.nodes + ' có prompt · ' + s.withUnity + ' có Unity · ' +
+      s.withPrompt + '/' + s.nodes + ' có prompt · ' + s.withUnity + ' có Unity · ' + s.withCode + ' có Code · ' +
       TRANSLATED_LANGS.map((lg) => s.translated[lg] + '/' + s.nodes + ' ' + lg).join(' · ') + ' · ' +
       s.basic + ' cơ bản / ' + s.intermediate + ' trung cấp / ' + s.advanced + ' chuyên sâu · ' +
       s.words + ' từ'
@@ -550,7 +555,7 @@ function renderIndex(graph, nodes) {
   const line = (id, prefix) => {
     const n = nodes.get(id)
     const badge = n.status === 'stub' ? ' _(stub — cần viết thêm)_' : ''
-    const prompt = (n.aiPrompt ? ' 🤖' : '') + (n.unity ? ' 🎮' : '') + (n.i18n.en ? ' 🇬🇧' : '')
+    const prompt = (n.aiPrompt ? ' 🤖' : '') + (n.unity ? ' 🎮' : '') + (n.code ? ' 💻' : '') + (n.i18n.en ? ' 🇬🇧' : '')
     const mark = { basic: '●', intermediate: '◐', advanced: '○' }[n.level] || '·'
     L.push(prefix + '- ' + mark + ' `#' + n.readIndex + '` **' + n.title + '** `#' + n.id + '`' +
            badge + prompt + ' — ' + (n.summary || '(chưa có summary)') +
@@ -562,6 +567,8 @@ function renderIndex(graph, nodes) {
   L.push('> **Ký hiệu:** ● cơ bản · ◐ trung cấp · ○ chuyên sâu · `#N` = thứ tự trong lộ trình đọc')
   L.push('>')
   L.push('> 🎮 = node có mục **Unity**: cách hiện thực hoá bước đó trong Unity (code C# + sơ đồ setup).')
+  L.push('>')
+  L.push('> 💻 = node có mục **Code**: script demo chạy được + sơ đồ thiết lập Inspector (nhánh Unity).')
   L.push('>')
   L.push('> 🇬🇧 = node đã có bản dịch tiếng Anh tại `<tên-file>.en.md`.')
   L.push('>')

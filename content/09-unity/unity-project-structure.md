@@ -173,3 +173,197 @@ Trả về dạng cây thư mục + bảng asmdef (tên, tham chiếu, platform)
 ```
 
 **Bẫy thường gặp:** AI tạo asmdef `Game.UI` tham chiếu `Game.Gameplay` "để UI đọc HP của Player", rồi `Game.Gameplay` tham chiếu `Game.UI` "để hiện damage number". Từng bước hợp lý, cộng lại là vòng phụ thuộc — Unity báo lỗi, AI sửa bằng cách **gộp hai asmdef thành một**, và bạn quay về `Assembly-CSharp` với tên khác. Ràng buộc chiều phụ thuộc phải viết thành luật trong prompt, không để AI suy.
+
+## 💻 Code
+
+Demo dựng một validator Editor bấm từ menu `Tools/Validate Project`: quét bốn lỗi cấu trúc mà không lỗi biên dịch nào bắt được (asset lạc ngoài `_Project`, texture lớn chưa Override cho Android, prefab base nằm nhầm thư mục Variants, scene thiếu trong Build Settings), kèm một `.asmdef` mẫu cho `Game.Gameplay` với `Auto Referenced` tắt để mọi code mới bắt buộc thuộc một assembly.
+
+**Setup**
+
+<figure class="fig">
+<svg viewBox="0 0 660 350" role="img" aria-label="Project window hiện cây thư mục _Project với các file asmdef và validator; Inspector của Game.Gameplay.asmdef hiện Name, References, Auto Referenced tắt, Platforms và Version Defines">
+  <rect x="10" y="10" width="200" height="330" rx="8" class="fig-box"/>
+  <text x="22" y="32" class="fig-label" font-size="13" font-weight="600">Project</text>
+  <line x1="10" y1="42" x2="210" y2="42" class="fig-line"/>
+  <text x="22" y="64" class="fig-muted" font-size="12">▾ Assets</text>
+  <text x="34" y="82" class="fig-muted" font-size="12">▾ _Project</text>
+  <text x="46" y="100" class="fig-muted" font-size="11">▾ Core</text>
+  <text x="58" y="118" class="fig-muted" font-size="11">Game.Core.asmdef</text>
+  <text x="46" y="136" class="fig-muted" font-size="11">▾ Gameplay</text>
+  <rect x="52" y="144" width="152" height="18" rx="4" fill="#6ea8fe" opacity="0.18"/>
+  <text x="58" y="157" class="fig-label" font-size="11" font-weight="600">Game.Gameplay.asmdef</text>
+  <text x="46" y="176" class="fig-muted" font-size="11">▾ Features ▸ Combat</text>
+  <text x="58" y="194" class="fig-muted" font-size="11">Scripts · Game.Features.Combat.asmdef</text>
+  <text x="58" y="212" class="fig-muted" font-size="11">Prefabs ▸ Variants</text>
+  <text x="46" y="230" class="fig-muted" font-size="11">Scenes   ·   Settings</text>
+  <text x="46" y="248" class="fig-muted" font-size="11">▾ Editor  (Game.Editor, Editor only)</text>
+  <text x="58" y="266" class="fig-muted" font-size="11">ProjectStructureValidator.cs</text>
+  <text x="34" y="288" class="fig-muted" font-size="12">Plugins</text>
+  <text x="34" y="306" class="fig-muted" font-size="12">&lt;AssetStore&gt;  (không sửa)</text>
+  <text x="22" y="330" class="fig-muted" font-size="11">Menu: Tools ▸ Validate Project</text>
+  <rect x="226" y="10" width="424" height="330" rx="8" class="fig-box"/>
+  <text x="238" y="32" class="fig-label" font-size="13" font-weight="600">Inspector — Game.Gameplay (Assembly Definition)</text>
+  <line x1="226" y1="42" x2="650" y2="42" class="fig-line"/>
+  <rect x="234" y="50" width="408" height="18" rx="3" fill="#6ea8fe" opacity="0.22"/>
+  <text x="242" y="63" class="fig-label" font-size="12" font-weight="600">General</text>
+  <text x="250" y="82" class="fig-muted" font-size="11">Name</text><text x="440" y="82" class="fig-label" font-size="11">Game.Gameplay</text>
+  <text x="250" y="98" class="fig-muted" font-size="11">Root Namespace</text><text x="440" y="98" class="fig-label" font-size="11">Game.Gameplay</text>
+  <text x="250" y="114" class="fig-muted" font-size="11">Auto Referenced</text><text x="440" y="114" class="fig-label" font-size="11">☐  (Assembly-CSharp không thấy assembly này)</text>
+  <text x="250" y="130" class="fig-muted" font-size="11">Override References</text><text x="440" y="130" class="fig-label" font-size="11">☐</text>
+  <text x="250" y="146" class="fig-muted" font-size="11">No Engine References</text><text x="440" y="146" class="fig-label" font-size="11">☐</text>
+  <rect x="234" y="156" width="408" height="18" rx="3" fill="#51cf9b" opacity="0.22"/>
+  <text x="242" y="169" class="fig-label" font-size="12" font-weight="600">Assembly Definition References</text>
+  <text x="250" y="188" class="fig-muted" font-size="11">[0]</text><text x="440" y="188" class="fig-label" font-size="11">Game.Core</text>
+  <text x="250" y="204" class="fig-muted" font-size="11">[1]</text><text x="440" y="204" class="fig-label" font-size="11">Unity.InputSystem</text>
+  <text x="250" y="220" class="fig-muted" font-size="11">[2]</text><text x="440" y="220" class="fig-label" font-size="11">Unity.Cinemachine</text>
+  <rect x="234" y="230" width="408" height="18" rx="3" fill="#ffd43b" opacity="0.22"/>
+  <text x="242" y="243" class="fig-label" font-size="12" font-weight="600">Platforms</text>
+  <text x="250" y="262" class="fig-muted" font-size="11">Any Platform</text><text x="440" y="262" class="fig-label" font-size="11">☑  (Game.Editor: chỉ tick Editor)</text>
+  <rect x="234" y="272" width="408" height="18" rx="3" fill="#b197fc" opacity="0.22"/>
+  <text x="242" y="285" class="fig-label" font-size="12" font-weight="600">Define Constraints · Version Defines</text>
+  <text x="250" y="304" class="fig-muted" font-size="11">Define Constraints</text><text x="440" y="304" class="fig-label" font-size="11">(trống)</text>
+  <text x="250" y="320" class="fig-muted" font-size="11">Version Defines [0]</text><text x="440" y="320" class="fig-label" font-size="11">com.demigiant.dotween → DOTWEEN</text>
+</svg>
+<figcaption>Validator nằm trong <code>_Project/Editor/</code> thuộc asmdef <code>Game.Editor</code> (Platforms = Editor) nên không lọt vào build. <code>Game.Gameplay</code> chỉ tham chiếu <code>Game.Core</code> và package; không tham chiếu UI hay Features.</figcaption>
+</figure>
+
+**Script**
+
+```csharp
+// Editor/ProjectStructureValidator.cs — Unity 6 (6000.x). Đặt trong Assets/_Project/Editor/ (asmdef Game.Editor, Platforms = Editor).
+// Menu Tools/Validate Project: quét 4 lỗi cấu trúc, mỗi lỗi một dòng warning bấm được để ping asset.
+using System.Collections.Generic;
+using System.Linq;
+using UnityEditor;
+using UnityEngine;
+
+public static class ProjectStructureValidator
+{
+    const string Root = "Assets/_Project";
+    const int MaxTextureSize = 2048;
+
+    // Thư mục được phép nằm ngoài _Project. Cài asset store thì THÊM tên nó vào đây, không di chuyển nó.
+    static readonly string[] allowedRoots =
+    {
+        Root, "Assets/Plugins", "Assets/StreamingAssets", "Assets/TextMesh Pro",
+    };
+
+    [MenuItem("Tools/Validate Project")]
+    public static void Run()
+    {
+        int issues = 0;
+        issues += CheckAssetsOutsideRoot();
+        issues += CheckLargeTexturesWithoutAndroidOverride();
+        issues += CheckVariantFolders();
+        issues += CheckScenesInBuildSettings();
+        if (issues == 0) Debug.Log("[Validate] Sạch — 0 vấn đề.");
+        else Debug.LogWarning($"[Validate] {issues} vấn đề. Bấm vào từng dòng để ping asset.");
+    }
+
+    // 1. Mọi file của dự án nằm dưới _Project hoặc thư mục third-party đã khai
+    static int CheckAssetsOutsideRoot()
+    {
+        int n = 0;
+        foreach (var path in AllPaths("", "Assets"))
+        {
+            if (AssetDatabase.IsValidFolder(path)) continue;
+            if (allowedRoots.Any(r => path.StartsWith(r + "/"))) continue;
+            Report(path, $"nằm ngoài {Root} — kéo vào feature tương ứng, hoặc khai thư mục vào allowedRoots nếu là asset store");
+            n++;
+        }
+        return n;
+    }
+
+    // 2. Texture cho phép > 2048 mà Android không Override → build Android tải texture 4096 vào RAM điện thoại
+    static int CheckLargeTexturesWithoutAndroidOverride()
+    {
+        int n = 0;
+        foreach (var path in AllPaths("t:Texture2D", Root))
+        {
+            if (AssetImporter.GetAtPath(path) is not TextureImporter imp) continue;
+            var android = imp.GetPlatformTextureSettings("Android");
+            bool leaks = imp.maxTextureSize > MaxTextureSize
+                      && (!android.overridden || android.maxTextureSize > MaxTextureSize);
+            if (!leaks) continue;
+            Report(path, $"Max Size {imp.maxTextureSize} > {MaxTextureSize} và Android chưa Override — áp Preset hoặc tick Override for Android");
+            n++;
+        }
+        return n;
+    }
+
+    // 3. Prefab trong Features/*/Prefabs/Variants phải là Variant thật — prefab base kéo nhầm vào đây là sai chỗ
+    static int CheckVariantFolders()
+    {
+        int n = 0;
+        foreach (var path in AllPaths("t:Prefab", Root + "/Features"))
+        {
+            if (!path.Contains("/Prefabs/Variants/")) continue;
+            var go = AssetDatabase.LoadAssetAtPath<GameObject>(path);
+            if (go == null || PrefabUtility.GetPrefabAssetType(go) == PrefabAssetType.Variant) continue;
+            Report(path, "không phải Prefab Variant nhưng nằm trong Prefabs/Variants — chuyển ra Prefabs/ hoặc tạo lại bằng Create ▸ Prefab Variant");
+            n++;
+        }
+        return n;
+    }
+
+    // 4. Scene trong _Project/Scenes phải có trong Build Settings, trừ thư mục Sandbox/ (scene thử của từng người)
+    static int CheckScenesInBuildSettings()
+    {
+        var inBuild = new HashSet<string>(EditorBuildSettings.scenes.Where(s => s.enabled).Select(s => s.path));
+        int n = 0;
+        foreach (var path in AllPaths("t:Scene", Root + "/Scenes"))
+        {
+            if (path.Contains("/Sandbox/") || inBuild.Contains(path)) continue;
+            Report(path, "không có trong Build Settings — LoadScene theo tên lúc chạy sẽ báo 'Scene couldn't be loaded'");
+            n++;
+        }
+        return n;
+    }
+
+    static IEnumerable<string> AllPaths(string filter, string folder)
+    {
+        if (!AssetDatabase.IsValidFolder(folder)) yield break;
+        foreach (var guid in AssetDatabase.FindAssets(filter, new[] { folder }))
+            yield return AssetDatabase.GUIDToAssetPath(guid);
+    }
+
+    static void Report(string path, string message) =>
+        Debug.LogWarning($"[Validate] {path}: {message}", AssetDatabase.LoadMainAssetAtPath(path));
+}
+```
+
+File `Assets/_Project/Gameplay/Game.Gameplay.asmdef` — tham chiếu ghi theo **tên** (bỏ tick "Use GUIDs") để diff Git đọc được:
+
+```json
+{
+    "name": "Game.Gameplay",
+    "rootNamespace": "Game.Gameplay",
+    "references": [
+        "Game.Core",
+        "Unity.InputSystem",
+        "Unity.Cinemachine"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": false,
+    "defineConstraints": [],
+    "versionDefines": [
+        {
+            "name": "com.demigiant.dotween",
+            "expression": "",
+            "define": "DOTWEEN"
+        }
+    ],
+    "noEngineReferences": false
+}
+```
+
+**Chạy thử**
+- Tools ▸ Validate Project trên project sạch: Console một dòng `[Validate] Sạch — 0 vấn đề.` Quét project 5.000 asset mất dưới 1 giây.
+- Kéo một texture ra thẳng `Assets/`: một warning `nằm ngoài Assets/_Project`; bấm dòng log, Project window ping đúng file. Kéo về `_Project/Features/Combat/Art/` → chạy lại hết.
+- Import ảnh 4096×4096 vào `Features/Combat/Art/`, tab Default đặt Max Size 4096, không tick Android: một warning. Tick `Override for Android` + Max Size 2048 → chạy lại hết. Đây chính là texture đáng ra Preset phải bắt lúc import.
+- Kéo prefab base `P_Enemy` vào `Prefabs/Variants/`: warning; xoá và tạo lại bằng Create ▸ Prefab Variant từ `P_Enemy` → hết. Tạo scene mới trong `Scenes/` chưa thêm Build Settings → warning; thêm vào → hết.
+- Với asmdef: sửa một dòng trong `Features/Combat/Scripts/`, lưu — Console báo compile xong dưới 3 giây vì chỉ `Game.Features.Combat` build lại. Thêm `Game.UI` vào references của `Game.Gameplay` trong khi `Game.UI` đã tham chiếu `Game.Gameplay` → Apply là lỗi ngay `cyclic references detected`. Viết một script ngoài mọi asmdef có `using Game.Gameplay;` → `type or namespace not found`: đó là `Auto Referenced ☐` đang làm việc, không phải bug.

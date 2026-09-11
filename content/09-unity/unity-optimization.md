@@ -178,3 +178,302 @@ Sau khi viết: nêu marker Profiler nào tôi cần nhìn để xác nhận, v�
 ```
 
 **Bẫy thường gặp:** AI schedule job rồi `Complete()` ngay dòng sau trong `Update` — code chạy, nhanh hơn nhờ Burst, nhưng main thread vẫn đứng chờ nên phần song song gần như bằng 0. Kết quả trông "tối ưu xong" trong khi mất nửa lợi ích. Yêu cầu schedule ở `Update`, `Complete()` ở `LateUpdate`, và đo cả hai cách.
+
+## 💻 Code
+
+Demo dựng một **overlay ngân sách frame** đọc `ProfilerRecorder` (chạy cả trên bản Release, không cần Development Build) và một hệ **2.000 boid** có nút chuyển giữa `IJobParallelFor` + Burst và vòng `for` thường — để thấy chênh lệch ms bằng chính overlay đó, không phải bằng cảm giác.
+
+**Setup**
+
+<figure class="fig">
+<svg viewBox="0 0 660 360" role="img" aria-label="Hierarchy có _Perf với PerfBudget, Boids với BoidsJobDemo và 2000 Boid gốc; Package Manager có Burst, Collections, Mathematics; Inspector hiện PerfBudget frame budget 12ms, draw call budget 300, show overlay, và BoidsJobDemo count 2000, use jobs, radius 20">
+  <rect x="10" y="10" width="200" height="340" rx="8" class="fig-box"/>
+  <text x="22" y="32" class="fig-label" font-size="13" font-weight="600">Hierarchy</text>
+  <line x1="10" y1="42" x2="210" y2="42" class="fig-line"/>
+  <text x="22" y="64" class="fig-muted" font-size="12">Main Camera  (0, 25, −45)</text>
+  <text x="22" y="82" class="fig-muted" font-size="12">Directional Light</text>
+  <rect x="16" y="90" width="188" height="20" rx="4" fill="#ff8787" opacity="0.18"/>
+  <text x="22" y="105" class="fig-label" font-size="12" font-weight="600">_Perf  └ PerfBudget</text>
+  <rect x="16" y="114" width="188" height="20" rx="4" fill="#6ea8fe" opacity="0.18"/>
+  <text x="22" y="129" class="fig-label" font-size="12" font-weight="600">Boids  └ BoidsJobDemo</text>
+  <text x="22" y="151" class="fig-muted" font-size="11">Boid (Clone) ×2000 — ở ROOT, không</text>
+  <text x="22" y="165" class="fig-muted" font-size="11">làm con của Boids (xem comment)</text>
+  <text x="22" y="193" class="fig-label" font-size="12" font-weight="600">Package Manager</text>
+  <text x="22" y="211" class="fig-muted" font-size="11">com.unity.burst          ✓ 1.8.x</text>
+  <text x="22" y="227" class="fig-muted" font-size="11">com.unity.collections    ✓ 2.5.x</text>
+  <text x="22" y="243" class="fig-muted" font-size="11">com.unity.mathematics    ✓ 1.3.x</text>
+  <rect x="16" y="256" width="188" height="86" rx="4" class="fig-box"/>
+  <text x="22" y="272" class="fig-label" font-size="11" font-weight="600">Overlay (góc trên trái khi Play)</text>
+  <text x="22" y="288" fill="#51cf9b" font-size="10">CPU main  3.4 / 12 ms</text>
+  <text x="22" y="302" fill="#51cf9b" font-size="10">GC alloc  0 B</text>
+  <text x="22" y="316" fill="#ff8787" font-size="10">Draw calls  2003 / 300  ⚠</text>
+  <text x="22" y="330" class="fig-muted" font-size="10">SetPass  6   ·   Boids: jobs 0.6 ms</text>
+  <rect x="226" y="10" width="424" height="340" rx="8" class="fig-box"/>
+  <text x="238" y="32" class="fig-label" font-size="13" font-weight="600">Inspector</text>
+  <line x1="226" y1="42" x2="650" y2="42" class="fig-line"/>
+  <rect x="234" y="50" width="408" height="18" rx="3" fill="#ff8787" opacity="0.22"/>
+  <text x="242" y="63" class="fig-label" font-size="12" font-weight="600">Perf Budget (Script)  — trên _Perf</text>
+  <text x="250" y="82" class="fig-muted" font-size="11">Frame Budget Ms</text><text x="440" y="82" class="fig-label" font-size="11">12   (≈ 83 FPS, chừa 30% cho nhiệt ở 60)</text>
+  <text x="250" y="98" class="fig-muted" font-size="11">Gc Budget Bytes</text><text x="440" y="98" class="fig-label" font-size="11">0</text>
+  <text x="250" y="114" class="fig-muted" font-size="11">Draw Call Budget</text><text x="440" y="114" class="fig-label" font-size="11">300</text>
+  <text x="250" y="130" class="fig-muted" font-size="11">Show Overlay</text><text x="440" y="130" class="fig-label" font-size="11">☑</text>
+  <text x="250" y="146" class="fig-muted" font-size="11">Warn Interval</text><text x="440" y="146" class="fig-label" font-size="11">1   (giây, throttle LogWarning)</text>
+  <rect x="234" y="156" width="408" height="18" rx="3" fill="#6ea8fe" opacity="0.22"/>
+  <text x="242" y="169" class="fig-label" font-size="12" font-weight="600">Boids Job Demo (Script)  — trên Boids</text>
+  <text x="250" y="188" class="fig-muted" font-size="11">Count</text><text x="440" y="188" class="fig-label" font-size="11">2000</text>
+  <text x="250" y="204" class="fig-muted" font-size="11">Use Jobs</text><text x="440" y="204" class="fig-label" font-size="11">☑   (nút trên màn hình đổi lúc Play)</text>
+  <text x="250" y="220" class="fig-muted" font-size="11">Prefab</text><text x="440" y="220" class="fig-label" font-size="11">None  → tự tạo Cube 0.3, bỏ Collider</text>
+  <text x="250" y="236" class="fig-muted" font-size="11">Radius</text><text x="440" y="236" class="fig-label" font-size="11">20</text>
+  <text x="250" y="252" class="fig-muted" font-size="11">Speed</text><text x="440" y="252" class="fig-label" font-size="11">4</text>
+  <rect x="234" y="262" width="408" height="18" rx="3" fill="#ffd43b" opacity="0.22"/>
+  <text x="242" y="275" class="fig-label" font-size="12" font-weight="600">Profiler (Window ▸ Analysis) — marker cần nhìn</text>
+  <text x="250" y="294" class="fig-muted" font-size="11">Use Jobs ☐</text><text x="440" y="294" class="fig-label" font-size="11">BoidsJobDemo.Update  ≈ 3–6 ms</text>
+  <text x="250" y="310" class="fig-muted" font-size="11">Use Jobs ☑</text><text x="440" y="310" class="fig-label" font-size="11">SteerJob (Burst) trên Worker 0…N</text>
+  <text x="440" y="326" class="fig-label" font-size="11">main thread chỉ còn Schedule + Complete</text>
+  <text x="250" y="342" class="fig-muted" font-size="10">Lần đầu Play: Burst biên dịch vài giây (Jobs ▸ Burst ▸ Enable Compilation ☑) — không phải game chậm.</text>
+</svg>
+<figcaption>Hai script trên hai object riêng. Overlay đỏ ở Draw calls là cố ý: 2.000 cube là 2.000 draw dù SRP Batcher gom thành ít batch — đó là lúc cần `RenderMeshInstanced` (xem thân bài), không phải tối ưu C#.</figcaption>
+</figure>
+
+**Script**
+
+```csharp
+// PerfBudget.cs — Unity 6 (6000.x). Overlay ngân sách frame qua ProfilerRecorder; chạy trên bản Release (không cần Development Build).
+// Marker Render ("Draw Calls Count", "SetPass Calls Count") có thể không hợp lệ trên vài nền tảng ở Release → luôn kiểm .Valid.
+using System.Text;
+using Unity.Profiling;
+using UnityEngine;
+
+public class PerfBudget : MonoBehaviour
+{
+    [SerializeField] float frameBudgetMs = 12f;
+    [SerializeField] long gcBudgetBytes = 0;
+    [SerializeField] int drawCallBudget = 300;
+    [SerializeField] bool showOverlay = true;
+    [SerializeField] float warnInterval = 1f;              // LogWarning tối đa 1 lần/giây khi vượt
+
+    ProfilerRecorder mainThread, gcAlloc, drawCalls, setPass;
+    readonly StringBuilder sb = new(256);
+    string overlayText = "";
+    float nextRefresh, nextWarn;
+    bool overBudget;
+    GUIStyle style;
+
+    public float MainThreadMs { get; private set; }
+    public long GcBytes { get; private set; }
+    public long DrawCalls { get; private set; }
+
+    void OnEnable()
+    {
+        // capacity 15 → lấy trung bình 15 frame, đỡ nhấp nháy số
+        mainThread = ProfilerRecorder.StartNew(ProfilerCategory.Internal, "Main Thread", 15);
+        gcAlloc    = ProfilerRecorder.StartNew(ProfilerCategory.Memory, "GC Allocated In Frame");
+        drawCalls  = ProfilerRecorder.StartNew(ProfilerCategory.Render, "Draw Calls Count");
+        setPass    = ProfilerRecorder.StartNew(ProfilerCategory.Render, "SetPass Calls Count");
+    }
+
+    void OnDisable()
+    {
+        mainThread.Dispose(); gcAlloc.Dispose(); drawCalls.Dispose(); setPass.Dispose();
+    }
+
+    void Update()
+    {
+        MainThreadMs = AverageMs(mainThread);
+        GcBytes = gcAlloc.Valid ? gcAlloc.LastValue : -1;
+        DrawCalls = drawCalls.Valid ? drawCalls.LastValue : -1;
+
+        overBudget = MainThreadMs > frameBudgetMs || GcBytes > gcBudgetBytes || DrawCalls > drawCallBudget;
+
+        if (overBudget && Time.unscaledTime >= nextWarn)
+        {
+            nextWarn = Time.unscaledTime + warnInterval;
+            Debug.LogWarning($"[PerfBudget] main {MainThreadMs:F1}/{frameBudgetMs} ms · GC {GcBytes} B · draw {DrawCalls}/{drawCallBudget}");
+        }
+
+        // StringBuilder.ToString() cấp phát → chỉ dựng chuỗi 4 lần/giây; frame có refresh sẽ tự hiện vài trăm byte GC — đó là overlay.
+        if (showOverlay && Time.unscaledTime >= nextRefresh)
+        {
+            nextRefresh = Time.unscaledTime + 0.25f;
+            sb.Clear();
+            sb.Append("CPU main  ").Append(MainThreadMs.ToString("F1")).Append(" / ").Append(frameBudgetMs).Append(" ms\n");
+            sb.Append("GC alloc  ").Append(GcBytes < 0 ? "n/a" : GcBytes.ToString()).Append(" B\n");
+            sb.Append("Draw calls  ").Append(DrawCalls < 0 ? "n/a" : DrawCalls.ToString()).Append(" / ").Append(drawCallBudget).Append('\n');
+            sb.Append("SetPass  ").Append(setPass.Valid ? setPass.LastValue.ToString() : "n/a");
+            overlayText = sb.ToString();
+        }
+    }
+
+    static float AverageMs(ProfilerRecorder r)
+    {
+        int n = r.Count;
+        if (!r.Valid || n == 0) return -1f;
+        double sum = 0;
+        for (int i = 0; i < n; i++) sum += r.GetSample(i).Value;   // nanosecond
+        return (float)(sum / n * 1e-6);
+    }
+
+    void OnGUI()
+    {
+        if (!showOverlay) return;
+        style ??= new GUIStyle(GUI.skin.label) { fontSize = 16, fontStyle = FontStyle.Bold };
+        style.normal.textColor = overBudget ? new Color(1f, 0.53f, 0.53f) : new Color(0.32f, 0.81f, 0.61f);
+        GUI.Label(new Rect(10, 10, 400, 100), overlayText, style);
+    }
+}
+```
+
+```csharp
+// BoidsJobDemo.cs — Unity 6 (6000.x). CẦN package: com.unity.burst, com.unity.collections, com.unity.mathematics (Package Manager ▸ Unity Registry).
+// 2000 boid quay quanh tâm trong bán kính 20. Nút trên màn hình đổi giữa IJobParallelFor+Burst và vòng for thường — cùng thuật toán.
+using Unity.Burst;
+using Unity.Collections;
+using Unity.Jobs;
+using Unity.Mathematics;
+using UnityEngine;
+using UnityEngine.Jobs;
+
+public class BoidsJobDemo : MonoBehaviour
+{
+    [SerializeField] int count = 2000;
+    [SerializeField] bool useJobs = true;
+    [SerializeField] Transform prefab;                 // trống → tự tạo cube 0.3 không collider
+    [SerializeField] float radius = 20f;
+    [SerializeField] float speed = 4f;
+
+    NativeArray<float3> positions, velocities;
+    TransformAccessArray transforms;                   // ghi vị trí trên worker thread — không gán transform.position trong for
+    Transform[] managed;                               // cho nhánh không job
+    JobHandle handle;
+    float frameStart, lastMs;
+    string label = "";
+    float nextLabel;
+
+    [BurstCompile]
+    struct SteerJob : IJobParallelFor
+    {
+        public NativeArray<float3> positions;
+        public NativeArray<float3> velocities;
+        public float dt, radius, speed;
+
+        public void Execute(int i)
+        {
+            float3 p = positions[i], v = velocities[i];
+            float3 swirl = math.cross(math.up(), math.normalizesafe(p)) * speed;             // quay quanh trục Y
+            float3 pull  = math.lengthsq(p) > radius * radius ? -math.normalize(p) * speed : float3.zero;   // ra khỏi bán kính → kéo về
+            v = math.normalizesafe(v + (swirl + pull) * dt) * speed;
+            positions[i]  = p + v * dt;
+            velocities[i] = v;
+        }
+    }
+
+    [BurstCompile]
+    struct WriteTransformJob : IJobParallelForTransform
+    {
+        [ReadOnly] public NativeArray<float3> positions;
+        [ReadOnly] public NativeArray<float3> velocities;
+
+        public void Execute(int i, TransformAccess t)
+        {
+            t.position = positions[i];
+            t.rotation = quaternion.LookRotationSafe(velocities[i], math.up());
+        }
+    }
+
+    void Start()
+    {
+        positions  = new NativeArray<float3>(count, Allocator.Persistent);   // sống nhiều frame → Persistent, Dispose ở OnDestroy
+        velocities = new NativeArray<float3>(count, Allocator.Persistent);
+        transforms = new TransformAccessArray(count);
+        managed    = new Transform[count];
+
+        var rng = new Unity.Mathematics.Random(1234);
+        for (int i = 0; i < count; i++)
+        {
+            positions[i]  = rng.NextFloat3Direction() * rng.NextFloat(0f, radius);
+            velocities[i] = rng.NextFloat3Direction() * speed;
+            Transform t = prefab != null ? Instantiate(prefab) : MakeCube();
+            t.name = "Boid";
+            // Để ở ROOT: IJobParallelForTransform chỉ chạy song song giữa các cây hierarchy khác nhau —
+            // 2000 con của cùng một parent sẽ chạy tuần tự trên một worker.
+            t.SetPositionAndRotation(positions[i], Quaternion.identity);
+            transforms.Add(t);
+            managed[i] = t;
+        }
+    }
+
+    static Transform MakeCube()
+    {
+        var go = GameObject.CreatePrimitive(PrimitiveType.Cube);
+        Destroy(go.GetComponent<Collider>());          // 2000 BoxCollider di chuyển = Physics cập nhật broadphase vô ích
+        go.transform.localScale = Vector3.one * 0.3f;
+        return go.transform;
+    }
+
+    void Update()
+    {
+        frameStart = Time.realtimeSinceStartup;
+        float dt = Time.deltaTime;
+
+        if (useJobs)
+        {
+            var steer = new SteerJob { positions = positions, velocities = velocities, dt = dt, radius = radius, speed = speed };
+            JobHandle h = steer.Schedule(count, 64);                               // batch 64: 2000/64 ≈ 32 gói chia cho worker
+            var write = new WriteTransformJob { positions = positions, velocities = velocities };
+            handle = write.Schedule(transforms, h);                                // phụ thuộc h; Complete ở LateUpdate
+            return;
+        }
+
+        // Nhánh thường: cùng phép toán, chạy trên main thread, ghi transform từng cái
+        for (int i = 0; i < count; i++)
+        {
+            Vector3 p = positions[i], v = velocities[i];
+            Vector3 swirl = Vector3.Cross(Vector3.up, p.normalized) * speed;
+            Vector3 pull  = p.sqrMagnitude > radius * radius ? -p.normalized * speed : Vector3.zero;
+            v = (v + (swirl + pull) * dt).normalized * speed;
+            p += v * dt;
+            positions[i] = p; velocities[i] = v;
+            managed[i].SetPositionAndRotation(p, v.sqrMagnitude > 1e-6f ? Quaternion.LookRotation(v) : Quaternion.identity);
+        }
+        lastMs = (Time.realtimeSinceStartup - frameStart) * 1000f;
+    }
+
+    void LateUpdate()
+    {
+        if (useJobs)
+        {
+            handle.Complete();                          // main thread rảnh suốt Update của script khác; giờ mới chờ
+            lastMs = (Time.realtimeSinceStartup - frameStart) * 1000f;   // gồm cả phần chờ — công bằng với nhánh for
+        }
+        if (Time.unscaledTime >= nextLabel)             // dựng chuỗi 4 lần/giây để không tự sinh GC mỗi frame
+        {
+            nextLabel = Time.unscaledTime + 0.25f;
+            label = $"Boids ({count}): {(useJobs ? "JOBS+BURST" : "for thường")}  {lastMs:F2} ms  —  bấm để đổi";
+        }
+    }
+
+    void OnGUI()
+    {
+        if (GUI.Button(new Rect(10, 120, 420, 32), label))
+        {
+            handle.Complete();                          // đổi chế độ giữa frame: chắc chắn không còn job đang chạm NativeArray
+            useJobs = !useJobs;
+        }
+    }
+
+    void OnDestroy()
+    {
+        handle.Complete();                              // Dispose khi job còn chạy → lỗi safety system
+        if (positions.IsCreated)  positions.Dispose();
+        if (velocities.IsCreated) velocities.Dispose();
+        if (transforms.isCreated) transforms.Dispose();
+    }
+}
+```
+
+**Chạy thử**
+- Play với `Use Jobs ☐`: nút ghi khoảng **3–6 ms** (tuỳ CPU) và Profiler ▸ CPU ▸ Timeline hiện `BoidsJobDemo.Update` một khối dài trên main thread. Bấm nút: số tụt xuống **0.3–0.8 ms**, Timeline hiện `SteerJob (Burst)` và `WriteTransformJob` rải trên Worker 0…N, main thread chỉ còn `Schedule` và một `Complete` ngắn ở `LateUpdate`.
+- Đổi `handle.Complete()` từ `LateUpdate` sang ngay sau `Schedule` trong `Update`: số ms tăng gấp ~2 — đó là bẫy ở mục 🤖: Burst vẫn nhanh nhưng main thread đứng chờ.
+- Overlay `PerfBudget`: `GC alloc 0 B` ở hầu hết frame (frame có refresh chuỗi lên vài trăm byte — do chính overlay); `Draw calls ≈ 2003 / 300` **đỏ** và Console một `LogWarning` mỗi giây, không nhiều hơn. Đổi `Count` = 250 → về xanh.
+- Mở Jobs ▸ Burst ▸ *Enable Compilation* ☐ rồi Play lại với jobs: ms tăng 5–10 lần — phần lớn lợi ích đến từ Burst, không phải từ đa luồng.
+- Đưa 2000 boid làm con của `Boids` (sửa `t.SetParent(transform)`): nhánh jobs chậm đi rõ vì `IJobParallelForTransform` chỉ song song hoá giữa các root khác nhau.

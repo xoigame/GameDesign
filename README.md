@@ -3,7 +3,7 @@
 Kho kiến thức **mindmap** về Game Design và AI trong game — đồng thời là **bộ não thiết kế** để AI agent (Codex, Claude Code, Cursor) đọc trước khi sinh code game.
 
 <p align="center">
-  <em>76 node · 9 nhánh · ~73.000 từ · lộ trình đọc 1→76 · 24 cơ bản / 36 trung cấp / 16 chuyên sâu</em>
+  <em>76 node · 9 nhánh · ~94.000 từ · lộ trình đọc 1→76 · 24 cơ bản / 36 trung cấp / 16 chuyên sâu</em>
 </p>
 
 ---

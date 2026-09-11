@@ -175,6 +175,49 @@ Một câu: trong Unity, điểm mấu chốt của bước này là gì.
 - Sơ đồ setup (Hierarchy / Inspector) dùng `<figure class="fig">` như mọi hình khác —
   xem mục Hình minh hoạ ở trên.
 
+## Mục tuỳ chọn: `## 💻 Code`
+
+Dành cho nhánh **Unity thực chiến** (`09-unity/`), đặt ở **cuối file, sau mục 🤖**.
+Build tách thành trường `node.code`, web hiện thành tab **💻 Code**. Node ở nhánh khác
+không cần mục này (chúng đã có tab 🎮 Unity).
+
+Khác với code rải trong thân bài (từng đoạn minh hoạ một ý), mục này là **một demo trọn vẹn**:
+copy vào dự án Unity 6 là chạy, kèm hình mô phỏng Inspector để biết đặt gì ở đâu.
+
+Cấu trúc chuẩn:
+
+```markdown
+## 💻 Code
+
+Một câu: demo này dựng cái gì, kiểm chứng được điều gì.
+
+**Setup**
+
+<figure class="fig">
+<svg viewBox="0 0 660 320" role="img" aria-label="Mô tả Inspector">
+  <!-- Hierarchy bên trái, Inspector bên phải — dùng class fig-box / fig-label / fig-muted -->
+</svg>
+<figcaption>Hierarchy và Inspector của demo.</figcaption>
+</figure>
+
+**Script**
+
+​```csharp
+// MỘT file .cs hoàn chỉnh, có using, biên dịch được trên Unity 6 (6000.x) + URP
+​```
+
+**Chạy thử**
+- Bước để thấy kết quả và con số mong đợi
+```
+
+**Nguyên tắc**
+- Script là **một file hoàn chỉnh** (có `using`, class, mọi field), không phải đoạn cắt.
+  Nếu demo cần hai script thì đặt hai fence, mỗi fence một file, ghi tên file trong comment dòng đầu.
+- Hình Inspector dùng SVG như mọi hình khác: khung `fig-box`, nhãn `fig-label`, giá trị `fig-muted`,
+  màu nhấn theo bảng màu app. **Không dòng trống trong `<figure>`.** Id `<marker>/<defs>` có tiền tố node.
+- Giá trị trong Inspector phải khớp với giá trị mặc định trong script.
+- "Chạy thử" nêu con số hoặc hiện tượng cụ thể để biết demo chạy đúng.
+
 ## Bản dịch — file song song
 
 Kho viết gốc bằng tiếng Việt. Bản dịch nằm ở **file song song** cùng thư mục:

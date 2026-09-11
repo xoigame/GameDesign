@@ -238,3 +238,257 @@ Sau khi viết, liệt kê mọi child ParticleSystem có Looping bật và mọ
 ```
 
 **Bẫy thường gặp:** AI viết pool đúng, `Stop Action = Callback` đúng, nhưng prefab có một child "glow" để `Looping = true` — hệ **không bao giờ** gọi `OnParticleSystemStopped`, pool cạn sau 8 cú đánh rồi `Create()` mãi, và trên Profiler nó trông như rò bộ nhớ ở chỗ hoàn toàn khác. Bắt AI liệt kê `main.loop` của **mọi** hệ con trong prefab, hoặc thêm assert trong `Create()`.
+
+## 💻 Code
+
+Demo dựng pipeline hit effect 2D hoàn chỉnh trong **một hàm `OnHit`**: hạt từ pool `ObjectPool<T>` trả về qua `OnParticleSystemStopped`, flash trắng 80 ms bằng `MaterialPropertyBlock`, hitstop 60 ms bằng clock riêng (không đụng `Time.timeScale`), camera giật theo hướng đòn qua Cinemachine 3 Impulse. Kiểm chứng: không `Instantiate` sau đòn thứ 8, GC Alloc 0 B, hạt vẫn bay khi nhân vật đứng hình.
+
+**Setup**
+
+<figure class="fig">
+<svg viewBox="0 0 660 370" role="img" aria-label="Hierarchy FX_Root, Player và Enemy_Dummy có HitStopReceiver, CinemachineCamera có Impulse Listener; Inspector hiện prefab FX_Hit ParticleSystem, HitEffectPlayer và Impulse Source">
+  <rect x="10" y="10" width="200" height="350" rx="8" class="fig-box"/>
+  <text x="22" y="32" class="fig-label" font-size="13" font-weight="600">Hierarchy</text>
+  <line x1="10" y1="42" x2="210" y2="42" class="fig-line"/>
+  <rect x="16" y="50" width="188" height="18" rx="4" fill="#51cf9b" opacity="0.18"/>
+  <text x="22" y="63" class="fig-label" font-size="12" font-weight="600">▾ FX_Root</text>
+  <text x="38" y="80" class="fig-muted" font-size="11">HitEffectPlayer + Impulse Source</text>
+  <text x="22" y="98" class="fig-label" font-size="12">▾ Player  (HitStopReceiver)</text>
+  <text x="38" y="114" class="fig-muted" font-size="11">Sprite  (SpriteRenderer)</text>
+  <text x="22" y="132" class="fig-label" font-size="12">▾ Enemy_Dummy  (HitStopReceiver)</text>
+  <text x="38" y="148" class="fig-muted" font-size="11">Sprite  mat Sprite_Flash  ← Test Target</text>
+  <text x="22" y="166" class="fig-label" font-size="12">CinemachineCamera</text>
+  <text x="38" y="182" class="fig-muted" font-size="11">+ Cinemachine Impulse Listener</text>
+  <text x="22" y="200" class="fig-muted" font-size="11">Main Camera  (CinemachineBrain)</text>
+  <line x1="10" y1="214" x2="210" y2="214" class="fig-line"/>
+  <text x="22" y="234" class="fig-label" font-size="12" font-weight="600">Project ▸ Prefabs/FX_Hit</text>
+  <text x="22" y="252" class="fig-muted" font-size="11">FX_Hit  (ParticleSystem)</text>
+  <text x="22" y="268" class="fig-muted" font-size="11">không child nào Looping</text>
+  <text x="22" y="284" class="fig-muted" font-size="11">Renderer: URP/Particles/Unlit</text>
+  <text x="22" y="300" class="fig-muted" font-size="11">Sorting Layer FX · Order 10</text>
+  <text x="22" y="318" class="fig-muted" font-size="11">Sprite_Flash: Shader Graph có</text>
+  <text x="22" y="334" class="fig-muted" font-size="11">float _FlashAmount → lerp trắng</text>
+  <text x="22" y="352" class="fig-muted" font-size="11">Demo: click trái = OnHit tại chuột</text>
+  <rect x="226" y="10" width="424" height="350" rx="8" class="fig-box"/>
+  <text x="238" y="32" class="fig-label" font-size="13" font-weight="600">Inspector — FX_Hit (prefab) và FX_Root</text>
+  <line x1="226" y1="42" x2="650" y2="42" class="fig-line"/>
+  <rect x="234" y="50" width="408" height="18" rx="3" fill="#6ea8fe" opacity="0.22"/>
+  <text x="242" y="63" class="fig-label" font-size="12" font-weight="600">Particle System  ·  FX_Hit</text>
+  <text x="250" y="82" class="fig-muted" font-size="11">Play On Awake / Looping</text><text x="440" y="82" class="fig-label" font-size="11">☐  /  ☐</text>
+  <text x="250" y="98" class="fig-muted" font-size="11">Stop Action</text><text x="440" y="98" class="fig-label" font-size="11">Callback</text>
+  <text x="250" y="114" class="fig-muted" font-size="11">Max Particles</text><text x="440" y="114" class="fig-label" font-size="11">30</text>
+  <text x="250" y="130" class="fig-muted" font-size="11">Simulation Space</text><text x="440" y="130" class="fig-label" font-size="11">World</text>
+  <text x="250" y="146" class="fig-muted" font-size="11">Emission</text><text x="440" y="146" class="fig-label" font-size="11">Rate 0 · Burst 24 hạt @ 0 s</text>
+  <rect x="234" y="156" width="408" height="18" rx="3" fill="#51cf9b" opacity="0.22"/>
+  <text x="242" y="169" class="fig-label" font-size="12" font-weight="600">Hit Effect Player (Script)  ·  FX_Root</text>
+  <text x="250" y="188" class="fig-muted" font-size="11">Prefab</text><text x="440" y="188" class="fig-label" font-size="11">FX_Hit</text>
+  <text x="250" y="204" class="fig-muted" font-size="11">Pool Default / Pool Max</text><text x="440" y="204" class="fig-label" font-size="11">8  /  32</text>
+  <text x="250" y="220" class="fig-muted" font-size="11">Flash Duration / Flash Property</text><text x="440" y="220" class="fig-label" font-size="11">0.08  /  _FlashAmount</text>
+  <text x="250" y="236" class="fig-muted" font-size="11">Hitstop Seconds</text><text x="440" y="236" class="fig-label" font-size="11">0.06</text>
+  <text x="250" y="252" class="fig-muted" font-size="11">Impulse Force</text><text x="440" y="252" class="fig-label" font-size="11">0.6</text>
+  <text x="250" y="268" class="fig-muted" font-size="11">Impulse</text><text x="440" y="268" class="fig-label" font-size="11">FX_Root (Impulse Source)</text>
+  <text x="250" y="284" class="fig-muted" font-size="11">Test Target / Test Receiver</text><text x="440" y="284" class="fig-label" font-size="11">Enemy_Dummy (Sprite / root)</text>
+  <rect x="234" y="294" width="408" height="18" rx="3" fill="#ffd43b" opacity="0.22"/>
+  <text x="242" y="307" class="fig-label" font-size="12" font-weight="600">Cinemachine Impulse Source  ·  FX_Root</text>
+  <text x="250" y="326" class="fig-muted" font-size="11">Impulse Shape / Duration</text><text x="440" y="326" class="fig-label" font-size="11">Bump  /  0.2 s</text>
+  <text x="250" y="342" class="fig-muted" font-size="11">Default Velocity</text><text x="440" y="342" class="fig-label" font-size="11">(0, −1, 0)</text>
+</svg>
+<figcaption>FX_Hit là prefab: Play On Awake tắt trong prefab (không chỉ trong code), Stop Action = Callback để OnParticleSystemStopped trả về pool. CinemachineCamera phải có Impulse Listener, không thì source phát mà camera đứng yên.</figcaption>
+</figure>
+
+**Script**
+
+```csharp
+// HitEffectPlayer.cs — Unity 6 (6000.x) + URP + Cinemachine 3 (Unity.Cinemachine). Một hàm OnHit gọi cả bốn việc ở cùng frame va chạm.
+using System.Collections.Generic;
+using Unity.Cinemachine;
+using UnityEngine;
+using UnityEngine.Pool;
+
+public class HitEffectPlayer : MonoBehaviour
+{
+    [Header("Hạt")]
+    [SerializeField] ParticleSystem prefab;                 // FX_Hit: Play On Awake TẮT, Stop Action = Callback, không child Looping
+    [SerializeField, Min(1)] int poolDefault = 8;
+    [SerializeField, Min(1)] int poolMax = 32;
+
+    [Header("Flash")]
+    [SerializeField, Min(0f)] float flashDuration = 0.08f;
+    [SerializeField] string flashProperty = "_FlashAmount"; // float 0–1 trong Shader Graph của sprite (xem unity-shader)
+
+    [Header("Hitstop & camera")]
+    [SerializeField, Min(0f)] float hitstopSeconds = 0.06f;
+    [SerializeField, Min(0f)] float impulseForce = 0.6f;
+    [SerializeField] CinemachineImpulseSource impulse;
+
+    [Header("Demo")]
+    [SerializeField] Renderer testTarget;                   // Enemy_Dummy ▸ Sprite
+    [SerializeField] HitStopReceiver testReceiver;          // Enemy_Dummy
+
+    ObjectPool<PooledParticle> pool;
+    int flashId;
+    readonly MaterialPropertyBlock mpb = new();
+    readonly List<Renderer> flashing = new(8);              // renderer đang trắng + mốc tắt — không coroutine, 0 B alloc
+    readonly List<float> flashEnd = new(8);
+
+    void Awake()
+    {
+        flashId = Shader.PropertyToID(flashProperty);
+        pool = new ObjectPool<PooledParticle>(
+            createFunc: Create,
+            actionOnGet: p => { p.InPool = false; p.gameObject.SetActive(true); },
+            actionOnRelease: p =>
+            {
+                p.InPool = true;
+                p.Ps.Stop(true, ParticleSystemStopBehavior.StopEmittingAndClear);   // xoá hạt còn sống ở cả con
+                p.gameObject.SetActive(false);
+            },
+            actionOnDestroy: p => Destroy(p.gameObject),
+            collectionCheck: true, defaultCapacity: poolDefault, maxSize: poolMax);
+
+        // ObjectPool không prewarm — Get/Release tay để 8 instance có sẵn trước đòn đầu
+        var tmp = new PooledParticle[poolDefault];
+        for (int i = 0; i < poolDefault; i++) tmp[i] = pool.Get();
+        for (int i = 0; i < poolDefault; i++) pool.Release(tmp[i]);
+    }
+
+    PooledParticle Create()
+    {
+        var ps = Instantiate(prefab, transform);
+        var main = ps.main;
+        main.playOnAwake = false;
+        main.stopAction = ParticleSystemStopAction.Callback;
+        foreach (var child in ps.GetComponentsInChildren<ParticleSystem>(true))
+            if (child.main.loop) Debug.LogError($"{child.name} đang Looping — hệ sẽ không bao giờ trả về pool", child);
+
+        var p = ps.gameObject.AddComponent<PooledParticle>();
+        p.Owner = this; p.Ps = ps;
+        if (pool.CountAll >= poolDefault) Debug.LogWarning($"Pool FX_Hit mở rộng lên {pool.CountAll + 1} — tăng Pool Default", this);
+        return p;
+    }
+
+    public void Release(PooledParticle p) => pool.Release(p);
+
+    /// Gọi ở đúng frame va chạm. hitDir = hướng đòn (từ attacker sang target); Vector3.zero nếu không có hướng.
+    public void OnHit(Vector3 point, Vector3 hitDir, Renderer targetRenderer, HitStopReceiver attacker, HitStopReceiver target)
+    {
+        bool hasDir = hitDir.sqrMagnitude > 0.0001f;
+
+        var fx = pool.Get();                                                                 // 0 ms: hạt
+        fx.transform.SetPositionAndRotation(point, hasDir ? Quaternion.FromToRotation(Vector3.right, hitDir) : Quaternion.identity);
+        fx.Ps.Play(true);
+
+        if (targetRenderer) Flash(targetRenderer);                                           // 0 ms: flash
+        if (attacker) attacker.Hitstop(hitstopSeconds);                                      // 0 ms: hitstop hai bên
+        if (target) target.Hitstop(hitstopSeconds);
+        if (impulse)                                                                         // 0 ms: camera
+        {
+            if (hasDir) impulse.GenerateImpulse(hitDir.normalized * impulseForce);          // rung theo hướng đòn
+            else impulse.GenerateImpulseWithForce(impulseForce);                             // không hướng: dùng Default Velocity
+        }
+    }
+
+    void Flash(Renderer r)
+    {
+        SetFlash(r, 1f);
+        int i = flashing.IndexOf(r);
+        if (i >= 0) flashEnd[i] = Time.unscaledTime + flashDuration;                        // đòn liên tiếp: kéo dài, không nhấp nháy
+        else { flashing.Add(r); flashEnd.Add(Time.unscaledTime + flashDuration); }
+    }
+
+    void SetFlash(Renderer r, float v)
+    {
+        r.GetPropertyBlock(mpb);
+        mpb.SetFloat(flashId, v);
+        r.SetPropertyBlock(mpb);                              // KHÔNG r.material — tạo instance material rò
+    }
+
+    void LateUpdate()
+    {
+        for (int i = flashing.Count - 1; i >= 0; i--)
+        {
+            if (Time.unscaledTime < flashEnd[i]) continue;    // unscaled: 80 ms thật kể cả khi debug slow-mo
+            if (flashing[i]) SetFlash(flashing[i], 0f);
+            flashing.RemoveAt(i); flashEnd.RemoveAt(i);
+        }
+    }
+
+    void Update()
+    {
+        // Demo: click trái = OnHit tại vị trí chuột, hướng đòn từ điểm click về mục tiêu
+        var mouse = UnityEngine.InputSystem.Mouse.current;
+        if (mouse == null || !mouse.leftButton.wasPressedThisFrame) return;
+        var cam = Camera.main;
+        if (!cam) return;
+        Vector3 p = cam.ScreenToWorldPoint(mouse.position.ReadValue());
+        p.z = 0f;
+        Vector3 dir = testTarget ? testTarget.bounds.center - p : Vector3.zero;
+        OnHit(p, dir, testTarget, null, testReceiver);
+    }
+}
+
+/// Gắn tự động lên mỗi instance FX_Hit trong Create(). Nhận callback khi mọi hạt chết (Stop Action = Callback) và trả về pool.
+public class PooledParticle : MonoBehaviour
+{
+    public HitEffectPlayer Owner;
+    public ParticleSystem Ps;
+    public bool InPool;
+    void OnParticleSystemStopped() { if (!InPool) Owner.Release(this); }
+}
+```
+
+```csharp
+// HitStopReceiver.cs — clock riêng cho từng thực thể. Movement đọc Delta, Animator nhận speed. Không đụng Time.timeScale.
+using UnityEngine;
+
+public class HitStopReceiver : MonoBehaviour
+{
+    [SerializeField] Animator animator;          // tuỳ chọn: speed = LocalTimeScale
+    [SerializeField] Rigidbody2D body;           // tuỳ chọn: đóng băng velocity trong hitstop
+
+    public float LocalTimeScale { get; private set; } = 1f;
+    public float Delta => Time.deltaTime * LocalTimeScale;      // mọi chuyển động của thực thể nhân với cái này
+    public bool InHitstop => LocalTimeScale == 0f;
+
+    float resumeAt;
+    Vector2 savedVelocity;
+    float savedGravity;
+
+    public void Hitstop(float seconds)
+    {
+        if (seconds <= 0f) return;
+        float until = Time.unscaledTime + seconds;
+        if (InHitstop) { resumeAt = Mathf.Max(resumeAt, until); return; }   // đòn thứ hai trong lúc đứng hình: kéo dài, không reset
+
+        resumeAt = until;
+        LocalTimeScale = 0f;
+        if (animator) animator.speed = 0f;
+        if (body)
+        {
+            savedVelocity = body.linearVelocity;             // 2022 LTS: body.velocity
+            savedGravity = body.gravityScale;
+            body.linearVelocity = Vector2.zero;
+            body.gravityScale = 0f;
+        }
+    }
+
+    void Update()
+    {
+        if (!InHitstop || Time.unscaledTime < resumeAt) return;
+        LocalTimeScale = 1f;
+        if (animator) animator.speed = 1f;
+        if (body)
+        {
+            body.linearVelocity = savedVelocity;             // trả lại đúng vận tốc trước đòn → knockback nối tiếp mượt
+            body.gravityScale = savedGravity;
+        }
+    }
+}
+```
+
+**Chạy thử**
+- Click 20 lần chậm rãi: dưới FX_Root có đúng 8 `FX_Hit(Clone)` bật/tắt luân phiên, Console không có warning. Click 40 lần trong 1 giây (hiệu ứng tan ~0.4 s): warning "Pool FX_Hit mở rộng lên 9" — đó là lúc tăng Pool Default.
+- Profiler ▸ GC Alloc khi click liên tục = 0 B (không coroutine, không `Instantiate`). `Sprite_Flash` trong Inspector của Enemy_Dummy không xuất hiện "(Instance)" — MaterialPropertyBlock không tạo material.
+- Enemy_Dummy đứng hình đúng 60 ms (~4 frame @60) trong khi hạt vẫn bay và `Time.timeScale` (Project Settings ▸ Time khi Play) vẫn 1. Click 2 lần cách 30 ms: đứng hình kéo dài tới 90 ms, không reset về 0.
+- Sprite trắng 0.08 s (~5 frame) rồi về bình thường; nếu vẫn thường: material của Sprite chưa có property `_FlashAmount` (Shader Graph) hoặc tên khác chữ hoa/thường.
+- Camera giật theo hướng từ điểm click tới mục tiêu; Impulse Force = 0 → hết rung; gỡ Impulse Listener khỏi CinemachineCamera → source phát mà không rung. Bật Looping trên một child của FX_Hit: 8 lỗi đỏ ngay ở Awake, trước khi pool cạn.

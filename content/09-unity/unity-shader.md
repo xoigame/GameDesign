@@ -169,3 +169,350 @@ Sau khi viết, liệt kê số variant sinh ra và lý do từng keyword.
 ```
 
 **Bẫy thường gặp:** AI thêm `#pragma multi_compile _ _MAIN_LIGHT_SHADOWS _MAIN_LIGHT_SHADOWS_CASCADE _MAIN_LIGHT_SHADOWS_SCREEN` cùng năm keyword URP khác "cho chắc" — shader biên dịch, trông đúng, nhưng thời gian build tăng 10 phút và bản Android có hàng trăm variant không bao giờ dùng. Yêu cầu AI **giải thích từng keyword** và bỏ những cái không khớp cài đặt URP Asset của bạn.
+
+## 💻 Code
+
+Demo dựng một shader URP viết tay (unlit, hit flash + dissolve) tương thích SRP Batcher, và một driver dùng `MaterialPropertyBlock` để chỉ **object bị đánh** rời batch trong 0.08s rồi quay lại. Kiểm chứng bằng Frame Debugger: 50 kẻ địch cùng shader = 1 SRP Batch, con đang nhấp nháy tách ra, hết flash gộp lại.
+
+**Setup**
+
+<figure class="fig">
+<svg viewBox="0 0 660 360" role="img" aria-label="Hierarchy có ba Enemy dùng chung material M_Enemy, Frame Debugger báo SRP Batch tương thích; Inspector hiện material M_Enemy với shader Custom/HitFlashDissolve và component FlashDissolveDriver">
+  <rect x="10" y="10" width="200" height="340" rx="8" class="fig-box"/>
+  <text x="22" y="32" class="fig-label" font-size="13" font-weight="600">Hierarchy</text>
+  <line x1="10" y1="42" x2="210" y2="42" class="fig-line"/>
+  <text x="22" y="64" class="fig-muted" font-size="12">Main Camera</text>
+  <text x="22" y="82" class="fig-muted" font-size="12">Directional Light</text>
+  <text x="22" y="100" class="fig-muted" font-size="12">▾ Enemies</text>
+  <rect x="16" y="108" width="188" height="20" rx="4" fill="#6ea8fe" opacity="0.18"/>
+  <text x="38" y="123" class="fig-label" font-size="12" font-weight="600">Enemy_01  (M_Enemy)</text>
+  <text x="38" y="143" class="fig-muted" font-size="12">Enemy_02  (M_Enemy)</text>
+  <text x="38" y="161" class="fig-muted" font-size="12">Enemy_03  (M_Enemy)</text>
+  <text x="22" y="196" class="fig-label" font-size="12" font-weight="600">Project</text>
+  <text x="22" y="214" class="fig-muted" font-size="11">Shaders/HitFlashDissolve.shader</text>
+  <text x="22" y="230" class="fig-muted" font-size="11">Materials/M_Enemy.mat</text>
+  <text x="22" y="246" class="fig-muted" font-size="11">Scripts/FlashDissolveDriver.cs</text>
+  <rect x="16" y="260" width="188" height="82" rx="4" class="fig-box"/>
+  <text x="22" y="276" class="fig-label" font-size="11" font-weight="600">Frame Debugger</text>
+  <text x="22" y="292" class="fig-muted" font-size="10">SRP Batch  ·  3 draws</text>
+  <text x="22" y="306" fill="#51cf9b" font-size="10">SRP Batcher: compatible</text>
+  <text x="22" y="322" class="fig-muted" font-size="10">Enemy_02 (đang flash) tách riêng:</text>
+  <text x="22" y="336" fill="#ffd43b" font-size="10">"Node has a MaterialPropertyBlock"</text>
+  <rect x="226" y="10" width="424" height="340" rx="8" class="fig-box"/>
+  <text x="238" y="32" class="fig-label" font-size="13" font-weight="600">Inspector — Enemy_01</text>
+  <line x1="226" y1="42" x2="650" y2="42" class="fig-line"/>
+  <rect x="234" y="50" width="408" height="18" rx="3" fill="#b197fc" opacity="0.22"/>
+  <text x="242" y="63" class="fig-label" font-size="12" font-weight="600">M_Enemy (Material)</text>
+  <text x="250" y="82" class="fig-muted" font-size="11">Shader</text><text x="440" y="82" class="fig-label" font-size="11">Custom/HitFlashDissolve</text>
+  <text x="250" y="98" class="fig-muted" font-size="11">Base Map</text><text x="440" y="98" class="fig-label" font-size="11">T_Enemy_Albedo</text>
+  <text x="250" y="114" class="fig-muted" font-size="11">Noise Tex</text><text x="440" y="114" class="fig-label" font-size="11">T_Noise_Perlin (Wrap: Repeat)</text>
+  <text x="250" y="130" class="fig-muted" font-size="11">Base Color</text><text x="440" y="130" class="fig-label" font-size="11">#FFFFFF</text>
+  <text x="250" y="146" class="fig-muted" font-size="11">Flash Amount / Dissolve</text><text x="440" y="146" class="fig-label" font-size="11">0   /   0   (code ghi đè)</text>
+  <text x="250" y="162" class="fig-muted" font-size="11">Edge Width</text><text x="440" y="162" class="fig-label" font-size="11">0.05</text>
+  <text x="250" y="178" class="fig-muted" font-size="11">Edge Color (HDR)</text><rect x="440" y="168" width="12" height="12" rx="2" fill="#ffd43b"/><text x="458" y="178" class="fig-label" font-size="11">#FFD43B</text>
+  <rect x="234" y="188" width="408" height="18" rx="3" fill="#6ea8fe" opacity="0.22"/>
+  <text x="242" y="201" class="fig-label" font-size="12" font-weight="600">Mesh Renderer</text>
+  <text x="250" y="220" class="fig-muted" font-size="11">Materials [0]</text><text x="440" y="220" class="fig-label" font-size="11">M_Enemy  (shared — KHÔNG instance)</text>
+  <text x="250" y="236" class="fig-muted" font-size="11">Cast Shadows</text><text x="440" y="236" class="fig-label" font-size="11">On</text>
+  <rect x="234" y="246" width="408" height="18" rx="3" fill="#ffd43b" opacity="0.22"/>
+  <text x="242" y="259" class="fig-label" font-size="12" font-weight="600">Flash Dissolve Driver (Script)</text>
+  <text x="250" y="278" class="fig-muted" font-size="11">Flash Duration</text><text x="440" y="278" class="fig-label" font-size="11">0.08</text>
+  <text x="250" y="294" class="fig-muted" font-size="11">Dissolve Duration</text><text x="440" y="294" class="fig-label" font-size="11">0.6</text>
+  <text x="250" y="310" class="fig-muted" font-size="11">Auto Demo</text><text x="440" y="310" class="fig-label" font-size="11">☑  (flash ×2 rồi dissolve, lặp)</text>
+  <text x="250" y="326" class="fig-muted" font-size="11">Destroy When Dissolved</text><text x="440" y="326" class="fig-label" font-size="11">☐</text>
+  <text x="250" y="342" class="fig-muted" font-size="10">Play Mode: chuột phải header component ▸ Flash / Dissolve để kích tay</text>
+</svg>
+<figcaption>Ba Enemy dùng chung một material — không có instance. Driver chỉ gắn property block lên renderer đang flash/dissolve và gỡ (`SetPropertyBlock(null)`) khi xong.</figcaption>
+</figure>
+
+**Script**
+
+```hlsl
+// HitFlashDissolve.shader — Unity 6 (6000.x) + URP 17. Unlit, HLSL tay, tương thích SRP Batcher.
+// Ba pass (Forward, ShadowCaster, DepthOnly) dùng chung MỘT CBUFFER qua HLSLINCLUDE — đây là điều kiện
+// để SRP Batcher nhận; dùng UsePass lấy pass của shader khác sẽ làm CBUFFER lệch và mất tương thích.
+Shader "Custom/HitFlashDissolve"
+{
+    Properties
+    {
+        _BaseMap("Base Map", 2D) = "white" {}
+        _NoiseTex("Noise Tex", 2D) = "gray" {}
+        _BaseColor("Base Color", Color) = (1, 1, 1, 1)
+        _FlashAmount("Flash Amount", Range(0, 1)) = 0
+        _Dissolve("Dissolve", Range(0, 1)) = 0
+        _EdgeWidth("Edge Width", Range(0, 0.2)) = 0.05
+        [HDR] _EdgeColor("Edge Color", Color) = (1, 0.83, 0.23, 1)
+    }
+
+    SubShader
+    {
+        Tags { "RenderType" = "Opaque" "Queue" = "AlphaTest" "RenderPipeline" = "UniversalPipeline" }
+
+        HLSLINCLUDE
+        #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Core.hlsl"
+
+        TEXTURE2D(_BaseMap);  SAMPLER(sampler_BaseMap);
+        TEXTURE2D(_NoiseTex); SAMPLER(sampler_NoiseTex);
+
+        // Mọi property của material nằm trong đúng một CBUFFER này → SRP Batcher gom được.
+        CBUFFER_START(UnityPerMaterial)
+            float4 _BaseMap_ST;
+            float4 _NoiseTex_ST;
+            half4  _BaseColor;
+            half   _FlashAmount;
+            half   _Dissolve;
+            half   _EdgeWidth;
+            half4  _EdgeColor;
+        CBUFFER_END
+
+        struct Attributes
+        {
+            float4 positionOS : POSITION;
+            float3 normalOS   : NORMAL;
+            float2 uv         : TEXCOORD0;
+        };
+
+        struct Varyings
+        {
+            float4 positionHCS : SV_POSITION;
+            float2 uv          : TEXCOORD0;   // half đủ cho UV, nhưng interpolator luôn là float
+            float2 uvNoise     : TEXCOORD1;
+        };
+
+        // Dissolve dùng chung cho cả 3 pass: bóng và depth cũng phải "thủng" theo mesh.
+        half SampleNoiseAndClip(float2 uvNoise)
+        {
+            half noise = SAMPLE_TEXTURE2D(_NoiseTex, sampler_NoiseTex, uvNoise).r;
+            clip(noise - _Dissolve);
+            return noise;
+        }
+        ENDHLSL
+
+        Pass
+        {
+            Name "Unlit"
+            Tags { "LightMode" = "UniversalForward" }
+            Cull Back
+            ZWrite On
+
+            HLSLPROGRAM
+            #pragma vertex vert
+            #pragma fragment frag
+
+            Varyings vert(Attributes IN)
+            {
+                Varyings OUT;
+                OUT.positionHCS = TransformObjectToHClip(IN.positionOS.xyz);
+                OUT.uv      = TRANSFORM_TEX(IN.uv, _BaseMap);
+                OUT.uvNoise = TRANSFORM_TEX(IN.uv, _NoiseTex);
+                return OUT;
+            }
+
+            half4 frag(Varyings IN) : SV_Target
+            {
+                half noise = SampleNoiseAndClip(IN.uvNoise);
+                half4 col = SAMPLE_TEXTURE2D(_BaseMap, sampler_BaseMap, IN.uv) * _BaseColor;
+
+                // Dải cạnh dissolve: pixel còn sống nhưng noise nằm trong [_Dissolve, _Dissolve + _EdgeWidth].
+                // step() thay if — không rẽ nhánh trong fragment. Nhân step(0.001, _Dissolve) để không có viền khi chưa dissolve.
+                half edge = step(noise, _Dissolve + _EdgeWidth) * step(0.001h, _Dissolve);
+                col.rgb += _EdgeColor.rgb * edge;              // emission HDR → Bloom bắt được nếu bật
+
+                col.rgb = lerp(col.rgb, half3(1, 1, 1), _FlashAmount);   // hit flash: trộn trắng
+                return col;
+            }
+            ENDHLSL
+        }
+
+        Pass
+        {
+            Name "ShadowCaster"
+            Tags { "LightMode" = "ShadowCaster" }
+            ZWrite On
+            ZTest LEqual
+            ColorMask 0
+
+            HLSLPROGRAM
+            #pragma vertex vertShadow
+            #pragma fragment fragShadow
+            #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Shadows.hlsl"
+
+            float3 _LightDirection;   // URP set per-pass; không phải property material nên nằm ngoài CBUFFER
+
+            Varyings vertShadow(Attributes IN)
+            {
+                Varyings OUT;
+                float3 positionWS = TransformObjectToWorld(IN.positionOS.xyz);
+                float3 normalWS   = TransformObjectToWorldNormal(IN.normalOS);
+                OUT.positionHCS   = TransformWorldToHClip(ApplyShadowBias(positionWS, normalWS, _LightDirection));
+            #if UNITY_REVERSED_Z
+                OUT.positionHCS.z = min(OUT.positionHCS.z, UNITY_NEAR_CLIP_VALUE);
+            #else
+                OUT.positionHCS.z = max(OUT.positionHCS.z, UNITY_NEAR_CLIP_VALUE);
+            #endif
+                OUT.uv      = IN.uv;
+                OUT.uvNoise = TRANSFORM_TEX(IN.uv, _NoiseTex);
+                return OUT;
+            }
+
+            half4 fragShadow(Varyings IN) : SV_Target
+            {
+                SampleNoiseAndClip(IN.uvNoise);   // bóng cũng thủng theo dissolve
+                return 0;
+            }
+            ENDHLSL
+        }
+
+        Pass
+        {
+            Name "DepthOnly"
+            Tags { "LightMode" = "DepthOnly" }
+            ZWrite On
+            ColorMask R
+
+            HLSLPROGRAM
+            #pragma vertex vertDepth
+            #pragma fragment fragDepth
+
+            Varyings vertDepth(Attributes IN)
+            {
+                Varyings OUT;
+                OUT.positionHCS = TransformObjectToHClip(IN.positionOS.xyz);
+                OUT.uv      = IN.uv;
+                OUT.uvNoise = TRANSFORM_TEX(IN.uv, _NoiseTex);
+                return OUT;
+            }
+
+            half fragDepth(Varyings IN) : SV_Target
+            {
+                SampleNoiseAndClip(IN.uvNoise);
+                return IN.positionHCS.z;
+            }
+            ENDHLSL
+        }
+    }
+}
+```
+
+```csharp
+// FlashDissolveDriver.cs — Unity 6 (6000.x) + URP 17. Gắn lên object có Renderer dùng material shader Custom/HitFlashDissolve.
+// MaterialPropertyBlock làm renderer RỜI SRP Batcher trong lúc block còn gắn → chỉ dùng cho ít object, thời gian ngắn,
+// và gỡ block (SetPropertyBlock(null)) ngay khi hiệu ứng xong. Hàng trăm object cần giá trị riêng lâu dài → vertex color / instancing.
+using System.Collections;
+using UnityEngine;
+
+[RequireComponent(typeof(Renderer))]
+public class FlashDissolveDriver : MonoBehaviour
+{
+    // PropertyToID một lần, theo REFERENCE trong shader (bắt đầu bằng _), không phải Display Name.
+    static readonly int FlashId    = Shader.PropertyToID("_FlashAmount");
+    static readonly int DissolveId = Shader.PropertyToID("_Dissolve");
+
+    [SerializeField] float flashDuration = 0.08f;
+    [SerializeField] float dissolveDuration = 0.6f;
+    [SerializeField] bool autoDemo = true;               // flash ×2 rồi dissolve ra/vào, lặp — để thấy trong Frame Debugger
+    [SerializeField] bool destroyWhenDissolved = false;
+
+    Renderer rend;
+    MaterialPropertyBlock mpb;
+    Coroutine flashRoutine, dissolveRoutine;
+    float flash, dissolve;                                // 0 = không hiệu ứng
+
+    void Awake()
+    {
+        rend = GetComponent<Renderer>();
+        mpb = new MaterialPropertyBlock();                // tạo MỘT lần, tái dùng — không new mỗi frame
+    }
+
+    void Start()
+    {
+        if (autoDemo) StartCoroutine(DemoLoop());
+    }
+
+    [ContextMenu("Flash")]
+    public void Flash()
+    {
+        if (flashRoutine != null) StopCoroutine(flashRoutine);
+        flashRoutine = StartCoroutine(FlashRoutine());
+    }
+
+    [ContextMenu("Dissolve")]
+    public void Dissolve() => Dissolve(reverse: false);
+
+    public void Dissolve(bool reverse)
+    {
+        if (dissolveRoutine != null) StopCoroutine(dissolveRoutine);
+        dissolveRoutine = StartCoroutine(DissolveRoutine(reverse));
+    }
+
+    IEnumerator FlashRoutine()
+    {
+        float t = 0f;
+        while (t < flashDuration)
+        {
+            t += Time.deltaTime;
+            flash = 1f - t / flashDuration;               // 1 → 0: trắng rồi tắt dần
+            Apply();
+            yield return null;
+        }
+        flash = 0f;
+        Apply();                                          // về 0 → có thể gỡ block
+        flashRoutine = null;
+    }
+
+    IEnumerator DissolveRoutine(bool reverse)
+    {
+        float t = 0f;
+        while (t < dissolveDuration)
+        {
+            t += Time.deltaTime;
+            float k = Mathf.Clamp01(t / dissolveDuration);
+            dissolve = reverse ? 1f - k : k;
+            Apply();
+            yield return null;
+        }
+        dissolve = reverse ? 0f : 1f;
+        Apply();
+        dissolveRoutine = null;
+        if (!reverse && destroyWhenDissolved) Destroy(gameObject);
+    }
+
+    IEnumerator DemoLoop()
+    {
+        var pause = new WaitForSeconds(0.7f);
+        while (true)
+        {
+            Flash(); yield return pause;
+            Flash(); yield return pause;
+            Dissolve(reverse: false); yield return new WaitForSeconds(dissolveDuration + 0.4f);
+            Dissolve(reverse: true);  yield return new WaitForSeconds(dissolveDuration + 0.7f);
+        }
+    }
+
+    void Apply()
+    {
+        // Cả hai về 0 → GỠ block: renderer quay lại SRP Batch ngay frame sau. Đây là dòng quan trọng nhất.
+        if (flash <= 0f && dissolve <= 0f)
+        {
+            rend.SetPropertyBlock(null);
+            return;
+        }
+        mpb.SetFloat(FlashId, flash);
+        mpb.SetFloat(DissolveId, dissolve);
+        rend.SetPropertyBlock(mpb);
+    }
+
+    void OnDisable()
+    {
+        flash = dissolve = 0f;
+        if (rend != null) rend.SetPropertyBlock(null);    // object bị pool/tắt giữa hiệu ứng không được giữ block mãi
+    }
+}
+```
+
+**Chạy thử**
+- Tạo material từ shader `Custom/HitFlashDissolve`, gán một noise texture (Wrap Repeat) vào Noise Tex; nếu material **hồng** là project chưa dùng URP hoặc Graphics Settings chưa gán URP Asset.
+- Nhân 3 Enemy dùng chung M_Enemy, không chạm `.material`. `Window ▸ Analysis ▸ Frame Debugger` ▸ Enable: cả ba nằm trong **một** dòng `SRP Batch` (3 draws). Chọn shader trong Inspector: mục *SRP Batcher* phải ghi **compatible** — ghi *not compatible* là có property nằm ngoài CBUFFER.
+- Bật Play: mỗi 0.7s một cú flash 0.08s (≈ 5 frame ở 60 FPS); đúng lúc đó Frame Debugger tách Enemy đang flash thành draw riêng với lý do "Node has a MaterialPropertyBlock", frame kế tiếp gộp lại — nếu **không gộp lại** thì `SetPropertyBlock(null)` chưa được gọi.
+- Dissolve 0.6s: mesh thủng theo noise với viền vàng `#FFD43B`; **bóng dưới đất thủng theo** (ShadowCaster pass cũng clip). Bật Bloom trong Volume, viền loé — vì cộng emission HDR thay vì lerp.
+- Đặt `Flash Duration` = 0.5 ngay trong Play: flash dài rõ mà không cần sửa shader — chứng minh giá trị đi qua MPB. Kiểm `Shader.PropertyToID("_FlashAmount")` bằng cách đổi thành `"Flash Amount"` (Display Name): không lỗi, không hiệu ứng.

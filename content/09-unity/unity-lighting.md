@@ -155,4 +155,246 @@ Ràng buộc:
 Kèm checklist kiểm tra bằng Frame Debugger sau khi bake.
 ```
 
-**Bẫy thường gặp:** AI viết `volume.profile.TryGet<Vignette>(out var v); v.intensity.value = 0.6f;` — chạy đúng trong Play Mode, rồi giá trị 0.6 **được lưu vào asset profile** vì `volume.profile` trả về asset gốc, không phải bản sao. Muốn sửa lúc chạy phải dùng `volume.profile = Instantiate(profile)` hoặc điều khiển `weight` của Volume riêng.
+**Bẫy thường gặp:** AI viết `volume.sharedProfile.TryGet<Vignette>(out var v); v.intensity.value = 0.6f;` — chạy đúng trong Play Mode, rồi giá trị 0.6 **được lưu vào asset profile** vì `sharedProfile` là asset gốc. Muốn sửa lúc chạy phải dùng `volume.profile` (Unity tự instantiate bản sao riêng cho Volume đó ở lần truy cập đầu, nhớ Destroy trong `OnDestroy`) hoặc chỉ điều khiển `weight` của một Volume riêng.
+
+## 💻 Code
+
+Demo dựng hai thứ hay bị làm sai: một **Volume riêng cho trạng thái máu thấp** điều khiển bằng `weight` (không ghi vào asset profile) có vignette đập theo nhịp, và một **kiểm toán ngân sách đèn realtime** chạy mỗi 0.5s — tắt bóng point light ở xa camera và cảnh báo khi vượt "1 directional + 2 point đổ bóng".
+
+**Setup**
+
+<figure class="fig">
+<svg viewBox="0 0 660 370" role="img" aria-label="Hierarchy có Volume_Global, Volume_LowHP với GameplayVolumeDriver, LightBudget và bốn Torch; Inspector hiện Volume Global weight 0 với profile Vignette 0.45 và Saturation -40, GameplayVolumeDriver, Directional Light Mixed và URP Asset shadow distance 40, cascades 2, per object limit 4, Forward+ tắt">
+  <rect x="10" y="10" width="200" height="350" rx="8" class="fig-box"/>
+  <text x="22" y="32" class="fig-label" font-size="13" font-weight="600">Hierarchy</text>
+  <line x1="10" y1="42" x2="210" y2="42" class="fig-line"/>
+  <text x="22" y="64" class="fig-muted" font-size="12">Main Camera  (Post Processing ☑)</text>
+  <text x="22" y="82" class="fig-muted" font-size="12">Directional Light  (Mixed)</text>
+  <text x="22" y="100" class="fig-muted" font-size="12">Volume_Global  (weight 1)</text>
+  <rect x="16" y="108" width="188" height="20" rx="4" fill="#6ea8fe" opacity="0.18"/>
+  <text x="22" y="123" class="fig-label" font-size="12" font-weight="600">Volume_LowHP  (weight 0)</text>
+  <text x="38" y="143" class="fig-muted" font-size="11">└ GameplayVolumeDriver</text>
+  <text x="22" y="163" class="fig-muted" font-size="12">_LightBudget</text>
+  <text x="38" y="181" class="fig-muted" font-size="11">└ LightBudget</text>
+  <text x="22" y="201" class="fig-muted" font-size="12">▾ Torches</text>
+  <text x="38" y="219" class="fig-muted" font-size="11">Torch_01…04  (Point, Mixed, Soft)</text>
+  <text x="22" y="247" class="fig-label" font-size="12" font-weight="600">Project</text>
+  <text x="22" y="265" class="fig-muted" font-size="11">Settings/VP_LowHP.asset</text>
+  <text x="22" y="281" class="fig-muted" font-size="11">Settings/URP_Mobile.asset</text>
+  <rect x="16" y="294" width="188" height="58" rx="4" class="fig-box"/>
+  <text x="22" y="310" class="fig-label" font-size="11" font-weight="600">Console (LightBudget)</text>
+  <text x="22" y="326" fill="#ffd43b" font-size="10">⚠ 3 point light đổ bóng &gt; ngân sách 2</text>
+  <text x="22" y="342" class="fig-muted" font-size="10">Torch_04 cách camera 31m → tắt bóng</text>
+  <rect x="226" y="10" width="424" height="350" rx="8" class="fig-box"/>
+  <text x="238" y="32" class="fig-label" font-size="13" font-weight="600">Inspector</text>
+  <line x1="226" y1="42" x2="650" y2="42" class="fig-line"/>
+  <rect x="234" y="50" width="408" height="18" rx="3" fill="#b197fc" opacity="0.22"/>
+  <text x="242" y="63" class="fig-label" font-size="12" font-weight="600">Volume_LowHP ▸ Volume</text>
+  <text x="250" y="82" class="fig-muted" font-size="11">Mode / Priority</text><text x="440" y="82" class="fig-label" font-size="11">Global   /   10</text>
+  <text x="250" y="98" class="fig-muted" font-size="11">Weight</text><text x="440" y="98" class="fig-label" font-size="11">0   (code điều khiển)</text>
+  <text x="250" y="114" class="fig-muted" font-size="11">Profile</text><text x="440" y="114" class="fig-label" font-size="11">VP_LowHP</text>
+  <text x="250" y="130" class="fig-muted" font-size="11">└ Vignette ▸ Intensity / Smoothness</text><text x="440" y="130" class="fig-label" font-size="11">☑ 0.45   /   ☑ 0.4</text>
+  <text x="250" y="146" class="fig-muted" font-size="11">└ Color Adjustments ▸ Saturation</text><text x="440" y="146" class="fig-label" font-size="11">☑ −40</text>
+  <rect x="234" y="156" width="408" height="18" rx="3" fill="#ffd43b" opacity="0.22"/>
+  <text x="242" y="169" class="fig-label" font-size="12" font-weight="600">Gameplay Volume Driver (Script)</text>
+  <text x="250" y="188" class="fig-muted" font-size="11">Low Hp Volume</text><text x="440" y="188" class="fig-label" font-size="11">Volume_LowHP</text>
+  <text x="250" y="204" class="fig-muted" font-size="11">Fade / Pulse Speed</text><text x="440" y="204" class="fig-label" font-size="11">0.3   /   2</text>
+  <text x="250" y="220" class="fig-muted" font-size="11">Pulse Amplitude / Low Hp Threshold</text><text x="440" y="220" class="fig-label" font-size="11">0.1   /   0.3</text>
+  <text x="250" y="236" class="fig-muted" font-size="11">Debug Health (slider để thử)</text><text x="440" y="236" class="fig-label" font-size="11">1</text>
+  <rect x="234" y="246" width="408" height="18" rx="3" fill="#51cf9b" opacity="0.22"/>
+  <text x="242" y="259" class="fig-label" font-size="12" font-weight="600">Directional Light ▸ Light</text>
+  <text x="250" y="278" class="fig-muted" font-size="11">Mode / Indirect Multiplier</text><text x="440" y="278" class="fig-label" font-size="11">Mixed   /   1</text>
+  <text x="250" y="294" class="fig-muted" font-size="11">Shadow Type</text><text x="440" y="294" class="fig-label" font-size="11">Soft Shadows</text>
+  <rect x="234" y="304" width="408" height="18" rx="3" fill="#6ea8fe" opacity="0.22"/>
+  <text x="242" y="317" class="fig-label" font-size="12" font-weight="600">URP_Mobile (Universal Render Pipeline Asset)</text>
+  <text x="250" y="336" class="fig-muted" font-size="11">Shadows ▸ Max Distance / Cascade Count</text><text x="440" y="336" class="fig-label" font-size="11">40   /   2</text>
+  <text x="250" y="352" class="fig-muted" font-size="11">Additional Lights ▸ Per Object Limit · Forward+</text><text x="440" y="352" class="fig-label" font-size="11">4   ·   ☐</text>
+</svg>
+<figcaption>Volume_LowHP là Volume Global thứ hai, weight 0, priority cao hơn Volume_Global. Driver chỉ kéo weight và pulse intensity trên bản profile đã instantiate. LightBudget đọc URP Asset không cần — nó đếm component Light trong cảnh.</figcaption>
+</figure>
+
+**Script**
+
+```csharp
+// GameplayVolumeDriver.cs — Unity 6 (6000.x) + URP 17. Điều khiển Volume_LowHP: weight mượt 0→1 trong 0.3s, vignette đập theo nhịp khi máu thấp.
+// volume.profile (KHÔNG phải volume.sharedProfile) trả về bản sao được instantiate riêng cho Volume này — ghi vào nó không làm bẩn asset.
+// Bản sao là ScriptableObject sống trong bộ nhớ → Destroy ở OnDestroy.
+using System.Collections;
+using UnityEngine;
+using UnityEngine.Rendering;
+using UnityEngine.Rendering.Universal;
+
+public class GameplayVolumeDriver : MonoBehaviour
+{
+    [SerializeField] Volume lowHpVolume;                       // Volume riêng, Global, weight 0, profile có Vignette + Color Adjustments
+    [SerializeField] float fade = 0.3f;
+    [SerializeField] float pulseSpeed = 2f;                    // Hz
+    [SerializeField] float pulseAmplitude = 0.1f;              // ± quanh intensity gốc trong profile (0.45)
+    [SerializeField, Range(0f, 1f)] float lowHpThreshold = 0.3f;
+    [SerializeField, Range(0f, 1f)] float debugHealth = 1f;   // kéo slider trong Play Mode để thử, không cần hệ máu thật
+
+    Vignette vignette;
+    ColorAdjustments colorAdjustments;
+    float baseIntensity;
+    bool lowHp;
+    Coroutine fadeRoutine;
+
+    void Awake()
+    {
+        if (lowHpVolume == null) { Debug.LogError("Chưa gán Volume_LowHP", this); enabled = false; return; }
+
+        VolumeProfile profile = lowHpVolume.profile;           // instantiate lần đầu truy cập
+        if (!profile.TryGet(out vignette) || !profile.TryGet(out colorAdjustments))
+        {
+            Debug.LogError("Profile cần có Vignette và Color Adjustments (bật override Intensity / Saturation)", this);
+            enabled = false; return;
+        }
+        baseIntensity = vignette.intensity.value;              // 0.45 từ profile — không hardcode ở đây
+        lowHpVolume.weight = 0f;
+    }
+
+    /// <summary>Gọi từ hệ máu với giá trị 0…1. Chỉ đổi trạng thái khi qua ngưỡng — không fade lại mỗi lần trúng đòn.</summary>
+    public void SetHealth(float normalized)
+    {
+        bool nowLow = normalized <= lowHpThreshold;
+        if (nowLow == lowHp) return;
+        lowHp = nowLow;
+        if (fadeRoutine != null) StopCoroutine(fadeRoutine);
+        fadeRoutine = StartCoroutine(FadeWeight(lowHp ? 1f : 0f));
+    }
+
+    IEnumerator FadeWeight(float target)
+    {
+        float start = lowHpVolume.weight, t = 0f;
+        while (t < fade)
+        {
+            t += Time.unscaledDeltaTime;                        // hitstop/slow-mo không được kéo dài fade
+            lowHpVolume.weight = Mathf.Lerp(start, target, t / fade);
+            yield return null;
+        }
+        lowHpVolume.weight = target;
+        fadeRoutine = null;
+    }
+
+    void Update()
+    {
+        SetHealth(debugHealth);                                // demo; dự án thật bỏ dòng này, để hệ máu gọi SetHealth
+        if (!lowHp) return;
+
+        // Pulse quanh giá trị gốc, cùng pha với Saturation để "tim đập" đồng bộ. Sin thay AnimationCurve cho gọn.
+        float pulse = 0.5f + 0.5f * Mathf.Sin(Time.unscaledTime * pulseSpeed * 2f * Mathf.PI);
+        vignette.intensity.value = baseIntensity + pulseAmplitude * (pulse * 2f - 1f);
+        colorAdjustments.saturation.value = Mathf.Lerp(-40f, -60f, pulse);
+    }
+
+    void OnDestroy()
+    {
+        // Gỡ bản profile đã instantiate (và các component con của nó) để không rò rỉ qua nhiều lần load scene.
+        if (lowHpVolume == null || !lowHpVolume.HasInstantiatedProfile()) return;
+        var profile = lowHpVolume.profile;
+        foreach (var c in profile.components) Destroy(c);
+        Destroy(profile);
+    }
+}
+```
+
+```csharp
+// LightBudget.cs — Unity 6 (6000.x) + URP 17. Kiểm toán đèn realtime mỗi 0.5s (coroutine, KHÔNG mỗi frame):
+// tắt bóng point/spot light cách camera > 25m, khôi phục khi lại gần, cảnh báo khi vượt ngân sách "1 directional + 2 point đổ bóng".
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+public class LightBudget : MonoBehaviour
+{
+    [SerializeField] Camera targetCamera;                  // trống → Camera.main
+    [SerializeField] float checkInterval = 0.5f;
+    [SerializeField] float shadowCullDistance = 25f;
+    [SerializeField] int maxShadowedDirectional = 1;
+    [SerializeField] int maxShadowedPunctual = 2;          // point + spot
+
+    // Bóng gốc của từng đèn để khôi phục — không được "đoán" lại là Soft hay Hard
+    readonly Dictionary<Light, LightShadows> originalShadows = new();
+    bool wasOverBudget;
+
+    public int RealtimeLights { get; private set; }
+    public int ShadowedDirectional { get; private set; }
+    public int ShadowedPunctual { get; private set; }
+
+    void OnEnable()
+    {
+        if (targetCamera == null) targetCamera = Camera.main;
+        StartCoroutine(AuditLoop());
+    }
+
+    IEnumerator AuditLoop()
+    {
+        var wait = new WaitForSecondsRealtime(checkInterval);   // tạo MỘT lần, tái dùng
+        while (enabled)
+        {
+            Audit();
+            yield return wait;
+        }
+    }
+
+    void Audit()
+    {
+        if (targetCamera == null) return;
+        Vector3 camPos = targetCamera.transform.position;
+        int realtime = 0, shadowedDir = 0, shadowedPunctual = 0;
+
+        // FindObjectsByType cấp phát một mảng — chấp nhận được ở tần suất 2 lần/giây. Dự án lớn: đèn tự đăng ký vào danh sách khi OnEnable.
+        var lights = FindObjectsByType<Light>(FindObjectsSortMode.None);
+        foreach (var l in lights)
+        {
+            if (!l.enabled) continue;
+            if (l.bakingOutput.lightmapBakeType == LightmapBakeType.Baked) continue;   // Baked không tốn lúc chạy
+            realtime++;
+
+            if (l.type == LightType.Directional)
+            {
+                if (l.shadows != LightShadows.None) shadowedDir++;
+                continue;
+            }
+
+            // Point/Spot: nhớ bóng gốc lần đầu gặp, rồi bật/tắt theo khoảng cách tới camera
+            if (!originalShadows.TryGetValue(l, out var original))
+            {
+                original = l.shadows;
+                originalShadows[l] = original;
+            }
+            if (original == LightShadows.None) continue;
+
+            float dist = Vector3.Distance(camPos, l.transform.position);
+            l.shadows = dist > shadowCullDistance ? LightShadows.None : original;
+            if (l.shadows != LightShadows.None) shadowedPunctual++;
+        }
+
+        RealtimeLights = realtime;
+        ShadowedDirectional = shadowedDir;
+        ShadowedPunctual = shadowedPunctual;
+
+        bool over = shadowedDir > maxShadowedDirectional || shadowedPunctual > maxShadowedPunctual;
+        if (over && !wasOverBudget)                      // chỉ log khi CHUYỂN trạng thái, không spam mỗi 0.5s
+            Debug.LogWarning($"[LightBudget] {shadowedDir} directional + {shadowedPunctual} point/spot đổ bóng " +
+                             $"(ngân sách {maxShadowedDirectional} + {maxShadowedPunctual}). Mỗi bóng là một lần vẽ lại cảnh.", this);
+        else if (!over && wasOverBudget)
+            Debug.Log("[LightBudget] Đã về trong ngân sách bóng.", this);
+        wasOverBudget = over;
+    }
+
+    void OnDisable()
+    {
+        foreach (var kv in originalShadows)
+            if (kv.Key != null) kv.Key.shadows = kv.Value;     // trả bóng gốc khi tắt hệ
+        originalShadows.Clear();
+    }
+}
+```
+
+**Chạy thử**
+- Vào Play, kéo `Debug Health` xuống dưới 0.3: viền tối hiện lên trong 0.3s rồi **đập** 2 lần/giây (intensity 0.35↔0.55), màu bệch đi (saturation −40…−60). Kéo lên trên 0.3: mờ đi trong 0.3s. Kéo qua lại **trong** vùng < 0.3 không làm fade chạy lại.
+- Thoát Play rồi mở `VP_LowHP.asset`: Intensity vẫn **0.45**, Saturation vẫn **−40**. Nếu asset đổi thì code đang chạm `sharedProfile` — đây là bẫy được nói ở thân bài.
+- `Time.timeScale = 0.2` (đổi trong Project Settings ▸ Time lúc Play): fade vẫn 0.3s thật và nhịp đập vẫn 2 Hz — vì dùng `unscaledDeltaTime` / `unscaledTime`.
+- Đặt 4 Torch có bóng, kéo camera ra xa hơn 25m: Frame Debugger số dòng `AdditionalLightsShadow` giảm theo từng đuốc, Console báo một lần khi vượt "1 + 2" và một lần khi về ngân sách — không lặp mỗi 0.5s.
+- Profiler ▸ CPU: `LightBudget.Audit` chỉ xuất hiện 2 lần/giây; GC Alloc trong frame có audit là một mảng nhỏ (`FindObjectsByType`), các frame khác 0 B.

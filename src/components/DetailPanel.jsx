@@ -39,8 +39,8 @@ export default function DetailPanel({
 
   // Node mới có thể không có tab đang mở → lùi về tab Nội dung.
   useEffect(() => {
-    if (tab === 'unity' && !node.unity) setTab('doc')
-  }, [node.id, node.unity, tab])
+    if ((tab === 'unity' && !node.unity) || (tab === 'code' && !node.code)) setTab('doc')
+  }, [node.id, node.unity, node.code, tab])
 
   const fsIndex = FONT_STEPS.indexOf(fontScale)
   const stepFont = (dir) => {
@@ -99,6 +99,7 @@ export default function DetailPanel({
     const text =
       kind === 'prompt' ? node.aiPrompt
       : kind === 'unity' ? node.unity
+      : kind === 'code' ? node.code
       : buildAiContext(node, nodesById, { subtree: kind === 'subtree' })
     try {
       await navigator.clipboard.writeText(text)
@@ -114,6 +115,7 @@ export default function DetailPanel({
     { id: 'doc', label: t('tabDoc', lang), on: true },
     { id: 'prompt', label: t('tabPrompt', lang), on: true },
     { id: 'unity', label: t('tabUnity', lang), on: !!node.unity },
+    { id: 'code', label: t('tabCode', lang), on: !!node.code },
   ].filter((x) => x.on)
 
   const md = (content) => (
@@ -269,6 +271,18 @@ export default function DetailPanel({
             </button>
           </div>
           {renderPane('unity', 'unity-md')}
+        </section>
+      )}
+
+      {tab === 'code' && (
+        <section className="tab-pane code-pane">
+          <div className="pane-head">
+            <p className="pane-hint">{t('codeHint', lang)}</p>
+            <button className="btn" onClick={() => copy('code')}>
+              {copied === 'code' ? t('copied', lang) : t('copySection', lang)}
+            </button>
+          </div>
+          {renderPane('code', 'code-md')}
         </section>
       )}
 

@@ -231,3 +231,293 @@ Kèm debug overlay: source đang phát + priority, Audio CPU %, dspTime tới ô
 ```
 
 **Bẫy thường gặp:** AI tính điểm chuyển nhạc bằng `AudioSettings.dspTime` nhưng lưu vào `float` hoặc so với `Time.time` — trông đúng vì cùng đơn vị giây, chạy đúng trong 30 giây đầu, rồi lệch dần vì `Time.time` chịu `timeScale` và frame time còn `dspTime` thì không. Yêu cầu tường minh: **mọi biến thời gian nhạc là `double` và chỉ so với `dspTime`**, test bằng bài 5 phút và đo sai số điểm chuyển cuối.
+
+## 💻 Code
+
+Demo dựng tầng audio tối thiểu đủ ship cho game indie: pool 16 AudioSource qua bus SFX thay `PlayOneShot`, slider 0–1 → dB đúng công thức và snapshot Paused chuyển trong 0.2 s, nhạc intro → loop nối khít theo `dspTime`. Kiểm chứng bằng cửa sổ AudioMixer, Profiler ▸ Audio và tai.
+
+**Setup**
+
+<figure class="fig">
+<svg viewBox="0 0 660 340" role="img" aria-label="Hierarchy AudioRoot với 16 AudioSource con và hai source nhạc, sơ đồ bus MainMixer; Inspector hiện SfxPool, MixerController, MusicScheduler">
+  <rect x="10" y="10" width="200" height="320" rx="8" class="fig-box"/>
+  <text x="22" y="32" class="fig-label" font-size="13" font-weight="600">Hierarchy</text>
+  <line x1="10" y1="42" x2="210" y2="42" class="fig-line"/>
+  <rect x="16" y="50" width="188" height="18" rx="4" fill="#6ea8fe" opacity="0.18"/>
+  <text x="22" y="63" class="fig-label" font-size="12" font-weight="600">▾ AudioRoot  (3 script)</text>
+  <text x="38" y="81" class="fig-muted" font-size="11">Sfx_00 … Sfx_15</text>
+  <text x="38" y="97" class="fig-muted" font-size="11">(AudioSource, tạo lúc Awake)</text>
+  <text x="38" y="115" class="fig-muted" font-size="11">Music_Intro · Music_Loop</text>
+  <text x="22" y="133" class="fig-muted" font-size="11">Main Camera  (AudioListener)</text>
+  <line x1="10" y1="148" x2="210" y2="148" class="fig-line"/>
+  <text x="22" y="168" class="fig-label" font-size="12" font-weight="600">MainMixer.mixer</text>
+  <text x="22" y="186" class="fig-muted" font-size="11">Master   ─ Lowpass (snapshot)</text>
+  <text x="34" y="202" class="fig-muted" font-size="11">├ Music    expose MusicVol</text>
+  <text x="34" y="218" class="fig-muted" font-size="11">├ SFX       expose SfxVol</text>
+  <text x="34" y="234" class="fig-muted" font-size="11">└ UI</text>
+  <text x="22" y="256" class="fig-muted" font-size="11">Snapshots: Normal · Paused</text>
+  <text x="22" y="272" class="fig-muted" font-size="11">Paused = Lowpass 800 Hz trên Master</text>
+  <text x="22" y="288" class="fig-muted" font-size="11">MusicVol/SfxVol KHÔNG ở trong snapshot</text>
+  <text x="22" y="316" class="fig-muted" font-size="11">Demo: Space SFX 2D · F SFX 3D · P pause</text>
+  <rect x="226" y="10" width="424" height="320" rx="8" class="fig-box"/>
+  <text x="238" y="32" class="fig-label" font-size="13" font-weight="600">Inspector — AudioRoot</text>
+  <line x1="226" y1="42" x2="650" y2="42" class="fig-line"/>
+  <rect x="234" y="50" width="408" height="18" rx="3" fill="#6ea8fe" opacity="0.22"/>
+  <text x="242" y="63" class="fig-label" font-size="12" font-weight="600">Sfx Pool (Script)</text>
+  <text x="250" y="82" class="fig-muted" font-size="11">Mixer Group</text><text x="440" y="82" class="fig-label" font-size="11">SFX (MainMixer)</text>
+  <text x="250" y="98" class="fig-muted" font-size="11">Pool Size</text><text x="440" y="98" class="fig-label" font-size="11">16</text>
+  <text x="250" y="114" class="fig-muted" font-size="11">Pitch Jitter</text><text x="440" y="114" class="fig-label" font-size="11">0.05</text>
+  <text x="250" y="130" class="fig-muted" font-size="11">Rolloff / Min Distance / Max Distance</text><text x="440" y="130" class="fig-label" font-size="11">Linear  /  2  /  30</text>
+  <text x="250" y="146" class="fig-muted" font-size="11">Test Clip</text><text x="440" y="146" class="fig-label" font-size="11">sfx_hit</text>
+  <rect x="234" y="156" width="408" height="18" rx="3" fill="#51cf9b" opacity="0.22"/>
+  <text x="242" y="169" class="fig-label" font-size="12" font-weight="600">Mixer Controller (Script)</text>
+  <text x="250" y="188" class="fig-muted" font-size="11">Mixer</text><text x="440" y="188" class="fig-label" font-size="11">MainMixer</text>
+  <text x="250" y="204" class="fig-muted" font-size="11">Normal Snapshot / Paused Snapshot</text><text x="440" y="204" class="fig-label" font-size="11">Normal  /  Paused</text>
+  <text x="250" y="220" class="fig-muted" font-size="11">Fade Seconds</text><text x="440" y="220" class="fig-label" font-size="11">0.2</text>
+  <rect x="234" y="230" width="408" height="18" rx="3" fill="#ffd43b" opacity="0.22"/>
+  <text x="242" y="243" class="fig-label" font-size="12" font-weight="600">Music Scheduler (Script)</text>
+  <text x="250" y="262" class="fig-muted" font-size="11">Intro Clip / Loop Clip</text><text x="440" y="262" class="fig-label" font-size="11">bgm_intro  /  bgm_loop</text>
+  <text x="250" y="278" class="fig-muted" font-size="11">Music Group</text><text x="440" y="278" class="fig-label" font-size="11">Music (MainMixer)</text>
+  <text x="250" y="294" class="fig-muted" font-size="11">Lead Time</text><text x="440" y="294" class="fig-label" font-size="11">0.1</text>
+  <text x="250" y="316" class="fig-muted" font-size="11">Import: SFX = ADPCM · Decompress On Load · Mono; Music = Vorbis · Streaming</text>
+</svg>
+<figcaption>Ba script cùng nằm trên AudioRoot. Hai tham số MusicVol/SfxVol phải Expose to script bằng tay trong AudioMixer; snapshot Paused chỉ đụng Lowpass cutoff (800 Hz), không đụng volume để không đè lên slider.</figcaption>
+</figure>
+
+**Script**
+
+```csharp
+// SfxPool.cs — Unity 6 (6000.x). 16 AudioSource con tạo lúc Awake, mọi tiếng đi qua bus SFX. Thay cho PlayOneShot / PlayClipAtPoint.
+using UnityEngine;
+using UnityEngine.Audio;
+using UnityEngine.InputSystem;
+
+public class SfxPool : MonoBehaviour
+{
+    public static SfxPool I { get; private set; }
+
+    [SerializeField] AudioMixerGroup mixerGroup;              // MainMixer ▸ Master ▸ SFX
+    [SerializeField, Range(4, 32)] int poolSize = 16;
+    [SerializeField, Range(0f, 0.2f)] float pitchJitter = 0.05f;
+
+    [Header("3D")]
+    [SerializeField] AudioRolloffMode rolloff = AudioRolloffMode.Linear;
+    [SerializeField] float minDistance = 2f;
+    [SerializeField] float maxDistance = 30f;
+
+    [Header("Demo")]
+    [SerializeField] AudioClip testClip;                      // Space = 2D, F = 3D tại điểm ngẫu nhiên
+
+    AudioSource[] pool;
+    int cursor;
+
+    void Awake()
+    {
+        I = this;
+        pool = new AudioSource[poolSize];
+        for (int i = 0; i < poolSize; i++)
+        {
+            var src = new GameObject($"Sfx_{i:00}").AddComponent<AudioSource>();
+            src.transform.SetParent(transform, false);
+            src.outputAudioMixerGroup = mixerGroup;           // mọi tiếng qua bus, không ngoại lệ
+            src.playOnAwake = false;
+            src.dopplerLevel = 0f;
+            src.rolloffMode = rolloff;
+            src.minDistance = minDistance;
+            src.maxDistance = maxDistance;
+            pool[i] = src;
+        }
+    }
+
+    /// Tiếng 2D (UI, cảnh báo boss): không phụ thuộc vị trí listener.
+    public AudioSource Play(AudioClip clip, float volume = 1f, int priority = 128)
+        => PlayInternal(clip, Vector3.zero, 0f, volume, priority);
+
+    /// Tiếng 3D tại một điểm trong thế giới.
+    public AudioSource Play3D(AudioClip clip, Vector3 pos, float volume = 1f, int priority = 128)
+        => PlayInternal(clip, pos, 1f, volume, priority);
+
+    AudioSource PlayInternal(AudioClip clip, Vector3 pos, float spatialBlend, float volume, int priority)
+    {
+        if (clip == null) return null;
+        var src = Acquire();
+        src.transform.position = pos;
+        src.clip = clip;
+        src.volume = volume;
+        src.spatialBlend = spatialBlend;
+        src.priority = priority;                              // 0 cao nhất … 256 thấp nhất
+        src.pitch = 1f + Random.Range(-pitchJitter, pitchJitter);   // ±5%: 20 bước chân không nghe "máy"
+        src.Play();
+        return src;                                           // caller giữ để Stop nếu cần
+    }
+
+    AudioSource Acquire()
+    {
+        // Quét từ cursor: source rỗi đầu tiên. Hết thì cướp source có priority thấp nhất (số lớn nhất).
+        for (int i = 0; i < pool.Length; i++)
+        {
+            var s = pool[(cursor + i) % pool.Length];
+            if (!s.isPlaying) { cursor = (cursor + i + 1) % pool.Length; return s; }
+        }
+        var victim = pool[cursor];
+        foreach (var s in pool) if (s.priority > victim.priority) victim = s;
+        cursor = (cursor + 1) % pool.Length;
+        return victim;
+    }
+
+    public int PlayingCount
+    {
+        get { int n = 0; foreach (var s in pool) if (s.isPlaying) n++; return n; }
+    }
+
+    void Update()
+    {
+        var kb = Keyboard.current;
+        if (kb == null || testClip == null) return;
+        if (kb.spaceKey.wasPressedThisFrame) Play(testClip);
+        if (kb.fKey.wasPressedThisFrame) Play3D(testClip, Random.insideUnitSphere * 20f, 1f, 96);
+    }
+}
+```
+
+```csharp
+// MixerController.cs — slider 0–1 → dB cho hai expose param, và chuyển snapshot Normal/Paused khi pause.
+using UnityEngine;
+using UnityEngine.Audio;
+using UnityEngine.InputSystem;
+
+public class MixerController : MonoBehaviour
+{
+    public static class Params                         // tên expose — khớp đúng chữ trong AudioMixer, không rải string khắp code
+    {
+        public const string SfxVol = "SfxVol";
+        public const string MusicVol = "MusicVol";
+    }
+
+    [SerializeField] AudioMixer mixer;                 // MainMixer.mixer
+    [SerializeField] AudioMixerSnapshot normalSnapshot;
+    [SerializeField] AudioMixerSnapshot pausedSnapshot;
+    [SerializeField, Min(0f)] float fadeSeconds = 0.2f;
+
+    readonly AudioMixerSnapshot[] snapshots = new AudioMixerSnapshot[1];
+    readonly float[] weights = { 1f };
+    bool paused;
+
+    void Start()
+    {
+        // KHÔNG gọi SetFloat trong Awake — mixer chưa init, SetFloat trả false âm thầm.
+        SetSfxVolume(PlayerPrefs.GetFloat(Params.SfxVol, 0.8f));
+        SetMusicVolume(PlayerPrefs.GetFloat(Params.MusicVol, 0.7f));
+    }
+
+    public void SetSfxVolume(float linear01)   => SetLinear(Params.SfxVol, linear01);    // gắn vào Slider.onValueChanged
+    public void SetMusicVolume(float linear01) => SetLinear(Params.MusicVol, linear01);
+
+    void SetLinear(string param, float v)
+    {
+        v = Mathf.Clamp01(v);
+        float dB = Mathf.Log10(Mathf.Max(v, 0.0001f)) * 20f;     // 1 → 0 dB, 0.5 → −6 dB, 0.1 → −20 dB, 0 → −80 dB
+        if (!mixer.SetFloat(param, dB))
+            Debug.LogError($"Tham số '{param}' chưa Expose to script trong {mixer.name}", mixer);
+        PlayerPrefs.SetFloat(param, v);
+    }
+
+    public void SetPaused(bool value)
+    {
+        if (paused == value) return;
+        paused = value;
+        snapshots[0] = value ? pausedSnapshot : normalSnapshot;
+        mixer.TransitionToSnapshots(snapshots, weights, fadeSeconds);   // Paused: lowpass 800 Hz. Không đụng Time.timeScale.
+    }
+
+    void Update()
+    {
+        var kb = Keyboard.current;
+        if (kb != null && kb.pKey.wasPressedThisFrame) SetPaused(!paused);
+    }
+}
+```
+
+```csharp
+// MusicScheduler.cs — intro → loop nối khít theo dspTime, không Play() + coroutine. Mọi biến thời gian nhạc là double.
+using UnityEngine;
+using UnityEngine.Audio;
+
+public class MusicScheduler : MonoBehaviour
+{
+    [SerializeField] AudioClip introClip;             // cắt đúng ở DAW; không MP3 (padding đầu/cuối làm hở mối nối)
+    [SerializeField] AudioClip loopClip;
+    [SerializeField] AudioMixerGroup musicGroup;      // MainMixer ▸ Master ▸ Music
+    [SerializeField, Range(0.05f, 0.5f)] float leadTime = 0.1f;   // 100 ms cho source kịp prepare trước mốc
+
+    AudioSource introSrc, loopSrc;
+    double startDsp, loopStartDsp;
+
+    void Awake()
+    {
+        introSrc = Create("Music_Intro");
+        loopSrc = Create("Music_Loop");
+        loopSrc.loop = true;
+    }
+
+    AudioSource Create(string name)
+    {
+        var src = new GameObject(name).AddComponent<AudioSource>();
+        src.transform.SetParent(transform, false);
+        src.outputAudioMixerGroup = musicGroup;
+        src.playOnAwake = false;
+        src.spatialBlend = 0f;                        // nhạc là 2D
+        src.priority = 0;                             // nhạc không bao giờ bị cướp voice
+        return src;
+    }
+
+    void Start() => Play();
+
+    public void Play()
+    {
+        introSrc.clip = introClip;
+        loopSrc.clip = loopClip;
+
+        startDsp = AudioSettings.dspTime + leadTime;
+        // Độ dài intro = mẫu / tần số, tính bằng double — clip.length là float, lệch vài mẫu là nghe "click" ở mối nối
+        double introLength = (double)introClip.samples / introClip.frequency;
+        loopStartDsp = startDsp + introLength;
+
+        introSrc.PlayScheduled(startDsp);
+        introSrc.SetScheduledEndTime(loopStartDsp);   // intro dừng đúng mẫu mà loop bắt đầu
+        loopSrc.PlayScheduled(loopStartDsp);
+    }
+
+    public void Stop() { introSrc.Stop(); loopSrc.Stop(); }
+
+    void OnApplicationPause(bool pauseStatus)
+    {
+        AudioListener.pause = pauseStatus;            // dừng mọi source; source UI muốn kêu thì ignoreListenerPause = true
+        if (pauseStatus || AudioSettings.dspTime < loopStartDsp) return;
+        // Đã ở đoạn loop khi bị pause: lịch cũ lệch, lên lịch lại loop từ đầu ô nhịp, bỏ intro
+        loopSrc.Stop();
+        loopStartDsp = AudioSettings.dspTime + leadTime;
+        loopSrc.PlayScheduled(loopStartDsp);
+    }
+
+    /// Cho debug overlay và cho SwitchSegment: âm là đã vào loop.
+    public double SecondsUntilLoop => loopStartDsp - AudioSettings.dspTime;
+
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
+    void OnGUI()
+    {
+        double now = AudioSettings.dspTime;
+        string state = now < startDsp ? "chờ" : now < loopStartDsp ? "intro" : "loop";
+        GUI.Label(new Rect(10, 10, 520, 22),
+            $"music: {state}   tới loop: {loopStartDsp - now:F3} s   dsp: {now:F3}   sfx đang phát: {SfxPool.I?.PlayingCount}");
+    }
+#endif
+}
+```
+
+**Chạy thử**
+- Play: overlay góc trên hiện `chờ` đúng ~0.1 s → `intro` → `loop` khi `tới loop` qua 0.000; mối nối không khựng, không click. Đổi tạm `PlayScheduled` thành `Play()` trong coroutine `WaitForSeconds(introClip.length)` để nghe lệch 5–30 ms và lệch khác nhau mỗi lần.
+- Bấm F 20 lần trong 1 giây: Hierarchy thấy `Sfx_00…Sfx_15` lần lượt sáng (icon loa), `sfx đang phát` tối đa 16; lần thứ 17 khi cả 16 còn kêu → cướp source priority thấp nhất, không lỗi, không GameObject mới. Pitch mỗi tiếng khác nhau trong ±5%.
+- Gọi `SetSfxVolume(0.5f)` (Slider hoặc Inspector Debug): cửa sổ AudioMixer hiện SfxVol = −6.0 dB; 0.1 → −20 dB; 0 → −80 dB (im hẳn). Quên Expose to script → Console lỗi đỏ ghi đúng tên tham số ngay ở Start.
+- Nhấn P: trong 0.2 s nhạc "tối" lại (lowpass 800 Hz), Space vẫn phát SFX qua pool, `Time.timeScale` vẫn 1; P lần nữa trở về Normal. Kéo slider MusicVol trong lúc Paused: slider vẫn có tác dụng vì snapshot không giữ MusicVol.
+- Trên điện thoại bấm Home 10 s rồi quay lại: im hoàn toàn khi ẩn, khi về loop bắt đầu lại sau 0.1 s, không "dồn" một loạt SFX. Grep `PlayClipAtPoint` và `PlayOneShot` trong project: 0 kết quả.

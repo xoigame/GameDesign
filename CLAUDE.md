@@ -68,6 +68,10 @@ Trong file dịch dùng `## 🤖 Prompt for AI` (build nhận cả hai ngôn ng�
 
 Node hiện thực hoá được trong Unity thì có mục `## 🎮 Unity` ở cuối (sau mục 🤖). Build tách thành `node.unity`, web hiện thành tab thứ ba. **Không bắt buộc** — node lý thuyết thì bỏ qua. Code trong mục này phải chạy được, không phải giả mã. Cấu trúc đầy đủ ở `content/_SCHEMA.md`.
 
+## Mục Code
+
+Node nhánh `09-unity/` có mục `## 💻 Code` ở cuối (sau mục 🤖): **một script demo hoàn chỉnh chạy được** trên Unity 6 + **sơ đồ SVG mô phỏng Inspector/Hierarchy** cho đúng thiết lập của node. Build tách thành `node.code`, web hiện thành tab **💻 Code**. Node ngoài nhánh Unity thì không cần. Cấu trúc ở `content/_SCHEMA.md`.
+
 ## Code fence phải cân
 
 `npm run check` báo **lỗi** nếu một file có số code fence lẻ. Lý do: fence chưa đóng làm mọi heading phía sau bị coi là code, nên các mục 🤖/🎮 không được tách ra và **biến mất khỏi web mà build không báo gì**. Đã xảy ra một lần ở `meta-systems.md`.

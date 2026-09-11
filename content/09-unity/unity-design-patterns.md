@@ -249,3 +249,259 @@ Trước khi viết code: liệt kê class, class nào là MonoBehaviour, class 
 ```
 
 **Bẫy thường gặp:** AI khai `public List<Enemy> Items` trong runtime set SO **không** có `[NonSerialized]`. Trên build chạy đúng; trong Editor sau lần Play thứ hai danh sách có 12 tham chiếu "null" và AI director đếm sai số quái. Bạn debug gameplay hai tiếng trong khi lỗi nằm ở một attribute — và AI sẽ không tự nhận ra vì code của nó "đúng" theo mọi tài liệu về `List<T>`.
+
+## 💻 Code
+
+Demo dựng ba vai của ScriptableObject cùng lúc: asset `OnWaveCleared` là event channel, asset `LivingEnemies` là runtime set mà enemy tự đăng ký trong `OnEnable`/`OnDisable`, và `EnemySpawner` dùng `ObjectPool<Enemy>` có sẵn với reset đầy đủ trong `actionOnGet`. Kiểm chứng được: pool xoay vòng đúng 20 object cho vô số wave, danh sách runtime set rỗng khi thoát Play, và channel bắn đúng một lần mỗi wave.
+
+**Setup**
+
+<figure class="fig">
+<svg viewBox="0 0 660 330" role="img" aria-label="Hierarchy có EnemySpawner với 20 con P_Enemy trong pool, Project có hai asset OnWaveCleared và LivingEnemies; Inspector hiện EnemySpawner, VoidEventChannel và EnemyRuntimeSet">
+  <rect x="10" y="10" width="200" height="310" rx="8" class="fig-box"/>
+  <text x="22" y="32" class="fig-label" font-size="13" font-weight="600">Hierarchy</text>
+  <line x1="10" y1="42" x2="210" y2="42" class="fig-line"/>
+  <text x="22" y="64" class="fig-muted" font-size="12">▾ Level01</text>
+  <rect x="16" y="72" width="188" height="20" rx="4" fill="#6ea8fe" opacity="0.18"/>
+  <text x="22" y="87" class="fig-label" font-size="12" font-weight="600">▾ EnemySpawner</text>
+  <text x="38" y="106" class="fig-muted" font-size="11">P_Enemy(Clone) ×20  (con, pool)</text>
+  <text x="22" y="126" class="fig-muted" font-size="11">Main Camera</text>
+  <text x="22" y="158" class="fig-label" font-size="12" font-weight="600">Project</text>
+  <text x="22" y="176" class="fig-muted" font-size="11">_Project/Core/Events/</text>
+  <text x="34" y="194" font-size="11" fill="#51cf9b">OnWaveCleared.asset</text>
+  <text x="22" y="212" class="fig-muted" font-size="11">_Project/Core/Sets/</text>
+  <text x="34" y="230" font-size="11" fill="#ffd43b">LivingEnemies.asset</text>
+  <text x="22" y="248" class="fig-muted" font-size="11">Features/Combat/Prefabs/</text>
+  <text x="34" y="266" class="fig-muted" font-size="11">P_Enemy.prefab</text>
+  <text x="22" y="292" class="fig-muted" font-size="11">P_Enemy: Enemy (Max Hp 30, Lifetime 3)</text>
+  <text x="22" y="308" class="fig-muted" font-size="11">+ Rigidbody (Use Gravity ☐) + Collider</text>
+  <rect x="226" y="10" width="424" height="310" rx="8" class="fig-box"/>
+  <text x="238" y="32" class="fig-label" font-size="13" font-weight="600">Inspector</text>
+  <line x1="226" y1="42" x2="650" y2="42" class="fig-line"/>
+  <rect x="234" y="50" width="408" height="18" rx="3" fill="#6ea8fe" opacity="0.22"/>
+  <text x="242" y="63" class="fig-label" font-size="12" font-weight="600">Enemy Spawner (Script)</text>
+  <text x="250" y="82" class="fig-muted" font-size="11">Prefab</text><text x="440" y="82" class="fig-label" font-size="11">P_Enemy (Enemy)</text>
+  <text x="250" y="98" class="fig-muted" font-size="11">Pool Default / Pool Max</text><text x="440" y="98" class="fig-label" font-size="11">20   /   100</text>
+  <text x="250" y="114" class="fig-muted" font-size="11">Enemies Per Wave</text><text x="440" y="114" class="fig-label" font-size="11">10</text>
+  <text x="250" y="130" class="fig-muted" font-size="11">Spawn Interval / Spawn Radius</text><text x="440" y="130" class="fig-label" font-size="11">0.2   /   6</text>
+  <text x="250" y="146" class="fig-muted" font-size="11">Runtime Set</text><text x="440" y="146" class="fig-label" font-size="11">LivingEnemies</text>
+  <text x="250" y="162" class="fig-muted" font-size="11">Wave Cleared Channel</text><text x="440" y="162" class="fig-label" font-size="11">OnWaveCleared</text>
+  <rect x="234" y="172" width="408" height="18" rx="3" fill="#51cf9b" opacity="0.22"/>
+  <text x="242" y="185" class="fig-label" font-size="12" font-weight="600">OnWaveCleared (Void Event Channel)</text>
+  <text x="250" y="204" class="fig-muted" font-size="11">Description</text><text x="440" y="204" class="fig-label" font-size="11">Spawner raise khi LivingEnemies rỗng</text>
+  <text x="250" y="220" class="fig-muted" font-size="11">listeners</text><text x="440" y="220" class="fig-label" font-size="11">[NonSerialized] — không hiện, không vào asset</text>
+  <rect x="234" y="230" width="408" height="18" rx="3" fill="#ffd43b" opacity="0.22"/>
+  <text x="242" y="243" class="fig-label" font-size="12" font-weight="600">LivingEnemies (Enemy Runtime Set)</text>
+  <text x="250" y="262" class="fig-muted" font-size="11">Items</text><text x="440" y="262" class="fig-label" font-size="11">0  ([NonSerialized], rỗng khi thoát Play)</text>
+  <text x="250" y="278" class="fig-muted" font-size="11">Count lúc Play</text><text x="440" y="278" class="fig-label" font-size="11">0 → 10 → 0 → 10 …</text>
+  <text x="250" y="304" class="fig-muted" font-size="11">Hai asset SO này được cả Spawner lẫn UI/audio tham chiếu — không ai FindObjectsByType.</text>
+</svg>
+<figcaption>Spawner giữ pool làm con của chính nó: unload scene là pool đi theo, không còn stack chứa object đã destroy. Enemy không biết Spawner, chỉ biết runtime set và callback trả về pool.</figcaption>
+</figure>
+
+**Script**
+
+```csharp
+// VoidEventChannel.cs — Unity 6 (6000.x). Asset: Create ▸ Events ▸ Void Channel → _Project/Core/Events/OnWaveCleared.asset
+using System;
+using UnityEngine;
+
+[CreateAssetMenu(menuName = "Events/Void Channel", fileName = "OnSomething")]
+public sealed class VoidEventChannel : ScriptableObject
+{
+    [TextArea] [SerializeField] string description;   // cho designer biết ai raise, ai nghe — không dùng lúc chạy
+
+    [NonSerialized] Action listeners;                 // KHÔNG serialize: không được ghi vào asset khi Save Project
+    [NonSerialized] int raiseCount;
+
+    public int ListenerCount => listeners?.GetInvocationList().Length ?? 0;
+    public int RaiseCount => raiseCount;
+
+    public void Raise() { raiseCount++; listeners?.Invoke(); }
+    public void Register(Action a)   => listeners += a;
+    public void Unregister(Action a) => listeners -= a;
+
+    // Lớp bảo vệ thứ hai: subscriber MonoBehaviour gỡ trong OnDisable là lớp chính;
+    // OnDisable của SO chạy khi Domain Reload / unload asset, dọn nốt những gì còn sót.
+    void OnDisable() { listeners = null; raiseCount = 0; }
+}
+```
+
+```csharp
+// EnemyRuntimeSet.cs — Unity 6 (6000.x). Asset: Create ▸ Runtime Sets ▸ Enemy → _Project/Core/Sets/LivingEnemies.asset
+using System;
+using System.Collections.Generic;
+using UnityEngine;
+
+[CreateAssetMenu(menuName = "Runtime Sets/Enemy", fileName = "LivingEnemies")]
+public sealed class EnemyRuntimeSet : ScriptableObject
+{
+    [NonSerialized] List<Enemy> items = new(64);      // thiếu [NonSerialized] = danh sách object chết dính vào asset
+
+    public IReadOnlyList<Enemy> Items => items;
+    public int Count => items.Count;
+
+    /// <summary>Bắn khi phần tử cuối rời set. Khai `event` để không ai `=` ghi đè cả danh sách.</summary>
+    public event Action Emptied;
+
+    public void Add(Enemy e)    { if (!items.Contains(e)) items.Add(e); }
+    public void Remove(Enemy e) { if (items.Remove(e) && items.Count == 0) Emptied?.Invoke(); }
+
+    void OnDisable() { items.Clear(); Emptied = null; }   // thoát Play: không dính sang lần Play sau
+}
+```
+
+```csharp
+// Enemy.cs — Unity 6 (6000.x). Trên prefab P_Enemy cùng Rigidbody (Use Gravity ☐) + Collider bất kỳ.
+// Đăng ký vào runtime set theo cặp OnEnable/OnDisable; chết thì TRẢ VỀ POOL, không Destroy.
+using UnityEngine;
+
+public sealed class Enemy : MonoBehaviour
+{
+    [SerializeField] float maxHp = 30f;
+    [SerializeField] float lifetime = 3f;      // demo: tự chết sau N giây để thấy pool xoay vòng
+
+    public float Hp { get; private set; }
+
+    EnemyRuntimeSet set;                       // Spawner gán qua Init — Enemy không biết Spawner là ai
+    System.Action<Enemy> release;
+    Rigidbody rb;
+    TrailRenderer trail;
+    float age;
+    bool released;
+
+    void Awake()
+    {
+        rb = GetComponent<Rigidbody>();
+        trail = GetComponent<TrailRenderer>();  // có thể null — reset có kiểm tra
+    }
+
+    public void Init(EnemyRuntimeSet runtimeSet, System.Action<Enemy> releaseToPool)
+    {
+        set = runtimeSet;
+        release = releaseToPool;
+    }
+
+    void OnEnable()  { if (set != null) set.Add(this); }
+    void OnDisable() { if (set != null) set.Remove(this); }
+
+    /// <summary>Pool gọi trong actionOnGet, SAU SetActive(true). Mọi thứ SetActive KHÔNG tự reset nằm ở đây.</summary>
+    public void ResetState()
+    {
+        Hp = maxHp;
+        age = 0f;
+        released = false;
+        transform.localScale = Vector3.one;    // từng bị parent vào object có scale khác thì lệch
+        if (rb != null) { rb.linearVelocity = Vector3.zero; rb.angularVelocity = Vector3.zero; }   // 2022 LTS: rb.velocity
+        if (trail != null) trail.Clear();      // không Clear: vệt kéo từ chỗ chết cũ sang chỗ spawn mới
+        StopAllCoroutines();
+    }
+
+    public void TakeDamage(float dmg) { Hp -= dmg; if (Hp <= 0f) Die(); }
+
+    void Update()
+    {
+        age += Time.deltaTime;
+        if (age >= lifetime) Die();
+    }
+
+    void Die()
+    {
+        if (released) return;                  // collectionCheck của pool sẽ ném lỗi nếu Release hai lần
+        released = true;
+        release?.Invoke(this);
+    }
+}
+```
+
+```csharp
+// EnemySpawner.cs — Unity 6 (6000.x). Trên GameObject "EnemySpawner" trong scene Level.
+// Pool có sẵn của Unity; việc của ta là createFunc + reset trong actionOnGet, và nghe runtime set để biết wave sạch.
+using System.Collections;
+using UnityEngine;
+using UnityEngine.Pool;
+
+public sealed class EnemySpawner : MonoBehaviour
+{
+    [Header("Pool")]
+    [SerializeField] Enemy prefab;
+    [SerializeField] int poolDefault = 20;
+    [SerializeField] int poolMax = 100;
+
+    [Header("Wave")]
+    [SerializeField] int enemiesPerWave = 10;
+    [SerializeField] float spawnInterval = 0.2f;
+    [SerializeField] float spawnRadius = 6f;
+
+    [Header("Kênh ScriptableObject")]
+    [SerializeField] EnemyRuntimeSet runtimeSet;
+    [SerializeField] VoidEventChannel waveClearedChannel;
+
+    ObjectPool<Enemy> pool;
+    int wave;
+
+    void Awake()
+    {
+        pool = new ObjectPool<Enemy>(
+            createFunc: Create,
+            actionOnGet: e => { e.gameObject.SetActive(true); e.ResetState(); },   // SetActive trước để Rigidbody nhận velocity
+            actionOnRelease: e => e.gameObject.SetActive(false),
+            actionOnDestroy: e => Destroy(e.gameObject),
+            collectionCheck: true,                                                // Editor: bắt Release hai lần
+            defaultCapacity: poolDefault,
+            maxSize: poolMax);
+    }
+
+    void OnEnable()  => runtimeSet.Emptied += OnAllDead;
+    void OnDisable() { runtimeSet.Emptied -= OnAllDead; StopAllCoroutines(); }
+
+    void Start() => StartCoroutine(SpawnWave());
+
+    Enemy Create()
+    {
+        var e = Instantiate(prefab, transform);   // con của Spawner: unload scene là pool đi theo
+        e.Init(runtimeSet, pool.Release);         // Init SAU Instantiate — OnEnable đầu tiên chưa có set nên không Add
+        e.gameObject.SetActive(false);
+        return e;
+    }
+
+    IEnumerator SpawnWave()
+    {
+        wave++;
+        for (int i = 0; i < enemiesPerWave; i++)
+        {
+            var e = pool.Get();                   // thiếu thì Create, không thì lấy object cũ → actionOnGet
+            var dir = Random.insideUnitCircle.normalized * spawnRadius;
+            e.transform.SetPositionAndRotation(transform.position + new Vector3(dir.x, 0f, dir.y), Quaternion.identity);
+            yield return new WaitForSeconds(spawnInterval);
+        }
+    }
+
+    void OnAllDead()
+    {
+        waveClearedChannel.Raise();               // UI, audio, quest tự nghe asset này — Spawner không biết họ
+        StartCoroutine(NextWaveAfter(1f));
+    }
+
+    IEnumerator NextWaveAfter(float seconds)
+    {
+        yield return new WaitForSeconds(seconds);
+        yield return SpawnWave();
+    }
+
+    void OnGUI()
+    {
+        GUILayout.BeginArea(new Rect(10, 10, 420, 60), GUI.skin.box);
+        GUILayout.Label($"Wave {wave}   Sống: {runtimeSet.Count}   Pool active/all: {pool.CountActive}/{pool.CountAll}");
+        GUILayout.Label($"OnWaveCleared: raised {waveClearedChannel.RaiseCount} · listeners {waveClearedChannel.ListenerCount}");
+        GUILayout.EndArea();
+    }
+}
+```
+
+**Chạy thử**
+- Play: HUD `Sống` tăng 0 → 10 trong 2 giây, `Pool active/all` lên `10/10`. Sau 3 giây enemy chết dần, `Sống` về 0, `raised 1`, một giây sau wave 2. Từ wave 2 trở đi `Pool all` đứng ở 10 — không có `Instantiate` nào nữa (Profiler ▸ CPU không còn `Instantiate`).
+- Đổi `Lifetime` của prefab thành 1 và `Spawn Interval` 0.05: `Pool all` vẫn không vượt 10 vì object chết trước khi wave spawn xong — đó là pool đang tái dụng. Đặt `Lifetime` 30 và `Enemies Per Wave` 150: `Pool all` chạm 100 rồi enemy thứ 101 vẫn spawn nhưng khi Release bị Destroy thay vì vào pool (`maxSize`).
+- Hierarchy lúc Play: 10 `P_Enemy(Clone)` active và phần còn lại tối màu dưới `EnemySpawner`. Chọn `LivingEnemies.asset` ở Inspector chế độ Debug: **không** có field `items` — vì `[NonSerialized]`. Xoá attribute đó, Play rồi Stop, Save Project: asset giờ chứa 10 tham chiếu `None (Enemy)` — đúng bẫy thân bài mô tả.
+- Xoá trail: thêm `TrailRenderer` (Time 0.5) vào prefab, comment dòng `trail.Clear()`: mỗi lần spawn thấy vệt kéo từ chỗ enemy chết wave trước sang chỗ mới. Bật lại dòng đó → hết.
+- Edit ▸ Project Settings ▸ Editor ▸ Enter Play Mode Options, tắt Domain Reload, Play → Stop → Play: HUD wave 1 vẫn `raised 0` lúc bắt đầu và `Sống` bắt đầu từ 0 — nhờ `OnDisable` của Enemy gỡ khỏi set khi scene bị huỷ. Gọi `Die()` hai lần trên cùng enemy (bỏ guard `released`): Console đỏ `Trying to release an object that has already been released to the pool` — đó là `collectionCheck` đang làm việc.

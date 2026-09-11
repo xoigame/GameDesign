@@ -204,3 +204,255 @@ Kèm: danh sách phương thức IPlayerActions phải implement, và nơi gọi
 ```
 
 **Bẫy thường gặp:** AI viết `if (ctx.performed) JumpPressed?.Invoke()` đúng, rồi để controller nghe event và **đặt velocity ngay trong handler** — handler chạy giữa lúc Input System xử lý event, ngoài `FixedUpdate`, nên bước physics kế ghi đè hoặc chạy hai lần. Code biên dịch, nhảy "gần như luôn" được, hỏng ở 144Hz. Event từ InputReader chỉ được **đặt cờ**; vận tốc luôn đặt trong `FixedUpdate`.
+
+## 💻 Code
+
+Demo dựng một `InputReader` ScriptableObject là cửa duy nhất chạm Input System: hai action map Gameplay/UI không bao giờ cùng bật, jump theo consume-pattern có buffer, và một hàng Settings rebind phím Jump lúc chạy rồi lưu vào PlayerPrefs — kiểm chứng được bằng Input Debugger.
+
+**Setup**
+
+<figure class="fig">
+<svg viewBox="0 0 660 360" role="img" aria-label="Hierarchy có Canvas với SettingsPanel chứa Row_Jump gắn RebindButton, EventSystem dùng InputSystemUIInputModule, Player gắn PauseToggleDemo; asset GameInput.inputactions và InputReader; Inspector hiện InputReader, Rebind Button, Pause Toggle Demo và UI Input Module">
+  <rect x="10" y="10" width="200" height="340" rx="8" class="fig-box"/>
+  <text x="22" y="32" class="fig-label" font-size="13" font-weight="600">Hierarchy</text>
+  <line x1="10" y1="42" x2="210" y2="42" class="fig-line"/>
+  <text x="22" y="64" class="fig-muted" font-size="12">▾ Canvas</text>
+  <text x="38" y="82" class="fig-muted" font-size="12">▾ SettingsPanel</text>
+  <rect x="16" y="90" width="188" height="20" rx="4" fill="#ffd43b" opacity="0.18"/>
+  <text x="54" y="105" class="fig-label" font-size="12" font-weight="600">Row_Jump  (RebindButton)</text>
+  <text x="70" y="124" class="fig-muted" font-size="11">Btn_Rebind, Label_TMP</text>
+  <text x="70" y="140" class="fig-muted" font-size="11">Btn_Reset</text>
+  <text x="38" y="158" class="fig-muted" font-size="12">EventSystem</text>
+  <text x="54" y="174" class="fig-muted" font-size="11">InputSystemUIInputModule</text>
+  <text x="22" y="194" class="fig-muted" font-size="12">Player  (PauseToggleDemo)</text>
+  <line x1="10" y1="208" x2="210" y2="208" class="fig-line"/>
+  <text x="22" y="228" class="fig-label" font-size="12" font-weight="600">Assets</text>
+  <text x="22" y="246" class="fig-muted" font-size="11">GameInput.inputactions</text>
+  <text x="34" y="262" class="fig-muted" font-size="11">☑ Generate C# Class → GameInput.cs</text>
+  <text x="34" y="278" class="fig-muted" font-size="11">Gameplay: Move Jump Attack Pause</text>
+  <text x="34" y="294" class="fig-muted" font-size="11">UI: Navigate Submit Cancel</text>
+  <rect x="16" y="302" width="188" height="20" rx="4" fill="#6ea8fe" opacity="0.18"/>
+  <text x="22" y="317" class="fig-label" font-size="11" font-weight="600">InputReader.asset  (ScriptableObject)</text>
+  <text x="22" y="338" class="fig-muted" font-size="10">Active Input Handling: Input System Package (New)</text>
+  <rect x="226" y="10" width="424" height="340" rx="8" class="fig-box"/>
+  <text x="238" y="32" class="fig-label" font-size="13" font-weight="600">Inspector</text>
+  <line x1="226" y1="42" x2="650" y2="42" class="fig-line"/>
+  <rect x="234" y="50" width="408" height="18" rx="3" fill="#6ea8fe" opacity="0.22"/>
+  <text x="242" y="63" class="fig-label" font-size="12" font-weight="600">Input Reader  (asset InputReader)</text>
+  <text x="250" y="82" class="fig-muted" font-size="11">Jump Buffer (s)</text><text x="440" y="82" class="fig-label" font-size="11">0.12</text>
+  <text x="250" y="98" class="fig-muted" font-size="11">Bindings Prefs Key</text><text x="440" y="98" class="fig-label" font-size="11">bindings</text>
+  <text x="250" y="114" class="fig-muted" font-size="11">Generated class</text><text x="440" y="114" class="fig-label" font-size="11">GameInput  (không cần kéo asset)</text>
+  <rect x="234" y="124" width="408" height="18" rx="3" fill="#ffd43b" opacity="0.22"/>
+  <text x="242" y="137" class="fig-label" font-size="12" font-weight="600">Rebind Button (Script)  (Row_Jump)</text>
+  <text x="250" y="156" class="fig-muted" font-size="11">Reader</text><text x="440" y="156" class="fig-label" font-size="11">InputReader</text>
+  <text x="250" y="172" class="fig-muted" font-size="11">Action Reference</text><text x="440" y="172" class="fig-label" font-size="11">Gameplay/Jump</text>
+  <text x="250" y="188" class="fig-muted" font-size="11">Binding Index</text><text x="440" y="188" class="fig-label" font-size="11">0   (Keyboard: space)</text>
+  <text x="250" y="204" class="fig-muted" font-size="11">Label</text><text x="440" y="204" class="fig-label" font-size="11">Label_TMP (TMP_Text)</text>
+  <text x="250" y="220" class="fig-muted" font-size="11">Rebind Button / Reset Button</text><text x="440" y="220" class="fig-label" font-size="11">Btn_Rebind / Btn_Reset</text>
+  <rect x="234" y="230" width="408" height="18" rx="3" fill="#51cf9b" opacity="0.22"/>
+  <text x="242" y="243" class="fig-label" font-size="12" font-weight="600">Pause Toggle Demo (Script)  (Player)</text>
+  <text x="250" y="262" class="fig-muted" font-size="11">Reader</text><text x="440" y="262" class="fig-label" font-size="11">InputReader</text>
+  <text x="250" y="278" class="fig-muted" font-size="11">Menu Panel</text><text x="440" y="278" class="fig-label" font-size="11">SettingsPanel</text>
+  <rect x="234" y="288" width="408" height="18" rx="3" fill="#b197fc" opacity="0.22"/>
+  <text x="242" y="301" class="fig-label" font-size="12" font-weight="600">Input System UI Input Module  (EventSystem)</text>
+  <text x="250" y="320" class="fig-muted" font-size="11">Actions Asset</text><text x="440" y="320" class="fig-label" font-size="11">GameInput</text>
+  <text x="250" y="336" class="fig-muted" font-size="11">Navigate / Submit / Cancel</text><text x="440" y="336" class="fig-label" font-size="11">UI/Navigate, UI/Submit, UI/Cancel</text>
+</svg>
+<figcaption>Mọi script tham chiếu asset InputReader qua Inspector — không singleton. Map UI chỉ có 3 action; dùng template UI mặc định (có thêm Point, Click, ScrollWheel…) thì phải implement thêm hàm rỗng tương ứng trong IUIActions.</figcaption>
+</figure>
+
+**Script**
+
+```csharp
+// InputReader.cs — Unity 6 (6000.x), Input System 1.11+. Tạo asset: Assets ▸ Create ▸ Game ▸ Input Reader.
+// Cần asset GameInput.inputactions với map Gameplay (Move: Value/Vector2; Jump, Attack, Pause: Button)
+// và map UI (Navigate: Value/Vector2; Submit, Cancel: Button), tick "Generate C# Class" → class GameInput.
+// Đây là NƠI DUY NHẤT trong game using UnityEngine.InputSystem (RebindButton là phần UI của lớp này).
+using System;
+using UnityEngine;
+using UnityEngine.InputSystem;
+
+[CreateAssetMenu(menuName = "Game/Input Reader")]
+public class InputReader : ScriptableObject, GameInput.IGameplayActions, GameInput.IUIActions
+{
+    [SerializeField] float jumpBuffer = 0.12f;            // cửa sổ buffer nhấn nhảy (giây, unscaled)
+    [SerializeField] string bindingsPrefsKey = "bindings";
+
+    GameInput input;
+    float jumpPressedAt = -10f;
+
+    // --- Gameplay: phần còn lại của game chỉ biết những thứ này, không biết phím nào ---
+    public Vector2 Move { get; private set; }
+    public bool JumpHeld { get; private set; }
+    public bool JumpPressed => Time.unscaledTime - jumpPressedAt <= jumpBuffer;   // đọc không tiêu thụ
+    public event Action Attack;
+    public event Action Pause;
+
+    // --- UI ---
+    public event Action Cancel;
+
+    public bool GameplayEnabled => input != null && input.Gameplay.enabled;
+
+    void OnEnable()
+    {
+        if (input == null)
+        {
+            input = new GameInput();
+            input.Gameplay.SetCallbacks(this);
+            input.UI.SetCallbacks(this);
+            input.asset.LoadBindingOverridesFromJson(PlayerPrefs.GetString(bindingsPrefsKey, ""));   // override lưu theo id binding
+        }
+        EnableGameplay();
+    }
+
+    void OnDisable()
+    {
+        input?.Disable();
+        Move = Vector2.zero; JumpHeld = false;             // SO giữ state xuyên Play khi tắt Domain Reload
+    }
+
+    /// Hai map KHÔNG bao giờ cùng bật — "bấm A trong menu, nhân vật phía sau nhảy" là vì thế.
+    public void EnableGameplay() { input.UI.Disable(); input.Gameplay.Enable(); }
+    public void EnableUI()       { input.Gameplay.Disable(); input.UI.Enable(); Move = Vector2.zero; JumpHeld = false; }
+
+    /// Consume-pattern: gọi trong FixedUpdate của controller. Trả true đúng MỘT lần cho mỗi lần nhấn.
+    public bool ConsumeJump()
+    {
+        if (!JumpPressed) return false;
+        jumpPressedAt = -10f;
+        return true;
+    }
+
+    // --- Rebinding. Generated class giữ BẢN SAO của asset, nên phải tra action trong input.asset;
+    //     dùng thẳng InputActionReference.action là rebind lên asset gốc và không có tác dụng gì. ---
+    public InputAction ResolveAction(InputActionReference reference) => input.asset.FindAction(reference.action.id);
+    public void SaveBindings() => PlayerPrefs.SetString(bindingsPrefsKey, input.asset.SaveBindingOverridesAsJson());
+    public void ResetAllBindings() { input.asset.RemoveAllBindingOverrides(); SaveBindings(); }
+
+    // --- IGameplayActions: phải implement MỌI hàm — thêm action vào asset là lỗi biên dịch nhắc bạn xử lý ---
+    public void OnMove(InputAction.CallbackContext ctx) => Move = ctx.ReadValue<Vector2>();
+
+    public void OnJump(InputAction.CallbackContext ctx)
+    {
+        if (ctx.performed) { JumpHeld = true; jumpPressedAt = Time.unscaledTime; }   // chỉ đặt cờ — KHÔNG đặt velocity ở đây
+        else if (ctx.canceled) JumpHeld = false;
+    }
+
+    public void OnAttack(InputAction.CallbackContext ctx) { if (ctx.performed) Attack?.Invoke(); }
+    public void OnPause(InputAction.CallbackContext ctx)  { if (ctx.performed) Pause?.Invoke(); }
+
+    // --- IUIActions: Navigate/Submit do InputSystemUIInputModule xử lý; ở đây chỉ cần Cancel để đóng menu ---
+    public void OnNavigate(InputAction.CallbackContext ctx) { }
+    public void OnSubmit(InputAction.CallbackContext ctx)   { }
+    public void OnCancel(InputAction.CallbackContext ctx)   { if (ctx.performed) Cancel?.Invoke(); }
+}
+```
+
+```csharp
+// RebindButton.cs — một hàng trong màn Settings: nhãn phím hiện tại + nút Rebind + nút Reset. Cần TextMeshPro.
+using TMPro;
+using UnityEngine;
+using UnityEngine.InputSystem;
+using UnityEngine.UI;
+
+public class RebindButton : MonoBehaviour
+{
+    [SerializeField] InputReader reader;
+    [SerializeField] InputActionReference actionReference;   // kéo Gameplay/Jump từ asset vào
+    [SerializeField] int bindingIndex = 0;                    // composite (WASD): trỏ vào binding CON, không phải cha
+    [SerializeField] TMP_Text label;
+    [SerializeField] Button rebindButton;
+    [SerializeField] Button resetButton;
+
+    InputAction action;
+    InputActionRebindingExtensions.RebindingOperation op;
+
+    void Start()
+    {
+        action = reader.ResolveAction(actionReference);       // action trong bản sao của GameInput, không phải asset gốc
+        rebindButton.onClick.AddListener(StartRebind);
+        resetButton.onClick.AddListener(ResetBinding);
+        RefreshLabel();
+    }
+
+    void OnDestroy() => op?.Dispose();
+
+    void StartRebind()
+    {
+        bool wasEnabled = action.enabled;
+        action.Disable();                                     // BẮT BUỘC — rebind action đang bật là ném lỗi
+        label.text = "Nhấn phím mới… (Esc huỷ)";
+
+        op = action.PerformInteractiveRebinding(bindingIndex)
+            .WithControlsExcluding("<Mouse>/position")
+            .WithControlsExcluding("<Mouse>/delta")
+            .WithCancelingThrough("<Keyboard>/escape")
+            .OnMatchWaitForAnother(0.1f)                      // chờ 100ms để bắt cả tổ hợp
+            .OnCancel(_ => Finish(wasEnabled))
+            .OnComplete(_ => { reader.SaveBindings(); Finish(wasEnabled); })
+            .Start();
+    }
+
+    void Finish(bool reEnable)
+    {
+        op?.Dispose(); op = null;
+        if (reEnable) action.Enable();                        // đang ở menu (map Gameplay tắt) thì KHÔNG bật lẻ mỗi Jump
+        RefreshLabel();
+    }
+
+    void ResetBinding()
+    {
+        action.RemoveBindingOverride(bindingIndex);
+        reader.SaveBindings();
+        RefreshLabel();
+    }
+
+    void RefreshLabel()
+    {
+        // Lấy từ binding thật, không hardcode. controlPath ("space", "buttonSouth") là khoá tra sprite glyph nếu muốn hiện icon.
+        label.text = action.GetBindingDisplayString(bindingIndex, out string deviceLayout, out string controlPath);
+    }
+}
+```
+
+```csharp
+// PauseToggleDemo.cs — chứng minh chuyển map: Pause (map Gameplay) mở menu → chỉ map UI bật; Cancel (map UI) đóng → ngược lại.
+// Cả hai action cùng gán Escape nhưng không bao giờ cùng bật, nên không có chuyện một lần bấm mở-đóng-mở.
+using UnityEngine;
+
+public class PauseToggleDemo : MonoBehaviour
+{
+    [SerializeField] InputReader reader;
+    [SerializeField] GameObject menuPanel;
+
+    void OnEnable()  { reader.Pause += Open;  reader.Cancel += Close; menuPanel.SetActive(false); }
+    void OnDisable() { reader.Pause -= Open;  reader.Cancel -= Close; }
+
+    void Open()
+    {
+        reader.EnableUI();                 // Gameplay tắt: Move về zero, Jump không lọt xuống controller
+        menuPanel.SetActive(true);
+        Time.timeScale = 0f;               // Input System không đo bằng timeScale — buffer vẫn đúng nhờ unscaledTime
+    }
+
+    void Close()
+    {
+        Time.timeScale = 1f;
+        menuPanel.SetActive(false);
+        reader.EnableGameplay();
+    }
+
+    void FixedUpdate()
+    {
+        // Controller thật đặt velocity ở đây; demo chỉ log để đếm.
+        if (reader.ConsumeJump()) Debug.Log($"Jump tiêu thụ ở FixedUpdate, Move = {reader.Move}");
+    }
+}
+```
+
+**Chạy thử**
+- Mở **Window ▸ Analysis ▸ Input Debugger ▸ Actions** lúc Play: `Gameplay` Enabled, `UI` Disabled. Nhấn Esc: đảo ngược ngay, và `Move` trong asset InputReader (Inspector chế độ Debug) về (0, 0) cùng frame. Esc lần nữa: về như cũ, không nhấp nháy.
+- Đặt `Application.targetFrameRate = 30`, bấm Space 20 lần dồn dập: Console đúng 20 dòng "Jump tiêu thụ" — không nhảy đôi, không mất lần nào, vì cờ đặt ở callback và tiêu thụ ở FixedUpdate.
+- Bấm Rebind rồi nhấn J: nhãn đổi từ `Space` sang `J`; Space không log nữa, J log. Stop rồi Play lại: nhãn vẫn `J` — PlayerPrefs key `bindings` có JSON override theo id binding.
+- Bấm Reset: nhãn về `Space`, JSON không còn override cho Jump. Nhấn Esc giữa lúc rebind: huỷ, nhãn giữ phím cũ.
+- Cố ý thay `reader.ResolveAction(actionReference)` bằng `actionReference.action`: nhãn đổi sang J nhưng Space vẫn nhảy, J không — đó là bẫy "bản sao asset" của generated class, và là lý do InputReader phải là người tra action.

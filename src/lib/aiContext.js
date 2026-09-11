@@ -25,6 +25,12 @@ function renderNode(node, nodesById, depth = 0) {
     L.push(node.aiPrompt)
     L.push('')
   }
+  if (node.code) {
+    L.push(`${'#'.repeat(Math.min(6, depth + 3))} 💻 Code — ${node.title}`)
+    L.push('')
+    L.push(node.code)
+    L.push('')
+  }
   return L.join('\n')
 }
 

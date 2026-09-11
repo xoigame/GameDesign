@@ -374,3 +374,273 @@ EditorPrefs với tiền tố "MyGame.". Sau khi viết, liệt kê mọi lời 
 ```
 
 **Bẫy thường gặp:** AI viết `OnValidate` hoặc custom Editor chỉnh field rồi **quên `EditorUtility.SetDirty(target)`** (hoặc dùng `serializedObject.ApplyModifiedProperties` sai chỗ) — giá trị hiện đúng trong Inspector, đúng trong Play Mode, rồi **biến mất khi mở lại project** vì asset chưa bao giờ được đánh dấu cần lưu. Kiểm tra bằng: chỉnh qua tool, đóng Unity, mở lại, xem asset.
+
+## 💻 Code
+
+Demo dựng hai tool viết ở tuần 2: `ImportRules` ép import settings theo thư mục (không ai còn phải nhớ ASTC hay ADPCM) kèm menu kiểm lệch chuẩn, và `DebugConsole` chạy trong Development Build trên máy thật (mở bằng `~` hoặc 3 ngón), biến mất hoàn toàn ở release.
+
+**Setup**
+
+<figure class="fig">
+<svg viewBox="0 0 660 320" role="img" aria-label="Project view thư mục _Project với Art/UI, Audio/SFX, Audio/Music, Editor, Scripts; Inspector hiện Texture Importer bị ép, Audio Importer bị ép và DebugConsole">
+  <rect x="10" y="10" width="200" height="300" rx="8" class="fig-box"/>
+  <text x="22" y="32" class="fig-label" font-size="13" font-weight="600">Project</text>
+  <line x1="10" y1="42" x2="210" y2="42" class="fig-line"/>
+  <text x="22" y="63" class="fig-label" font-size="12" font-weight="600">▾ Assets/_Project</text>
+  <text x="30" y="81" class="fig-label" font-size="12">▾ Art/UI</text>
+  <rect x="16" y="86" width="188" height="18" rx="4" fill="#6ea8fe" opacity="0.18"/>
+  <text x="46" y="99" class="fig-label" font-size="12" font-weight="600">icon_sword.png</text>
+  <text x="30" y="117" class="fig-label" font-size="12">▾ Audio/SFX</text>
+  <text x="46" y="133" class="fig-muted" font-size="11">hit_01.wav</text>
+  <text x="30" y="151" class="fig-label" font-size="12">▾ Audio/Music</text>
+  <text x="46" y="167" class="fig-muted" font-size="11">bgm_loop.ogg  (Vorbis, Streaming)</text>
+  <text x="30" y="185" class="fig-label" font-size="12">▾ Editor  (asmdef Editor-only)</text>
+  <text x="46" y="201" class="fig-muted" font-size="11">ImportRules.cs</text>
+  <text x="30" y="219" class="fig-label" font-size="12">▾ Scripts</text>
+  <text x="46" y="235" class="fig-muted" font-size="11">DebugConsole.cs</text>
+  <line x1="10" y1="248" x2="210" y2="248" class="fig-line"/>
+  <text x="22" y="268" class="fig-label" font-size="12" font-weight="600">Hierarchy</text>
+  <text x="22" y="286" class="fig-muted" font-size="11">_Debug  (DebugConsole)</text>
+  <text x="22" y="302" class="fig-muted" font-size="11">chỉ tồn tại trong Development Build</text>
+  <rect x="226" y="10" width="424" height="300" rx="8" class="fig-box"/>
+  <text x="238" y="32" class="fig-label" font-size="13" font-weight="600">Inspector</text>
+  <line x1="226" y1="42" x2="650" y2="42" class="fig-line"/>
+  <rect x="234" y="50" width="408" height="18" rx="3" fill="#6ea8fe" opacity="0.22"/>
+  <text x="242" y="63" class="fig-label" font-size="12" font-weight="600">Texture Importer  ·  icon_sword.png</text>
+  <text x="250" y="82" class="fig-muted" font-size="11">Texture Type</text><text x="440" y="82" class="fig-label" font-size="11">Sprite (2D and UI)</text>
+  <text x="250" y="98" class="fig-muted" font-size="11">Sprite Mode</text><text x="440" y="98" class="fig-label" font-size="11">Single</text>
+  <text x="250" y="114" class="fig-muted" font-size="11">Generate Mip Maps</text><text x="440" y="114" class="fig-label" font-size="11">☐</text>
+  <text x="250" y="130" class="fig-muted" font-size="11">Max Size (Default)</text><text x="440" y="130" class="fig-label" font-size="11">2048</text>
+  <text x="250" y="146" class="fig-muted" font-size="11">Android ▸ Override / Format</text><text x="440" y="146" class="fig-label" font-size="11">☑  /  ASTC 6x6</text>
+  <text x="250" y="162" class="fig-muted" font-size="11">(sửa tay rồi Reimport → ImportRules ghi đè lại; đổi GetVersion → tự reimport cả thư mục)</text>
+  <rect x="234" y="172" width="408" height="18" rx="3" fill="#51cf9b" opacity="0.22"/>
+  <text x="242" y="185" class="fig-label" font-size="12" font-weight="600">Audio Importer  ·  hit_01.wav</text>
+  <text x="250" y="204" class="fig-muted" font-size="11">Force To Mono</text><text x="440" y="204" class="fig-label" font-size="11">☑</text>
+  <text x="250" y="220" class="fig-muted" font-size="11">Load Type / Compression Format</text><text x="440" y="220" class="fig-label" font-size="11">Decompress On Load  /  ADPCM</text>
+  <rect x="234" y="230" width="408" height="18" rx="3" fill="#ffd43b" opacity="0.22"/>
+  <text x="242" y="243" class="fig-label" font-size="12" font-weight="600">Debug Console (Script)  ·  _Debug</text>
+  <text x="250" y="262" class="fig-muted" font-size="11">Toggle Key</text><text x="440" y="262" class="fig-label" font-size="11">Backquote</text>
+  <text x="250" y="278" class="fig-muted" font-size="11">Max Lines</text><text x="440" y="278" class="fig-label" font-size="11">20</text>
+  <text x="250" y="294" class="fig-muted" font-size="11">Touch Fingers</text><text x="440" y="294" class="fig-label" font-size="11">3</text>
+</svg>
+<figcaption>ImportRules.cs nằm trong thư mục Editor (asmdef Editor-only) — không cần #if. DebugConsole.cs nằm ở assembly runtime, bọc toàn bộ bằng #if DEVELOPMENT_BUILD || UNITY_EDITOR nên release build không có class này.</figcaption>
+</figure>
+
+**Script**
+
+```csharp
+// Editor/ImportRules.cs — Unity 6 (6000.x). Đặt trong Assets/_Project/Editor/ (asmdef Editor-only). Chạy khi import; asset cũ phải Reimport một lần.
+using UnityEditor;
+using UnityEngine;
+
+public class ImportRules : AssetPostprocessor
+{
+    const string UiTextures = "Assets/_Project/Art/UI/";
+    const string Sfx        = "Assets/_Project/Audio/SFX/";
+    const string Music      = "Assets/_Project/Audio/Music/";
+
+    // Tăng số này mỗi khi đổi rule → Unity tự reimport mọi asset đi qua postprocessor này, không cần Reimport tay
+    public override uint GetVersion() => 3;
+
+    void OnPreprocessTexture()
+    {
+        if (!assetPath.StartsWith(UiTextures)) return;
+        var imp = (TextureImporter)assetImporter;
+        imp.textureType = TextureImporterType.Sprite;
+        imp.spriteImportMode = SpriteImportMode.Single;
+        imp.mipmapEnabled = false;                    // UI không cần mip
+        imp.maxTextureSize = 2048;
+        imp.alphaIsTransparency = true;
+
+        var android = imp.GetPlatformTextureSettings("Android");
+        android.overridden = true;
+        android.maxTextureSize = 2048;
+        android.format = TextureImporterFormat.ASTC_6x6;   // không để RGBA32 mặc định lọt vào build
+        imp.SetPlatformTextureSettings(android);
+
+        var ios = imp.GetPlatformTextureSettings("iPhone");
+        ios.overridden = true;
+        ios.maxTextureSize = 2048;
+        ios.format = TextureImporterFormat.ASTC_6x6;
+        imp.SetPlatformTextureSettings(ios);
+    }
+
+    void OnPreprocessAudio()
+    {
+        bool isSfx = assetPath.StartsWith(Sfx);
+        bool isMusic = assetPath.StartsWith(Music);
+        if (!isSfx && !isMusic) return;
+
+        var imp = (AudioImporter)assetImporter;
+        var s = imp.defaultSampleSettings;
+        if (isSfx)
+        {
+            imp.forceToMono = true;                   // spatializer trộn về mono trước khi pan — giữ stereo là tốn gấp đôi RAM cho thứ bị vứt
+            imp.loadInBackground = false;
+            s.loadType = AudioClipLoadType.DecompressOnLoad;
+            s.compressionFormat = AudioCompressionFormat.ADPCM;
+        }
+        else
+        {
+            imp.forceToMono = false;
+            imp.loadInBackground = true;
+            s.loadType = AudioClipLoadType.Streaming; // nhạc không nạp vào RAM
+            s.compressionFormat = AudioCompressionFormat.Vorbis;
+            s.quality = 0.7f;
+        }
+        imp.defaultSampleSettings = s;
+    }
+
+    // Bước kiểm: duyệt asset đã có và log cái lệch chuẩn. Chạy tay hoặc từ CI: -executeMethod ImportRules.ValidateAll
+    [MenuItem("Tools/Validate/Import Settings")]
+    public static void ValidateAll()
+    {
+        int bad = 0;
+        foreach (var guid in AssetDatabase.FindAssets("t:Texture2D", new[] { UiTextures.TrimEnd('/') }))
+        {
+            var path = AssetDatabase.GUIDToAssetPath(guid);
+            if (AssetImporter.GetAtPath(path) is not TextureImporter t) continue;
+            var android = t.GetPlatformTextureSettings("Android");
+            if (t.textureType != TextureImporterType.Sprite || t.mipmapEnabled || t.maxTextureSize > 2048
+                || !android.overridden || android.format != TextureImporterFormat.ASTC_6x6)
+            {
+                bad++;
+                Debug.LogWarning($"Lệch chuẩn UI texture: {path}", AssetDatabase.LoadMainAssetAtPath(path));
+            }
+        }
+        foreach (var guid in AssetDatabase.FindAssets("t:AudioClip", new[] { Sfx.TrimEnd('/') }))
+        {
+            var path = AssetDatabase.GUIDToAssetPath(guid);
+            if (AssetImporter.GetAtPath(path) is not AudioImporter a) continue;
+            var s = a.defaultSampleSettings;
+            if (!a.forceToMono || s.loadType != AudioClipLoadType.DecompressOnLoad || s.compressionFormat != AudioCompressionFormat.ADPCM)
+            {
+                bad++;
+                Debug.LogWarning($"Lệch chuẩn SFX: {path}", AssetDatabase.LoadMainAssetAtPath(path));
+            }
+        }
+        Debug.Log(bad == 0 ? "Import settings: OK" : $"Import settings: {bad} asset lệch chuẩn — chọn thư mục ▸ Reimport");
+    }
+}
+```
+
+```csharp
+// DebugConsole.cs — cheat console cho Development Build, vẽ bằng IMGUI để không phụ thuộc Canvas. Toàn bộ class biến mất ở release nhờ #if.
+#if DEVELOPMENT_BUILD || UNITY_EDITOR
+using System;
+using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.InputSystem;
+using UnityEngine.SceneManagement;
+
+public class DebugConsole : MonoBehaviour
+{
+    [SerializeField] Key toggleKey = Key.Backquote;        // phím `~`
+    [SerializeField, Range(5, 100)] int maxLines = 20;
+    [SerializeField, Range(2, 5)] int touchFingers = 3;    // mobile: 3 ngón chạm cùng lúc để mở
+
+    public static bool GodMode { get; private set; }       // gameplay đọc: if (DebugConsole.GodMode) return;
+
+    readonly Dictionary<string, Action<string[]>> cmds = new(StringComparer.OrdinalIgnoreCase);
+    readonly List<string> lines = new();
+    string input = "";
+    bool open;
+    Vector2 scroll;
+
+    void Awake()
+    {
+        cmds["help"]  = _ => Print(string.Join("  ", cmds.Keys));
+        cmds["god"]   = _ => { GodMode = !GodMode; Print($"god = {GodMode}"); };
+        cmds["spawn"] = a => Spawn(a.Length > 0 ? int.Parse(a[0]) : 1);
+        cmds["time"]  = a =>
+        {
+            Time.timeScale = a.Length > 0 ? float.Parse(a[0], System.Globalization.CultureInfo.InvariantCulture) : 1f;
+            Print($"timeScale = {Time.timeScale}");           // chỗ duy nhất được đụng timeScale ngoài TimeManager
+        };
+        cmds["level"] = a => { if (a.Length > 0) SceneManager.LoadScene(a[0]); else Print("level <tên scene>"); };
+        cmds["clear"] = _ => lines.Clear();
+        Print("DebugConsole sẵn sàng — gõ help");
+    }
+
+    void Update()
+    {
+        var kb = Keyboard.current;
+        if (kb != null && kb[toggleKey].wasPressedThisFrame) open = !open;
+
+        var ts = Touchscreen.current;
+        if (ts != null && !open)
+        {
+            int active = 0;
+            foreach (var t in ts.touches) if (t.isInProgress) active++;   // ReadOnlyArray: không alloc
+            if (active >= touchFingers) open = true;
+        }
+    }
+
+    void OnGUI()
+    {
+        if (!open) return;
+        const float lineH = 20f;
+        float w = Mathf.Min(Screen.width - 20f, 640f);
+        var box = new Rect(10, 10, w, lineH * (maxLines + 2));
+        GUI.Box(box, GUIContent.none);
+
+        // Log — chỉ maxLines dòng cuối
+        GUILayout.BeginArea(new Rect(box.x + 6, box.y + 6, box.width - 12, lineH * maxLines));
+        scroll = GUILayout.BeginScrollView(scroll);
+        for (int i = Mathf.Max(0, lines.Count - maxLines); i < lines.Count; i++) GUILayout.Label(lines[i]);
+        GUILayout.EndScrollView();
+        GUILayout.EndArea();
+
+        // Enter chạy lệnh — kiểm trước khi vẽ TextField để TextField không nuốt sự kiện
+        var e = Event.current;
+        if (e.type == EventType.KeyDown && e.keyCode == KeyCode.Return && input.Length > 0)
+        {
+            Execute(input); input = ""; e.Use();
+        }
+        GUI.SetNextControlName("cheat");
+        input = GUI.TextField(new Rect(box.x + 6, box.yMax - lineH - 6, box.width - 12, lineH), input);
+        input = input.Replace("`", "");                        // phím mở console không lọt vào ô nhập
+        GUI.FocusControl("cheat");
+    }
+
+    void Execute(string line)
+    {
+        Print("> " + line);
+        var parts = line.Trim().Split(' ', StringSplitOptions.RemoveEmptyEntries);
+        if (parts.Length == 0) return;
+        if (!cmds.TryGetValue(parts[0], out var cmd)) { Print($"Không có lệnh '{parts[0]}' — gõ help"); return; }
+        try { cmd(parts[1..]); }
+        catch (Exception ex) { Print($"Lỗi: {ex.Message}"); }  // int.Parse sai không được làm chết console
+    }
+
+    void Print(string s)
+    {
+        lines.Add(s);
+        if (lines.Count > maxLines * 4) lines.RemoveAt(0);
+        scroll.y = float.MaxValue;                             // luôn cuộn xuống dòng mới
+    }
+
+    void Spawn(int n)
+    {
+        // Demo: n cube trước camera. Dự án thật gọi EnemySpawner.SpawnById(id, n).
+        var cam = Camera.main;
+        for (int i = 0; i < n; i++)
+        {
+            var go = GameObject.CreatePrimitive(PrimitiveType.Cube);
+            go.name = $"Spawned_{i}";
+            go.transform.position = cam
+                ? cam.transform.position + cam.transform.forward * 5f + UnityEngine.Random.insideUnitSphere * 2f
+                : Vector3.zero;
+        }
+        Print($"spawn {n}");
+    }
+}
+#endif
+```
+
+**Chạy thử**
+- Kéo một PNG 4096×4096 vào `_Project/Art/UI/`: Inspector hiện ngay Sprite, Generate Mip Maps ☐, Max Size 2048, tab Android Override ☑ ASTC 6x6; preview cuối Inspector ghi 2048×2048 ASTC 6x6 ≈ 1.9 MB (RGBA32 cùng cỡ là 16 MB). Kéo cùng file vào `Art/Characters/`: giữ mặc định, chứng tỏ rule chỉ ăn theo đường dẫn.
+- Sửa tay Max Size thành 4096 rồi Apply: Unity reimport và giá trị quay về 2048 — code thắng tay. Đổi `GetVersion()` từ 3 thành 4, chờ compile: mọi texture trong `Art/UI` và mọi clip trong `Audio/**` tự reimport, không cần chuột phải Reimport.
+- Kéo một WAV stereo vào `Audio/SFX/`: Force To Mono ☑, Decompress On Load, ADPCM; cột Imported Size nhỏ hơn ~7 lần so với PCM stereo. Kéo OGG 3 phút vào `Audio/Music/`: Streaming + Vorbis 0.7, Memory Profiler cột AudioClip không tăng khi phát.
+- Tools ▸ Validate ▸ Import Settings: Console `Import settings: OK`. Dùng Explorer chép một file vào `Art/UI` khi Unity đang mở nhưng tắt Auto Refresh: menu báo `1 asset lệch chuẩn`, bấm log nhảy đúng asset.
+- Development Build trên điện thoại: 3 ngón chạm mở console; gõ `time 0.2` → slow-mo, `god` → `god = True`, `spawn 5` → 5 cube trước camera, `level Level_02` → nhảy scene (scene phải có trong Build Profiles), `spawn abc` → dòng `Lỗi:` thay vì crash. Release build: gõ `~` không có gì, và `DebugConsole` không xuất hiện trong Build Report.

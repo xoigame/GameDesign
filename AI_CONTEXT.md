@@ -59,7 +59,7 @@ Node nào hiện thực hoá được trong Unity thì có thêm mục `## 🎮 
 
 Trong `graph.json` nó nằm ở trường `node.unity`. `KNOWLEDGE_INDEX.md` đánh dấu 🎮 cho node có mục này.
 
-Nhánh `content/09-unity/` (id `unity`) là nhánh lấy Unity làm trục: mỗi node là một mảng (vật lý, animation, UI, shader, tối ưu…) với kinh nghiệm thực chiến, bẫy và checklist. Node trong nhánh đó **không có** mục 🎮 riêng vì toàn thân bài đã là Unity.
+Nhánh `content/09-unity/` (id `unity`) là nhánh lấy Unity làm trục: mỗi node là một mảng (vật lý, animation, UI, shader, tối ưu…) với kinh nghiệm thực chiến, bẫy và checklist. Node trong nhánh đó **không có** mục 🎮 riêng vì toàn thân bài đã là Unity; thay vào đó mỗi node có mục `## 💻 Code` (trường `node.code`, tab **Code** trên web): một script demo hoàn chỉnh chạy được và sơ đồ thiết lập Inspector. Cần code khởi điểm cho một mảng Unity thì lấy từ đó.
 
 Khi người dùng làm việc với Unity: **đọc node tương ứng trong `09-unity/` rồi đọc mục 🎮 của node kỹ thuật liên quan trước khi viết code**, và tôn trọng
 phần "Bẫy Unity cụ thể" — đó là những lỗi chỉ lộ ra trong Unity mà không lộ ra khi

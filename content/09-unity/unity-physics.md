@@ -202,3 +202,178 @@ Sau khi viết, liệt kê mọi magic number còn trong code.
 ```
 
 **Bẫy thường gặp:** AI cho ground check bằng `OnCollisionEnter/Exit` với bộ đếm — bộ đếm lệch khi hai collider Ground chạm cùng lúc rồi rời khác lúc, nhân vật "bay" vĩnh viễn. Ground check phải là **query mỗi bước** (cast), không phải trạng thái tích luỹ từ sự kiện.
+
+## 💻 Code
+
+Demo dựng một nhân vật platformer 2D bằng Rigidbody2D Kinematic: tự cộng trọng trường, coyote time, jump buffer, ground check bằng BoxCast, mọi query không cấp phát. Thả vào scene có vài BoxCollider2D layer `Ground` là chạy.
+
+**Setup**
+
+<figure class="fig">
+<svg viewBox="0 0 660 340" role="img" aria-label="Hierarchy có Player với Rigidbody2D, CapsuleCollider2D và PlatformerController2D; Inspector hiện giá trị từng field">
+  <rect x="10" y="10" width="200" height="320" rx="8" class="fig-box"/>
+  <text x="22" y="32" class="fig-label" font-size="13" font-weight="600">Hierarchy</text>
+  <line x1="10" y1="42" x2="210" y2="42" class="fig-line"/>
+  <text x="22" y="64" class="fig-muted" font-size="12">▾ Level</text>
+  <text x="38" y="84" class="fig-muted" font-size="12">Ground_01  (Layer: Ground)</text>
+  <text x="38" y="102" class="fig-muted" font-size="12">Ground_02  (Layer: Ground)</text>
+  <rect x="16" y="112" width="188" height="20" rx="4" fill="#6ea8fe" opacity="0.18"/>
+  <text x="22" y="127" class="fig-label" font-size="12" font-weight="600">▸ Player  (Layer: Player)</text>
+  <text x="22" y="160" class="fig-muted" font-size="11">Main Camera</text>
+  <text x="22" y="200" class="fig-muted" font-size="11">Project Settings ▸ Physics 2D</text>
+  <text x="22" y="218" class="fig-muted" font-size="11">Layer Collision Matrix:</text>
+  <text x="34" y="236" class="fig-muted" font-size="11">Player ✕ Ground   ✓</text>
+  <text x="34" y="254" class="fig-muted" font-size="11">Player ✕ Player   ✗</text>
+  <text x="34" y="272" class="fig-muted" font-size="11">Ground ✕ Ground   ✗</text>
+  <text x="22" y="306" class="fig-muted" font-size="11">Fixed Timestep: 0.02</text>
+  <rect x="226" y="10" width="424" height="320" rx="8" class="fig-box"/>
+  <text x="238" y="32" class="fig-label" font-size="13" font-weight="600">Inspector — Player</text>
+  <line x1="226" y1="42" x2="650" y2="42" class="fig-line"/>
+  <rect x="234" y="50" width="408" height="18" rx="3" fill="#6ea8fe" opacity="0.22"/>
+  <text x="242" y="63" class="fig-label" font-size="12" font-weight="600">Rigidbody 2D</text>
+  <text x="250" y="82" class="fig-muted" font-size="11">Body Type</text><text x="440" y="82" class="fig-label" font-size="11">Kinematic</text>
+  <text x="250" y="98" class="fig-muted" font-size="11">Interpolate</text><text x="440" y="98" class="fig-label" font-size="11">Interpolate</text>
+  <text x="250" y="114" class="fig-muted" font-size="11">Use Full Kinematic Contacts</text><text x="440" y="114" class="fig-label" font-size="11">☐</text>
+  <text x="250" y="130" class="fig-muted" font-size="11">Constraints ▸ Freeze Rotation Z</text><text x="440" y="130" class="fig-label" font-size="11">☑</text>
+  <rect x="234" y="140" width="408" height="18" rx="3" fill="#51cf9b" opacity="0.22"/>
+  <text x="242" y="153" class="fig-label" font-size="12" font-weight="600">Capsule Collider 2D</text>
+  <text x="250" y="172" class="fig-muted" font-size="11">Size</text><text x="440" y="172" class="fig-label" font-size="11">X 0.8   Y 1.8</text>
+  <rect x="234" y="182" width="408" height="18" rx="3" fill="#ffd43b" opacity="0.22"/>
+  <text x="242" y="195" class="fig-label" font-size="12" font-weight="600">Platformer Controller 2D (Script)</text>
+  <text x="250" y="214" class="fig-muted" font-size="11">Move Speed</text><text x="440" y="214" class="fig-label" font-size="11">8</text>
+  <text x="250" y="230" class="fig-muted" font-size="11">Jump Height</text><text x="440" y="230" class="fig-label" font-size="11">3</text>
+  <text x="250" y="246" class="fig-muted" font-size="11">Time To Apex</text><text x="440" y="246" class="fig-label" font-size="11">0.38</text>
+  <text x="250" y="262" class="fig-muted" font-size="11">Fall Gravity Mult / Cut Mult</text><text x="440" y="262" class="fig-label" font-size="11">2   /   3</text>
+  <text x="250" y="278" class="fig-muted" font-size="11">Max Fall Speed</text><text x="440" y="278" class="fig-label" font-size="11">20</text>
+  <text x="250" y="294" class="fig-muted" font-size="11">Coyote Time / Jump Buffer</text><text x="440" y="294" class="fig-label" font-size="11">0.1   /   0.12</text>
+  <text x="250" y="310" class="fig-muted" font-size="11">Ground Mask</text><text x="440" y="310" class="fig-label" font-size="11">Ground</text>
+  <text x="250" y="326" class="fig-muted" font-size="11">Ground Check Distance</text><text x="440" y="326" class="fig-label" font-size="11">0.06</text>
+</svg>
+<figcaption>Player = Rigidbody2D Kinematic + CapsuleCollider2D + script. Gravity Scale không quan trọng vì script tự cộng trọng trường. Layer Player không va với chính nó.</figcaption>
+</figure>
+
+**Script**
+
+```csharp
+// PlatformerController2D.cs — Unity 6 (6000.x). Dùng Input System cũ (Keyboard) để demo không phụ thuộc asset;
+// trong dự án thật thay hai dòng đọc input bằng InputReader của bạn (xem unity-input).
+using UnityEngine;
+
+[RequireComponent(typeof(Rigidbody2D), typeof(CapsuleCollider2D))]
+public class PlatformerController2D : MonoBehaviour
+{
+    [Header("Di chuyển")]
+    [SerializeField] float moveSpeed = 8f;
+
+    [Header("Nhảy — số thiết kế, không phải lực")]
+    [SerializeField] float jumpHeight = 3f;
+    [SerializeField] float timeToApex = 0.38f;
+    [SerializeField] float fallGravityMult = 2f;
+    [SerializeField] float cutGravityMult = 3f;
+    [SerializeField] float maxFallSpeed = 20f;
+    [SerializeField] float coyoteTime = 0.1f;
+    [SerializeField] float jumpBuffer = 0.12f;
+
+    [Header("Ground check")]
+    [SerializeField] LayerMask groundMask;
+    [SerializeField] float groundCheckDistance = 0.06f;
+
+    Rigidbody2D rb;
+    CapsuleCollider2D col;
+    ContactFilter2D groundFilter;
+    readonly RaycastHit2D[] groundHits = new RaycastHit2D[4];
+
+    float gravity, jumpVelocity;
+    float moveX;
+    bool jumpHeld;
+    float coyoteTimer, bufferTimer;      // đếm trong Update: đo thời gian thật của người chơi
+    bool grounded;
+    Vector2 velocity;
+
+    void Awake()
+    {
+        rb = GetComponent<Rigidbody2D>();
+        col = GetComponent<CapsuleCollider2D>();
+        rb.bodyType = RigidbodyType2D.Kinematic;
+        rb.interpolation = RigidbodyInterpolation2D.Interpolate;
+        rb.freezeRotation = true;
+
+        groundFilter = new ContactFilter2D { useLayerMask = true, layerMask = groundMask, useTriggers = false };
+        RecomputeJump();
+    }
+
+    void OnValidate() => RecomputeJump();
+
+    void RecomputeJump()
+    {
+        gravity = -2f * jumpHeight / (timeToApex * timeToApex);
+        jumpVelocity = -gravity * timeToApex;
+    }
+
+    void Update()
+    {
+        // --- input: đọc mỗi frame render, giữ vào cờ/bộ đếm ---
+        var kb = UnityEngine.InputSystem.Keyboard.current;
+        moveX = (kb.dKey.isPressed || kb.rightArrowKey.isPressed ? 1f : 0f)
+              - (kb.aKey.isPressed || kb.leftArrowKey.isPressed ? 1f : 0f);
+        jumpHeld = kb.spaceKey.isPressed;
+        if (kb.spaceKey.wasPressedThisFrame) bufferTimer = jumpBuffer;
+
+        // --- bộ đếm cảm giác ---
+        coyoteTimer = grounded ? coyoteTime : coyoteTimer - Time.deltaTime;
+        bufferTimer -= Time.deltaTime;
+    }
+
+    void FixedUpdate()
+    {
+        grounded = CheckGround();
+
+        velocity.x = moveX * moveSpeed;
+
+        // nhảy khi: có buffer còn hạn VÀ (đang chạm đất hoặc còn coyote)
+        if (bufferTimer > 0f && coyoteTimer > 0f)
+        {
+            velocity.y = jumpVelocity;
+            bufferTimer = 0f;
+            coyoteTimer = 0f;
+        }
+
+        float g = gravity;
+        if (velocity.y < 0f) g *= fallGravityMult;
+        else if (!jumpHeld) g *= cutGravityMult;
+
+        if (grounded && velocity.y < 0f) velocity.y = 0f;   // đứng trên nền: không tích luỹ vận tốc âm
+        else velocity.y += g * Time.fixedDeltaTime;
+
+        velocity.y = Mathf.Max(velocity.y, -maxFallSpeed);
+        rb.linearVelocity = velocity;                        // 2022 LTS: rb.velocity
+    }
+
+    bool CheckGround()
+    {
+        // BoxCast từ đáy capsule xuống một đoạn ngắn — ray đơn trượt khỏi mép nền
+        Bounds b = col.bounds;
+        Vector2 origin = new(b.center.x, b.min.y + 0.02f);
+        Vector2 size = new(b.size.x * 0.9f, 0.04f);
+        int n = Physics2D.BoxCast(origin, size, 0f, Vector2.down, groundFilter, groundHits, groundCheckDistance);
+        if (n == groundHits.Length) Debug.LogWarning("Ground buffer đầy — tăng kích cỡ groundHits");
+        return n > 0;
+    }
+
+    void OnDrawGizmosSelected()
+    {
+        if (col == null) col = GetComponent<CapsuleCollider2D>();
+        Bounds b = col.bounds;
+        Gizmos.color = grounded ? Color.green : Color.red;
+        Gizmos.DrawWireCube(new Vector3(b.center.x, b.min.y + 0.02f - groundCheckDistance / 2f, 0f),
+                            new Vector3(b.size.x * 0.9f, 0.04f + groundCheckDistance, 0f));
+    }
+}
+```
+
+**Chạy thử**
+- Đứng yên trên nền: gizmo dưới chân màu xanh, `rb.linearVelocity.y` đúng 0 (xem Inspector ở chế độ Debug).
+- Nhấn Space rồi nhả ngay: nhảy thấp hơn rõ so với giữ Space — nếu bằng nhau thì `cutGravityMult` không có tác dụng (kiểm `jumpHeld`).
+- Chạy khỏi mép và nhấn Space trong 0.1s: vẫn nhảy (coyote). Nhấn Space 0.1s trước khi chạm đất: nhảy ngay khi chạm (buffer).
+- Đổi `jumpHeight` thành 6 khi đang Play: đỉnh nhảy cao gấp đôi mà `timeToApex` không đổi — chứng minh gravity được suy ra, không chọn tay.
+- Profiler ▸ Memory ▸ GC Alloc của script này = 0 B/frame.
