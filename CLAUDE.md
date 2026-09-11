@@ -68,6 +68,10 @@ Trong file dịch dùng `## 🤖 Prompt for AI` (build nhận cả hai ngôn ng�
 
 Node hiện thực hoá được trong Unity thì có mục `## 🎮 Unity` ở cuối (sau mục 🤖). Build tách thành `node.unity`, web hiện thành tab thứ ba. **Không bắt buộc** — node lý thuyết thì bỏ qua. Code trong mục này phải chạy được, không phải giả mã. Cấu trúc đầy đủ ở `content/_SCHEMA.md`.
 
+## Code fence phải cân
+
+`npm run check` báo **lỗi** nếu một file có số code fence lẻ. Lý do: fence chưa đóng làm mọi heading phía sau bị coi là code, nên các mục 🤖/🎮 không được tách ra và **biến mất khỏi web mà build không báo gì**. Đã xảy ra một lần ở `meta-systems.md`.
+
 ## Hình minh hoạ
 
 Node có thể chứa SVG nội tuyến trong `<figure class="fig">`. **Tuyệt đối không để dòng trống bên trong figure** — markdown coi dòng trống là kết thúc khối HTML thô, phần SVG sau đó bị đẩy ra ngoài `<svg>` và render thành chữ lộn xộn. Lỗi này không trông giống lỗi cú pháp nên rất dễ bỏ sót. Class dùng chung và quy ước đầy đủ ở `content/_SCHEMA.md`.
