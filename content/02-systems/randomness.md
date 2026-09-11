@@ -69,3 +69,72 @@ pity đạt trần đúng lần thứ 32, rngGameplay không đụng rngContent.
 ```
 
 **Bẫy thường gặp:** dùng chung một `Random` toàn cục. Khi đó người chơi bắn thêm một phát là bố cục phòng kế tiếp đổi — không tái hiện được bug, không làm được daily challenge.
+
+## 🎮 Unity
+
+Unity có hai bộ sinh số và **dùng lẫn chúng là nguồn bug không tái hiện được**.
+
+**`UnityEngine.Random` hay `System.Random`?**
+
+| | `UnityEngine.Random` | `System.Random` |
+|---|---|---|
+| Phạm vi | Static toàn cục | Instance riêng |
+| Nhiều dòng độc lập | **Không** | Có |
+| Chạy ngoài Unity | Không | Có |
+| Tiện | `Random.Range` gọn | Phải truyền instance |
+
+Quy tắc: **`System.Random` có seed cho mọi thứ cần tái hiện** (procgen, mô phỏng, daily challenge). `UnityEngine.Random` chỉ cho thứ thuần trang trí (lệch pha particle, biến thể cao độ âm thanh).
+
+**Hai dòng RNG riêng biệt — bắt buộc**
+
+```csharp
+public class RngService : MonoBehaviour {
+    public static RngService I { get; private set; }
+
+    // Dùng cho procgen. Hành động người chơi KHÔNG được ảnh hưởng dòng này.
+    public System.Random Content { get; private set; }
+    // Dùng cho gameplay (drop, crit nếu có)
+    public System.Random Gameplay { get; private set; }
+
+    public void Init(int seed) {
+        Content  = new System.Random(seed);
+        Gameplay = new System.Random(seed ^ 0x5f3759df);
+    }
+}
+```
+
+Dùng chung một dòng nghĩa là: người chơi bắn thêm một phát → bố cục phòng kế tiếp đổi. Khi đó không tái hiện được bug, không làm được daily challenge, và không so sánh được hai phiên bản thuật toán procgen.
+
+**Pity system**
+
+```csharp
+[CreateAssetMenu(menuName = "Game/Drop Table")]
+public class DropTable : ScriptableObject {
+    public float baseChance = 0.05f;
+    public float pityIncrement = 0.03f;
+    // Trạng thái runtime KHÔNG lưu ở đây — ScriptableObject là read-only.
+}
+
+// Trạng thái nằm ở class runtime riêng
+public class DropTracker {
+    int consecutiveMisses;
+    public bool Roll(DropTable t, System.Random rng) {
+        float p = Mathf.Min(1f, t.baseChance + t.pityIncrement * consecutiveMisses);
+        bool hit = rng.NextDouble() < p;
+        consecutiveMisses = hit ? 0 : consecutiveMisses + 1;
+        return hit;
+    }
+}
+```
+
+Để `consecutiveMisses` trong ScriptableObject là bẫy kinh điển: nó ghi vào asset, và trong Editor bạn mang trạng thái từ phiên chơi trước sang phiên sau.
+
+**Lưu và phục hồi trạng thái RNG**
+
+`System.Random` không serialize được trực tiếp. Cách thực dụng: lưu **seed + số lần đã rút**, rồi quay lại bằng cách rút lại đúng số lần đó. Hoặc dùng một PRNG tự viết (xorshift) có state là một `ulong` — serialize được. Xem [[unity-save-data]].
+
+**Kiểm tra nhanh**
+- Cùng seed, chơi lại: bố cục màn giống hệt không?
+- Bắn thêm vài phát rồi sang phòng mới: bố cục có đổi không? (không được)
+- Grep `UnityEngine.Random` trong `Core/` → nên bằng 0.
+- Thoát Play Mode rồi vào lại: `consecutiveMisses` có về 0 không?

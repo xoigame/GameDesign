@@ -77,3 +77,44 @@ Kèm bộ kiểm tra tự động:
 ```
 
 **Bẫy thường gặp:** nhờ AI "thiết kế UI đẹp" → nhận về layout generic kiểu dashboard admin, hardcode màu khắp nơi. Hỏi nó **hệ thống và ràng buộc**, còn thẩm mỹ thì bạn quyết rồi đưa số.
+
+## 🎮 Unity
+
+Nhánh này nói *thiết kế cái gì*. Phần *làm thế nào trong Unity* nằm ở nhánh [[unity]] — cụ thể [[unity-ui]], [[unity-audio]], [[unity-vfx]], [[unity-shader]], [[unity-lighting]], [[unity-animation]].
+
+Mục 🎮 ở đây chỉ làm một việc: **nối quyết định thiết kế vào chỗ nó sống trong Unity project.**
+
+**Bảng tra: quyết định thiết kế → nơi nó nằm trong Unity**
+
+| Quyết định ở nhánh này | Sống ở đâu trong Unity | Node đào sâu |
+|---|---|---|
+| Bảng màu, độ đọc được | Palette asset + Sprite Atlas | [[unity-shader]], [[unity-lighting]] |
+| Thang spacing, thang chữ | `UiTheme` ScriptableObject hoặc USS | [[unity-ui]] |
+| Cấu trúc HUD | Canvas phân tầng theo tần suất đổi | [[unity-ui]] |
+| Luồng menu, settings | Scene bootstrap + state máy cấp app | [[unity-game-loop]] |
+| Cây audio bus, ducking | AudioMixer + Snapshot | [[unity-audio]] |
+| Trợ năng | Một static class đọc từ settings | [[accessibility]] |
+| Frame data animation | ScriptableObject, **không** Animation Event | [[unity-animation]] |
+
+**Ba thứ chốt trước khi sản xuất asset**
+
+Đổi sau nghĩa là làm lại toàn bộ asset, nên quyết định ngay tuần đầu:
+
+1. **Độ phân giải tham chiếu + pixels-per-unit** — quyết định mọi kích thước sprite.
+2. **Color space = Linear** (`Project Settings > Player`). Đổi sau làm mọi màu lệch. Xem [[unity-lighting]].
+3. **Cây AudioMixer** — thêm bus sau khi đã có 200 âm thanh phát trực tiếp là việc rất mệt.
+
+**Một ranh giới kiến trúc đáng giữ**
+
+```
+Assets/Scripts/
+├── Core/          ← luật chơi, KHÔNG using UnityEngine
+└── Presentation/  ← nghe/nhìn, đọc trạng thái từ Core qua event
+```
+
+Lớp trình bày **chỉ đọc**, không bao giờ quyết định luật chơi. Nhờ vậy đổi hiệu ứng không chạm vào cân bằng, và mô phỏng 10.000 trận không cần render — xem [[balancing-math]].
+
+**Kiểm tra nhanh**
+- `grep -r "using UnityEngine" Assets/Scripts/Core/` → rỗng?
+- Color space đang là Linear chứ không phải Gamma?
+- Mọi màu UI lấy từ một asset duy nhất, không hardcode?

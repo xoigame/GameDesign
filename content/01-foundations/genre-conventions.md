@@ -48,3 +48,43 @@ không có, để tôi biết chỗ nào cần dạy lại.
 ```
 
 **Bẫy thường gặp:** nói "làm game roguelike" rồi ngạc nhiên khi AI thêm meta-progression cộng chỉ số. Quy ước ngầm của thể loại chính là thứ AI điền vào chỗ trống.
+
+## 🎮 Unity
+
+Trong Unity, quy ước thể loại quy về **chọn đúng package và template** ngay từ `New Project`. Chọn sai thì mất vài ngày làm lại.
+
+**Template và package theo thể loại**
+
+| Thể loại | Template | Package cần thêm |
+|---|---|---|
+| 2D platformer / roguelike | 2D (URP) | Input System, Cinemachine, TextMeshPro |
+| 3D hành động | 3D (URP) | + AI Navigation, Cinemachine |
+| Top-down 2D | 2D (URP) | + Tilemap Extras (Rule Tile) |
+| Mobile casual | 2D/3D Mobile | + Addressables (giảm dung lượng build) |
+| Multiplayer | bất kỳ | Netcode for GameObjects — xem [[unity-multiplayer]] |
+
+**URP hay Built-in?** URP cho dự án mới, gần như không ngoại lệ — Built-in đang ở chế độ bảo trì. Chi tiết ở [[unity-lighting]].
+
+**Package nên thêm ngay, đừng chờ**
+
+```
+com.unity.inputsystem        ← đổi phím, tay cầm. Thêm sau rất mệt.
+com.unity.cinemachine        ← camera. Tự viết follow là lãng phí.
+com.unity.textmeshpro        ← chữ. Text cũ không dùng cho dự án mới.
+com.unity.ai.navigation      ← NavMesh (từ 2022 đã tách package)
+```
+
+Input System là cái đáng nhấn: nó đổi cách đọc input trên toàn bộ code. Thêm ở tháng thứ ba nghĩa là sửa mọi script có `Input.GetKey`. Xem [[unity-input]].
+
+**Phá vỡ quy ước — chi phí trong Unity**
+
+Quy ước thể loại thường trùng với **cái Unity làm sẵn**. Ví dụ:
+- Muốn camera không theo nhân vật → không dùng được preset Cinemachine, phải tự viết
+- Muốn UI không dùng Canvas → phải render bằng mesh, mất hết layout system
+
+Không phải lý do để không phá vỡ, nhưng nên biết giá trước.
+
+**Kiểm tra nhanh**
+- Đã thêm Input System chứ? (không dùng `Input.GetKey` ở đâu)
+- URP hay Built-in? Dự án mới nên URP.
+- `Window > Package Manager`: có package nào cài mà không dùng không? (tăng thời gian build)

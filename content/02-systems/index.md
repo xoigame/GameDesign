@@ -44,3 +44,54 @@ Khác biệt cốt lõi so với content design: content design viết ra *"phò
 4. Bạn đọc phân bố kết quả, chỉnh ràng buộc, lặp lại.
 
 Vòng lặp này trước đây tốn hàng tuần. Xem [[balancing-math]] để biết cách làm cụ thể.
+
+## 🎮 Unity
+
+Systems design trong Unity là câu chuyện về **nơi đặt con số**. Phần kiến trúc chung nằm ở [[unity-design-patterns]] và [[unity-project-structure]].
+
+**Ranh giới quan trọng nhất của cả nhánh này**
+
+```
+Assets/Scripts/
+├── Core/Systems/     ← C# thuần: DamageCalculator, LootRoller, PriceCurve
+│                       KHÔNG using UnityEngine
+├── Data/             ← ScriptableObject chứa số
+└── Unity/Systems/    ← MonoBehaviour mỏng, gọi vào Core
+```
+
+Vì sao đáng làm, cụ thể cho Unity:
+
+- **Test chạy EditMode** (mili giây) thay vì PlayMode (vài giây mỗi lần bấm Play)
+- **Mô phỏng 10.000 trận không cần mở Unity** — chạy bằng `dotnet run` trên project riêng tham chiếu cùng file. Đây là điều [[balancing-math]] cần.
+- Assembly Definition cho `Core/` làm compile nhanh hơn rõ rệt — xem [[unity-project-structure]]
+
+**Ba vai của ScriptableObject trong nhánh này**
+
+| Vai | Ví dụ | Lưu ý |
+|---|---|---|
+| Dữ liệu cấu hình | `WeaponData`, `EnemyData` | **Read-only lúc chạy** |
+| Kênh sự kiện | `GameEvent` (OnEnemyDied) | Tránh coupling giữa hệ thống |
+| Biến dùng chung | `FloatVariable` (player HP) | Tiện nhưng dễ lạm dụng |
+
+Chi tiết cả ba ở [[unity-design-patterns]]. Cái bẫy lớn nhất: **gán vào field của ScriptableObject sẽ ghi thẳng vào asset** và còn nguyên sau khi thoát Play Mode — xem [[data-driven-design]].
+
+**Tool cân bằng: một cửa sổ Editor, không phải Inspector**
+
+```csharp
+public class BalanceWindow : EditorWindow {
+    [MenuItem("Tools/Balance Dashboard")]
+    static void Open() => GetWindow<BalanceWindow>("Balance");
+
+    void OnGUI() {
+        if (GUILayout.Button("Mô phỏng 10.000 trận")) RunSim();
+        // bảng winrate/TTK theo cặp build × kẻ địch
+    }
+}
+```
+
+Với 5 hệ thống và 200 con số, Inspector từng asset không đủ. Một dashboard nhìn được toàn cảnh là khoản đầu tư một buổi chiều, dùng suốt dự án. Xem [[unity-editor-tools]].
+
+**Kiểm tra nhanh**
+- `grep -r "using UnityEngine" Assets/Scripts/Core/` → rỗng?
+- Test EditMode cho toàn bộ `Core/` chạy dưới 1 giây?
+- Grep phép gán vào field ScriptableObject → phải bằng 0?

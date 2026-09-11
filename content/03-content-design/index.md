@@ -38,3 +38,47 @@ Cơ hội: biến thể, sắp xếp, bản nháp đầu, mô tả vật phẩm,
 Cái bẫy: **khối lượng không phải chất lượng**. 500 nhiệm vụ sinh tự động tệ hơn 20 nhiệm vụ viết tay. Nếu người chơi nhận ra nội dung là khuôn mẫu lặp lại, toàn bộ thế giới mất độ tin cậy ngay lập tức.
 
 Cách dùng hợp lý: để AI sinh **nguyên liệu thô và biến thể**, còn con người giữ vai trò **biên tập và sắp đặt**. Xem [[ai-workflow]].
+
+## 🎮 Unity
+
+Nội dung trong Unity là câu hỏi **prefab hay scene hay dữ liệu**. Trả lời sai thì mỗi lần sửa một chi tiết nhỏ phải mở 40 scene.
+
+**Bảng quyết định**
+
+| Thứ | Đặt ở đâu | Vì sao |
+|---|---|---|
+| Bố cục màn chơi | Scene | Cần sửa bằng mắt, trong không gian |
+| Kẻ địch, vật phẩm | Prefab + ScriptableObject | Sửa một chỗ, áp cho mọi bản sao |
+| Chỉ số, bảng số | ScriptableObject / CSV | Sửa không cần mở scene |
+| Cấu hình procgen | ScriptableObject | Đổi luật sinh không đụng code |
+| Hội thoại | Asset text riêng (JSON/CSV) | Dịch được, biên tập được ngoài Unity |
+
+Nguyên tắc: **thứ gì cần nhìn thấy để sửa thì vào scene; còn lại vào dữ liệu.**
+
+**Prefab Variant thay vì kế thừa**
+
+```
+Enemy_Base.prefab
+├── Enemy_Goblin.prefab       (variant)
+├── Enemy_Archer.prefab       (variant)
+└── Enemy_Brute.prefab        (variant)
+```
+
+Sửa `Enemy_Base` áp cho cả ba; mỗi variant chỉ ghi đè phần khác biệt. Đây là cơ chế Unity làm tốt và ít người dùng đủ — chi tiết ở [[unity-project-structure]].
+
+**Đừng nhồi mọi thứ vào một scene**
+
+Additive scene loading cho phép tách:
+
+```csharp
+// Bootstrap luôn tồn tại; nội dung load/unload quanh nó
+SceneManager.LoadScene("Bootstrap");
+SceneManager.LoadSceneAsync("Level_03", LoadSceneMode.Additive);
+```
+
+Lợi ích thật: hai người sửa hai scene khác nhau không conflict. Scene Unity là file text nhưng merge conflict trên scene gần như không giải được — tách scene là cách phòng tránh. Xem [[unity-game-loop]].
+
+**Kiểm tra nhanh**
+- Sửa chỉ số một loại quái: có phải mở scene nào không? (không nên)
+- Hai người sửa hai màn khác nhau: có conflict không?
+- Prefab variant hay copy-paste prefab? (grep số lượng prefab gần giống nhau)

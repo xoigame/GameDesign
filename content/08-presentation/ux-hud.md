@@ -107,3 +107,65 @@ Sau bảng, liệt kê những gì bạn đã LOẠI BỎ và vì sao.
 Câu cuối quan trọng: nó buộc AI thể hiện phần "cắt bớt", vốn là phần khó nhất của thiết kế HUD và là phần nó tự nhiên né tránh.
 
 **Bẫy thường gặp:** phân biệt trạng thái chỉ bằng màu. Khoảng 8% nam giới mù màu đỏ-lục sẽ không phân biệt được thanh máu đỏ với thanh năng lượng xanh lá. Ràng buộc mã hoá kép nên có mặt trong **mọi** prompt về UI — xem [[accessibility]].
+
+## 🎮 Unity
+
+HUD là nơi Canvas rebuild giết frame rate. Quyết định thiết kế "hiện cái gì" ảnh hưởng trực tiếp tới hiệu năng, và đó là điều ít ai nối lại với nhau.
+
+**Nguyên tắc Unity quan trọng nhất: phân tầng Canvas theo tần suất đổi**
+
+```
+Canvas_Static     ← khung, nền, icon không đổi          (rebuild: gần như không bao giờ)
+Canvas_Frequent   ← thanh máu, cooldown, số đạn          (rebuild: nhiều lần/giây)
+Canvas_Rare       ← tên màn, mục tiêu, buff              (rebuild: vài giây một lần)
+Canvas_Overlay    ← số sát thương bay lên                (pool, không Instantiate)
+```
+
+Một phần tử đổi làm **rebuild toàn bộ Canvas chứa nó**. Nhét thanh máu (đổi 60 lần/giây) cùng Canvas với khung tĩnh nghĩa là rebuild cả khung 60 lần/giây. Tách ra là xong — chi tiết ở [[unity-ui]].
+
+Điều này nối thẳng với bài test câu hỏi ở phần trên: **phần tử nào được hỏi liên tục thì nằm Canvas riêng**, phần tử hỏi thỉnh thoảng thì Canvas khác. Thiết kế và hiệu năng cùng một câu trả lời.
+
+**Máu thấp đọc bằng thị giác ngoại vi**
+
+Không làm bằng cách phóng to thanh máu. Làm bằng post-processing toàn màn hình:
+
+```csharp
+// URP: Volume có Vignette + Color Adjustments, điều khiển weight theo HP
+[SerializeField] Volume lowHpVolume;
+
+void OnHealthChanged(float hp01) {
+    // chỉ bắt đầu hiện dưới 30% máu
+    lowHpVolume.weight = Mathf.InverseLerp(0.3f, 0.05f, hp01);
+}
+```
+
+`Volume.weight` rẻ và không gây Canvas rebuild. Nhớ nhân với hệ số trợ năng nếu người chơi đã tắt hiệu ứng mạnh — xem [[accessibility]].
+
+**Số sát thương bay lên — pool, đừng Instantiate**
+
+```csharp
+// 20 con quái trúng đòn cùng lúc = 20 Instantiate + 20 TMP_Text mới = giật
+readonly ObjectPool<DamageNumber> pool = new(...);
+```
+
+Và dùng `TMP_Text.SetText("{0}", value)` chứ không `text = value.ToString()` — bản đầu không cấp phát.
+
+**Chỉ báo hướng nguy hiểm ở rìa màn hình**
+
+```csharp
+// Chuyển vị trí thế giới thành góc quanh tâm màn hình
+Vector3 vp = cam.WorldToViewportPoint(threat.position);
+bool offScreen = vp.z < 0 || vp.x is < 0 or > 1 || vp.y is < 0 or > 1;
+if (offScreen) {
+    Vector2 dir = ((Vector2)vp - Vector2.one * 0.5f).normalized;
+    arrow.anchoredPosition = dir * edgeRadius;
+    arrow.up = dir;
+}
+```
+
+Kiểm tra `vp.z < 0` là bắt buộc — mục tiêu sau lưng camera cho viewport point đảo dấu, thiếu nó thì mũi tên chỉ ngược.
+
+**Kiểm tra nhanh**
+- Profiler mục `Canvas.BuildBatch` / `Canvas.SendWillRenderCanvases`: dưới 1ms?
+- Đặt breakpoint: thanh máu đổi có làm rebuild Canvas chứa khung tĩnh không?
+- Số sát thương: GC Alloc = 0 B khi 20 con trúng đòn cùng lúc?

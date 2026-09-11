@@ -95,3 +95,61 @@ core_loop:
 ```
 
 Số cụ thể như `0.4s`, `90ms`, `1-3 mảnh` là thứ biến prompt mơ hồ thành code chạy đúng ngay lần đầu. Xem thêm [[prompt-patterns]].
+
+## 🎮 Unity
+
+Core loop trong Unity là câu hỏi **vòng lặp nào chạy ở đâu**. Đặt sai tầng là nguồn bug timing khó truy.
+
+**Ba tầng lặp → ba nơi trong Unity**
+
+| Tầng | Unity | Lưu ý |
+|---|---|---|
+| Micro (1–10s) | `Update` / `FixedUpdate` | Frame data ở `FixedUpdate`, xem [[combat-systems]] |
+| Mid (2–10 phút) | State máy cấp scene | Không `DontDestroyOnLoad` |
+| Macro (nhiều giờ) | State máy cấp app + save | Bootstrap scene, xem [[unity-game-loop]] |
+
+**Vòng micro: `Update` hay `FixedUpdate`?**
+
+```csharp
+// Input: Update (bắt mọi lần bấm, kể cả frame nhanh)
+void Update() {
+    if (input.AttackPressed) queuedAttack = true;     // BUFFER, không xử lý ngay
+}
+
+// Luật chơi: FixedUpdate (tất định, 60Hz)
+void FixedUpdate() {
+    if (queuedAttack) { queuedAttack = false; ExecuteAttack(); }
+}
+```
+
+Đọc input trong `FixedUpdate` sẽ **bỏ lỡ** lần bấm nếu frame rate cao hơn 60. Xử lý luật trong `Update` thì frame rate cao/thấp cho kết quả khác nhau. Buffer trong `Update`, xử lý trong `FixedUpdate` là cách đúng — và nó cũng chính là `input buffer` ở [[game-feel]].
+
+**Vòng mid: state máy cấp scene, không cờ rải rác**
+
+```csharp
+public enum RoomState { Entering, Fighting, Cleared, Rewarding, Exiting }
+
+// Một enum, một chỗ chuyển. KHÔNG dùng bool isFighting + bool isCleared —
+// hai cờ cho bốn trạng thái, hai trong đó vô nghĩa.
+```
+
+**Vòng macro: bootstrap + additive scene**
+
+```csharp
+// Bootstrap scene sống suốt, chứa AudioManager/ConfigLoader/SaveSystem.
+// Scene gameplay load additive và unload khi hết run.
+await SceneManager.LoadSceneAsync("Run", LoadSceneMode.Additive);
+```
+
+Chi tiết ở [[unity-game-loop]]. Điểm quan trọng: **đừng `DontDestroyOnLoad` từng manager một** — chúng sẽ nhân bản khi load lại scene. Một bootstrap scene giải quyết gọn.
+
+**Bẫy Unity cụ thể**
+- **Đọc input trong `FixedUpdate`** → mất input ở frame rate cao.
+- **`Time.deltaTime` trong `FixedUpdate`** → dùng `Time.fixedDeltaTime`.
+- **`DontDestroyOnLoad` nhiều manager** → nhân bản sau khi load scene lại.
+- **Hitstop bằng `timeScale = 0`** làm `FixedUpdate` dừng — đúng ý, nhưng coroutine phải dùng `WaitForSecondsRealtime`.
+
+**Kiểm tra nhanh**
+- Chạy ở 240 FPS (tắt vsync): bấm tấn công nhanh có mất input không?
+- Load lại scene gameplay: có manager nào bị nhân đôi không?
+- `Time.fixedDeltaTime` dùng đúng trong `FixedUpdate` chứ?

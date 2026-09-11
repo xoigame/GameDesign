@@ -57,3 +57,51 @@ Viết script xử lý hậu kỳ cho sprite sinh tự động, để ép về c
 **Bẫy thường gặp:** sinh 20 sprite riêng lẻ rồi ghép lại — trông như 20 game khác nhau. Bảng màu cố định + hậu kỳ tự động là cách rẻ nhất để ép về một phong cách.
 
 **Lưu ý:** điều khoản giấy phép của từng công cụ khác nhau và thay đổi theo thời gian. Trước khi phát hành thương mại, tự xác minh với nguồn chính thức tại thời điểm đó — đừng dựa vào ghi nhớ của AI hay của tài liệu này.
+
+## 🎮 Unity
+
+Trong Unity, phần khó không phải sinh asset — là **import nó vào mà không phá nhất quán**.
+
+**Preset import cưỡng chế phong cách**
+
+Xem [[art-direction]]. Điểm cốt lõi: đặt `TextureImporter` preset làm mặc định cho thư mục, để mọi asset mới (kể cả AI sinh) tự vào đúng khuôn.
+
+**Pipeline xử lý hậu kỳ — AssetPostprocessor**
+
+```csharp
+// Chạy TỰ ĐỘNG mỗi lần có texture mới vào thư mục
+public class ArtPostprocessor : AssetPostprocessor {
+    void OnPreprocessTexture() {
+        if (!assetPath.StartsWith("Assets/Art/Generated")) return;
+        var ti = (TextureImporter)assetImporter;
+        ti.spritePixelsPerUnit = 32;
+        ti.filterMode = FilterMode.Point;
+        ti.textureCompression = TextureImporterCompression.Uncompressed;
+        ti.mipmapEnabled = false;
+    }
+
+    void OnPostprocessTexture(Texture2D tex) {
+        if (!assetPath.StartsWith("Assets/Art/Generated")) return;
+        QuantizeToPalette(tex);         // ép về palette dự án
+    }
+}
+```
+
+Đây là cách biến "nhất quán phong cách" từ kỷ luật con người thành cơ chế tự động. Thả 50 sprite AI sinh vào `Assets/Art/Generated/` là chúng tự về đúng palette và đúng PPU.
+
+**SFX sinh tự động — import settings quan trọng hơn chất lượng clip**
+
+Xem bảng ở [[unity-audio]]. Sai `Load Type` cho 200 SFX là cách nhanh nhất ăn hết RAM trên mobile.
+
+**Asset tạm: hình khối màu tốt hơn art AI nửa vời**
+
+Ở giai đoạn prototype, Unity có sẵn primitive và `Color`. Một `Cube` màu đỏ rõ ràng hơn một sprite AI sinh trông "gần giống quái vật" — và không làm bạn gắn bó với thứ sẽ phải bỏ.
+
+**Giấy phép — kiểm tra trước khi ship**
+
+Điều khoản từng công cụ khác nhau và thay đổi theo thời gian. Với Unity còn thêm một lớp: **Asset Store có điều khoản riêng** về việc redistribute. Đây là việc phải tự xác minh với nguồn chính thức tại thời điểm phát hành, không dựa vào ghi nhớ của AI hay của tài liệu này.
+
+**Kiểm tra nhanh**
+- Thả một PNG vào `Assets/Art/Generated/`: nó có tự về PPU 32 và palette không?
+- Build mobile: dung lượng RAM cho texture và audio bao nhiêu?
+- Có asset nào chưa rõ giấy phép trong build không?

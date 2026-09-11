@@ -132,3 +132,78 @@ Test: hysteresis không dao động khi intensity rung quanh ngưỡng;
 ```
 
 **Bẫy thường gặp:** dùng crossfade tuyến tính. Hai track cùng phát ở 50% âm lượng tuyến tính cho tổng năng lượng **thấp hơn** một track ở 100% — nghe như âm thanh bị tụt ở giữa đoạn chuyển. Phải nêu rõ *equal-power* (nhân với `cos`/`sin` của góc chuyển), AI mặc định làm tuyến tính.
+
+## 🎮 Unity
+
+Trong Unity, adaptive music đứng hoặc chết ở một API: **`AudioSettings.dspTime`**. Dùng `Time.time` là lệch nhịp, không có ngoại lệ.
+
+**Vì sao không dùng `Time.time`**
+
+`Time.time` cập nhật mỗi frame và trôi so với đồng hồ audio. Sau vài phút, "chờ tới cuối ô nhịp" tính bằng `Time.time` lệch cả trăm mili giây — tai nghe ra ngay.
+
+```csharp
+// ✅ đồng hồ của audio thread, không trôi
+double nextBarTime = startDspTime + barsPlayed * (60d / bpm * beatsPerBar);
+```
+
+**Phát đúng nhịp: `PlayScheduled`**
+
+```csharp
+public class AdaptiveMusic : MonoBehaviour {
+    [SerializeField] AudioSource[] layers;     // cùng độ dài, cùng tempo
+    [SerializeField] float bpm = 120f;
+    [SerializeField] int beatsPerBar = 4;
+    double startDsp;
+
+    void Start() {
+        // Lên lịch TẤT CẢ lớp cùng một mốc dsp -> không bao giờ lệch nhau
+        startDsp = AudioSettings.dspTime + 0.2;    // đệm 200ms để kịp lên lịch
+        foreach (var a in layers) {
+            a.volume = 0f;
+            a.loop = true;
+            a.PlayScheduled(startDsp);             // KHÔNG dùng Play()
+        }
+    }
+
+    public double SecondsToNextBar() {
+        double barLen = 60d / bpm * beatsPerBar;
+        double elapsed = AudioSettings.dspTime - startDsp;
+        return barLen - (elapsed % barLen);
+    }
+}
+```
+
+Điểm mấu chốt: **mọi lớp `PlayScheduled` cùng một mốc và không bao giờ `Stop()`**. Chỉ đổi `volume`. `Stop()` rồi `Play()` lại sẽ lệch timeline và không cách nào đồng bộ lại.
+
+**Fade equal-power, không tuyến tính**
+
+```csharp
+// Hai lớp cùng ở volume 0.5 tuyến tính cho tổng NĂNG LƯỢNG thấp hơn một lớp ở 1.0
+// -> nghe như âm thanh bị tụt ở giữa đoạn chuyển
+float t = Mathf.Clamp01(elapsed / fadeDuration);
+outgoing.volume = Mathf.Cos(t * Mathf.PI * 0.5f);
+incoming.volume = Mathf.Sin(t * Mathf.PI * 0.5f);
+```
+
+Đây là lỗi AI gần như luôn mắc nếu không nêu rõ.
+
+**Hysteresis — chống rung lớp**
+
+```csharp
+// intensity dao động quanh 0.5 sẽ bật/tắt lớp drums liên tục, nghe như lỗi
+bool drumsOn;
+drumsOn = drumsOn ? intensity > 0.35f : intensity > 0.50f;
+```
+
+Nguồn `intensity` nên là [[ai-director]] — nó đã có sẵn chỉ số 0..1.
+
+**Bẫy Unity cụ thể**
+- **`AudioSettings.dspTime` không nhích khi `timeScale = 0`?** Sai — nó *vẫn chạy*, vì nó là đồng hồ audio thread. Đây là điều tốt: nhạc không đứng khi hitstop. Nhưng nghĩa là không dùng nó để đo thời gian gameplay.
+- **`AudioSettings.OnAudioConfigurationChanged`** bắn khi người chơi cắm tai nghe — mọi `PlayScheduled` đang chờ bị mất. Phải lên lịch lại.
+- **Lớp có độ dài khác nhau** → lệch sau vài vòng loop. Mọi clip phải cùng số ô nhịp.
+
+**Kiểm tra nhanh**
+- Chơi 10 phút liên tục: các lớp còn khớp nhau không?
+- Cắm/rút tai nghe giữa lúc chơi: nhạc có tiếp tục không?
+- Đổi lớp giữa đoạn: có nghe ra chỗ nối không? (không được)
+- `intensity` rung quanh ngưỡng: lớp có bật tắt liên tục không?

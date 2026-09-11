@@ -124,3 +124,74 @@ Kèm test: mọi màn hình tới được và thoát ra được bằng riêng 
 ```
 
 **Bẫy thường gặp:** làm menu bằng chuột trước, tính chuyện tay cầm sau. Đến lúc đó thì mọi màn hình phải làm lại vì không có hệ thống focus. Ràng buộc điều hướng phải nằm trong **prompt đầu tiên**, không phải yêu cầu bổ sung.
+
+## 🎮 Unity
+
+Luồng menu trong Unity là câu hỏi **scene hay panel**, và trả lời sai thì mọi màn hình sau đều mệt.
+
+**Scene hay panel?**
+
+| | Scene riêng | Panel trong một scene |
+|---|---|---|
+| Tải | Có màn hình loading | Tức thì |
+| Trạng thái | Reset sạch | Phải tự dọn |
+| Quay lại game | Load lại scene game | Chỉ tắt panel |
+| Phù hợp | Main menu | Pause, settings, inventory |
+
+Kết hợp thường dùng: **một `Bootstrap` scene luôn tồn tại** (chứa AudioManager, ConfigLoader, UI Root), cộng scene gameplay load additive. Main menu là panel trong Bootstrap, không phải scene riêng. Chi tiết ở [[unity-game-loop]].
+
+**UI phải chạy khi `timeScale = 0`**
+
+Đây là bẫy làm mất cả buổi:
+
+```csharp
+// ❌ đứng mãi khi pause
+yield return new WaitForSeconds(0.3f);
+
+// ✅
+yield return new WaitForSecondsRealtime(0.3f);
+```
+
+Và với Animator trên UI: `Update Mode = Unscaled Time`. Với Input System, Actions vẫn chạy khi pause (tốt), nhưng `Time.deltaTime` bằng 0 — mọi animation UI tính theo `unscaledDeltaTime`.
+
+**Settings áp dụng ngay — đừng bắt Apply**
+
+```csharp
+volumeSlider.onValueChanged.AddListener(v => {
+    AudioManager.I.SetBusVolume("MusicVol", v);   // hiệu lực ngay
+    settings.musicVolume = v;
+    settings.SaveDebounced();                      // ghi file sau 0.5s im lặng
+});
+```
+
+`SaveDebounced` quan trọng: `onValueChanged` bắn mỗi frame khi kéo slider, ghi file mỗi frame sẽ giật.
+
+**Lưu game — ghi atomic, luôn giữ backup**
+
+Chi tiết ở [[unity-save-data]]. Điểm tối thiểu:
+
+```csharp
+// Ghi ra file tạm rồi đổi tên. Tắt máy giữa lúc ghi không làm hỏng save cũ.
+File.WriteAllText(tmp, json);
+if (File.Exists(path)) File.Replace(tmp, path, backup);
+else File.Move(tmp, path);
+```
+
+**Không dùng `PlayerPrefs` cho tiến trình.** Nó nằm trong registry (Windows), không sao lưu được, và giới hạn kích thước. `PlayerPrefs` chỉ cho settings.
+
+**Điều hướng tay cầm — focus mặc định mỗi màn hình**
+
+```csharp
+void OnEnable() {
+    EventSystem.current.SetSelectedGameObject(null);   // xoá focus cũ trước
+    EventSystem.current.SetSelectedGameObject(firstButton);
+}
+```
+
+Bước `SetSelectedGameObject(null)` trước là cần thiết — nếu không, mở lại cùng panel đôi khi không đổi focus.
+
+**Kiểm tra nhanh**
+- Pause game rồi mở settings: animation UI còn chạy không?
+- Kéo slider âm lượng liên tục 5 giây: có ghi file mỗi frame không?
+- Rút chuột, chỉ dùng bàn phím: tới được mọi màn hình và thoát ra được chứ?
+- Tắt game giữa lúc đang lưu (Task Manager): save cũ còn nguyên không?

@@ -102,3 +102,61 @@ KHÔNG tự đổi palette. KHÔNG tự quyết ràng buộc nào "hợp lý hơ
 ```
 
 **Bẫy thường gặp:** nhờ AI "đề xuất bảng màu cho game fantasy" → nhận về 5 màu tím-vàng quen thuộc trong mọi tutorial. Bảng màu là quyết định nhận diện của game bạn; hãy tự chọn rồi bắt AI thi hành nó.
+
+## 🎮 Unity
+
+Art direction trong Unity là **ràng buộc được cưỡng chế bằng tool**, không phải bằng lời nhắc trong Notion.
+
+**Nơi các quyết định sống**
+
+- `Assets/Art/palette.json` hoặc một `PaletteAsset` (ScriptableObject) — nguồn chân lý cho màu
+- `Assets/Settings/` — Sprite Atlas, import presets
+- `Assets/Editor/ArtValidator.cs` — tool quét vi phạm
+
+**Preset import — đặt một lần, khỏi sửa 200 lần**
+
+`Project Settings > Editor > Asset Pipeline` rồi dùng **Preset** cho `TextureImporter`:
+
+```
+Sprite Mode        Single
+Pixels Per Unit    32        ← phải khớp con số đã chốt, không đổi giữa dự án
+Filter Mode        Point     (pixel art) / Bilinear (art mượt)
+Compression        None      (pixel art) / High Quality
+Generate Mip Maps  Tắt       cho sprite 2D
+```
+
+Đặt preset làm mặc định cho thư mục `Assets/Art/` bằng **Preset Manager**. Thiếu bước này thì mỗi sprite mới import với `Pixels Per Unit = 100` mặc định và tỉ lệ lệch — lỗi chỉ lộ ra khi ghép cảnh.
+
+**Cưỡng chế palette bằng editor tool**
+
+```csharp
+[MenuItem("Tools/Art/Validate Palette")]
+static void Validate() {
+    var palette = AssetDatabase.LoadAssetAtPath<PaletteAsset>("Assets/Art/Palette.asset");
+    foreach (var guid in AssetDatabase.FindAssets("t:Texture2D", new[] { "Assets/Art" })) {
+        var path = AssetDatabase.GUIDToAssetPath(guid);
+        var tex = AssetDatabase.LoadAssetAtPath<Texture2D>(path);
+        foreach (var c in tex.GetPixels32()) {
+            if (c.a < 8) continue;
+            if (!palette.Contains(c))
+                Debug.LogWarning($"Màu ngoài palette trong {path}: #{ColorUtility.ToHtmlStringRGB(c)}", tex);
+        }
+    }
+}
+```
+
+`GetPixels32` cần texture có `Read/Write Enabled` — bật trong preset cho thư mục Art, và nhớ là nó tăng RAM nên tắt trước khi ship.
+
+**Test silhouette ngay trong Editor**
+
+Cách nhanh nhất: tạo một `Volume` với **Color Adjustments → Saturation = -100** (URP), gán vào một Camera phụ, bật khi cần. Ba mươi giây setup và bạn có bài test silhouette bất cứ lúc nào. Xem [[unity-lighting]] về Volume và post-processing.
+
+**Bẫy Unity cụ thể**
+- **Color space Gamma** làm mọi màu blend sai. Đổi sang Linear từ ngày đầu — xem [[unity-lighting]].
+- **Sprite Atlas thiếu** → mỗi sprite một draw call. Xem [[unity-ui]].
+- **Pixels Per Unit khác nhau giữa các sprite** → cùng một nhân vật to nhỏ bất thường giữa các scene.
+
+**Kiểm tra nhanh**
+- Chạy Validate Palette: có màu nào ngoài palette không?
+- Bật Volume saturation -100: còn phân biệt được nhân vật với nền không?
+- Frame Debugger: bao nhiêu draw call cho sprite? (nên gom hết vào 1–2 atlas)

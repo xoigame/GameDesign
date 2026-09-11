@@ -56,3 +56,60 @@ Khuyến nghị MỘT cái. Nói rõ cái gì tôi sẽ mất khi chọn nó.
 **Luôn nêu phiên bản chính xác trong mọi prompt sau đó.** `Unity 6` khác `Unity 2021` rất nhiều; model sẽ dùng API của phiên bản phổ biến nhất trong dữ liệu huấn luyện nếu bạn không nói.
 
 **Bẫy thường gặp:** hỏi "engine nào tốt nhất" → nhận về bảng so sánh chung chung ai cũng viết được. Ràng buộc cụ thể mới cho ra khuyến nghị dùng được.
+
+## 🎮 Unity
+
+Bạn đã chọn Unity, nên mục này nói về **quyết định bên trong Unity** — những lựa chọn khó đảo ngược.
+
+**Bảng quyết định khó đảo ngược**
+
+| Quyết định | Lựa chọn | Chi phí đổi sau |
+|---|---|---|
+| Render pipeline | URP / Built-in / HDRP | Rất cao — mọi shader và lighting |
+| Input | Input System mới / Manager cũ | Cao — mọi script đọc input |
+| UI | UGUI / UI Toolkit | Cao — mọi màn hình |
+| Chuyển động | Rigidbody / tự viết | Cao — mọi collision |
+| Color space | Linear / Gamma | Rất cao — mọi màu và art |
+| Assembly Definition | Có / không | Trung bình, nhưng càng để lâu càng đắt |
+| Addressables | Có / không | Trung bình |
+| Netcode | NGO / Fish-Net / Photon / không | Rất cao — xem [[unity-multiplayer]] |
+
+**Khuyến nghị mặc định cho dự án indie 2026**
+
+```
+Render        URP            (Built-in đang bảo trì; HDRP quá nặng cho indie)
+Input         Input System   (đổi phím, tay cầm, không phải tự viết)
+UI            UGUI cho in-game HUD; UI Toolkit cho editor tool
+Color space   Linear
+Assembly      Game.Core (noEngineReferences) + Game.Unity + Game.Editor
+Addressables  Không, trừ khi build > 500MB hoặc cần DLC
+Netcode       Không, trừ khi multiplayer là pillar
+```
+
+Lý do URP thay vì Built-in: Built-in không còn nhận tính năng mới, và phần lớn asset/tutorial mới đều giả định URP. Chi tiết ở [[unity-lighting]].
+
+**Tiêu chí "agent sửa được tới đâu"**
+
+Đây là tiêu chí mới đáng cân nhắc khi làm cùng AI:
+
+| Thứ | Agent sửa được? |
+|---|---|
+| C# script | ✅ hoàn toàn |
+| UXML / USS (UI Toolkit) | ✅ text thuần |
+| ScriptableObject `.asset` | ⚠️ là YAML, đọc được nhưng sửa dễ hỏng GUID |
+| `.prefab` / `.unity` | ❌ đừng để agent sửa |
+| Animator Controller | ❌ |
+| Shader Graph | ❌ (HLSL viết tay thì ✅) |
+| ProjectSettings | ❌ agent không thấy |
+
+Hệ quả thực dụng: **đẩy càng nhiều quyết định vào C# và ScriptableObject càng tốt**, vì đó là phần agent làm được. Mọi thứ nằm trong Editor asset là phần bạn phải tự làm.
+
+**Phiên bản Unity — LTS hay mới nhất?**
+
+LTS cho dự án dự kiến kéo dài hơn một năm. Bản mới nhất nếu cần tính năng cụ thể. Đừng nhảy phiên bản giữa dự án trừ khi có bug chặn — nâng phiên bản Unity là việc cả tuần.
+
+**Kiểm tra nhanh**
+- Color space đang Linear chứ?
+- Input Manager cũ đã tắt chưa?
+- Assembly Definition đã có chưa? (`Game.Core` với `noEngineReferences`)
+- Phiên bản Unity có ghi trong `CLAUDE.md` chưa?

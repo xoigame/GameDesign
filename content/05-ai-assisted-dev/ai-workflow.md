@@ -125,3 +125,56 @@ Chưa sửa gì cả, chỉ liệt kê.
 ```
 
 **Bẫy thường gặp:** bỏ qua bước kế hoạch. Đọc kế hoạch mất 30 giây; đọc 300 dòng code sai hướng mất 20 phút.
+
+## 🎮 Unity
+
+Trên Unity project, quy trình 7 giai đoạn có vài chỗ khác — chủ yếu vì **bạn phải vào Editor giữa mỗi bước**.
+
+**Giai đoạn 3 (dựng khung) trong Unity**
+
+Thứ tự có ý nghĩa:
+
+```
+1. Tạo project với template đúng (xem [[genre-conventions]])
+2. Chốt ProjectSettings: Color Space, Fixed Timestep, Input System
+3. Assembly Definition: Game.Core (noEngineReferences), Game.Unity, Game.Editor
+4. Bootstrap scene + state máy cấp app (xem [[unity-game-loop]])
+5. Một ScriptableObject config + một MonoBehaviour đọc nó
+6. Một test EditMode chạy xanh
+```
+
+Bước 6 là mốc thật: khi có một test EditMode chạy, agent đã có cách **tự kiểm chứng** thay đổi của nó. Trước đó thì mọi thứ agent viết đều là niềm tin.
+
+**Giai đoạn 4 (vertical slice) — điều Unity làm dễ hơn**
+
+Một scene, một kẻ địch, một vũ khí, **có juice đầy đủ**. Unity mạnh ở đây: hitstop + screenshake + particle dựng trong một buổi. Xem [[game-feel]].
+
+Đừng bỏ juice ở giai đoạn này vì "để sau" — vertical slice không có juice không trả lời được câu hỏi "core loop có vui không".
+
+**Nhật ký quyết định — đặc biệt quan trọng với Unity**
+
+```markdown
+## 2026-09-11 — UGUI, không UI Toolkit
+Cân nhắc: UI Toolkit (agent sửa được vì UXML/USS là text) vs UGUI.
+Chọn: UGUI.
+Lý do: cần world-space UI cho thanh máu trên đầu quái; UI Toolkit hạn chế
+chỗ này. Chấp nhận việc agent không sửa được prefab UI.
+Xem lại nếu: bỏ world-space UI, hoặc UI Toolkit hỗ trợ đủ.
+```
+
+Không có file này, cứ vài phiên agent lại đề xuất chuyển sang UI Toolkit.
+
+**Commit trước khi giao việc lớn — với Unity thì bắt buộc**
+
+Unity ghi vào rất nhiều file khi bạn bấm Play (Library/, .meta, scene). `git reset --hard` sau một nhiệm vụ tệ là cách duy nhất sạch. Nhớ `.gitignore` đúng cho Unity (Library/, Temp/, Logs/, obj/).
+
+**Điểm mù riêng của Unity**
+
+- **Agent không biết `[SerializeField]` đã gán chưa** → code đúng, chạy `NullReferenceException`. Luôn `[RequireComponent]` hoặc kiểm tra trong `Awake` và log rõ.
+- **Agent viết API của phiên bản khác** → nêu phiên bản chính xác trong mọi prompt.
+- **Agent không thấy collision matrix** → va chạm không xảy ra mà code trông đúng.
+
+**Kiểm tra nhanh**
+- Có ít nhất một test EditMode chạy xanh chưa?
+- `design/decisions.md` có ghi các quyết định Unity chưa?
+- `.gitignore` có Library/, Temp/, Logs/, obj/ chưa?

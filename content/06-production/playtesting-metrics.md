@@ -95,3 +95,76 @@ Nguyên tắc riêng tư: chỉ log dữ liệu gameplay, không log thông tin 
 **Mô phỏng bổ sung cho playtest** — mô phỏng cho biết *có cân bằng không*, playtest cho biết *có vui không*. Cần cả hai; không cái nào thay được cái nào.
 
 Điều AI **không** làm được: quan sát nét mặt người chơi lúc họ bực. Phần đó vẫn phải ngồi xem.
+
+## 🎮 Unity
+
+Trong Unity, phần khó không phải thu thập số liệu — là **thu thập mà không làm giật game và không mất dữ liệu khi crash**.
+
+**Nơi các quyết định sống**
+
+- `Core/Analytics/EventLogger.cs` — buffer + ghi theo lô (C# thuần được)
+- `Application.persistentDataPath` — nơi ghi file log
+- `Assets/Editor/LogAnalyzer.cs` — đọc log, vẽ phễu
+
+**Ghi log không gây giật**
+
+```csharp
+public class EventLogger {
+    readonly List<string> buffer = new(256);
+    float lastFlush;
+
+    public void Log(string name, string json) {
+        // Ghi vào buffer trong bộ nhớ — KHÔNG chạm đĩa ở đây
+        buffer.Add($"{{\"t\":{Time.unscaledTime:F2},\"e\":\"{name}\",\"d\":{json}}}");
+        if (buffer.Count >= 200) Flush();
+    }
+
+    public void Flush() {
+        if (buffer.Count == 0) return;
+        File.AppendAllLines(logPath, buffer);   // một lần ghi cho 200 dòng
+        buffer.Clear();
+    }
+}
+```
+
+Ghi từng dòng ra đĩa mỗi sự kiện là nguồn giật lag rõ ràng. Ghi theo lô 200 dòng gần như miễn phí.
+
+**Đừng mất dữ liệu khi crash**
+
+```csharp
+void OnApplicationPause(bool paused) { if (paused) logger.Flush(); }
+void OnApplicationFocus(bool focus)  { if (!focus)  logger.Flush(); }
+void OnApplicationQuit()             { logger.Flush(); }
+```
+
+Ba callback này bắt gần hết trường hợp. Crash cứng thì vẫn mất buffer — nên đặt ngưỡng flush thấp hơn (50 dòng) nếu đang tìm bug crash.
+
+**`unscaledTime`, không `time`**
+
+`Time.time` bị `timeScale` ảnh hưởng, nên hitstop và pause làm số liệu lệch. Mọi mốc thời gian trong log dùng `Time.unscaledTime`.
+
+**Vẽ phễu ngay trong Editor**
+
+```csharp
+[MenuItem("Tools/Analytics/Funnel")]
+static void Funnel() {
+    var events = LoadAllSessions();          // đọc mọi file log
+    var steps = new[] { "level_start", "level_complete" };
+    // đếm session đi qua từng bước, in tỉ lệ rơi rụng
+    // 1000 -> 780 -> 310 -> 295 : cú rơi 780->310 là chỗ cần sửa
+}
+```
+
+Không cần dashboard bên ngoài cho giai đoạn playtest nội bộ. Một EditorWindow đọc file JSON là đủ và làm trong một buổi.
+
+**Bẫy Unity cụ thể**
+- **`Application.persistentDataPath` khác nhau mỗi nền tảng** — đừng hardcode đường dẫn.
+- **`File.AppendAllLines` trên WebGL không hoạt động** — WebGL không có filesystem thật. Dùng `PlayerPrefs` hoặc gửi lên server.
+- **Ghi log trong `Update`** — kể cả vào buffer, `string` interpolation cấp phát. Chỉ log sự kiện, không log mỗi frame.
+- **Quên ẩn danh** — không log tên máy, đường dẫn chứa tên người dùng.
+
+**Kiểm tra nhanh**
+- Profiler khi đang log nhiều: GC Alloc có tăng không?
+- Alt-Tab ra rồi vào: log có được flush không?
+- Log dùng `unscaledTime` chứ?
+- Có dữ liệu định danh cá nhân nào trong log không? (không được)

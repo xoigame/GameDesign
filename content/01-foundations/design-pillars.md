@@ -71,3 +71,67 @@ Việc sửa pillar không sai. Sửa *lặng lẽ* mới sai — đó là lúc 
 ```
 
 Dòng *"nếu một đề xuất cần RNG → từ chối"* là mấu chốt: nó biến pillar từ lời mô tả thành **một luật mà agent có thể thi hành**. Xem [[agent-guardrails]].
+
+## 🎮 Unity
+
+Pillars chỉ có tác dụng khi **máy kiểm tra được**. Trong Unity, biến pillar thành test là việc một buổi chiều và nó chặn trôi dạt suốt dự án.
+
+**Nơi pillars sống trong project**
+
+- `CLAUDE.md` ở gốc repo — để AI agent đọc mỗi phiên
+- `Assets/Tests/EditMode/PillarTests.cs` — test cưỡng chế
+- `Assets/Editor/PillarValidator.cs` — quét asset
+
+**Pillar → test**
+
+```csharp
+// Pillar: "Không có ngẫu nhiên trong chiến đấu"
+[Test]
+public void Pillar_KhongRngTrongCombat() {
+    var files = Directory.GetFiles("Assets/Scripts/Combat", "*.cs", SearchOption.AllDirectories);
+    foreach (var f in files) {
+        var src = File.ReadAllText(f);
+        Assert.IsFalse(Regex.IsMatch(src, @"\bRandom\."),
+            $"Pillar 1 bị vi phạm: {f} dùng Random");
+    }
+}
+
+// Pillar: "Người chơi hiểu nguyên nhân thất bại trong 2 giây"
+[Test]
+public void Pillar_MoiDonCoTelegraph() {
+    foreach (var atk in AssetDatabase.FindAssets("t:AttackData")
+             .Select(g => AssetDatabase.LoadAssetAtPath<AttackData>(AssetDatabase.GUIDToAssetPath(g)))) {
+        if (!atk.isEnemyAttack) continue;
+        Assert.GreaterOrEqual(atk.startupFrames, 18,
+            $"Pillar 3: {atk.name} có startup {atk.startupFrames}f < 18f (0.3s)");
+    }
+}
+
+// Pillar: "Một ván dưới 3 phút"
+[Test]
+public void Pillar_MatchDuoi3Phut() {
+    foreach (var lvl in LoadAll<LevelData>())
+        Assert.Less(lvl.EstimatedSeconds, 180f, $"Pillar 2: {lvl.name} dự kiến {lvl.EstimatedSeconds}s");
+}
+```
+
+Ba test này chạy trong mili giây và chúng **không cho phép trôi dạt lặng lẽ**. Đây là điều khiến pillar khác một câu khẩu hiệu.
+
+**Chạy trong CI**
+
+```yaml
+- run: |
+    Unity -batchmode -runTests -testPlatform EditMode \
+          -projectPath . -testResults results.xml
+```
+
+CI đỏ khi ai đó (kể cả AI agent) vi phạm pillar. Xem [[unity-build-platform]] về CI cho Unity.
+
+**Bẫy Unity cụ thể**
+- **Test quét chuỗi dễ báo nhầm** — comment có chữ `Random.` cũng bị bắt. Loại comment trước khi quét, hoặc chấp nhận và whitelist.
+- **`AssetDatabase` chỉ dùng được trong Editor** — test này phải ở `Tests/EditMode/`, không PlayMode.
+
+**Kiểm tra nhanh**
+- Cố tình thêm `Random.value` vào `Combat/`: test có đỏ không?
+- Test pillar chạy dưới 1 giây chứ?
+- CI có chạy test EditMode không?

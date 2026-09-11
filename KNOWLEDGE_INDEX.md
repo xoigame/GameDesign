@@ -4,7 +4,7 @@
 > Đây là mục lục phẳng của toàn bộ kho kiến thức, dành cho AI agent (Codex / Claude Code)
 > đọc nhanh trước khi mở từng file `content/**/*.md` chi tiết.
 
-Cập nhật: `2026-09-11T06:34:55.727Z` · 76 node · 63 deep · 13 stub · 72845 từ
+Cập nhật: `2026-09-11T06:58:27.818Z` · 76 node · 63 deep · 13 stub · 82252 từ
 
 Mức độ: **24 cơ bản** · 36 trung cấp · 16 chuyên sâu
 
@@ -94,39 +94,39 @@ thức cơ bản (ai cũng nên đọc), trung cấp (cần nền), hay chuyên 
 
 ## Cây kiến thức
 
-- ● `#1` **GameDesign Brain** `#root` 🤖 🇬🇧 — Kho kiến thức mindmap về Game Design và AI trong game — đồng thời là bộ não thiết kế cho AI agent đọc trước khi sinh code. → `content/index.md`
-  - ● `#2` **Nền tảng Game Design** `#foundations` 🤖 — Những nguyên lý phải nắm trước khi viết dòng code đầu tiên — core loop, động lực người chơi, MDA, game feel. → `content/01-foundations/index.md`
-    - ● `#3` **Design Pillars** `#design-pillars` 🤖 🇬🇧 — Ba câu định nghĩa game của bạn — công cụ ra quyết định, và là thứ đầu tiên AI agent cần đọc. → `content/01-foundations/design-pillars.md`
-    - ● `#4` **Core Loop** `#core-loop` 🤖 🇬🇧 — Chuỗi hành động người chơi lặp lại liên tục — nếu vòng này không vui trong 30 giây, không hệ thống meta nào cứu nổi. → `content/01-foundations/core-loop.md`
-    - ● `#5` **Động lực người chơi** `#player-motivation` 🤖 — Vì sao người ta chơi tiếp — Self-Determination Theory, Bartle, Quantic Foundry và cách chuyển thành hệ thống cụ thể. → `content/01-foundations/player-motivation.md`
+- ● `#1` **GameDesign Brain** `#root` 🤖 🎮 🇬🇧 — Kho kiến thức mindmap về Game Design và AI trong game — đồng thời là bộ não thiết kế cho AI agent đọc trước khi sinh code. → `content/index.md`
+  - ● `#2` **Nền tảng Game Design** `#foundations` 🤖 🎮 — Những nguyên lý phải nắm trước khi viết dòng code đầu tiên — core loop, động lực người chơi, MDA, game feel. → `content/01-foundations/index.md`
+    - ● `#3` **Design Pillars** `#design-pillars` 🤖 🎮 🇬🇧 — Ba câu định nghĩa game của bạn — công cụ ra quyết định, và là thứ đầu tiên AI agent cần đọc. → `content/01-foundations/design-pillars.md`
+    - ● `#4` **Core Loop** `#core-loop` 🤖 🎮 🇬🇧 — Chuỗi hành động người chơi lặp lại liên tục — nếu vòng này không vui trong 30 giây, không hệ thống meta nào cứu nổi. → `content/01-foundations/core-loop.md`
+    - ● `#5` **Động lực người chơi** `#player-motivation` 🤖 🎮 — Vì sao người ta chơi tiếp — Self-Determination Theory, Bartle, Quantic Foundry và cách chuyển thành hệ thống cụ thể. → `content/01-foundations/player-motivation.md`
     - ● `#6` **Game Feel & Juice** `#game-feel` 🤖 🎮 — Lớp phản hồi cảm giác biến một prototype đúng chức năng thành một game đã tay — kèm số liệu cụ thể để đưa cho AI. → `content/01-foundations/game-feel.md`
-    - ◐ `#23` **MDA Framework** `#mda-framework` 🤖 — Mechanics → Dynamics → Aesthetics — ngôn ngữ chung để truy ngược từ cảm xúc mong muốn về luật chơi cụ thể. → `content/01-foundations/mda-framework.md`
-    - ● `#7` **Quy ước thể loại** `#genre-conventions` _(stub — cần viết thêm)_ 🤖 — Kỳ vọng mặc định người chơi mang theo khi bước vào một thể loại — biết để dùng, và để cố ý phá. → `content/01-foundations/genre-conventions.md`
-    - ● `#8` **Prototyping** `#prototyping` _(stub — cần viết thêm)_ 🤖 — Kiểm chứng câu hỏi rủi ro nhất bằng công sức nhỏ nhất — và vì sao AI làm khâu này rẻ đi mười lần. → `content/01-foundations/prototyping.md`
-  - ● `#16` **Systems Design** `#systems` 🤖 — Thiết kế các hệ thống chạy ngầm — kinh tế, tiến trình, chiến đấu, cân bằng số — sao cho chúng sinh ra hành vi thú vị. → `content/02-systems/index.md`
-    - ◐ `#18` **Economy Design** `#economy-design` 🤖 — Source, sink, faucet-drain — thiết kế dòng chảy tài nguyên để game không lạm phát và không bế tắc. → `content/02-systems/economy-design.md`
+    - ◐ `#23` **MDA Framework** `#mda-framework` 🤖 🎮 — Mechanics → Dynamics → Aesthetics — ngôn ngữ chung để truy ngược từ cảm xúc mong muốn về luật chơi cụ thể. → `content/01-foundations/mda-framework.md`
+    - ● `#7` **Quy ước thể loại** `#genre-conventions` _(stub — cần viết thêm)_ 🤖 🎮 — Kỳ vọng mặc định người chơi mang theo khi bước vào một thể loại — biết để dùng, và để cố ý phá. → `content/01-foundations/genre-conventions.md`
+    - ● `#8` **Prototyping** `#prototyping` _(stub — cần viết thêm)_ 🤖 🎮 — Kiểm chứng câu hỏi rủi ro nhất bằng công sức nhỏ nhất — và vì sao AI làm khâu này rẻ đi mười lần. → `content/01-foundations/prototyping.md`
+  - ● `#16` **Systems Design** `#systems` 🤖 🎮 — Thiết kế các hệ thống chạy ngầm — kinh tế, tiến trình, chiến đấu, cân bằng số — sao cho chúng sinh ra hành vi thú vị. → `content/02-systems/index.md`
+    - ◐ `#18` **Economy Design** `#economy-design` 🤖 🎮 — Source, sink, faucet-drain — thiết kế dòng chảy tài nguyên để game không lạm phát và không bế tắc. → `content/02-systems/economy-design.md`
     - ◐ `#17` **Progression Systems** `#progression` 🤖 🎮 — Người chơi mạnh lên bằng cách nào — tiến trình dọc, ngang, và tiến trình kỹ năng thật sự. → `content/02-systems/progression.md`
     - ◐ `#19` **Combat Systems** `#combat-systems` 🤖 🎮 — Giải phẫu một hệ thống chiến đấu — frame data, telegraph, tam giác khắc chế, và cách làm nó đọc được. → `content/02-systems/combat-systems.md`
-    - ○ `#24` **Balancing & Math** `#balancing-math` 🤖 — Công thức, bảng số và mô phỏng Monte Carlo — thay việc đoán mò bằng việc đo đạc. → `content/02-systems/balancing-math.md`
-    - ◐ `#20` **Difficulty Curve** `#difficulty-curve` 🤖 — Điều tiết thử thách quanh vùng dòng chảy — răng cưa, trợ năng, và dynamic difficulty làm đúng cách. → `content/02-systems/difficulty-curve.md`
-    - ◐ `#21` **Randomness & RNG** `#randomness` _(stub — cần viết thêm)_ 🤖 — Input vs output randomness, pity system, shuffle bag — dùng ngẫu nhiên để tạo kịch tính chứ không tạo bất công. → `content/02-systems/randomness.md`
+    - ○ `#24` **Balancing & Math** `#balancing-math` 🤖 🎮 — Công thức, bảng số và mô phỏng Monte Carlo — thay việc đoán mò bằng việc đo đạc. → `content/02-systems/balancing-math.md`
+    - ◐ `#20` **Difficulty Curve** `#difficulty-curve` 🤖 🎮 — Điều tiết thử thách quanh vùng dòng chảy — răng cưa, trợ năng, và dynamic difficulty làm đúng cách. → `content/02-systems/difficulty-curve.md`
+    - ◐ `#21` **Randomness & RNG** `#randomness` _(stub — cần viết thêm)_ 🤖 🎮 — Input vs output randomness, pity system, shuffle bag — dùng ngẫu nhiên để tạo kịch tính chứ không tạo bất công. → `content/02-systems/randomness.md`
     - ◐ `#22` **Meta Systems** `#meta-systems` _(stub — cần viết thêm)_ 🤖 — Những gì giữ người chơi giữa các phiên — căn cứ, bộ sưu tập, nhiệm vụ hằng ngày, mùa giải. → `content/02-systems/meta-systems.md`
-  - ● `#25` **Level & Content Design** `#content-design` 🤖 — Đổ nội dung vào bộ khung hệ thống — màn chơi, nhịp độ, sinh thủ tục, kể chuyện, giao diện. → `content/03-content-design/index.md`
-    - ◐ `#26` **Level Design** `#level-design` 🤖 — Dẫn dắt người chơi bằng không gian — sight line, landmark, vòng lặp không gian, và dạy học không lời. → `content/03-content-design/level-design.md`
-    - ○ `#30` **Procedural Generation** `#procedural-generation` 🤖 — Sinh nội dung bằng thuật toán — các kỹ thuật chính, và vì sao "vô hạn" thường đồng nghĩa với "nhạt". → `content/03-content-design/procedural-generation.md`
-    - ◐ `#27` **Onboarding & Tutorial** `#onboarding` _(stub — cần viết thêm)_ 🤖 — Dạy người chơi mà không cần hộp thoại hướng dẫn — 5 phút đầu quyết định họ ở lại hay đi. → `content/03-content-design/onboarding.md`
-    - ◐ `#28` **Pacing & Flow** `#pacing` _(stub — cần viết thêm)_ 🤖 — Nhịp căng–chùng qua toàn bộ hành trình chơi, ở cả ba thang thời gian. → `content/03-content-design/pacing.md`
-    - ◐ `#29` **Narrative Design** `#narrative` _(stub — cần viết thêm)_ 🤖 — Kể chuyện bằng phương tiện của game — không gian, cơ chế, hệ thống — chứ không chỉ bằng cắt cảnh. → `content/03-content-design/narrative.md`
-  - ● `#31` **Nghe nhìn & UX** `#presentation` 🤖 — Lớp trình bày — âm thanh, art direction, animation, UI, UX, trợ năng. Thứ người chơi thực sự tiếp xúc. → `content/08-presentation/index.md`
-    - ◐ `#32` **Art Direction** `#art-direction` 🤖 — Định hướng nghệ thuật — bảng màu, silhouette, độ đọc được, và cách giữ nhất quán khi nhiều nguồn asset. → `content/08-presentation/art-direction.md`
+  - ● `#25` **Level & Content Design** `#content-design` 🤖 🎮 — Đổ nội dung vào bộ khung hệ thống — màn chơi, nhịp độ, sinh thủ tục, kể chuyện, giao diện. → `content/03-content-design/index.md`
+    - ◐ `#26` **Level Design** `#level-design` 🤖 🎮 — Dẫn dắt người chơi bằng không gian — sight line, landmark, vòng lặp không gian, và dạy học không lời. → `content/03-content-design/level-design.md`
+    - ○ `#30` **Procedural Generation** `#procedural-generation` 🤖 🎮 — Sinh nội dung bằng thuật toán — các kỹ thuật chính, và vì sao "vô hạn" thường đồng nghĩa với "nhạt". → `content/03-content-design/procedural-generation.md`
+    - ◐ `#27` **Onboarding & Tutorial** `#onboarding` _(stub — cần viết thêm)_ 🤖 🎮 — Dạy người chơi mà không cần hộp thoại hướng dẫn — 5 phút đầu quyết định họ ở lại hay đi. → `content/03-content-design/onboarding.md`
+    - ◐ `#28` **Pacing & Flow** `#pacing` _(stub — cần viết thêm)_ 🤖 🎮 — Nhịp căng–chùng qua toàn bộ hành trình chơi, ở cả ba thang thời gian. → `content/03-content-design/pacing.md`
+    - ◐ `#29` **Narrative Design** `#narrative` _(stub — cần viết thêm)_ 🤖 🎮 — Kể chuyện bằng phương tiện của game — không gian, cơ chế, hệ thống — chứ không chỉ bằng cắt cảnh. → `content/03-content-design/narrative.md`
+  - ● `#31` **Nghe nhìn & UX** `#presentation` 🤖 🎮 — Lớp trình bày — âm thanh, art direction, animation, UI, UX, trợ năng. Thứ người chơi thực sự tiếp xúc. → `content/08-presentation/index.md`
+    - ◐ `#32` **Art Direction** `#art-direction` 🤖 🎮 — Định hướng nghệ thuật — bảng màu, silhouette, độ đọc được, và cách giữ nhất quán khi nhiều nguồn asset. → `content/08-presentation/art-direction.md`
     - ◐ `#33` **Animation cho Game** `#animation-game` 🤖 🎮 — Animation game khác animation phim — responsiveness thắng độ mượt, và frame data là hợp đồng gameplay. → `content/08-presentation/animation-game.md`
     - ◐ `#34` **UI Design** `#ui-design` 🤖 🎮 — Hệ thống giao diện — thang đo, typography, biểu tượng, trạng thái, và cách scale qua nhiều độ phân giải. → `content/08-presentation/ui-design.md`
-    - ◐ `#35` **UX & HUD** `#ux-hud` 🤖 — HUD trong lúc chơi — hiện cái gì, khi nào, và cách đọc trạng thái sống còn bằng thị giác ngoại vi. → `content/08-presentation/ux-hud.md`
-    - ◐ `#36` **UX Flow** `#ux-flow` 🤖 — Luồng ngoài lúc chơi — menu, settings, lưu game, xử lý lỗi. Phần ít ai thiết kế và ai cũng phải dùng. → `content/08-presentation/ux-flow.md`
+    - ◐ `#35` **UX & HUD** `#ux-hud` 🤖 🎮 — HUD trong lúc chơi — hiện cái gì, khi nào, và cách đọc trạng thái sống còn bằng thị giác ngoại vi. → `content/08-presentation/ux-hud.md`
+    - ◐ `#36` **UX Flow** `#ux-flow` 🤖 🎮 — Luồng ngoài lúc chơi — menu, settings, lưu game, xử lý lỗi. Phần ít ai thiết kế và ai cũng phải dùng. → `content/08-presentation/ux-flow.md`
     - ● `#37` **Accessibility** `#accessibility` 🤖 🎮 — Trợ năng — không phải tính năng phụ. Phần lớn hạng mục rẻ nếu làm sớm, rất đắt nếu làm muộn. → `content/08-presentation/accessibility.md`
-    - ◐ `#38` **Audio Design** `#audio-design` 🤖 — Thiết kế SFX — layering, biến thể chống lặp, chia dải tần, và vì sao âm thanh là phản hồi rẻ nhất. → `content/08-presentation/audio-design.md`
+    - ◐ `#38` **Audio Design** `#audio-design` 🤖 🎮 — Thiết kế SFX — layering, biến thể chống lặp, chia dải tần, và vì sao âm thanh là phản hồi rẻ nhất. → `content/08-presentation/audio-design.md`
     - ○ `#39` **Audio Implementation** `#audio-implementation` 🤖 🎮 — Kiến trúc bus, mixing, ducking, âm thanh không gian — phần kỹ thuật quyết định game nghe sạch hay đục. → `content/08-presentation/audio-implementation.md`
-    - ○ `#40` **Adaptive Music** `#adaptive-music` 🤖 — Nhạc thay đổi theo trạng thái game — vertical layering, horizontal resequencing, và bài toán chuyển mượt. → `content/08-presentation/adaptive-music.md`
+    - ○ `#40` **Adaptive Music** `#adaptive-music` 🤖 🎮 — Nhạc thay đổi theo trạng thái game — vertical layering, horizontal resequencing, và bài toán chuyển mượt. → `content/08-presentation/adaptive-music.md`
   - ● `#41` **AI trong Game** `#game-ai` 🤖 🎮 🇬🇧 — AI điều khiển NPC và gameplay — FSM, Behavior Tree, GOAP, Utility AI, pathfinding, AI Director, LLM-NPC. → `content/04-game-ai/index.md`
     - ◐ `#42` **Finite State Machine** `#fsm` 🤖 🎮 — Máy trạng thái hữu hạn — kiến trúc AI đơn giản nhất, đủ dùng cho phần lớn kẻ địch nhỏ, và giới hạn của nó. → `content/04-game-ai/fsm.md`
     - ◐ `#43` **Behavior Tree** `#behavior-tree` 🤖 🎮 — Cây hành vi — chuẩn công nghiệp cho AI NPC: cấu trúc node, blackboard, và cách tránh cây phình to. → `content/04-game-ai/behavior-tree.md`
@@ -138,17 +138,17 @@ thức cơ bản (ai cũng nên đọc), trung cấp (cần nền), hay chuyên 
     - ◐ `#44` **Perception & Senses** `#perception` _(stub — cần viết thêm)_ 🤖 🎮 — Tầm nhìn, thính giác, trí nhớ — hệ thống làm cho AI vừa công bằng vừa trông có vẻ công bằng. → `content/04-game-ai/perception.md`
     - ○ `#46` **Steering & Flocking** `#steering-flocking` _(stub — cần viết thêm)_ 🤖 🎮 — Chuyển động mượt và hành vi bầy đàn — seek, flee, arrive, separation, và ba luật của Boids. → `content/04-game-ai/steering-flocking.md`
     - ○ `#51` **Machine Learning & RL** `#ml-rl` _(stub — cần viết thêm)_ 🤖 🎮 — Học tăng cường và ML-Agents trong game — khi nào đáng dùng, và vì sao thường thì không. → `content/04-game-ai/ml-rl.md`
-  - ● `#9` **Làm game với AI** `#ai-assisted-dev` 🤖 — Dùng Codex/Claude để thực sự làm ra game — quy trình, cách viết GDD cho AI đọc, prompt pattern, và rào chắn an toàn. → `content/05-ai-assisted-dev/index.md`
-    - ● `#10` **Quy trình làm game với AI** `#ai-workflow` 🤖 — Từ ý tưởng tới build chạy được — chia giai đoạn, chia nhỏ nhiệm vụ, và giữ quyền kiểm soát. → `content/05-ai-assisted-dev/ai-workflow.md`
-    - ● `#11` **GDD cho AI đọc** `#gdd-for-ai` 🤖 — Viết tài liệu thiết kế mà máy thực thi được — cấu trúc, mức độ cụ thể, và những gì AI luôn bịa nếu bạn không nói. → `content/05-ai-assisted-dev/gdd-for-ai.md`
-    - ● `#12` **Prompt Patterns cho Gamedev** `#prompt-patterns` 🤖 — Các mẫu prompt đã kiểm chứng cho từng loại việc — hệ thống, cân bằng, thuật toán, debug, refactor. → `content/05-ai-assisted-dev/prompt-patterns.md`
-    - ● `#13` **Agent Guardrails** `#agent-guardrails` 🤖 — Rào chắn để AI agent không phá vỡ thiết kế — bất biến, phạm vi, và cách viết luật mà máy thi hành được. → `content/05-ai-assisted-dev/agent-guardrails.md`
-    - ○ `#58` **Sinh Asset bằng AI** `#asset-generation` _(stub — cần viết thêm)_ 🤖 — Sprite, âm thanh, nhạc, 3D — công cụ, giới hạn, và vấn đề nhất quán phong cách. → `content/05-ai-assisted-dev/asset-generation.md`
-  - ● `#52` **Production & Tech** `#production` 🤖 — Biến prototype thành sản phẩm — kiến trúc, data-driven, đo đạc, hiệu năng. → `content/06-production/index.md`
+  - ● `#9` **Làm game với AI** `#ai-assisted-dev` 🤖 🎮 — Dùng Codex/Claude để thực sự làm ra game — quy trình, cách viết GDD cho AI đọc, prompt pattern, và rào chắn an toàn. → `content/05-ai-assisted-dev/index.md`
+    - ● `#10` **Quy trình làm game với AI** `#ai-workflow` 🤖 🎮 — Từ ý tưởng tới build chạy được — chia giai đoạn, chia nhỏ nhiệm vụ, và giữ quyền kiểm soát. → `content/05-ai-assisted-dev/ai-workflow.md`
+    - ● `#11` **GDD cho AI đọc** `#gdd-for-ai` 🤖 🎮 — Viết tài liệu thiết kế mà máy thực thi được — cấu trúc, mức độ cụ thể, và những gì AI luôn bịa nếu bạn không nói. → `content/05-ai-assisted-dev/gdd-for-ai.md`
+    - ● `#12` **Prompt Patterns cho Gamedev** `#prompt-patterns` 🤖 🎮 — Các mẫu prompt đã kiểm chứng cho từng loại việc — hệ thống, cân bằng, thuật toán, debug, refactor. → `content/05-ai-assisted-dev/prompt-patterns.md`
+    - ● `#13` **Agent Guardrails** `#agent-guardrails` 🤖 🎮 — Rào chắn để AI agent không phá vỡ thiết kế — bất biến, phạm vi, và cách viết luật mà máy thi hành được. → `content/05-ai-assisted-dev/agent-guardrails.md`
+    - ○ `#58` **Sinh Asset bằng AI** `#asset-generation` _(stub — cần viết thêm)_ 🤖 🎮 — Sprite, âm thanh, nhạc, 3D — công cụ, giới hạn, và vấn đề nhất quán phong cách. → `content/05-ai-assisted-dev/asset-generation.md`
+  - ● `#52` **Production & Tech** `#production` 🤖 🎮 — Biến prototype thành sản phẩm — kiến trúc, data-driven, đo đạc, hiệu năng. → `content/06-production/index.md`
     - ◐ `#54` **Architecture Patterns** `#architecture-patterns` 🤖 🎮 — ECS, component, event bus, object pool — chọn kiến trúc theo quy mô thật của dự án, không theo xu hướng. → `content/06-production/architecture-patterns.md`
     - ◐ `#53` **Data-Driven Design** `#data-driven-design` 🤖 🎮 — Tách dữ liệu khỏi code — quyết định kiến trúc quan trọng nhất cho việc cân bằng và cho làm việc với AI. → `content/06-production/data-driven-design.md`
-    - ◐ `#55` **Playtesting & Metrics** `#playtesting-metrics` 🤖 — Đo cái gì, hỏi thế nào, và vì sao người chơi nói sai về chính trải nghiệm của họ. → `content/06-production/playtesting-metrics.md`
-    - ◐ `#56` **Chọn Tech Stack** `#tech-stack` _(stub — cần viết thêm)_ 🤖 — Engine, ngôn ngữ, công cụ — chọn theo dự án và theo mức độ AI hỗ trợ được. → `content/06-production/tech-stack.md`
+    - ◐ `#55` **Playtesting & Metrics** `#playtesting-metrics` 🤖 🎮 — Đo cái gì, hỏi thế nào, và vì sao người chơi nói sai về chính trải nghiệm của họ. → `content/06-production/playtesting-metrics.md`
+    - ◐ `#56` **Chọn Tech Stack** `#tech-stack` _(stub — cần viết thêm)_ 🤖 🎮 — Engine, ngôn ngữ, công cụ — chọn theo dự án và theo mức độ AI hỗ trợ được. → `content/06-production/tech-stack.md`
     - ○ `#57` **Performance** `#performance` _(stub — cần viết thêm)_ 🤖 🎮 — Ngân sách frame, profiling, và những nguyên nhân giật lag phổ biến nhất. → `content/06-production/performance.md`
   - ● `#59` **Unity thực chiến** `#unity` 🤖 — Kinh nghiệm hiện thực hoá game trong Unity — vật lý, animation, pattern, UI, audio, shader, ánh sáng, tối ưu, multiplayer. Không phải docs, là những gì lộ ra khi làm thật. → `content/09-unity/index.md`
     - ● `#60` **Vòng đời game & Scene flow** `#unity-game-loop` 🤖 — Bootstrap scene, state machine cấp ứng dụng, thứ tự Awake/Start, Time.timeScale và mọi thứ hỏng theo nó — xương sống mà mọi hệ thống khác móc vào. → `content/09-unity/unity-game-loop.md`
@@ -168,8 +168,8 @@ thức cơ bản (ai cũng nên đọc), trung cấp (cần nền), hay chuyên 
     - ○ `#74` **Build & nền tảng** `#unity-build-platform` 🤖 — Build ra máy thật từ tuần đầu và build hàng đêm trên CI — vì IL2CPP, stripping, bộ nhớ và driver GPU là những lỗi chỉ tồn tại ngoài Editor, và chúng tích luỹ âm thầm. → `content/09-unity/unity-build-platform.md`
     - ○ `#75` **Multiplayer & Netcode** `#unity-multiplayer` 🤖 — Multiplayer làm từ ngày đầu hoặc không bao giờ — retrofit gần như là viết lại. Chọn stack theo thể loại và ngân sách, không tin client, và test với lag giả từ tuần đầu. → `content/09-unity/unity-multiplayer.md`
     - ◐ `#76` **Editor Tools tự viết** `#unity-editor-tools` 🤖 — Một giờ viết tool tiết kiệm mười giờ của team; tool là thứ để designer không phải gọi lập trình viên — và là việc AI agent làm tốt nhất trong toàn bộ dự án Unity. → `content/09-unity/unity-editor-tools.md`
-  - ● `#14` **Blueprints** `#blueprints` 🤖 — Nơi chứa GDD của game thật bạn đang làm — lớp mà AI agent trực tiếp thực thi. → `content/07-blueprints/index.md`
-    - ● `#15` **GDD Template** `#gdd-template` 🤖 — Mẫu tài liệu thiết kế sẵn sàng cho AI đọc — sao chép, điền vào, chỉ agent tới đó. → `content/07-blueprints/gdd-template.md`
+  - ● `#14` **Blueprints** `#blueprints` 🤖 🎮 — Nơi chứa GDD của game thật bạn đang làm — lớp mà AI agent trực tiếp thực thi. → `content/07-blueprints/index.md`
+    - ● `#15` **GDD Template** `#gdd-template` 🤖 🎮 — Mẫu tài liệu thiết kế sẵn sàng cho AI đọc — sao chép, điền vào, chỉ agent tới đó. → `content/07-blueprints/gdd-template.md`
 
 > **Ký hiệu:** ● cơ bản · ◐ trung cấp · ○ chuyên sâu · `#N` = thứ tự trong lộ trình đọc
 >
@@ -407,6 +407,7 @@ thức cơ bản (ai cũng nên đọc), trung cấp (cần nền), hay chuyên 
 - `#systems` ↔ `#meta-systems` (mention)
 - `#systems` ↔ `#data-driven-design` (mention)
 - `#meta-systems` ↔ `#core-loop` (mention)
+- `#meta-systems` ↔ `#unity-save-data` (mention)
 - `#progression` ↔ `#balancing-math` (mention)
 - `#progression` ↔ `#agent-guardrails` (mention)
 - `#content-design` ↔ `#level-design` (mention)

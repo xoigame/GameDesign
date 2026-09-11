@@ -84,3 +84,61 @@ Loại bỏ ngay mọi cơ chế dựa trên: chờ đợi, FOMO, variable-ratio
 ```
 
 **Bẫy thường gặp:** AI đề xuất "nhiệm vụ hằng ngày + chuỗi đăng nhập + battle pass" cho mọi thể loại, vì đó là mẫu phổ biến nhất trong dữ liệu huấn luyện. Bắt nó biện minh từng cơ chế theo SDT là cách lọc nhanh nhất.
+
+## 🎮 Unity
+
+Động lực không hiện thực hoá trực tiếp bằng code. Nhưng trong Unity có một việc cụ thể: **đo xem hệ thống bạn xây có thật phục vụ động lực đó không**.
+
+**Log sự kiện gắn với nhu cầu SDT**
+
+```csharp
+// Competence — người chơi có thấy mình giỏi lên?
+Analytics.Log("skill_progress", new {
+    level = playerLevel,
+    deathsLastHour = deaths,
+    bossAttemptsBeforeWin = attempts      // giảm dần = đang giỏi lên thật
+});
+
+// Autonomy — các build có thật sự khả thi?
+Analytics.Log("build_chosen", new { buildId, winRate });
+
+// Relatedness — nếu có
+Analytics.Log("coop_session", new { durationMinutes });
+```
+
+Không có log này, bạn chỉ **tin** rằng game tạo cảm giác competence. Có log thì thấy `bossAttemptsBeforeWin` có giảm theo thời gian hay không — đó là bằng chứng. Xem [[playtesting-metrics]].
+
+**Kiểm tra autonomy bằng số: pick rate**
+
+```csharp
+[MenuItem("Tools/Balance/Pick Rate Report")]
+static void Report() {
+    // Đọc log, đếm tỉ lệ chọn từng build
+    // Một build > 40% pick rate = các build khác đang vô nghĩa
+    // -> autonomy chỉ là ảo giác
+}
+```
+
+Đây là cách biến "người chơi có cảm thấy được tự quyết không" thành một con số kiểm tra được.
+
+**Cấm cơ chế khai thác — cưỡng chế bằng test**
+
+Nếu pillar của bạn từ chối loot box / timer / FOMO:
+
+```csharp
+[Test]
+public void KhongCoTimerChoDoi() {
+    // Không field nào tên kiểu *CooldownHours, *WaitTime, *EnergyRefill
+    foreach (var t in typeof(GameAssembly).Assembly.GetTypes())
+        foreach (var f in t.GetFields())
+            Assert.IsFalse(Regex.IsMatch(f.Name, "(?i)(waittime|cooldownhours|energyrefill)"),
+                $"{t.Name}.{f.Name} trông như timer chờ — vi phạm pillar");
+    }
+```
+
+Hơi thô, nhưng nó chặn được việc cơ chế khai thác lẻn vào qua một PR không ai đọc kỹ.
+
+**Kiểm tra nhanh**
+- Có log `bossAttemptsBeforeWin` không? Nó có giảm theo thời gian không?
+- Pick rate build cao nhất dưới 40% chứ?
+- Grep tên field trông như timer chờ → bằng 0?

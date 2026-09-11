@@ -106,3 +106,83 @@ Rất hiệu quả:
 Cần cảnh giác:
 - AI đề xuất con số **nghe hợp lý mà không kiểm chứng**. Luôn bắt nó chạy mô phỏng rồi đưa ra số liệu, đừng nhận số trực tiếp.
 - AI thiên về các giá trị "tròn trịa" quen thuộc trong dữ liệu huấn luyện (10%, 25%, 1.5×) chứ không phải giá trị đúng cho game của bạn.
+
+## 🎮 Unity
+
+Điểm mấu chốt trong Unity: **logic cân bằng phải chạy được ngoài Unity**. Đó là khác biệt giữa mô phỏng 10.000 trận trong 2 giây và trong 20 phút.
+
+**Kiến trúc cho mô phỏng**
+
+```
+GameDesign.sln
+├── Core/              ← class library, KHÔNG tham chiếu UnityEngine
+│   └── Combat/DamageModel.cs
+├── Unity/             ← Unity project, tham chiếu Core qua asmdef
+└── SimRunner/         ← console app, tham chiếu Core
+    └── Program.cs     ← dotnet run, in bảng winrate
+```
+
+Với Assembly Definition (`Core.asmdef`, không tick "Override References"), Unity dùng được `Core/`, và một console project cũng dùng được cùng file. Chi tiết ở [[unity-project-structure]].
+
+**Mô hình sát thương thuần**
+
+```csharp
+// Core/Combat/DamageModel.cs — không using UnityEngine
+public static class DamageModel {
+    const float ArmorK = 100f;
+
+    public static float Apply(float raw, float armor, float[] percentBonuses, float critMul) {
+        // CỘNG trong cùng loại, NHÂN giữa các loại khác nhau
+        float sumPct = 0f;
+        foreach (var b in percentBonuses) sumPct += b;
+        float afterBonus = raw * (1f + sumPct);
+        float afterCrit  = afterBonus * critMul;
+        return afterCrit * (ArmorK / (ArmorK + armor));
+    }
+}
+```
+
+Không dùng `Mathf` ở đây — `Mathf` nằm trong `UnityEngine`. Dùng `System.Math` hoặc `MathF`.
+
+**Console runner**
+
+```csharp
+// SimRunner/Program.cs
+foreach (var build in Builds.All) {
+    var runs = Enumerable.Range(0, 10_000)
+        .Select(i => Battle.Simulate(build, Enemies.Brute, seed: i))
+        .ToArray();
+    Console.WriteLine($"{build.Name,-14} winrate={runs.Count(r => r.Win) / 100f:F1}%  " +
+                      $"TTK={Median(runs.Select(r => r.Seconds)):F1}s");
+}
+```
+
+`dotnet run --project SimRunner` — vài giây, không mở Unity, chạy được trong CI.
+
+**Unit test EditMode cho bất biến toán**
+
+```csharp
+[Test]
+public void PercentBonuses_Cong_KhongNhan() {
+    // ba bonus 50% phải cho 2.5x, KHÔNG phải 3.375x
+    float d = DamageModel.Apply(100f, 0f, new[] { .5f, .5f, .5f }, 1f);
+    Assert.AreEqual(250f, d, 0.01f);
+}
+
+[Test]
+public void Armor_KhongBaoGioAm_KhongBaoGioBang0() {
+    Assert.Greater(DamageModel.Apply(100f, 100000f, new float[0], 1f), 0f);
+}
+```
+
+Hai test này chặn đúng hai trường hợp suy biến mô tả ở phần trên. Chạy trong mili giây, chạy được trong CI.
+
+**Bẫy Unity cụ thể**
+- **`Mathf` trong `Core/`** làm mất khả năng chạy ngoài Unity — dùng `MathF`.
+- **`UnityEngine.Random` trong mô phỏng** → không tái hiện được. Dùng `System.Random(seed)`.
+- **Chạy mô phỏng trong Play Mode** với `yield return null` mỗi trận → 10.000 trận mất hàng phút.
+
+**Kiểm tra nhanh**
+- `dotnet run --project SimRunner` chạy được không?
+- Test EditMode toàn bộ `Core/` dưới 1 giây?
+- Cùng seed hai lần: kết quả giống hệt?

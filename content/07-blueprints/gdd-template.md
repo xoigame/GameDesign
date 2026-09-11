@@ -182,3 +182,85 @@ Với mỗi mục THIẾU SỐ hoặc MƠ HỒ, hỏi tôi đúng câu hỏi c�
 ```
 
 **Bẫy thường gặp:** điền mục 3 và 4 (hệ thống, nội dung) thật chi tiết nhưng bỏ trống mục 1, 6, 7. Đó là ba mục quyết định game của bạn khác game generic — thiếu chúng thì mọi chi tiết còn lại chỉ là trang trí.
+
+## 🎮 Unity
+
+Template ở trên là bản chung. Với Unity, thêm **mục 5b** dưới đây — đây là mục agent cần nhất và hay thiếu nhất.
+
+**Mục 5b — dán vào GDD của bạn**
+
+```markdown
+## 5b. Trạng thái Unity project (agent KHÔNG đọc được, đây là sự thật)
+
+### Phiên bản
+Unity        6000.0.32f1
+Render       URP 17.x        (hoặc: Built-in / HDRP)
+Packages     Input System 1.8 · Cinemachine 3.1 · TextMeshPro 3.2
+             AI Navigation 2.0 · (Addressables: không dùng)
+
+### Project Settings
+Color Space       Linear
+Fixed Timestep    0.01667
+Max Allowed TS    0.1
+Target Frame Rate 60
+Active Input       Input System Package (Input Manager cũ TẮT)
+
+### Layer & Collision
+6  Player          9  EnemyProj
+7  Enemy          10  Hazard
+8  PlayerProj     11  Interactable
+TẮT va chạm: Player↔PlayerProj · Enemy↔EnemyProj · PlayerProj↔EnemyProj
+
+### Tags
+PlayerSpawn · LevelExit · Landmark
+
+### Assembly Definition
+Game.Core    noEngineReferences: true     ← logic thuần, test EditMode
+Game.Unity   refs: Game.Core, InputSystem, Cinemachine
+Game.Editor  refs: Game.Unity
+
+### AudioMixer
+Master > [ Music, SFX > (Player, Enemy, World), UI, Ambience ]
+Exposed params: MusicVol, SfxVol, UiVol, AmbienceVol
+
+### Chuyển động
+Rigidbody2D  hay  tự viết?  → <chọn một>
+Nếu Rigidbody: Collision Detection = Continuous, Interpolate = Interpolate
+
+### UI
+UGUI  hay  UI Toolkit?  → <chọn một>
+CanvasScaler: Scale With Screen Size · 1920x1080 · Match = 1 (chiều cao)
+```
+
+**Vì sao mục này quan trọng nhất trong GDD Unity**
+
+Mỗi dòng là một lỗi cụ thể agent sẽ mắc nếu thiếu:
+
+| Thiếu dòng | Lỗi agent mắc |
+|---|---|
+| Phiên bản | Dùng `rb.velocity` (đã đổi tên ở Unity 6) |
+| Active Input | Viết `Input.GetKey`, không chạy |
+| Layer number | Đặt layer sai, va chạm không xảy ra |
+| Collision matrix | Đạn người chơi tự bắn trúng người chơi |
+| Exposed params | `SetFloat` trả về false, im lặng không làm gì |
+| Assembly | `using UnityEngine` trong Core → lỗi compile |
+| Color Space | Màu hiệu ứng trông sai |
+
+**Kiểm tra template đã đủ cho Unity chưa**
+
+```
+Đọc GDD của tôi. Đóng vai agent sắp viết code Unity từ tài liệu này.
+
+Liệt kê mọi thứ bạn PHẢI TỰ ĐOÁN vì tài liệu không nói — đặc biệt các thứ
+chỉ tồn tại trong Unity Editor mà không nằm trong code:
+ProjectSettings, layer, collision matrix, Animator, AudioMixer,
+Assembly Definition, import settings.
+
+Với mỗi chỗ, nói bạn sẽ mặc định chọn gì và hậu quả nếu đoán sai.
+Đừng sửa tài liệu.
+```
+
+**Kiểm tra nhanh**
+- Mục 5b đã điền chưa? Layer có ghi đúng số chưa?
+- Đã nêu Input System mới hay cũ chưa?
+- Đã nêu Rigidbody hay tự viết chuyển động chưa?

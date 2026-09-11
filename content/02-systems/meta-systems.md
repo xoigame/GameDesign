@@ -51,3 +51,73 @@ Ràng buộc cứng:
 
 Với mỗi hệ thống bạn đề xuất, trả lời: "nếu bỏ nó đi, game TỆ HƠN hay chỉ NGẮN HƠN?"
 Cái nào chỉ ngắn hơn thì loại.
+
+## 🎮 Unity
+
+Meta system là mảng có **nhiều trạng thái cần lưu nhất**, nên nó đứng hoặc chết ở [[unity-save-data]].
+
+**Nơi các quyết định sống**
+
+- `Core/Meta/` — logic mở khoá, tiến trình (C# thuần)
+- `SaveData.cs` — **một class phẳng, có version**
+- `Assets/Data/Unlocks/*.asset` — định nghĩa mở khoá
+
+**Lưu id, không lưu tham chiếu**
+
+```csharp
+// ❌ ScriptableObject không serialize được vào JSON — mất hết khi load
+[System.Serializable] public class SaveData {
+    public List<WeaponData> unlockedWeapons;
+}
+
+// ✅ lưu id chuỗi, tra lại khi load
+[System.Serializable] public class SaveData {
+    public int version = 3;
+    public List<string> unlockedWeaponIds = new();
+}
+```
+
+Đây là lỗi phổ biến nhất của meta-progression trong Unity. `JsonUtility` sẽ serialize object reference thành `{"instanceID": 0}` — load lại là mất trắng.
+
+**Version và migration từ ngày đầu**
+
+```csharp
+static SaveData Migrate(SaveData d) {
+    if (d.version < 2) { d.unlockedWeaponIds ??= new(); d.version = 2; }
+    if (d.version < 3) { d.dailyStreak = 0; d.version = 3; }
+    return d;
+}
+```
+
+Thêm version sau khi đã có người chơi nghĩa là bạn không biết file save cũ có cấu trúc gì. Bắt đầu từ `version = 1` ngay commit đầu — chi phí bằng không.
+
+**Mở khoá định nghĩa bằng dữ liệu**
+
+```csharp
+[CreateAssetMenu(menuName = "Game/Unlock")]
+public class UnlockDef : ScriptableObject {
+    public string id;                    // khớp với chuỗi trong SaveData
+    public UnlockKind kind;              // Choice | Cosmetic — KHÔNG có StatBoost
+    public int cost;
+    public string[] requires;            // id điều kiện tiên quyết
+}
+```
+
+Enum **không có** `StatBoost` là cách cưỡng chế bất biến "chỉ mở khoá lựa chọn, không cộng sức mạnh" ở [[progression]]. Ai muốn thêm phải sửa enum — và lúc đó có review.
+
+**Nhiệm vụ hằng ngày — đừng dùng thời gian máy**
+
+```csharp
+// ❌ người chơi lùi đồng hồ hệ thống là ăn thưởng vô hạn
+if (DateTime.Now.Date > lastClaim.Date) Grant();
+
+// ✅ lưu cả UtcNow và kiểm tra không đi lùi
+if (DateTime.UtcNow < save.lastServerSeenUtc) { FlagSuspicious(); return; }
+```
+
+Không có server thì không chống được hoàn toàn. Cách thực dụng cho game offline: **chấp nhận**, và thiết kế thưởng hằng ngày tích luỹ có trần (xem phần trên) để việc gian lận không đáng.
+
+**Kiểm tra nhanh**
+- Xoá file save: game có chạy được từ đầu không? (không crash)
+- Sửa `version` trong file save xuống 1: migration có chạy không?
+- Lùi đồng hồ hệ thống: có ăn thưởng hằng ngày hai lần được không?

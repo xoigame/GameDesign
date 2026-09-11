@@ -83,3 +83,64 @@ Nhưng nó rất hữu ích ở những việc quanh đó:
 - Sinh biến thể trang trí từ một bố cục nền do bạn dựng.
 
 Nói cách khác: **bạn thiết kế không gian, AI thi hành luật và kiểm tra.**
+
+## 🎮 Unity
+
+Unity là công cụ dựng màn tốt, nhưng **nó không ngăn bạn tạo màn không đi được**. Phần đó phải tự viết validator.
+
+**Nơi các quyết định sống**
+
+- `Assets/Scenes/Levels/Level_XX.unity` — bố cục, dựng bằng mắt
+- `Assets/Data/Levels/Level_XX.asset` — ngân sách quái, cơ chế (xem [[difficulty-curve]])
+- `Assets/Editor/LevelValidator.cs` — quét scene, cảnh báo lỗi bố cục
+
+**Dựng khối: ProBuilder hay Tilemap**
+
+- **2D:** Tilemap + Rule Tile. Rule Tile tự chọn sprite theo lân cận — tiết kiệm rất nhiều công vẽ viền.
+- **3D:** ProBuilder cho greybox. Đừng dựng greybox bằng Cube scale — không sửa được hình dạng sau.
+
+Dựng greybox bằng primitive rồi thay art sau là con đường đúng, nhưng phải dùng **cùng một collider layout** để thay art không đổi gameplay.
+
+**Validator — quét bố cục ngay trong Editor**
+
+```csharp
+[MenuItem("Tools/Level/Validate Current Scene")]
+static void Validate() {
+    // 1. Đích đến có tới được không — flood fill trên NavMesh
+    var spawn = GameObject.FindWithTag("PlayerSpawn").transform.position;
+    var exit  = GameObject.FindWithTag("LevelExit").transform.position;
+    var path  = new NavMeshPath();
+    if (!NavMesh.CalculatePath(spawn, exit, NavMesh.AllAreas, path)
+        || path.status != NavMeshPathStatus.PathComplete)
+        Debug.LogError("Không có đường từ spawn tới exit — bake NavMesh chưa?");
+
+    // 2. Landmark nhìn thấy từ nhiều chỗ
+    var landmarks = GameObject.FindGameObjectsWithTag("Landmark");
+    if (landmarks.Length == 0) Debug.LogWarning("Màn không có landmark nào");
+
+    // 3. Vật thể lơ lửng — lỗi hay gặp khi copy-paste
+    foreach (var r in Object.FindObjectsByType<Renderer>(FindObjectsSortMode.None))
+        if (!Physics.Raycast(r.bounds.center, Vector3.down, 50f))
+            Debug.LogWarning($"{r.name} có thể đang lơ lửng", r);
+}
+```
+
+Ba kiểm tra này bắt được phần lớn lỗi màn chơi "không chơi được", và chạy trong một giây.
+
+**Test silhouette ngay trong Scene view**
+
+Scene view có **Shading Mode → Shaded Wireframe**, và quan trọng hơn là **Draw Mode → Overdraw**. Nhưng để test silhouette (đọc được hình khối), cách nhanh nhất là một `Volume` với Saturation = −100 gán vào camera phụ — xem [[art-direction]].
+
+**Occlusion Culling — bake sau khi bố cục ổn**
+
+`Window > Rendering > Occlusion Culling`. Chỉ bake khi hình khối đã chốt, vì nó phải bake lại mỗi lần đổi geometry tĩnh. Đánh dấu `Occluder Static` / `Occludee Static` đúng — chi tiết ở [[unity-optimization]].
+
+**Bẫy Unity cụ thể**
+- **Quên bake NavMesh** sau khi sửa geometry → validator báo không có đường, hoặc tệ hơn là NPC đứng im trong build.
+- **Lighting chưa bake** → màn trông khác hoàn toàn giữa Editor và build. Xem [[unity-lighting]].
+- **Scene merge conflict** — hầu như không giải được. Chia scene theo người, dùng additive.
+
+**Kiểm tra nhanh**
+- Chạy Validate: có đường từ spawn tới exit chứ?
+- Build ra rồi chơi: lighting giống Editor không?
+- Có ít nhất một vòng lặp/đường tắt trong màn chứ? (validator khó tự kiểm, phải tự đi thử)

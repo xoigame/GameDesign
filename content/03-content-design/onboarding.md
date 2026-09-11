@@ -58,3 +58,60 @@ Kèm: danh sách sự kiện cần log ở mỗi bước để dựng phễu rơ
 ```
 
 **Bẫy thường gặp:** AI đề xuất "hiện tooltip: nhấn Space để nhảy". Câu `KHÔNG có hộp thoại` buộc nó phải nghĩ ra tình huống — ví dụ một hố nhỏ không thể không nhảy qua.
+
+## 🎮 Unity
+
+Trong Unity, onboarding hỏng vì một lý do kỹ thuật rất cụ thể: **thứ tự khởi tạo**. Tutorial bật trước khi hệ thống nó dạy sẵn sàng.
+
+**Nơi các quyết định sống**
+
+- `Assets/Scenes/Level_00_Tutorial.unity` — màn đầu, dựng bằng bố cục
+- `Core/Onboarding/TutorialFlow.cs` — chuỗi bước, C# thuần
+- `Assets/Data/Onboarding/*.asset` — điều kiện hoàn thành từng bước
+
+**Thứ tự khởi tạo — nguồn bug số một**
+
+```csharp
+// ❌ Awake của TutorialManager có thể chạy TRƯỚC PlayerController
+void Awake() => player.EnableMovement(false);   // player có thể chưa tồn tại
+
+// ✅ đợi hệ thống báo sẵn sàng
+void OnEnable() => GameBootstrap.OnSystemsReady += StartTutorial;
+```
+
+Thứ tự `Awake` giữa các GameObject **không xác định** trừ khi bạn đặt Script Execution Order. Cách chắc chắn hơn là một bootstrap phát event khi mọi hệ thống đã sẵn sàng — xem [[unity-game-loop]].
+
+**Dạy bằng bố cục, cưỡng chế bằng collider**
+
+Nguyên tắc "không hộp thoại" ở phần trên hiện thực hoá thế nào: dùng **trigger collider** làm cửa một chiều.
+
+```csharp
+// Phòng đầu tiên: một hố nhỏ không thể không nhảy qua.
+// Người chơi học nhảy vì không có cách nào khác, không vì có tooltip.
+void OnTriggerEnter(Collider other) {
+    if (other.CompareTag("Player")) TutorialFlow.Complete("learned_jump");
+}
+```
+
+Không khoá input, không hiện chữ. Bố cục làm việc dạy.
+
+**Log phễu — thứ quyết định bạn sửa đúng chỗ**
+
+```csharp
+// Mỗi bước một event. Không có log thì không biết người chơi rơi ở đâu.
+Analytics.Log("tutorial_step", new { step = "learned_dodge", seconds = elapsed });
+```
+
+Xem [[playtesting-metrics]] về cách đọc phễu. Đây là phễu có tỉ lệ cải thiện cao nhất trong toàn game, nên đừng bỏ log.
+
+**Bẫy Unity cụ thể**
+- **`Awake` order không xác định** → tutorial chạm vào object chưa khởi tạo.
+- **Khoá input bằng `Time.timeScale = 0`** rồi quên rằng coroutine dùng `WaitForSeconds` sẽ đứng. Dùng `WaitForSecondsRealtime` — xem [[ux-flow]].
+- **Tutorial trong cùng scene với gameplay** → không test riêng được. Tách scene hoặc tách prefab bật/tắt.
+- **`DontDestroyOnLoad` cho TutorialManager** → nó sống sang màn 2 và bật lại. Đừng.
+
+**Kiểm tra nhanh**
+- Load thẳng vào Level_00 từ Editor: tutorial chạy đúng không?
+- Load vào Level_03: tutorial có bật nhầm không?
+- Đếm số hộp thoại hướng dẫn: bao nhiêu? (càng gần 0 càng tốt)
+- 30 giây đầu: người chơi đã làm trọn core loop chưa?

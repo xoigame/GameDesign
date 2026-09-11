@@ -82,3 +82,62 @@ Nhiệm vụ hôm nay: <mô tả>
 **Phải luôn nêu:** phiên bản engine chính xác. Tri thức của model có thời điểm cắt; engine thì cập nhật liên tục. Đây là nguồn lỗi "API không tồn tại" phổ biến nhất.
 
 **Bẫy thường gặp:** giao nguyên một tính năng lớn ("làm hệ thống chiến đấu") và nhận về 2000 dòng không chạy. Chia tới mức *một lần commit, chạy được, kiểm chứng được*.
+
+## 🎮 Unity
+
+Làm việc với AI agent trên một Unity project có vài đặc thù mà project web hay backend không có.
+
+**Ba thứ khiến Unity khó cho AI agent**
+
+1. **Scene và prefab là file YAML khổng lồ.** Agent đọc được nhưng sửa tay gần như luôn làm hỏng. Việc gì cần sửa scene/prefab thì bạn tự làm trong Editor.
+2. **Nhiều thứ không nằm trong code** — ProjectSettings, Animator Controller, AudioMixer, Lighting. Agent không thấy chúng trừ khi bạn mô tả.
+3. **Không chạy được game để kiểm chứng.** Agent viết xong không biết nó có hoạt động không. Bạn là vòng lặp kiểm chứng.
+
+**Phân công thực tế trên Unity project**
+
+| Việc | Agent làm | Bạn làm |
+|---|---|---|
+| Class C# thuần trong `Core/` | ✅ rất tốt | Review |
+| MonoBehaviour, component | ✅ tốt | Gắn vào prefab |
+| Sửa prefab / scene | ❌ dễ hỏng | ✅ trong Editor |
+| Animator Controller | ❌ binary-ish | ✅ |
+| ProjectSettings | ❌ không thấy | ✅, rồi kể cho agent |
+| Editor tool, validator | ✅ rất tốt | Review |
+| Shader Graph | ❌ | ✅ |
+| Shader HLSL viết tay | ✅ tốt | Kiểm tra trên máy đích |
+
+**Đưa thông tin agent không thấy được**
+
+Viết vào `CLAUDE.md` những setting agent không đọc được:
+
+```markdown
+## Project settings (agent không thấy được, đây là sự thật)
+
+- Unity 6000.0.32f1, URP 17
+- Color Space: Linear
+- Fixed Timestep: 0.01667 (60Hz)
+- Input System mới (KHÔNG có Input Manager cũ)
+- Collision matrix: layer Player không va chạm layer PlayerProjectile
+- AudioMixer bus: Master > [Music, SFX > (Player, Enemy, World), UI, Ambience]
+- Assembly: Game.Core (noEngineReferences), Game.Unity, Game.Editor
+```
+
+Thiếu khối này, agent sẽ viết `Input.GetKey` (Input Manager cũ) hoặc đặt layer sai — và code trông đúng nhưng không chạy.
+
+**Vòng lặp làm việc trên Unity**
+
+```
+1. Bạn:   nhiệm vụ + tham chiếu node trong kho
+2. Agent: kế hoạch (file nào, API nào)     ← DỪNG, đọc
+3. Bạn:   duyệt
+4. Agent: viết code C#
+5. Bạn:   gắn component vào prefab trong Editor, bấm Play
+6. Bạn:   commit, hoặc mô tả lỗi cụ thể → quay lại 4
+```
+
+Bước 5 không uỷ quyền được. Đó là lý do nhiệm vụ nên nhỏ: mỗi lần bạn phải tự vào Editor kiểm chứng.
+
+**Kiểm tra nhanh**
+- `CLAUDE.md` có khối project settings chưa?
+- Agent có bao giờ sửa `.prefab`/`.unity` không? (nên không)
+- Nhiệm vụ giao có kiểm chứng được trong một lần bấm Play không?

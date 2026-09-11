@@ -137,3 +137,76 @@ Viết bảng 12 màn: cơ chế mới, cơ chế kết hợp, ngân sách quái
 ```
 
 **Bẫy thường gặp:** AI thêm DDA chạm vào HP/sát thương kẻ địch. Người chơi **đếm được số đòn** nên sẽ phát hiện ngay và mất hết cảm giác thành tựu. Cấm rõ hai trường đó.
+
+## 🎮 Unity
+
+Đường cong khó trong Unity nên là **dữ liệu quét được**, không phải số rải trong prefab.
+
+**Nơi các quyết định sống**
+
+- `Assets/Data/Levels/*.asset` — mỗi màn một `LevelData` (ngân sách quái, cơ chế mới)
+- `Core/Difficulty/` — logic tính ngân sách, C# thuần
+- `Assets/Editor/DifficultyValidator.cs` — quét toàn bộ màn, cảnh báo tường khó
+
+**LevelData — cơ chế, không phải nhân chỉ số**
+
+```csharp
+[CreateAssetMenu(menuName = "Game/Level Data")]
+public class LevelData : ScriptableObject {
+    [Header("Cơ chế — cách tăng khó ĐÚNG")]
+    public EnemyData[] newMechanics;      // cơ chế lần đầu xuất hiện
+    public EnemyData[] combinedWith;      // kết hợp với cơ chế đã học
+
+    [Header("Ngân sách")]
+    public int spawnBudget = 12;
+
+    [Header("Cửa sổ phản ứng — thu hẹp dần")]
+    [Range(0.3f, 1.5f)] public float telegraphScale = 1f;
+
+    // KHÔNG có hpMultiplier / damageMultiplier ở đây — cố ý.
+    // Nhân chỉ số làm trận đấu DÀI hơn, không KHÓ hơn.
+}
+```
+
+Việc **không có** `hpMultiplier` là quyết định thiết kế được cưỡng chế bằng schema. Agent hay người mới sẽ không thêm được nó mà không sửa class — và lúc đó có review.
+
+**Validator quét chu trình răng cưa**
+
+```csharp
+[MenuItem("Tools/Difficulty/Validate Curve")]
+static void Validate() {
+    var levels = LoadAllSorted();
+    for (int i = 0; i < levels.Length; i++) {
+        var l = levels[i];
+        // Cơ chế mới phải xuất hiện trong bối cảnh an toàn TRƯỚC khi bị kiểm tra
+        foreach (var m in l.combinedWith)
+            if (!levels.Take(i).Any(prev => prev.newMechanics.Contains(m)))
+                Debug.LogError($"Màn {i}: kết hợp {m.name} chưa từng được giới thiệu", l);
+
+        // Đoạn hạ xuống sau cao trào
+        if (i >= 2 && l.spawnBudget > levels[i-1].spawnBudget
+                   && levels[i-1].spawnBudget > levels[i-2].spawnBudget)
+            Debug.LogWarning($"Màn {i}: ba màn tăng liên tiếp, thiếu đoạn nghỉ", l);
+    }
+}
+```
+
+Đây là cách biến nguyên tắc "răng cưa" và "dạy trước khi kiểm tra" từ lời khuyên thành **luật máy kiểm tra được**.
+
+**DDA an toàn trong Unity**
+
+Chỉ điều chỉnh những thứ người chơi không đo được:
+
+```csharp
+// ✅ an toàn — người chơi không đếm được tỉ lệ rơi đồ
+lootTable.healthDropWeight = Mathf.Lerp(1f, 3f, struggleScore);
+director.relaxDuration = Mathf.Lerp(30f, 48f, struggleScore);
+
+// ❌ người chơi ĐẾM ĐƯỢC số đòn để hạ một con quái
+enemy.maxHealth *= difficultyMultiplier;
+```
+
+**Kiểm tra nhanh**
+- Chạy Validate Curve: có màn nào kết hợp cơ chế chưa dạy không?
+- Grep `hpMultiplier`/`damageMultiplier` trong code độ khó → nên bằng 0?
+- Log số lần chết mỗi màn: trung vị 2–5 ở boss chứ?

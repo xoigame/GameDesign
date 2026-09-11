@@ -154,3 +154,72 @@ Với mỗi chỗ, ghi: bạn sẽ mặc định chọn gì, và vì sao.
 ```
 
 **Bẫy thường gặp:** nhờ AI "viết GDD cho game roguelike" → nhận về tài liệu tổng hợp trung bình của ngành, không phải game của bạn. Phỏng vấn thì khác hẳn.
+
+## 🎮 Unity
+
+GDD cho một Unity project cần thêm một mục mà GDD chung không có: **những gì agent không đọc được**.
+
+**Mục bắt buộc thêm cho Unity**
+
+```markdown
+## 5b. Trạng thái Unity project (agent KHÔNG thấy được)
+
+Engine       Unity 6000.0.32f1 + URP 17
+Color Space  Linear
+Timestep     Fixed 0.01667 · Maximum Allowed 0.1
+Input        Input System 1.8 (Input Manager cũ đã tắt)
+Assemblies   Game.Core (noEngineReferences: true)
+             Game.Unity (refs: Game.Core, Unity.InputSystem, Cinemachine)
+             Game.Editor (refs: Game.Unity)
+Layers       0 Default · 6 Player · 7 Enemy · 8 PlayerProj · 9 EnemyProj · 10 Hazard
+Collision    Player ↔ PlayerProj: TẮT
+             Enemy  ↔ EnemyProj:  TẮT
+Tags         PlayerSpawn, LevelExit, Landmark
+AudioMixer   Master > [Music, SFX > (Player,Enemy,World), UI, Ambience]
+             Exposed: MusicVol, SfxVol, UiVol, AmbienceVol
+Addressables Không dùng (build nhỏ, load trực tiếp)
+```
+
+Mỗi dòng ở đây là một lỗi agent sẽ mắc nếu thiếu. Layer number sai làm va chạm không xảy ra; thiếu exposed parameter làm `SetFloat` im lặng không làm gì.
+
+**Số liệu phải có đơn vị Unity**
+
+```yaml
+# ❌ mơ hồ
+jump: "nhảy cao và linh hoạt"
+
+# ✅ đơn vị Unity cụ thể
+jump:
+  apex_height_units: 3.2        # Unity unit, PPU 32 -> 102 pixel
+  rise_time_s: 0.38
+  gravity_scale_rise: 3.0       # Rigidbody2D.gravityScale
+  gravity_scale_fall: 6.5
+  coyote_frames: 6              # @ Fixed 60Hz
+  buffer_frames: 7
+  air_control: 0.75
+```
+
+`gravityScale` là thuộc tính Unity thật, `units` là đơn vị Unity thật. Agent điền đúng ngay lần đầu.
+
+**Nhờ AI phỏng vấn — thêm câu hỏi Unity**
+
+```
+Tôi muốn viết GDD cho Unity project. Hãy PHỎNG VẤN tôi, đừng tự viết.
+
+Ngoài các mục thiết kế thường lệ, truy vấn thêm những thứ chỉ Unity mới có:
+- Color space, Fixed Timestep, target frame rate
+- Input System mới hay cũ
+- Layer và collision matrix
+- URP hay Built-in; 2D hay 3D pipeline
+- Rigidbody hay tự viết chuyển động (xem [[unity-physics]])
+- UGUI hay UI Toolkit
+- Có Addressables không
+- Assembly Definition thế nào
+
+Hỏi MỖI LẦN MỘT CÂU. Câu trả lời thiếu số cụ thể thì hỏi lại.
+```
+
+**Kiểm tra nhanh**
+- GDD có mục "trạng thái Unity project" chưa?
+- Mọi số liệu chuyển động có đơn vị Unity (unit, gravityScale) chưa?
+- Layer number có ghi đúng số, không chỉ ghi tên chưa?

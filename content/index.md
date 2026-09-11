@@ -75,3 +75,35 @@ và nói cho tôi biết bạn chọn cái nào, vì sao.
 ```
 
 **Bẫy lớn nhất:** dán cả 22.000 từ kiến thức vào chat. Vừa tốn token vừa làm loãng tín hiệu. Hãy để agent **đọc file theo nhu cầu** — chỉ dán khi agent không truy cập được ổ đĩa.
+
+## 🎮 Unity
+
+Toàn bộ kinh nghiệm Unity nằm ở nhánh [[unity]] — 17 node về vật lý, animation, pattern, UI, audio, VFX, shader, lighting, tối ưu, build, multiplayer.
+
+Mục 🎮 ở các nhánh thiết kế **không lặp lại** nội dung đó. Nó chỉ trả lời: *quyết định thiết kế này sống ở đâu trong Unity project?*
+
+**Đọc theo thứ tự nào nếu bạn đang làm Unity**
+
+| Bạn đang ở đâu | Đọc gì |
+|---|---|
+| Chưa mở Unity, còn đang nghĩ ý tưởng | Nhánh [[foundations]] (#2–8) |
+| Đã có ý tưởng, muốn giao việc cho AI | Nhánh [[ai-assisted-dev]] (#9–15) |
+| Vừa `New Project`, chưa viết gì | [[unity-project-structure]], [[unity-game-loop]] |
+| Đang dựng gameplay | [[unity-physics]], [[unity-input]], [[unity-camera]] |
+| Game chạy được, cần "đã tay" | [[game-feel]] rồi [[unity-vfx]], [[unity-audio]] |
+| Chuẩn bị phát hành | [[unity-optimization]], [[unity-build-platform]] |
+
+**Ba quyết định Unity không sửa được về sau**
+
+Chốt trong tuần đầu, vì đổi nghĩa là làm lại asset hoặc code diện rộng:
+
+1. **Color space = Linear** (`Project Settings > Player`) — xem [[unity-lighting]]
+2. **Input System mới**, không Input Manager cũ — xem [[unity-input]]
+3. **Fixed Timestep = 1/60** nếu game có frame data — xem [[combat-systems]]
+
+Và một quyết định kiến trúc: **`Assets/Scripts/Core/` không `using UnityEngine`**. Nó cho bạn test EditMode chạy trong mili giây và mô phỏng cân bằng ngoài Unity — xem [[unity-project-structure]].
+
+**Kiểm tra nhanh**
+- `Project Settings > Player > Color Space` = Linear?
+- `Time > Fixed Timestep` = 0.01667?
+- `grep -r "using UnityEngine" Assets/Scripts/Core/` → rỗng?

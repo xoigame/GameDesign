@@ -112,3 +112,66 @@ Sau khi có kết quả, đề xuất điều chỉnh rồi CHẠY LẠI để c
 ```
 
 **Bẫy thường gặp:** AI chọn sink là hằng số vì dễ. Đến cấp 50 tiền thành vô nghĩa. Luôn khai báo sink theo công thức có `level` hoặc `n` trong đó.
+
+## 🎮 Unity
+
+Kinh tế là mảng cần **mô phỏng ngoài Unity**. Chạy 30 ngày ảo × 1000 người chơi trong Play Mode là vô nghĩa; chạy bằng C# thuần thì mất vài giây.
+
+**Nơi các quyết định sống**
+
+- `Core/Economy/` — `EarnCurve`, `CostCurve`, `EconomySimulator` (C# thuần)
+- `Assets/Data/Balance/economy.csv` — bảng số, sửa trên Google Sheets
+- `Assets/Editor/EconomyImporter.cs` — CSV → ScriptableObject
+
+**Công thức trong AnimationCurve hay trong code?**
+
+| | AnimationCurve | Công thức trong code |
+|---|---|---|
+| Nhìn thấy hình dạng | Kéo bằng chuột, thấy ngay | Phải vẽ đồ thị riêng |
+| Mô phỏng ngoài Unity | **Không dùng lại được** | Chạy được ở mọi nơi |
+| Chỉnh nhanh | Rất nhanh | Phải build lại |
+
+Cách dung hoà thực dụng: **dùng AnimationCurve để *tìm* hình dạng, rồi fit một công thức xấp xỉ** cho phần mô phỏng. Hoặc xuất curve thành bảng 50 điểm ra JSON để code ngoài Unity đọc được.
+
+**Mô phỏng không cần Unity**
+
+```csharp
+// Core/Economy/EconomySimulator.cs — KHÔNG using UnityEngine
+public static class EconomySimulator {
+    public static SimResult Run(EconomyParams p, int players, int days, int seed) {
+        var rng = new System.Random(seed);          // KHÔNG UnityEngine.Random
+        var gold = new List<double>(players);
+        // ... 45 phút/ngày, mua nâng cấp rẻ nhất có thể
+        return new SimResult {
+            MedianGoldByDay = ..., P10 = ..., P90 = ...
+        };
+    }
+}
+```
+
+Dùng `System.Random` có seed, không `UnityEngine.Random` — nó là static toàn cục, không tất định giữa các lần chạy, và không tồn tại ngoài Unity.
+
+Rồi gọi từ một EditorWindow **và** từ một console project riêng. Cùng một file logic, hai cách chạy.
+
+**Cảnh báo lạm phát ngay trong Editor**
+
+```csharp
+if (GUILayout.Button("Kiểm tra lạm phát")) {
+    var r = EconomySimulator.Run(p, 1000, 30, seed: 42);
+    for (int d = 8; d < 30; d++)
+        if (r.MedianGoldByDay[d] > r.MedianGoldByDay[d - 1] * 1.05)
+            Debug.LogWarning($"Vàng trung vị tăng đơn điệu từ ngày {d} — lạm phát");
+    if (r.P10.Skip(10).Take(3).All(g => g < 1))
+        Debug.LogWarning("Phân vị 10 kẹt ở 0 — nhóm người chơi bị bế tắc");
+}
+```
+
+**Bẫy Unity cụ thể**
+- **`UnityEngine.Random` trong logic kinh tế** → không tái hiện được kết quả mô phỏng.
+- **`float` cho tiền tệ** → sai số tích luỹ sau hàng nghìn giao dịch. Dùng `long` (đơn vị nhỏ nhất) hoặc `decimal`.
+- **Sửa số trong Play Mode rồi quên** — ScriptableObject giữ lại thay đổi. Tiện lợi, nhưng cũng là cách vô tình phá cân bằng.
+
+**Kiểm tra nhanh**
+- Mô phỏng cùng seed hai lần: kết quả giống hệt không?
+- Chạy được logic kinh tế ngoài Unity (`dotnet run`) không?
+- Tiền tệ đang lưu bằng `long` chứ không `float`?

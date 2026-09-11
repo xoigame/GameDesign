@@ -183,3 +183,74 @@ Không cần khen. Chỉ liệt kê vấn đề.
 ```
 
 **Bẫy thường gặp:** hỏi "cách nào tốt nhất?" — nhận về câu trả lời trung bình hoá. Luôn hỏi dạng *"so sánh A và B cho ràng buộc cụ thể của tôi, khuyến nghị một cái, nói rõ đánh đổi."*
+
+## 🎮 Unity
+
+Prompt cho Unity cần thêm hai thứ mà prompt chung không có: **phiên bản** và **những gì agent không thấy**.
+
+**Khung prompt cho Unity**
+
+```
+[BỐI CẢNH]
+Unity 6000.0.32f1 + URP. Input System mới. Fixed Timestep 0.01667.
+Đã có: PlayerController (Game.Unity), HealthComponent, InputReader.
+Assembly: Game.Core không tham chiếu UnityEngine.
+Layer: Player=6, Enemy=7, PlayerProj=8.
+
+[MỤC TIÊU]
+Hệ thống stamina: chạy và né tiêu stamina, hết thì không né được.
+
+[RÀNG BUỘC]
+- Logic thuần vào Game.Core/Stamina/StaminaModel.cs (KHÔNG using UnityEngine)
+- MonoBehaviour adapter vào Game.Unity/StaminaComponent.cs
+- Hằng số trong StaminaConfig : ScriptableObject
+- KHÔNG GetComponent ngoài Awake
+- KHÔNG cấp phát trong Update
+- Hồi stamina tính bằng thời gian trôi qua khi truy vấn, KHÔNG dùng Update
+
+[DỮ LIỆU]
+max 100 | hồi 25/s | trễ hồi 1.2s | né 25 | chạy 12/s
+
+[ĐẦU RA]
+- Hai file như trên
+- Test EditMode cho StaminaModel: tiêu, hồi, trễ hồi, chặn né
+- Nói cho tôi biết cần gán gì trong Inspector
+```
+
+Dòng cuối quan trọng và hay thiếu: agent không gắn được component vào prefab, nên nó phải **nói bạn cần làm gì trong Editor**.
+
+**Mẫu: nhờ agent viết editor tool**
+
+Đây là loại việc agent làm rất tốt và ít rủi ro (không đụng gameplay):
+
+```
+Viết editor tool quét toàn bộ project, tìm:
+1. [SerializeField] nào đang null trong prefab (dùng AssetDatabase + SerializedObject)
+2. Component nào thiếu trên prefab mà script yêu cầu
+3. AudioSource nào không gán output Mixer Group
+4. Sprite nào có Pixels Per Unit khác 32
+
+Xuất báo cáo dạng bảng trong một EditorWindow, bấm vào dòng thì select object đó.
+Đặt ở Assets/Editor/ProjectValidator.cs, menu Tools/Validate Project.
+```
+
+Tool này bắt được đúng lớp lỗi "code đúng mà chạy sai" phổ biến nhất trong Unity.
+
+**Mẫu: debug lỗi Unity**
+
+```
+Triệu chứng: nhân vật thỉnh thoảng xuyên nền khi rơi nhanh.
+Tần suất: ~1/20 lần, chỉ khi velocity.y < -25.
+Đã thử: Fixed Timestep 0.02 -> 0.01 (giảm nhưng không hết).
+Collision Detection của Rigidbody2D: Discrete.
+[dán code]
+
+Đừng đoán. Liệt kê giả thuyết theo thứ tự khả năng, và với mỗi cái nói tôi
+cần kiểm tra gì trong Editor để xác nhận. Chờ tôi báo kết quả.
+```
+
+Nêu `Collision Detection: Discrete` là chi tiết agent không thấy được — và ở ví dụ này nó chính là nguyên nhân.
+
+**Bẫy thường gặp**
+- **Không nêu phiên bản** → agent dùng API đã đổi tên (`rb.velocity` → `rb.linearVelocity` từ Unity 6).
+- **Không nói agent phải báo việc cần làm trong Editor** → code đúng, chạy `NullReferenceException` vì field chưa gán.

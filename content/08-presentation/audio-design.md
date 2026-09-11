@@ -113,3 +113,61 @@ Kèm:
 ```
 
 **Bẫy thường gặp:** không giới hạn instance. Một vụ nổ spawn 30 mảnh, mỗi mảnh phát một tiếng va chạm → 30 âm chồng lên nhau, clip, méo, và nghe như lỗi. `maxInstances` là ràng buộc phải nêu ngay từ đầu.
+
+## 🎮 Unity
+
+Phần kiến trúc audio trong Unity nằm ở [[unity-audio]]. Mục này chỉ nói cách nối **quyết định thiết kế SFX** vào Unity.
+
+**Layering trong Unity: một SFX = nhiều clip phát cùng lúc**
+
+```csharp
+[CreateAssetMenu(menuName = "Audio/Sfx Event")]
+public class SfxEvent : ScriptableObject {
+    [System.Serializable] public struct Layer {
+        public AudioClip[] variants;    // shuffle bag, không random thuần
+        public float volumeDb;
+        public float delayMs;           // transient 0ms, body 0ms, tail có thể trễ
+    }
+    public Layer[] layers;
+    public float pitchVariance = 0.08f;
+    public int maxInstances = 3;
+    public int priority = 128;          // 0 = cao nhất trong Unity, KHÔNG phải 255
+}
+```
+
+`AudioSource.priority` trong Unity ngược trực giác: **0 là ưu tiên cao nhất**, 256 là thấp nhất. Đặt ngược là lý do âm thanh quan trọng bị cắt trước.
+
+**Shuffle bag, không `Random.Range`**
+
+```csharp
+// Random thuần sẽ phát cùng một clip hai lần liền — tai nghe ra ngay
+public class ShuffleBag {
+    readonly int[] order; int cursor;
+    public int Next() {
+        if (cursor == 0) Shuffle();          // trộn lại khi hết lượt
+        return order[cursor++ % order.Length];
+    }
+}
+```
+
+**Import settings quyết định RAM nhiều hơn code**
+
+Bảng quyết định đầy đủ ở [[unity-audio]]. Tóm lại:
+
+| Loại | Load Type | Compression |
+|---|---|---|
+| SFX ngắn, phát thường xuyên | Decompress On Load | ADPCM hoặc PCM |
+| SFX dài, thưa | Compressed In Memory | Vorbis |
+| Nhạc, ambience | Streaming | Vorbis |
+
+Để nhạc ở `Decompress On Load` là cách nhanh nhất ăn hết 200MB RAM.
+
+**Chia dải tần — làm được trong Unity**
+
+AudioMixer có sẵn EQ effect. Đặt trên bus `Music`: cắt nhẹ 2–6 kHz (khoảng −3 dB) để nhường dải đó cho SFX gameplay. Đây là cách kỹ thuật thực hiện nguyên tắc ở phần trên, và nó hiệu quả hơn việc hạ toàn bộ âm lượng nhạc.
+
+**Kiểm tra nhanh**
+- Cho 20 viên đạn bắn cùng frame: có bị clip/méo không? (`maxInstances` phải chặn)
+- `priority` của âm cảnh báo có **nhỏ hơn** âm phụ không?
+- Profiler mục Audio: bao nhiêu voice đang phát? Vượt 32 là không ai nghe ra gì.
+- Build ra máy thật: dung lượng RAM cho audio bao nhiêu?

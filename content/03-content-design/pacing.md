@@ -58,3 +58,62 @@ Sau bảng, vẽ đồ thị ASCII để tôi nhìn được hình dạng.
 ```
 
 **Bẫy thường gặp:** hỏi "làm sao cho nhịp độ hay hơn" sẽ nhận về lời khuyên sách giáo khoa. Định nghĩa công thức cường độ biến câu hỏi thẩm mỹ thành bài toán kiểm tra được.
+
+## 🎮 Unity
+
+Nhịp độ trong Unity đo được, và đó là cách duy nhất để nó không còn là chuyện cảm tính.
+
+**Nơi các quyết định sống**
+
+- `Core/Pacing/IntensityMeter.cs` — công thức cường độ, C# thuần
+- `Assets/Data/Levels/Level_XX.asset` — đường cong cường độ mục tiêu
+- `Assets/Editor/PacingGraph.cs` — vẽ đồ thị đo được so với mục tiêu
+
+**Đo cường độ bằng số**
+
+```csharp
+// Core/Pacing/IntensityMeter.cs
+public class IntensityMeter {
+    readonly Queue<(float t, float dmg)> window = new();
+
+    public float Sample(float now, int enemiesAlive, float damageTaken) {
+        window.Enqueue((now, damageTaken));
+        while (window.Count > 0 && now - window.Peek().t > 10f) window.Dequeue();
+        float dmgRate = window.Sum(w => w.dmg) / 10f;
+        return Mathf.Clamp01((enemiesAlive * 2f + dmgRate) / 10f);
+    }
+}
+```
+
+Công thức cụ thể không quan trọng bằng việc **có một con số**. Có số thì vẽ được đồ thị, so được với mục tiêu, và biết đoạn nào phẳng lặng quá lâu.
+
+**Ghi lại và vẽ — editor tool**
+
+```csharp
+// Ghi (thời điểm, cường độ) suốt một lần chơi, rồi vẽ bằng Handles
+[MenuItem("Tools/Pacing/Show Last Session")]
+static void Show() {
+    var samples = PacingRecorder.LoadLast();   // JSON trong persistentDataPath
+    // vẽ đường đo được (xanh) chồng lên đường mục tiêu (xám nét đứt)
+}
+```
+
+Nhìn hai đường chồng nhau là thấy ngay: chỗ nào game căng hơn dự kiến, chỗ nào lặng quá lâu. Đây là việc [[ai-director]] dùng để tự điều tiết, nhưng bạn nên nhìn bằng mắt trước khi tự động hoá.
+
+**Khoảng lặng phải là quyết định, không phải tình cờ**
+
+```csharp
+// Director đảm bảo tối thiểu 30s không spawn sau cao trào — xem [[ai-director]].
+// Trong Unity, nhớ rằng khoảng lặng nghe rõ hơn nếu ducking nhả về (xem [[unity-audio]])
+// và post-processing giảm cường độ.
+```
+
+**Bẫy Unity cụ thể**
+- **Dùng `Time.time` để đo nhịp** — nó bị `timeScale` ảnh hưởng, nên hitstop làm số liệu lệch. Dùng `Time.unscaledTime` cho đo đạc.
+- **`Queue` trong `Update`** cấp phát khi lớn lên. Cấp phát sẵn capacity.
+- **Ghi log mỗi frame** → file vài chục MB một phiên. Lấy mẫu 2Hz là đủ.
+
+**Kiểm tra nhanh**
+- Chơi một màn, mở đồ thị: có đoạn nào cường độ phẳng quá 60 giây không?
+- Ba cao trào có tách nhau bằng đoạn thấp không?
+- Đo bằng `unscaledTime` chứ không `time`?

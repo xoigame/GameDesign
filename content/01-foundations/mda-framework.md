@@ -66,3 +66,49 @@ Phân công hợp lý:
 
 - **Bạn** quyết định Aesthetics và phán đoán Dynamics (cần playtest — xem [[playtesting-metrics]]).
 - **AI** hiện thực hoá Mechanics và, nếu bạn mô tả rõ luật, có thể chạy mô phỏng để dò Dynamics: *"mô phỏng 10.000 trận với 3 build này, thống kê tỉ lệ thắng"*. Đây là cách dùng AI hiệu quả và ít bị đánh giá thấp — xem [[balancing-math]].
+
+## 🎮 Unity
+
+MDA trong Unity nói về **nơi mỗi tầng sống trong project** — và ranh giới đó quyết định bạn test được gì.
+
+**Ba tầng → ba lớp code**
+
+```
+Mechanics   → Assets/Scripts/Core/        C# thuần, test EditMode, mô phỏng được
+Dynamics    → (không có code)             phát sinh; đo bằng log + playtest
+Aesthetics  → Assets/Scripts/Presentation/ animation, audio, VFX, UI
+```
+
+Điểm quan trọng: **Dynamics không có lớp code tương ứng.** Nó là thứ nảy sinh, và cách duy nhất quan sát là đo. Đây là lý do log sự kiện không phải việc phụ — xem [[playtesting-metrics]].
+
+**Chẩn đoán ngược bằng công cụ Unity**
+
+Khi game "sai sai", truy từ Aesthetics về Mechanics:
+
+| Tầng | Công cụ Unity |
+|---|---|
+| Aesthetics quan sát được | Playtest, ghi màn hình, phỏng vấn |
+| Dynamic nào gây ra | Log sự kiện + phân tích (tỉ lệ dùng cơ chế, pick rate) |
+| Mechanic nào cho phép | Đọc `Core/`, chạy mô phỏng (xem [[balancing-math]]) |
+
+Ví dụ thật: người chơi chán ở phút 10 → log cho thấy 80% thời gian họ dùng đúng một chiến thuật → mô phỏng cho thấy chiến thuật đó winrate 85% → mechanic cho phép: hồi máu không giới hạn. Sửa một dòng trong `Core/`.
+
+Không có lớp `Core/` tách biệt, bước cuối (mô phỏng) không làm được và bạn phải đoán.
+
+**Ranh giới cưỡng chế bằng Assembly Definition**
+
+```json
+// Assets/Scripts/Core/Core.asmdef
+{
+  "name": "Game.Core",
+  "references": [],                    // KHÔNG tham chiếu gì
+  "noEngineReferences": true           // ← cưỡng chế không dùng UnityEngine
+}
+```
+
+`noEngineReferences: true` làm compiler **báo lỗi** nếu ai đó `using UnityEngine` trong `Core/`. Đây là cách biến nguyên tắc thành ràng buộc máy kiểm tra — mạnh hơn mọi lời nhắc trong tài liệu. Xem [[unity-project-structure]].
+
+**Kiểm tra nhanh**
+- `Core.asmdef` có `noEngineReferences: true` chứ?
+- Thử thêm `using UnityEngine` vào `Core/`: có lỗi compile không?
+- Có log đủ để trả lời "người chơi đang dùng cơ chế nào" không?

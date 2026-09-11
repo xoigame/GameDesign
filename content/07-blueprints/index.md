@@ -76,3 +76,57 @@ Chưa viết code.
 ```
 
 **Bẫy thường gặp:** để agent đọc GDD rồi lao vào code ngay. Bước 2 và 3 phát hiện những chỗ bạn tưởng đã rõ mà thực ra chưa — rẻ hơn nhiều so với phát hiện sau 500 dòng code.
+
+## 🎮 Unity
+
+Với Unity project, GDD cần thêm một mục mà GDD chung không có — xem mục 5b ở [[gdd-for-ai]].
+
+**Đặt GDD ở đâu**
+
+Kho kiến thức này (`E:/XoiGame/GameDesign`) và Unity project là **hai repo riêng**. GDD nên nằm ở đâu?
+
+| Cách | Ưu | Nhược |
+|---|---|---|
+| GDD trong kho này (`content/07-blueprints/`) | Xem được trên mindmap, có tab 🤖 | Agent làm việc trong Unity project phải đọc repo khác |
+| GDD trong Unity project (`design/GDD.md`) | Agent đọc cùng repo, luôn cập nhật | Không lên mindmap |
+| **Cả hai, một là symlink** | Cả hai lợi ích | Phải nhớ không sửa hai bản |
+
+Cách thực dụng nhất: **GDD sống trong Unity project** (`design/GDD.md`), và node trong `content/07-blueprints/` là bản **tóm tắt + trỏ đường**:
+
+```markdown
+---
+title: Xoi Survivors
+summary: Roguelike survivor-like, PC, phiên 25 phút.
+---
+
+GDD đầy đủ: `E:/XoiGame/XoiSurvivors/design/GDD.md`
+
+Ba pillar (bản đầy đủ trong GDD):
+1. Không RNG trong combat
+2. Một run dưới 25 phút
+3. Người chơi hiểu nguyên nhân chết trong 2 giây
+```
+
+Nhờ vậy agent làm việc trong Unity project có GDD ngay bên cạnh code, và bạn vẫn thấy dự án trên mindmap.
+
+**`CLAUDE.md` trong Unity project**
+
+```markdown
+# Xoi Survivors
+
+Kho kiến thức thiết kế: E:/XoiGame/GameDesign — đọc AI_CONTEXT.md khi cần
+tra nguyên lý (core loop, behavior tree, audio bus...).
+
+GDD: design/GDD.md — mục Pillars, Bất biến, Ngoài phạm vi là RÀNG BUỘC CỨNG.
+
+## Trạng thái Unity project (bạn không thấy được)
+[khối project settings — xem mục 5b ở gdd-for-ai]
+
+## Không được tự ý
+[khối guardrail Unity — xem agent-guardrails]
+```
+
+**Kiểm tra nhanh**
+- Unity project có `CLAUDE.md` trỏ về kho kiến thức chưa?
+- GDD có mục "trạng thái Unity project" chưa?
+- Node blueprint trong kho này có trỏ đúng đường dẫn GDD thật chưa?

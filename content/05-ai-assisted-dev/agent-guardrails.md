@@ -168,3 +168,85 @@ Chưa sửa gì. Chỉ báo cáo.
 ```
 
 **Bẫy thường gặp:** viết bất biến dạng nguyện vọng ("game phải công bằng"). Không kiểm tra được thì không phải bất biến. Mỗi luật cần một cột *"cách phát hiện vi phạm"*.
+
+## 🎮 Unity
+
+Trong Unity, guardrail mạnh nhất không phải lời nhắc — là **test EditMode chạy trong CI**.
+
+**Bất biến → test, cho Unity**
+
+```csharp
+public class InvariantTests {
+
+    // INV-01: không RNG trong combat
+    [Test] public void INV01() {
+        foreach (var f in Dir("Assets/Scripts/Core/Combat"))
+            Assert.IsFalse(Src(f).Contains("Random."), $"INV-01: {f}");
+    }
+
+    // INV-02: Core không phụ thuộc UnityEngine
+    // (asmdef noEngineReferences đã chặn ở compile, test này là lớp thứ hai)
+    [Test] public void INV02() {
+        var core = System.Reflection.Assembly.Load("Game.Core");
+        Assert.IsFalse(core.GetReferencedAssemblies()
+            .Any(a => a.Name.StartsWith("UnityEngine")));
+    }
+
+    // INV-03: không cấp phát trong hot path — kiểm tra bằng attribute đánh dấu
+    [Test] public void INV03() {
+        foreach (var f in Dir("Assets/Scripts"))
+            foreach (var line in Lines(f))
+                if (line.Contains("void Update()") || line.Contains("void FixedUpdate()"))
+                    /* quét N dòng sau tìm new/LINQ/string concat */ ;
+    }
+
+    // INV-04: mọi đòn kẻ địch có telegraph >= 18 frame
+    [Test] public void INV04() {
+        foreach (var a in LoadAll<AttackData>().Where(x => x.isEnemyAttack))
+            Assert.GreaterOrEqual(a.startupFrames, 18, a.name);
+    }
+
+    // INV-05: meta-progression chỉ mở khoá lựa chọn
+    [Test] public void INV05() {
+        foreach (var u in LoadAll<UnlockDef>())
+            Assert.AreNotEqual(UnlockKind.StatBoost, u.kind, u.name);
+    }
+}
+```
+
+**Ràng buộc riêng cho Unity — viết vào `CLAUDE.md`**
+
+```markdown
+## Không được tự ý (Unity)
+
+- Sửa file .prefab, .unity, .asset bằng text → KHÔNG BAO GIỜ.
+  Cần đổi prefab thì mô tả cho tôi làm trong Editor.
+- Sửa ProjectSettings/*.asset → KHÔNG. Nói tôi setting nào cần đổi.
+- Thêm package vào manifest.json → hỏi trước.
+- Đổi Assembly Definition references → hỏi trước.
+- Dùng `Input.GetKey` (Input Manager cũ) → dự án dùng Input System mới.
+- `GameObject.Find` / `FindObjectOfType` trong Update → không bao giờ.
+- Đổi số cân bằng trong ScriptableObject → đó là quyết định của tôi.
+```
+
+Dòng đầu quan trọng nhất: agent sửa prefab bằng text làm hỏng GUID reference, và lỗi chỉ lộ ra khi mở Editor.
+
+**Rà soát cuối phiên — thêm mục Unity**
+
+```
+Rà thay đổi vừa rồi, đối chiếu CLAUDE.md. Báo cáo bảng:
+| bất biến | vi phạm? | file | cách sửa |
+
+Thêm vào báo cáo:
+- File .prefab/.unity/.asset nào bị sửa? (phải là 0)
+- Package mới nào được thêm?
+- API nào dùng mà có thể đã deprecated ở Unity 6?
+- Component nào tôi cần gán trong Inspector để code này chạy?
+
+Chưa sửa gì.
+```
+
+**Kiểm tra nhanh**
+- Test EditMode chạy trong CI chưa?
+- `git diff --stat` sau một phiên agent: có `.prefab`/`.unity` nào không?
+- `CLAUDE.md` có khối "không được tự ý (Unity)" chưa?

@@ -78,3 +78,80 @@ Dùng một bộ sinh số ngẫu nhiên **riêng cho procgen**, tách khỏi RN
 - **Sinh dữ liệu mẫu** — 50 mẫu phòng dạng JSON theo schema bạn định nghĩa, rồi bạn sàng lọc.
 
 Điều AI **không** làm được: quyết định thế nào là một màn chơi *hay*. Phần đó vẫn phải tự chơi và cảm nhận.
+
+## 🎮 Unity
+
+Procgen trong Unity đứng hoặc chết ở một điểm: **tất định**. Và Unity có ba cái bẫy làm mất tính tất định mà không ai nghĩ tới.
+
+**Ba thứ phá tính tất định**
+
+1. **`UnityEngine.Random`** — static toàn cục, dùng chung với mọi hệ thống khác. Xem [[randomness]].
+2. **`Object.FindObjectsByType` thứ tự không đảm bảo** — duyệt kết quả rồi sinh theo thứ tự đó là không tất định.
+3. **`Dictionary` thứ tự duyệt** — trong .NET không đảm bảo. Dùng `SortedDictionary` hoặc `List` khi thứ tự ảnh hưởng kết quả sinh.
+
+**Bộ sinh nằm ngoài Unity**
+
+```csharp
+// Core/Procgen/DungeonGenerator.cs — KHÔNG using UnityEngine
+public static class DungeonGenerator {
+    public static DungeonLayout Generate(GenParams p, int seed) {
+        var rng = new System.Random(seed);
+        var layout = StitchRooms(p, rng);
+        return layout;      // dữ liệu thuần: toạ độ, loại phòng, kết nối
+    }
+}
+```
+
+Rồi một MonoBehaviour biến `DungeonLayout` thành GameObject. Tách như vậy cho bạn:
+- Test EditMode: sinh 100.000 seed trong vài giây, không cần render
+- Dò seed hỏng trong CI
+- Cùng seed cho cùng layout, mọi nền tảng
+
+**Dò seed hỏng — editor tool**
+
+```csharp
+[MenuItem("Tools/Procgen/Scan 100k Seeds")]
+static void Scan() {
+    var bad = new List<int>();
+    for (int seed = 0; seed < 100_000; seed++) {
+        var layout = DungeonGenerator.Generate(defaultParams, seed);
+        if (!Validator.IsPlayable(layout, out string why)) bad.Add(seed);
+    }
+    Debug.Log($"{bad.Count} seed hỏng: {string.Join(", ", bad.Take(20))}");
+}
+```
+
+Chạy được vì generator không phụ thuộc Unity. Nếu nó phải Instantiate GameObject thì 100.000 seed là hàng giờ.
+
+**Tilemap cho 2D — nhanh hơn nghĩ**
+
+```csharp
+// Đặt cả mảng một lần, KHÔNG SetTile từng ô
+tilemap.SetTilesBlock(bounds, tileArray);
+```
+
+`SetTile` từng ô cho một bản đồ 200×200 là 40.000 lệnh; `SetTilesBlock` là một lệnh. Khác biệt hàng giây.
+
+**Sinh dần theo chunk — đừng sinh cả bản đồ một frame**
+
+```csharp
+// Sinh 200x200 trong một frame = khựng 2 giây.
+// Chia chunk và trải qua nhiều frame:
+foreach (var chunk in layout.Chunks) {
+    BuildChunk(chunk);
+    if (stopwatch.ElapsedMilliseconds > 8) { yield return null; stopwatch.Restart(); }
+}
+```
+
+Ngân sách 8ms/frame giữ được 60 FPS trong lúc sinh.
+
+**Bẫy Unity cụ thể**
+- **`Instantiate` trong vòng lặp sinh** → GC spike lớn. Pool, hoặc dùng Tilemap/mesh gộp.
+- **Quên bake NavMesh sau khi sinh** → NPC không đi được. Dùng `NavMeshSurface.BuildNavMeshAsync()` runtime.
+- **Seed lấy từ `DateTime.Now`** → không log lại được seed của lần chơi bị bug. Luôn log seed.
+
+**Kiểm tra nhanh**
+- Cùng seed hai lần: layout giống hệt từng ô không?
+- Chạy Scan 100k Seeds: bao nhiêu seed hỏng? (nên 0, hoặc có cơ chế sinh lại)
+- Sinh bản đồ lớn: FPS có tụt dưới 50 không?
+- Seed có được log ra khi crash không?

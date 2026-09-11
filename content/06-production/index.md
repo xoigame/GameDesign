@@ -38,3 +38,36 @@ Kiến trúc tốt khiến AI agent hiệu quả hơn rõ rệt:
 - **Quy ước nhất quán** → code sinh ra khớp với phần còn lại của dự án.
 
 Ngược lại, một codebase rối sẽ khiến agent tạo ra nhiều lỗi hơn — nó không thấy được toàn cảnh và sẽ đoán.
+
+## 🎮 Unity
+
+Toàn bộ nhánh này có bản Unity chi tiết ở [[unity]]: [[unity-project-structure]], [[unity-design-patterns]], [[unity-optimization]], [[unity-build-platform]].
+
+**Ba thứ dựng trong tuần đầu, không để sau**
+
+1. **Assembly Definition** — `Game.Core` với `noEngineReferences: true`. Nó cho bạn test EditMode nhanh và mô phỏng ngoài Unity; thêm sau nghĩa là sửa hàng trăm `using`.
+2. **`.gitignore` đúng cho Unity** — `Library/`, `Temp/`, `Logs/`, `obj/`, `*.csproj`, `*.sln`. Commit `Library/` một lần là repo phình lên hàng GB.
+3. **Build ra máy đích** — không phải cuối dự án, mà tuần đầu. IL2CPP, stripping, và giới hạn bộ nhớ chỉ lộ ra ở build thật. Xem [[unity-build-platform]].
+
+**Git cho Unity — ba thứ bắt buộc**
+
+```
+# .gitattributes — KHÔNG có dòng này thì scene/prefab merge sẽ hỏng im lặng
+*.unity   binary
+*.prefab  binary
+*.asset   binary
+```
+
+Đánh dấu binary làm git **từ chối** merge thay vì merge sai. Bạn sẽ phải chọn một bên — mệt, nhưng tốt hơn một scene hỏng không ai biết.
+
+Và bật **Force Text** cho serialization (`Project Settings > Editor > Asset Serialization > Force Text`) để diff đọc được, dù vẫn treat as binary khi merge.
+
+**Meta file phải commit**
+
+`.meta` giữ GUID. Không commit `.meta` nghĩa là mọi tham chiếu vỡ trên máy người khác. Đây là lỗi phổ biến nhất khi người mới setup Unity repo.
+
+**Kiểm tra nhanh**
+- `git check-attr merge Assets/Scenes/Main.unity` → binary?
+- `.meta` có được commit không?
+- `Library/` có trong `.gitignore` không?
+- Đã build ra máy đích ít nhất một lần chưa?
