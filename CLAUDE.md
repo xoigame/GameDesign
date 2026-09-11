@@ -74,6 +74,12 @@ Node hiện thực hoá được trong Unity thì có mục `## 🎮 Unity` ở 
 
 Node nhánh `09-unity/` có mục `## 💻 Code` ở cuối (sau mục 🤖): **một script demo hoàn chỉnh chạy được** trên Unity 6 + **sơ đồ SVG mô phỏng Inspector/Hierarchy** cho đúng thiết lập của node. Build tách thành `node.code`, web hiện thành tab **💻 Code**. Node ngoài nhánh Unity thì không cần. Cấu trúc ở `content/_SCHEMA.md`.
 
+## Từ điển thuật ngữ
+
+`content/_GLOSSARY.md` → `graph.glossary`. Web tự tô màu tím và cho bấm vào mọi chỗ khớp — cả `inline code` lẫn văn xuôi — rồi hiện popover giải thích, kèm nút mở node nếu entry có `see:`. **Không cần đánh dấu gì trong node**, chỉ cần thuật ngữ có trong từ điển và viết đúng chính tả như trong từ điển.
+
+Chỉ tô lần xuất hiện đầu tiên trong mỗi mục; bỏ qua code block, link, tiêu đề và SVG. Logic ở `src/lib/rehypeGlossary.js`. `npm run check` kiểm tra mọi `see:` trỏ tới node có thật.
+
 ## Code fence phải cân
 
 `npm run check` báo **lỗi** nếu một file có số code fence lẻ. Lý do: fence chưa đóng làm mọi heading phía sau bị coi là code, nên các mục 🤖/🎮 không được tách ra và **biến mất khỏi web mà build không báo gì**. Đã xảy ra một lần ở `meta-systems.md`.

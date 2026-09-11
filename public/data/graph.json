@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-09-11T07:57:10.132Z",
+  "generatedAt": "2026-09-11T08:26:14.099Z",
   "root": "root",
   "stats": {
     "nodes": 81,
@@ -10,6 +10,7 @@
     "withPrompt": 81,
     "withUnity": 63,
     "withAiHowto": 19,
+    "glossaryTerms": 134,
     "withCode": 17,
     "translated": {
       "en": 12
@@ -121,6 +122,977 @@
     "visual",
     "workflow"
   ],
+  "glossary": {
+    "vi": {
+      "core loop": {
+        "term": "core loop",
+        "aliases": [],
+        "body": "Chuỗi hành động ngắn nhất người chơi lặp đi lặp lại — đơn vị vui nhỏ nhất của game. Nếu vòng này không vui trong 30 giây, không hệ thống meta nào cứu được.",
+        "see": "core-loop"
+      },
+      "design pillars": {
+        "term": "design pillars",
+        "aliases": [
+          "pillar",
+          "pillars"
+        ],
+        "body": "2–4 câu định nghĩa game của bạn *là gì* và *không là gì*. Pillar tốt phải có khả năng nói KHÔNG với một tính năng cụ thể; nếu nó không loại trừ được gì thì chỉ là khẩu hiệu.",
+        "see": "design-pillars"
+      },
+      "pillar": {
+        "term": "design pillars",
+        "aliases": [
+          "pillar",
+          "pillars"
+        ],
+        "body": "2–4 câu định nghĩa game của bạn *là gì* và *không là gì*. Pillar tốt phải có khả năng nói KHÔNG với một tính năng cụ thể; nếu nó không loại trừ được gì thì chỉ là khẩu hiệu.",
+        "see": "design-pillars"
+      },
+      "pillars": {
+        "term": "design pillars",
+        "aliases": [
+          "pillar",
+          "pillars"
+        ],
+        "body": "2–4 câu định nghĩa game của bạn *là gì* và *không là gì*. Pillar tốt phải có khả năng nói KHÔNG với một tính năng cụ thể; nếu nó không loại trừ được gì thì chỉ là khẩu hiệu.",
+        "see": "design-pillars"
+      },
+      "game feel": {
+        "term": "game feel",
+        "aliases": [
+          "juice"
+        ],
+        "body": "Cảm giác vật lý khi điều khiển. Quyết định phần lớn ấn tượng 30 giây đầu, và gần như nằm ngoài phần \"tính năng\" của tài liệu thiết kế.",
+        "see": "game-feel"
+      },
+      "juice": {
+        "term": "game feel",
+        "aliases": [
+          "juice"
+        ],
+        "body": "Cảm giác vật lý khi điều khiển. Quyết định phần lớn ấn tượng 30 giây đầu, và gần như nằm ngoài phần \"tính năng\" của tài liệu thiết kế.",
+        "see": "game-feel"
+      },
+      "hitstop": {
+        "term": "hitstop",
+        "aliases": [
+          "freeze frame"
+        ],
+        "body": "Dừng hình 50–120ms ngay khi trúng đòn. Công cụ tạo cảm giác lực rẻ nhất và mạnh nhất — hiệu quả hơn tăng âm lượng hay tăng sát thương.",
+        "see": "game-feel"
+      },
+      "freeze frame": {
+        "term": "hitstop",
+        "aliases": [
+          "freeze frame"
+        ],
+        "body": "Dừng hình 50–120ms ngay khi trúng đòn. Công cụ tạo cảm giác lực rẻ nhất và mạnh nhất — hiệu quả hơn tăng âm lượng hay tăng sát thương.",
+        "see": "game-feel"
+      },
+      "screenshake": {
+        "term": "screenshake",
+        "aliases": [],
+        "body": "Rung camera khi có va chạm. Biên độ 4–10px, 100–200ms, **phải giảm dần**. Cường độ nên tỉ lệ với ý nghĩa sự kiện; nếu mọi thứ đều rung mạnh thì không gì đáng chú ý.",
+        "see": "game-feel"
+      },
+      "coyote time": {
+        "term": "coyote time",
+        "aliases": [],
+        "body": "Khoảng 80–120ms sau khi rời mép nền mà vẫn nhảy được. Một trong những thủ thuật \"nói dối cho hợp trực giác\" cơ bản nhất.",
+        "see": "game-feel"
+      },
+      "input buffer": {
+        "term": "input buffer",
+        "aliases": [],
+        "body": "Ghi nhận lần bấm sớm 100–150ms trước khi hành động khả dụng. Trong Unity: buffer ở `Update`, xử lý ở `FixedUpdate`.",
+        "see": "game-feel"
+      },
+      "squash & stretch": {
+        "term": "squash & stretch",
+        "aliases": [],
+        "body": "Biến dạng ±15–25% khi nhảy và tiếp đất. Nguyên tắc animation cổ điển, rẻ và hiệu quả cho cảm giác chuyển động.",
+        "see": "game-feel"
+      },
+      "mda": {
+        "term": "MDA",
+        "aliases": [
+          "MDA framework"
+        ],
+        "body": "Mechanics → Dynamics → Aesthetics. Người thiết kế đi từ trái sang phải, người chơi trải nghiệm từ phải sang trái — nên thiết kế phải truy ngược từ cảm xúc mong muốn về luật chơi.",
+        "see": "mda-framework"
+      },
+      "mda framework": {
+        "term": "MDA",
+        "aliases": [
+          "MDA framework"
+        ],
+        "body": "Mechanics → Dynamics → Aesthetics. Người thiết kế đi từ trái sang phải, người chơi trải nghiệm từ phải sang trái — nên thiết kế phải truy ngược từ cảm xúc mong muốn về luật chơi.",
+        "see": "mda-framework"
+      },
+      "sdt": {
+        "term": "SDT",
+        "aliases": [
+          "self-determination theory"
+        ],
+        "body": "Ba nhu cầu tâm lý: competence (cảm giác giỏi lên), autonomy (cảm giác tự quyết), relatedness (cảm giác kết nối). Game thoả cả ba đều gây nghiện.",
+        "see": "player-motivation"
+      },
+      "self-determination theory": {
+        "term": "SDT",
+        "aliases": [
+          "self-determination theory"
+        ],
+        "body": "Ba nhu cầu tâm lý: competence (cảm giác giỏi lên), autonomy (cảm giác tự quyết), relatedness (cảm giác kết nối). Game thoả cả ba đều gây nghiện.",
+        "see": "player-motivation"
+      },
+      "competence": {
+        "term": "competence",
+        "aliases": [],
+        "body": "Cảm giác mình đang giỏi lên — không phải chỉ số tăng, mà *bản thân người chơi* chơi giỏi hơn. Đây là nhu cầu mà DDA lộ liễu phá huỷ.",
+        "see": "player-motivation"
+      },
+      "autonomy": {
+        "term": "autonomy",
+        "aliases": [],
+        "body": "Cảm giác lựa chọn của mình có ý nghĩa. Ba build đều khả thi thì có autonomy; ba build mà một cái trội hẳn thì chỉ là lựa chọn giả.",
+        "see": "player-motivation"
+      },
+      "bartle": {
+        "term": "Bartle",
+        "aliases": [],
+        "body": "Phân loại bốn kiểu người chơi: Achiever, Explorer, Socialiser, Killer. Dùng để kiểm tra độ phủ, không dùng để cố phục vụ cả bốn.",
+        "see": "player-motivation"
+      },
+      "flow": {
+        "term": "flow",
+        "aliases": [
+          "vùng dòng chảy"
+        ],
+        "body": "Trạng thái chìm đắm khi thử thách xấp xỉ kỹ năng. Quá khó → lo âu; quá dễ → chán. Cả hai đều dẫn tới bỏ game.",
+        "see": "difficulty-curve"
+      },
+      "vung dong chay": {
+        "term": "flow",
+        "aliases": [
+          "vùng dòng chảy"
+        ],
+        "body": "Trạng thái chìm đắm khi thử thách xấp xỉ kỹ năng. Quá khó → lo âu; quá dễ → chán. Cả hai đều dẫn tới bỏ game.",
+        "see": "difficulty-curve"
+      },
+      "source": {
+        "term": "source",
+        "aliases": [
+          "faucet"
+        ],
+        "body": "Nơi tài nguyên sinh ra trong nền kinh tế: rơi đồ, thưởng nhiệm vụ, thu hoạch.",
+        "see": "economy-design"
+      },
+      "faucet": {
+        "term": "source",
+        "aliases": [
+          "faucet"
+        ],
+        "body": "Nơi tài nguyên sinh ra trong nền kinh tế: rơi đồ, thưởng nhiệm vụ, thu hoạch.",
+        "see": "economy-design"
+      },
+      "sink": {
+        "term": "sink",
+        "aliases": [
+          "drain"
+        ],
+        "body": "Nơi tài nguyên biến mất: mua bán, nâng cấp, sửa chữa, phí. Sink phải tăng **cùng bậc** với source, nếu không đến cuối game tiền vô nghĩa.",
+        "see": "economy-design"
+      },
+      "drain": {
+        "term": "sink",
+        "aliases": [
+          "drain"
+        ],
+        "body": "Nơi tài nguyên biến mất: mua bán, nâng cấp, sửa chữa, phí. Sink phải tăng **cùng bậc** với source, nếu không đến cuối game tiền vô nghĩa.",
+        "see": "economy-design"
+      },
+      "lam phat": {
+        "term": "lạm phát",
+        "aliases": [
+          "inflation"
+        ],
+        "body": "Source > sink kéo dài. Tiền mất giá, mọi phần thưởng vô nghĩa, người chơi hết mục tiêu. Phát hiện bằng cách xem vàng tồn kho trung vị có tăng đơn điệu sau ngày 7 không.",
+        "see": "economy-design"
+      },
+      "inflation": {
+        "term": "lạm phát",
+        "aliases": [
+          "inflation"
+        ],
+        "body": "Source > sink kéo dài. Tiền mất giá, mọi phần thưởng vô nghĩa, người chơi hết mục tiêu. Phát hiện bằng cách xem vàng tồn kho trung vị có tăng đơn điệu sau ngày 7 không.",
+        "see": "economy-design"
+      },
+      "tuong cay cuoc": {
+        "term": "tường cày cuốc",
+        "aliases": [
+          "grind wall"
+        ],
+        "body": "Điểm mà chi phí tăng nhanh hơn thu nhập, làm thời gian tới mốc kế tiếp nhảy vọt. Đây là nơi người chơi bỏ game.",
+        "see": "progression"
+      },
+      "grind wall": {
+        "term": "tường cày cuốc",
+        "aliases": [
+          "grind wall"
+        ],
+        "body": "Điểm mà chi phí tăng nhanh hơn thu nhập, làm thời gian tới mốc kế tiếp nhảy vọt. Đây là nơi người chơi bỏ game.",
+        "see": "progression"
+      },
+      "vertical progression": {
+        "term": "vertical progression",
+        "aliases": [
+          "tiến trình dọc"
+        ],
+        "body": "Số to hơn: HP 100 → 500. Dễ làm, dễ điều tiết, nhưng làm mất giá nội dung cũ và dễ bùng nổ chỉ số.",
+        "see": "progression"
+      },
+      "tien trinh doc": {
+        "term": "vertical progression",
+        "aliases": [
+          "tiến trình dọc"
+        ],
+        "body": "Số to hơn: HP 100 → 500. Dễ làm, dễ điều tiết, nhưng làm mất giá nội dung cũ và dễ bùng nổ chỉ số.",
+        "see": "progression"
+      },
+      "horizontal progression": {
+        "term": "horizontal progression",
+        "aliases": [
+          "tiến trình ngang"
+        ],
+        "body": "Nhiều lựa chọn hơn: thêm vũ khí, kỹ năng, đường build. Giữ nội dung cũ còn giá trị và tạo autonomy.",
+        "see": "progression"
+      },
+      "tien trinh ngang": {
+        "term": "horizontal progression",
+        "aliases": [
+          "tiến trình ngang"
+        ],
+        "body": "Nhiều lựa chọn hơn: thêm vũ khí, kỹ năng, đường build. Giữ nội dung cũ còn giá trị và tạo autonomy.",
+        "see": "progression"
+      },
+      "mastery": {
+        "term": "mastery",
+        "aliases": [],
+        "body": "Người chơi giỏi lên, nhân vật không đổi. Dạng tiến trình bền vững nhất: không lạm phát, không mất giá.",
+        "see": "progression"
+      },
+      "startup": {
+        "term": "startup",
+        "aliases": [
+          "windup"
+        ],
+        "body": "Giai đoạn vung lên trước khi đòn gây sát thương. Đây là *telegraph* — toàn bộ thông tin người chơi có để phản ứng, và là giai đoạn quan trọng nhất về mặt thiết kế.",
+        "see": "combat-systems"
+      },
+      "windup": {
+        "term": "startup",
+        "aliases": [
+          "windup"
+        ],
+        "body": "Giai đoạn vung lên trước khi đòn gây sát thương. Đây là *telegraph* — toàn bộ thông tin người chơi có để phản ứng, và là giai đoạn quan trọng nhất về mặt thiết kế.",
+        "see": "combat-systems"
+      },
+      "active frames": {
+        "term": "active frames",
+        "aliases": [],
+        "body": "Cửa sổ đòn đánh thực sự gây sát thương.",
+        "see": "combat-systems"
+      },
+      "recovery": {
+        "term": "recovery",
+        "aliases": [],
+        "body": "Giai đoạn thu đòn về. Đây là cửa sổ trừng phạt — phần thưởng cho đối phương vì đã né đúng.",
+        "see": "combat-systems"
+      },
+      "telegraph": {
+        "term": "telegraph",
+        "aliases": [
+          "tell"
+        ],
+        "body": "Tín hiệu báo trước đòn đánh. Phải dài hơn thời gian phản ứng người thật (~250ms) cộng thời gian thực hiện hành động né — tức thường ≥ 400ms cho đòn cần phản ứng.",
+        "see": "combat-systems"
+      },
+      "tell": {
+        "term": "telegraph",
+        "aliases": [
+          "tell"
+        ],
+        "body": "Tín hiệu báo trước đòn đánh. Phải dài hơn thời gian phản ứng người thật (~250ms) cộng thời gian thực hiện hành động né — tức thường ≥ 400ms cho đòn cần phản ứng.",
+        "see": "combat-systems"
+      },
+      "frame data": {
+        "term": "frame data",
+        "aliases": [],
+        "body": "Bảng số startup/active/recovery của từng đòn. Trong game hành động, frame data **là** luật chơi — nên nó phải là dữ liệu, không phải animation event.",
+        "see": "combat-systems"
+      },
+      "animation cancel": {
+        "term": "animation cancel",
+        "aliases": [],
+        "body": "Cho phép huỷ animation đang chạy để chuyển sang hành động khác. Công cụ responsiveness mạnh nhất; không cho cancel gì cả làm nhân vật cảm thấy mất kiểm soát.",
+        "see": "animation-game"
+      },
+      "poise": {
+        "term": "poise",
+        "aliases": [
+          "stagger"
+        ],
+        "body": "Thanh ẩn, đầy thì kẻ địch choáng. Thưởng cho việc gây áp lực liên tục thay vì đánh rồi lùi.",
+        "see": "combat-systems"
+      },
+      "stagger": {
+        "term": "poise",
+        "aliases": [
+          "stagger"
+        ],
+        "body": "Thanh ẩn, đầy thì kẻ địch choáng. Thưởng cho việc gây áp lực liên tục thay vì đánh rồi lùi.",
+        "see": "combat-systems"
+      },
+      "ttk": {
+        "term": "TTK",
+        "aliases": [
+          "time to kill"
+        ],
+        "body": "Thời gian hạ một mục tiêu. Biến thiên giữa các cặp không nên vượt ~2×; chênh lệch lớn nghĩa là một số kẻ địch bị bỏ qua.",
+        "see": "balancing-math"
+      },
+      "time to kill": {
+        "term": "TTK",
+        "aliases": [
+          "time to kill"
+        ],
+        "body": "Thời gian hạ một mục tiêu. Biến thiên giữa các cặp không nên vượt ~2×; chênh lệch lớn nghĩa là một số kẻ địch bị bỏ qua.",
+        "see": "balancing-math"
+      },
+      "winrate": {
+        "term": "winrate",
+        "aliases": [],
+        "body": "Tỉ lệ thắng của một build hoặc nhân vật. PvE lành mạnh 45–65%; PvP cần 48–52%. Quan trọng hơn con số là **phân bố**.",
+        "see": "balancing-math"
+      },
+      "pick rate": {
+        "term": "pick rate",
+        "aliases": [],
+        "body": "Tỉ lệ người chơi chọn một lựa chọn. Một lựa chọn vượt ~25% nghĩa là các lựa chọn khác đang vô nghĩa — autonomy chỉ là ảo giác.",
+        "see": "balancing-math"
+      },
+      "monte carlo": {
+        "term": "Monte Carlo",
+        "aliases": [
+          "mô phỏng Monte Carlo"
+        ],
+        "body": "Chạy hàng nghìn lượt mô phỏng có yếu tố ngẫu nhiên để xem **phân bố** kết quả, không chỉ giá trị trung bình. Cách duy nhất cân bằng mà không đoán mò.",
+        "see": "balancing-math"
+      },
+      "mo phong monte carlo": {
+        "term": "Monte Carlo",
+        "aliases": [
+          "mô phỏng Monte Carlo"
+        ],
+        "body": "Chạy hàng nghìn lượt mô phỏng có yếu tố ngẫu nhiên để xem **phân bố** kết quả, không chỉ giá trị trung bình. Cách duy nhất cân bằng mà không đoán mò.",
+        "see": "balancing-math"
+      },
+      "loi ich giam dan": {
+        "term": "lợi ích giảm dần",
+        "aliases": [
+          "diminishing returns"
+        ],
+        "body": "Đường cong bão hoà cho mọi thứ cộng dồn: `hiệu quả = tối đa × (1 - e^(-k·n))`. Thiếu nó, người chơi dồn hết vào một chỉ số và phá vỡ game.",
+        "see": "balancing-math"
+      },
+      "diminishing returns": {
+        "term": "lợi ích giảm dần",
+        "aliases": [
+          "diminishing returns"
+        ],
+        "body": "Đường cong bão hoà cho mọi thứ cộng dồn: `hiệu quả = tối đa × (1 - e^(-k·n))`. Thiếu nó, người chơi dồn hết vào một chỉ số và phá vỡ game.",
+        "see": "balancing-math"
+      },
+      "degenerate strategy": {
+        "term": "degenerate strategy",
+        "aliases": [
+          "chiến lược suy biến"
+        ],
+        "body": "Cách chơi tối ưu nhưng nhàm chán, thường sinh ra từ việc nhân các phần trăm với nhau. Người chơi sẽ tìm ra nó; câu hỏi là bạn có tìm trước không.",
+        "see": "balancing-math"
+      },
+      "chien luoc suy bien": {
+        "term": "degenerate strategy",
+        "aliases": [
+          "chiến lược suy biến"
+        ],
+        "body": "Cách chơi tối ưu nhưng nhàm chán, thường sinh ra từ việc nhân các phần trăm với nhau. Người chơi sẽ tìm ra nó; câu hỏi là bạn có tìm trước không.",
+        "see": "balancing-math"
+      },
+      "input randomness": {
+        "term": "input randomness",
+        "aliases": [],
+        "body": "Ngẫu nhiên xảy ra **trước** quyết định của người chơi: bài trên tay, bản đồ được sinh. Người chơi thích nghi với nó → tạo ra kỹ năng.",
+        "see": "randomness"
+      },
+      "output randomness": {
+        "term": "output randomness",
+        "aliases": [],
+        "body": "Ngẫu nhiên xảy ra **sau** quyết định: tỉ lệ trúng, crit, damage roll. Người chơi chịu đựng nó → tạo ra ức chế. Nên ưu tiên input randomness.",
+        "see": "randomness"
+      },
+      "pity system": {
+        "term": "pity system",
+        "aliases": [
+          "bad-luck protection"
+        ],
+        "body": "Tăng dần xác suất theo số lần thất bại liên tiếp, để chuỗi xui không kéo dài vô hạn. `p = min(1, p_gốc + tăng_dần × số_lần_trượt)`.",
+        "see": "randomness"
+      },
+      "bad-luck protection": {
+        "term": "pity system",
+        "aliases": [
+          "bad-luck protection"
+        ],
+        "body": "Tăng dần xác suất theo số lần thất bại liên tiếp, để chuỗi xui không kéo dài vô hạn. `p = min(1, p_gốc + tăng_dần × số_lần_trượt)`.",
+        "see": "randomness"
+      },
+      "shuffle bag": {
+        "term": "shuffle bag",
+        "aliases": [],
+        "body": "Rút không lặp lại trong một lượt rồi mới trộn lại. Dùng thay random thuần cho biến thể âm thanh và drop, vì tai và mắt phát hiện lặp rất nhanh.",
+        "see": "randomness"
+      },
+      "seed": {
+        "term": "seed",
+        "aliases": [],
+        "body": "Số khởi tạo bộ sinh ngẫu nhiên. Cùng seed phải cho cùng kết quả — thiếu tính tất định này thì không tái hiện được bug, không làm được daily challenge.",
+        "see": "procedural-generation"
+      },
+      "dda": {
+        "term": "DDA",
+        "aliases": [
+          "dynamic difficulty adjustment"
+        ],
+        "body": "Điều chỉnh độ khó theo hiệu suất người chơi lúc chạy. Nguyên tắc sống còn: người chơi không được phép nhận ra, nếu không mọi chiến thắng mất ý nghĩa.",
+        "see": "difficulty-curve"
+      },
+      "dynamic difficulty adjustment": {
+        "term": "DDA",
+        "aliases": [
+          "dynamic difficulty adjustment"
+        ],
+        "body": "Điều chỉnh độ khó theo hiệu suất người chơi lúc chạy. Nguyên tắc sống còn: người chơi không được phép nhận ra, nếu không mọi chiến thắng mất ý nghĩa.",
+        "see": "difficulty-curve"
+      },
+      "rang cua": {
+        "term": "răng cưa",
+        "aliases": [
+          "sawtooth"
+        ],
+        "body": "Hình dạng đường cong khó hiệu quả: giới thiệu (dễ) → luyện tập → thử thách đỉnh → hạ xuống. Đoạn hạ xuống là nơi người chơi *cảm nhận được* mình đã mạnh lên.",
+        "see": "difficulty-curve"
+      },
+      "sawtooth": {
+        "term": "răng cưa",
+        "aliases": [
+          "sawtooth"
+        ],
+        "body": "Hình dạng đường cong khó hiệu quả: giới thiệu (dễ) → luyện tập → thử thách đỉnh → hạ xuống. Đoạn hạ xuống là nơi người chơi *cảm nhận được* mình đã mạnh lên.",
+        "see": "difficulty-curve"
+      },
+      "rubber-banding": {
+        "term": "rubber-banding",
+        "aliases": [],
+        "body": "Điều chỉnh độ khó theo vị trí người chơi trong game đua. Ví dụ kinh điển về DDA làm sai: ai cũng nhận ra, và nó làm việc chơi giỏi trở nên vô nghĩa.",
+        "see": "difficulty-curve"
+      },
+      "fsm": {
+        "term": "FSM",
+        "aliases": [
+          "finite state machine",
+          "máy trạng thái"
+        ],
+        "body": "NPC luôn ở đúng một trạng thái, chuyển khi điều kiện thoả. Kiến trúc AI đơn giản nhất và dễ gỡ lỗi nhất; giới hạn là số chuyển tiếp tăng theo bình phương số trạng thái.",
+        "see": "fsm"
+      },
+      "finite state machine": {
+        "term": "FSM",
+        "aliases": [
+          "finite state machine",
+          "máy trạng thái"
+        ],
+        "body": "NPC luôn ở đúng một trạng thái, chuyển khi điều kiện thoả. Kiến trúc AI đơn giản nhất và dễ gỡ lỗi nhất; giới hạn là số chuyển tiếp tăng theo bình phương số trạng thái.",
+        "see": "fsm"
+      },
+      "may trang thai": {
+        "term": "FSM",
+        "aliases": [
+          "finite state machine",
+          "máy trạng thái"
+        ],
+        "body": "NPC luôn ở đúng một trạng thái, chuyển khi điều kiện thoả. Kiến trúc AI đơn giản nhất và dễ gỡ lỗi nhất; giới hạn là số chuyển tiếp tăng theo bình phương số trạng thái.",
+        "see": "fsm"
+      },
+      "behavior tree": {
+        "term": "behavior tree",
+        "aliases": [
+          "BT"
+        ],
+        "body": "Cây ưu tiên: mỗi tick duyệt từ gốc, node đầu tiên chạy được sẽ chạy. Chuẩn công nghiệp cho AI NPC. Đổi ưu tiên chỉ cần kéo nhánh lên/xuống.",
+        "see": "behavior-tree"
+      },
+      "bt": {
+        "term": "behavior tree",
+        "aliases": [
+          "BT"
+        ],
+        "body": "Cây ưu tiên: mỗi tick duyệt từ gốc, node đầu tiên chạy được sẽ chạy. Chuẩn công nghiệp cho AI NPC. Đổi ưu tiên chỉ cần kéo nhánh lên/xuống.",
+        "see": "behavior-tree"
+      },
+      "selector": {
+        "term": "selector",
+        "aliases": [],
+        "body": "Node BT kiểu HOẶC: chạy con lần lượt tới khi một con thành công.",
+        "see": "behavior-tree"
+      },
+      "sequence": {
+        "term": "sequence",
+        "aliases": [],
+        "body": "Node BT kiểu VÀ: chạy con lần lượt tới khi một con thất bại.",
+        "see": "behavior-tree"
+      },
+      "blackboard": {
+        "term": "blackboard",
+        "aliases": [],
+        "body": "Từ điển key-value dùng chung cho một agent. Tách **cảm nhận** (perception ghi vào) khỏi **quyết định** (BT/FSM đọc ra) — kiến trúc sạch và test được.",
+        "see": "behavior-tree"
+      },
+      "hysteresis": {
+        "term": "hysteresis",
+        "aliases": [
+          "ngưỡng trễ"
+        ],
+        "body": "Hai ngưỡng khác nhau cho vào và ra một trạng thái: vào chế độ chạy trốn ở HP < 25%, thoát ở HP > 40%. Cách chống dao động cơ bản nhất.",
+        "see": "behavior-tree"
+      },
+      "nguong tre": {
+        "term": "hysteresis",
+        "aliases": [
+          "ngưỡng trễ"
+        ],
+        "body": "Hai ngưỡng khác nhau cho vào và ra một trạng thái: vào chế độ chạy trốn ở HP < 25%, thoát ở HP > 40%. Cách chống dao động cơ bản nhất.",
+        "see": "behavior-tree"
+      },
+      "goap": {
+        "term": "GOAP",
+        "aliases": [
+          "goal-oriented action planning"
+        ],
+        "body": "NPC tự tìm chuỗi hành động đạt mục tiêu, bằng A* trong không gian trạng thái. Linh hoạt nhưng đắt CPU và rất khó gỡ lỗi.",
+        "see": "goap"
+      },
+      "goal-oriented action planning": {
+        "term": "GOAP",
+        "aliases": [
+          "goal-oriented action planning"
+        ],
+        "body": "NPC tự tìm chuỗi hành động đạt mục tiêu, bằng A* trong không gian trạng thái. Linh hoạt nhưng đắt CPU và rất khó gỡ lỗi.",
+        "see": "goap"
+      },
+      "utility ai": {
+        "term": "utility AI",
+        "aliases": [],
+        "body": "Chấm điểm mọi hành động khả dĩ mỗi tick rồi chọn điểm cao nhất. Mở rộng rất sạch — thêm hành động thứ 40 không đụng 39 cái cũ.",
+        "see": "utility-ai"
+      },
+      "consideration": {
+        "term": "consideration",
+        "aliases": [],
+        "body": "Một yếu tố đầu vào của utility AI, chuẩn hoá về [0,1] rồi qua một đường cong. Nhân các consideration với nhau, và nhớ bù luỹ thừa.",
+        "see": "utility-ai"
+      },
+      "a*": {
+        "term": "A*",
+        "aliases": [
+          "A star"
+        ],
+        "body": "Thuật toán tìm đường ưu tiên node có `f = g + h` nhỏ nhất. Heuristic phải không bao giờ ước lượng cao hơn chi phí thật, nếu không kết quả không tối ưu.",
+        "see": "pathfinding"
+      },
+      "a star": {
+        "term": "A*",
+        "aliases": [
+          "A star"
+        ],
+        "body": "Thuật toán tìm đường ưu tiên node có `f = g + h` nhỏ nhất. Heuristic phải không bao giờ ước lượng cao hơn chi phí thật, nếu không kết quả không tối ưu.",
+        "see": "pathfinding"
+      },
+      "heuristic": {
+        "term": "heuristic",
+        "aliases": [],
+        "body": "Hàm ước lượng chi phí còn lại trong A*. Chọn sai dạng heuristic cho dạng lưới là lỗi phổ biến nhất — Manhattan cho 4 hướng, octile cho 8 hướng.",
+        "see": "pathfinding"
+      },
+      "navmesh": {
+        "term": "NavMesh",
+        "aliases": [],
+        "body": "Chia bề mặt đi được thành các đa giác lồi. Ít node hơn lưới ô vuông rất nhiều và cho đường đi tự nhiên hơn. Từ Unity 2022 nằm ở package AI Navigation.",
+        "see": "pathfinding"
+      },
+      "flow field": {
+        "term": "flow field",
+        "aliases": [],
+        "body": "Tính một lần từ đích ra toàn bản đồ, mỗi ô lưu hướng đi kế tiếp. Cho hàng trăm đơn vị chung đích, đây là hai bậc độ lớn nhanh hơn N lần A*.",
+        "see": "pathfinding"
+      },
+      "steering": {
+        "term": "steering",
+        "aliases": [],
+        "body": "Cách *đi như thế nào* (mượt, tránh nhau), khác pathfinding là *đi đâu*. Dùng Arrive thay Seek thuần, nếu không agent rung quanh đích.",
+        "see": "steering-flocking"
+      },
+      "boids": {
+        "term": "boids",
+        "aliases": [],
+        "body": "Ba luật tạo hành vi bầy đàn: separation, alignment, cohesion. Đàn chim, đàn cá, bầy zombie đều là cùng thuật toán khác bộ trọng số.",
+        "see": "steering-flocking"
+      },
+      "ai director": {
+        "term": "AI director",
+        "aliases": [],
+        "body": "AI cấp hệ thống điều tiết nhịp độ cả trận — quyết định khi nào spawn và khi nào cho nghỉ. Mô hình Left 4 Dead: BuildUp → SustainPeak → PeakFade → Relax.",
+        "see": "ai-director"
+      },
+      "intensity": {
+        "term": "intensity",
+        "aliases": [],
+        "body": "Chỉ số 0–1 đo cường độ trải nghiệm hiện tại, dùng làm tín hiệu cho AI director và adaptive music.",
+        "see": "ai-director"
+      },
+      "perception": {
+        "term": "perception",
+        "aliases": [],
+        "body": "Hệ thống tầm nhìn, thính giác, trí nhớ của NPC. Quyết định AI *cảm thấy* công bằng hay ăn gian — đọc vị trí người chơi trực tiếp là ăn gian, dù số liệu cân bằng.",
+        "see": "perception"
+      },
+      "awareness": {
+        "term": "awareness",
+        "aliases": [],
+        "body": "Thang nhận biết 0–1 thay cho cờ bool \"thấy/không thấy\". Cho người chơi cửa sổ để rút lui trước khi bị phát hiện hẳn — đó chính là gameplay lén lút.",
+        "see": "perception"
+      },
+      "procgen": {
+        "term": "procgen",
+        "aliases": [
+          "procedural generation"
+        ],
+        "body": "Sinh nội dung bằng thuật toán. Nên **sắp xếp lại nội dung thủ công** thay vì sinh từ số không — đa dạng thống kê không phải đa dạng cảm nhận.",
+        "see": "procedural-generation"
+      },
+      "procedural generation": {
+        "term": "procgen",
+        "aliases": [
+          "procedural generation"
+        ],
+        "body": "Sinh nội dung bằng thuật toán. Nên **sắp xếp lại nội dung thủ công** thay vì sinh từ số không — đa dạng thống kê không phải đa dạng cảm nhận.",
+        "see": "procedural-generation"
+      },
+      "wave function collapse": {
+        "term": "wave function collapse",
+        "aliases": [
+          "WFC"
+        ],
+        "body": "Sinh nội dung bằng lan truyền ràng buộc từ một mẫu ví dụ. Kết quả cục bộ nhất quán ấn tượng, nhưng khó điều khiển mục tiêu tổng thể và có thể thất bại.",
+        "see": "procedural-generation"
+      },
+      "wfc": {
+        "term": "wave function collapse",
+        "aliases": [
+          "WFC"
+        ],
+        "body": "Sinh nội dung bằng lan truyền ràng buộc từ một mẫu ví dụ. Kết quả cục bộ nhất quán ấn tượng, nhưng khó điều khiển mục tiêu tổng thể và có thể thất bại.",
+        "see": "procedural-generation"
+      },
+      "silhouette": {
+        "term": "silhouette",
+        "aliases": [
+          "hình bóng"
+        ],
+        "body": "Hình dạng nhận ra được khi tô đen trắng thuần. Bài kiểm tra art rẻ nhất và bị bỏ qua nhiều nhất: nếu vẫn phân biệt được nhân vật, kẻ địch, lối đi thì hình khối tốt.",
+        "see": "art-direction"
+      },
+      "hinh bong": {
+        "term": "silhouette",
+        "aliases": [
+          "hình bóng"
+        ],
+        "body": "Hình dạng nhận ra được khi tô đen trắng thuần. Bài kiểm tra art rẻ nhất và bị bỏ qua nhiều nhất: nếu vẫn phân biệt được nhân vật, kẻ địch, lối đi thì hình khối tốt.",
+        "see": "art-direction"
+      },
+      "ma hoa kep": {
+        "term": "mã hoá kép",
+        "aliases": [
+          "double encoding"
+        ],
+        "body": "Mọi phân biệt quan trọng dùng màu **cộng** một kênh thứ hai (hình dạng, icon, vị trí). Khoảng 8% nam giới mù màu đỏ-lục, nên chỉ dùng màu là loại bỏ một phần người chơi.",
+        "see": "accessibility"
+      },
+      "double encoding": {
+        "term": "mã hoá kép",
+        "aliases": [
+          "double encoding"
+        ],
+        "body": "Mọi phân biệt quan trọng dùng màu **cộng** một kênh thứ hai (hình dạng, icon, vị trí). Khoảng 8% nam giới mù màu đỏ-lục, nên chỉ dùng màu là loại bỏ một phần người chơi.",
+        "see": "accessibility"
+      },
+      "diegetic ui": {
+        "term": "diegetic UI",
+        "aliases": [],
+        "body": "UI nằm trong thế giới game (đồng hồ trên vũ khí, đèn trên áo giáp). Tăng nhập vai nhưng đọc chậm hơn và khó scale qua nhiều độ phân giải.",
+        "see": "ux-hud"
+      },
+      "audio bus": {
+        "term": "audio bus",
+        "aliases": [],
+        "body": "Nhóm âm thanh trong mixer. Mọi âm thanh phải đi qua bus, nếu không settings âm lượng và ducking đều vô hiệu. Dựng cây bus trước khi làm âm thanh thứ hai.",
+        "see": "audio-implementation"
+      },
+      "ducking": {
+        "term": "ducking",
+        "aliases": [],
+        "body": "Hạ tạm các bus khác khi âm thanh quan trọng phát, để thông tin nổi lên khỏi nền. Không có ducking, âm cảnh báo bị chìm đúng lúc cần nghe nhất.",
+        "see": "audio-implementation"
+      },
+      "layering": {
+        "term": "layering",
+        "aliases": [],
+        "body": "Dựng một SFX từ nhiều lớp: transient (cú va chạm) + body (chất liệu) + tail (không gian). Muốn đòn mạnh hơn thì tăng transient, đừng tăng âm lượng tổng.",
+        "see": "audio-design"
+      },
+      "adaptive music": {
+        "term": "adaptive music",
+        "aliases": [],
+        "body": "Nhạc thay đổi theo trạng thái game. Vertical layering (bật/tắt lớp) dễ hơn horizontal resequencing (nối đoạn), và luôn khớp nhịp vì mọi lớp cùng timeline.",
+        "see": "adaptive-music"
+      },
+      "equal-power crossfade": {
+        "term": "equal-power crossfade",
+        "aliases": [],
+        "body": "Chuyển giữa hai track bằng `cos`/`sin` thay vì tuyến tính. Crossfade tuyến tính làm tổng năng lượng tụt ở giữa đoạn chuyển — nghe như âm thanh bị hụt.",
+        "see": "adaptive-music"
+      },
+      "ecs": {
+        "term": "ECS",
+        "aliases": [
+          "entity component system"
+        ],
+        "body": "Kiến trúc data-oriented cho hiệu năng ở quy mô lớn. **Bị lạm dụng nghiêm trọng** — dưới 200 thực thể thì nó chỉ thêm độ phức tạp và làm chậm việc thử nghiệm.",
+        "see": "architecture-patterns"
+      },
+      "entity component system": {
+        "term": "ECS",
+        "aliases": [
+          "entity component system"
+        ],
+        "body": "Kiến trúc data-oriented cho hiệu năng ở quy mô lớn. **Bị lạm dụng nghiêm trọng** — dưới 200 thực thể thì nó chỉ thêm độ phức tạp và làm chậm việc thử nghiệm.",
+        "see": "architecture-patterns"
+      },
+      "object pooling": {
+        "term": "object pooling",
+        "aliases": [],
+        "body": "Tái dùng object thay vì tạo/huỷ liên tục. Lý do không chỉ là tốc độ: cấp phát liên tục gây GC spike, và giật lag định kỳ rõ ràng hơn FPS thấp đều.",
+        "see": "architecture-patterns"
+      },
+      "event bus": {
+        "term": "event bus",
+        "aliases": [],
+        "body": "Các hệ thống giao tiếp qua sự kiện, không biết nhau. Đổi lại luồng thực thi trở nên vô hình — dùng cho giao tiếp giữa các hệ thống lớn, không dùng trong nội bộ một hệ thống.",
+        "see": "architecture-patterns"
+      },
+      "data-driven design": {
+        "term": "data-driven design",
+        "aliases": [],
+        "body": "Logic nằm trong code, con số nằm trong dữ liệu. Điều kiện tiên quyết để cân bằng nhanh, và để AI agent chỉnh số mà không phá vỡ logic.",
+        "see": "data-driven-design"
+      },
+      "scriptableobject": {
+        "term": "ScriptableObject",
+        "aliases": [],
+        "body": "Asset chứa dữ liệu trong Unity. **Chỉ đọc lúc chạy** — gán vào field của nó sẽ ghi thẳng vào asset và còn nguyên sau khi thoát Play Mode.",
+        "see": "data-driven-design"
+      },
+      "hot reload": {
+        "term": "hot reload",
+        "aliases": [],
+        "body": "Sửa file dữ liệu và game cập nhật ngay, không cần khởi động lại. Rút vòng lặp cân bằng từ \"sửa → build 90s → chơi lại\" xuống \"sửa → F5\".",
+        "see": "data-driven-design"
+      },
+      "gc": {
+        "term": "GC",
+        "aliases": [
+          "garbage collection"
+        ],
+        "body": "Thu gom bộ nhớ tự động. Cấp phát trong vòng lặp mỗi frame làm GC chạy định kỳ và gây khựng — chỉ tiêu thực dụng là 0 B cấp phát mỗi frame.",
+        "see": "performance"
+      },
+      "garbage collection": {
+        "term": "GC",
+        "aliases": [
+          "garbage collection"
+        ],
+        "body": "Thu gom bộ nhớ tự động. Cấp phát trong vòng lặp mỗi frame làm GC chạy định kỳ và gây khựng — chỉ tiêu thực dụng là 0 B cấp phát mỗi frame.",
+        "see": "performance"
+      },
+      "draw call": {
+        "term": "draw call",
+        "aliases": [],
+        "body": "Một lệnh gửi tới GPU. Nhiều draw call là nguyên nhân tụt FPS phổ biến ở UI và sprite; gom vào atlas hoặc batch để giảm.",
+        "see": "performance"
+      },
+      "overdraw": {
+        "term": "overdraw",
+        "aliases": [],
+        "body": "Vẽ nhiều lớp trong suốt chồng lên nhau. Kẻ giết frame rate thật của particle, không phải số lượng hạt.",
+        "see": "performance"
+      },
+      "profiler": {
+        "term": "profiler",
+        "aliases": [],
+        "body": "Công cụ đo hiệu năng. Ba cột cần nhìn trước: GC Alloc (quan trọng nhất), Time ms, Calls. Đo trước rồi tối ưu — trực giác về hiệu năng gần như luôn sai.",
+        "see": "performance"
+      },
+      "gdd": {
+        "term": "GDD",
+        "aliases": [
+          "game design document"
+        ],
+        "body": "Tài liệu thiết kế. GDD cho AI đọc thì ngắn, đặc, có số, và có **ràng buộc phủ định** — nêu rõ điều KHÔNG được làm.",
+        "see": "gdd-for-ai"
+      },
+      "game design document": {
+        "term": "GDD",
+        "aliases": [
+          "game design document"
+        ],
+        "body": "Tài liệu thiết kế. GDD cho AI đọc thì ngắn, đặc, có số, và có **ràng buộc phủ định** — nêu rõ điều KHÔNG được làm.",
+        "see": "gdd-for-ai"
+      },
+      "bat bien": {
+        "term": "bất biến",
+        "aliases": [
+          "invariant",
+          "INV"
+        ],
+        "body": "Luật về game mà agent không được vi phạm, kèm cách phát hiện vi phạm. Dòng \"cách phát hiện\" là thứ biến nguyện vọng thành luật máy kiểm tra được.",
+        "see": "agent-guardrails"
+      },
+      "invariant": {
+        "term": "bất biến",
+        "aliases": [
+          "invariant",
+          "INV"
+        ],
+        "body": "Luật về game mà agent không được vi phạm, kèm cách phát hiện vi phạm. Dòng \"cách phát hiện\" là thứ biến nguyện vọng thành luật máy kiểm tra được.",
+        "see": "agent-guardrails"
+      },
+      "inv": {
+        "term": "bất biến",
+        "aliases": [
+          "invariant",
+          "INV"
+        ],
+        "body": "Luật về game mà agent không được vi phạm, kèm cách phát hiện vi phạm. Dòng \"cách phát hiện\" là thứ biến nguyện vọng thành luật máy kiểm tra được.",
+        "see": "agent-guardrails"
+      },
+      "guardrail": {
+        "term": "guardrail",
+        "aliases": [
+          "rào chắn"
+        ],
+        "body": "Ràng buộc biến ý định thiết kế thành luật kiểm tra được. Rào chắn mạnh nhất là test chạy trong CI — bạn sẽ quên nhắc, CI thì không.",
+        "see": "agent-guardrails"
+      },
+      "rao chan": {
+        "term": "guardrail",
+        "aliases": [
+          "rào chắn"
+        ],
+        "body": "Ràng buộc biến ý định thiết kế thành luật kiểm tra được. Rào chắn mạnh nhất là test chạy trong CI — bạn sẽ quên nhắc, CI thì không.",
+        "see": "agent-guardrails"
+      },
+      "vertical slice": {
+        "term": "vertical slice",
+        "aliases": [],
+        "body": "Một phần game hoàn chỉnh theo chiều dọc: một màn chơi được, một kẻ địch, một vũ khí, **có juice đầy đủ**. Đây là lúc kiểm chứng core loop có vui không.",
+        "see": "ai-workflow"
+      },
+      "assembly definition": {
+        "term": "assembly definition",
+        "aliases": [
+          "asmdef"
+        ],
+        "body": "Chia project Unity thành các assembly riêng. `noEngineReferences: true` biến \"Core không dùng UnityEngine\" từ lời nhắc thành lỗi compile.",
+        "see": "unity-project-structure"
+      },
+      "asmdef": {
+        "term": "assembly definition",
+        "aliases": [
+          "asmdef"
+        ],
+        "body": "Chia project Unity thành các assembly riêng. `noEngineReferences: true` biến \"Core không dùng UnityEngine\" từ lời nhắc thành lỗi compile.",
+        "see": "unity-project-structure"
+      },
+      "prefab variant": {
+        "term": "prefab variant",
+        "aliases": [],
+        "body": "Prefab kế thừa từ prefab khác, chỉ ghi đè phần khác biệt. Cơ chế Unity làm tốt và ít dự án dùng đủ — thay thế cho cây kế thừa class.",
+        "see": "unity-project-structure"
+      },
+      "fixedupdate": {
+        "term": "FixedUpdate",
+        "aliases": [],
+        "body": "Vòng lặp chạy ở tần số cố định trong Unity. Luật chơi cần tất định thì ở đây; đọc input thì ở `Update`, nếu không mất input khi frame rate cao.",
+        "see": "unity-physics"
+      },
+      "timescale": {
+        "term": "timeScale",
+        "aliases": [],
+        "body": "Hệ số thời gian trong Unity. Đặt 0 để hitstop hoặc pause — nhưng khi đó `WaitForSeconds` đứng mãi, phải dùng `WaitForSecondsRealtime`.",
+        "see": "game-feel"
+      },
+      "dsptime": {
+        "term": "dspTime",
+        "aliases": [],
+        "body": "Đồng hồ của audio thread trong Unity (`AudioSettings.dspTime`). Dùng nó cho nhạc đúng nhịp — `Time.time` trôi so với đồng hồ audio và lệch dần.",
+        "see": "adaptive-music"
+      },
+      "canvas rebuild": {
+        "term": "canvas rebuild",
+        "aliases": [],
+        "body": "Unity vẽ lại toàn bộ Canvas khi một phần tử trong đó đổi. Vì vậy phải tách Canvas theo tần suất đổi, nếu không thanh máu đổi 60 lần/giây kéo cả khung tĩnh theo.",
+        "see": "unity-ui"
+      },
+      "canvasscaler": {
+        "term": "CanvasScaler",
+        "aliases": [],
+        "body": "Component quyết định UI scale thế nào qua các độ phân giải. `Match = 1` khớp theo chiều cao là lựa chọn đúng cho hầu hết game.",
+        "see": "ui-design"
+      },
+      "linear color space": {
+        "term": "Linear color space",
+        "aliases": [],
+        "body": "Chế độ màu đúng về mặt vật lý cho blending và lighting. Phải chọn từ ngày đầu — đổi sau làm mọi màu lệch và phải làm lại art.",
+        "see": "unity-lighting"
+      },
+      "il2cpp": {
+        "term": "IL2CPP",
+        "aliases": [],
+        "body": "Backend biên dịch C# sang C++ của Unity. Cùng với stripping, đây là nguồn lỗi \"chạy trong Editor mà crash trong build\" — nên phải build ra máy đích từ tuần đầu.",
+        "see": "unity-build-platform"
+      }
+    }
+  },
   "levels": [
     "basic",
     "intermediate",

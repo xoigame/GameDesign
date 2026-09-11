@@ -200,6 +200,70 @@ function extractSections(body) {
   return out
 }
 
+/**
+ * Đọc content/_GLOSSARY.md (và _GLOSSARY.<lang>.md) thành map thuật ngữ.
+ * Cú pháp: "## term | alias | alias" rồi phần giải thích, tuỳ chọn "see: node-id".
+ * Khoá tra cứu đã normalize (bỏ dấu, chữ thường) để web khớp không phân biệt dấu.
+ */
+function parseGlossary(warnings) {
+  const out = {}          // { lang: { normKey: {term, aliases, body, see} } }
+
+  for (const lang of [BASE_LANG, ...TRANSLATED_LANGS]) {
+    const file = lang === BASE_LANG ? '_GLOSSARY.md' : '_GLOSSARY.' + lang + '.md'
+    const full = path.join(CONTENT_DIR, file)
+    if (!fs.existsSync(full)) continue
+
+    const entries = {}
+    const lines = fs.readFileSync(full, 'utf8').split('\n')
+    let cur = null
+    let inFence = false
+
+    const flush = () => {
+      if (!cur) return
+      const body = cur.lines.join('\n').trim()
+      if (!body) { warnings.push('Thuật ngữ "' + cur.terms[0] + '" trong ' + file + ' không có giải thích'); cur = null; return }
+      const entry = { term: cur.terms[0], aliases: cur.terms.slice(1), body: cur.body, see: cur.see }
+      entry.body = body.replace(/^see:.*$/gm, '').trim()
+      for (const t of cur.terms) {
+        const key = glossKey(t)
+        if (!key) continue
+        if (entries[key]) warnings.push('Thuật ngữ trùng trong ' + file + ': "' + t + '"')
+        entries[key] = entry
+      }
+      cur = null
+    }
+
+    for (const line of lines) {
+      if (/^\s*(```|~~~)/.test(line)) { inFence = !inFence; if (cur) cur.lines.push(line); continue }
+      if (inFence) { if (cur) cur.lines.push(line); continue }
+
+      const h = line.match(/^##[ \t]+(.+?)[ \t]*$/)
+      if (h) {
+        flush()
+        const terms = h[1].split('|').map((t) => t.trim()).filter(Boolean)
+        cur = { terms, lines: [], see: null }
+        continue
+      }
+      if (!cur) continue
+      const see = line.match(/^see:[ \t]*([A-Za-z0-9-]+)[ \t]*$/)
+      if (see) { cur.see = see[1]; continue }
+      cur.lines.push(line)
+    }
+    flush()
+    out[lang] = entries
+  }
+  return out
+}
+
+/** Khoá tra cứu: chữ thường, bỏ dấu, gom khoảng trắng. */
+function glossKey(s) {
+  return String(s).toLowerCase()
+    .normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+    .replace(/[đĐ]/g, 'd')
+    .replace(/\s+/g, ' ')
+    .trim()
+}
+
 function build({ strict = false, quiet = false } = {}) {
   const warnings = []
   const errors = []
@@ -430,6 +494,19 @@ function build({ strict = false, quiet = false } = {}) {
     }
   }
 
+  // ---- từ điển thuật ngữ ----
+  const glossary = parseGlossary(warnings)
+  for (const [lang, entries] of Object.entries(glossary)) {
+    const seen = new Set()
+    for (const e of Object.values(entries)) {
+      if (seen.has(e)) continue
+      seen.add(e)
+      if (e.see && !nodes.has(e.see)) {
+        warnings.push('Thuật ngữ "' + e.term + '" (' + lang + ') có see: "' + e.see + '" không khớp node nào')
+      }
+    }
+  }
+
   const list = [...nodes.values()]
   const allTags = [...new Set(list.flatMap((n) => n.tags))].sort()
 
@@ -484,6 +561,7 @@ function build({ strict = false, quiet = false } = {}) {
       withPrompt: list.length - missingPrompt.length,
       withUnity: list.filter((n) => n.unity).length,
       withAiHowto: list.filter((n) => n.hasAiHowto).length,
+      glossaryTerms: Object.keys(glossary[BASE_LANG] || {}).length,
       withCode: list.filter((n) => n.code).length,
       translated: Object.fromEntries(
         TRANSLATED_LANGS.map((lg) => [lg, list.filter((n) => n.i18n[lg]).length])
@@ -494,6 +572,7 @@ function build({ strict = false, quiet = false } = {}) {
       words: list.reduce((s, n) => s + n.words, 0),
     },
     tags: allTags,
+    glossary,
     levels: LEVELS,
     baseLang: BASE_LANG,
     langs: [BASE_LANG, ...TRANSLATED_LANGS],
@@ -511,7 +590,7 @@ function build({ strict = false, quiet = false } = {}) {
     console.log(
       '[graph] ' + s.nodes + ' node · ' + s.branches + ' nhánh · ' +
       s.deep + ' deep / ' + s.stub + ' stub · ' + s.relations + ' liên kết · ' +
-      s.withPrompt + '/' + s.nodes + ' có prompt (' + s.withAiHowto + ' có howto) · ' + s.withUnity + ' có Unity · ' + s.withCode + ' có Code · ' +
+      s.withPrompt + '/' + s.nodes + ' có prompt (' + s.withAiHowto + ' có howto) · ' + s.withUnity + ' có Unity · ' + s.glossaryTerms + ' thuật ngữ · ' + s.withCode + ' có Code · ' +
       TRANSLATED_LANGS.map((lg) => s.translated[lg] + '/' + s.nodes + ' ' + lg).join(' · ') + ' · ' +
       s.basic + ' cơ bản / ' + s.intermediate + ' trung cấp / ' + s.advanced + ' chuyên sâu · ' +
       s.words + ' từ'

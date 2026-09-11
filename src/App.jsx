@@ -373,6 +373,7 @@ export default function App() {
           nodesById={nodesById}
           relations={graph.relations}
           readingPath={graph.readingPath}
+          glossary={graph.glossary}
           fontScale={fontScale}
           setFontScale={setFontScale}
           lang={lang}

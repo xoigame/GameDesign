@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react'
+import { createContext, useContext, useEffect, useMemo, useState } from 'react'
 import ReactMarkdown from 'react-markdown'
 import remarkGfm from 'remark-gfm'
 import rehypeRaw from 'rehype-raw'
@@ -6,9 +6,19 @@ import { buildAiContext } from '../lib/aiContext.js'
 import { LEVEL_VI, LEVEL_GLYPH, LEVEL_HINT } from '../lib/levels.js'
 import { FONT_STEPS } from '../App.jsx'
 import { t, field, text as tx, hasTranslation } from '../lib/i18n.js'
+import { lookup, tableFor } from '../lib/glossary.js'
+import rehypeGlossary from '../lib/rehypeGlossary.js'
+import GlossaryTerm from './GlossaryTerm.jsx'
 
 /** Biến link `#id` (từ wiki-link [[id]]) thành nút điều hướng trong app. */
-const mdComponents = (onSelect) => ({
+/**
+ * react-markdown gọi `code` cho CẢ inline code lẫn code block. Cách phân biệt
+ * đáng tin duy nhất là biết mình có đang ở trong `<pre>` không, nên `pre` đặt
+ * cờ qua context và `code` đọc ra.
+ */
+const InPre = createContext(false)
+
+const mdComponents = (onSelect, glossary, lang) => ({
   a: ({ href, children, ...rest }) => {
     if (href && href.startsWith('#')) {
       return (
@@ -19,6 +29,38 @@ const mdComponents = (onSelect) => ({
       )
     }
     return <a href={href} target="_blank" rel="noreferrer" {...rest}>{children}</a>
+  },
+
+  pre: ({ children, ...rest }) => (
+    <InPre.Provider value={true}><pre {...rest}>{children}</pre></InPre.Provider>
+  ),
+
+  code: ({ children, className, ...rest }) => {
+    const inPre = useContext(InPre)
+    // Trong code block thì để nguyên — không tra từ điển giữa code
+    if (inPre) return <code className={className} {...rest}>{children}</code>
+
+    const raw = Array.isArray(children) ? children.join('') : String(children ?? '')
+    const entry = lookup(glossary, lang, raw)
+    if (!entry) return <code className={className} {...rest}>{children}</code>
+
+    return (
+      <GlossaryTerm entry={entry} lang={lang} onSelect={onSelect}>
+        <code className={(className || '') + ' is-term'}>{children}</code>
+      </GlossaryTerm>
+    )
+  },
+
+  // Thẻ giả do rehypeGlossary chèn cho thuật ngữ nằm trong văn xuôi.
+  gterm: ({ children }) => {
+    const raw = Array.isArray(children) ? children.join('') : String(children ?? '')
+    const entry = lookup(glossary, lang, raw)
+    if (!entry) return children
+    return (
+      <GlossaryTerm entry={entry} lang={lang} onSelect={onSelect}>
+        <span className="term-kw">{children}</span>
+      </GlossaryTerm>
+    )
   },
 })
 
@@ -32,7 +74,7 @@ const linkify = (content, nodesById, lang) =>
   })
 
 export default function DetailPanel({
-  node, nodesById, relations, readingPath, fontScale, setFontScale, lang, onSelect, onClose,
+  node, nodesById, relations, readingPath, glossary, fontScale, setFontScale, lang, onSelect, onClose,
 }) {
   const [copied, setCopied] = useState('')
   const [tab, setTab] = useState('doc')
@@ -118,9 +160,20 @@ export default function DetailPanel({
     { id: 'code', label: t('tabCode', lang), on: !!node.code },
   ].filter((x) => x.on)
 
+  /* rehypeGlossary phải chạy SAU rehypeRaw: lúc đó SVG nội tuyến đã thành
+     element thật nên bỏ qua được, không bị chèn <button> vào giữa hình. */
+  const rehypePlugins = useMemo(
+    () => [rehypeRaw, [rehypeGlossary, { table: tableFor(glossary, lang) }]],
+    [glossary, lang],
+  )
+  const components = useMemo(
+    () => mdComponents(onSelect, glossary, lang),
+    [onSelect, glossary, lang],
+  )
+
   const md = (content) => (
-    <ReactMarkdown remarkPlugins={[remarkGfm]} rehypePlugins={[rehypeRaw]}
-                   components={mdComponents(onSelect)}>
+    <ReactMarkdown remarkPlugins={[remarkGfm]} rehypePlugins={rehypePlugins}
+                   components={components}>
       {content}
     </ReactMarkdown>
   )

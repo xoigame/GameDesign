@@ -301,6 +301,30 @@ Viết `[[id-cua-node]]` ở bất kỳ đâu trong thân bài. Build sẽ:
 
 Ví dụ: `Xem thêm [[goap]] nếu cần lập kế hoạch động.`
 
+## Từ điển thuật ngữ
+
+`content/_GLOSSARY.md` là từ điển dùng chung. Build nạp nó vào `graph.glossary`,
+web tự tô màu và cho bấm mọi chỗ khớp — **không cần đánh dấu gì trong node**.
+
+Hai đường khớp:
+
+| Viết trong node | Kết quả |
+|---|---|
+| `` `hitstop` `` (inline code) | hộp code màu tím, bấm được |
+| `hitstop` (văn xuôi, kể cả trong `**đậm**`) | chữ màu tím gạch chân đứt, bấm được |
+
+Quy tắc để không rối mắt:
+
+- Chỉ tô **lần xuất hiện đầu tiên** của mỗi thuật ngữ trong một mục
+  (mục 📄 / 🤖 / 🎮 / 💻 đếm riêng).
+- Bỏ qua chữ bên trong code block, link, tiêu đề và SVG.
+  Link `[[core-loop]]` đã mở được node rồi — không cần popover chồng lên.
+
+Muốn một thuật ngữ mới được tô: thêm nó vào `_GLOSSARY.md`, viết tên **đúng như
+cách nó xuất hiện trong nội dung**, thêm alias cho các cách viết khác. `see:`
+trỏ tới node đọc sâu thì popover có thêm nút mở node đó, và `npm run check`
+kiểm tra id đó có thật.
+
 ## Thêm một node mới — 4 bước
 
 1. Tạo `content/<nhánh>/<ten-node>.md`

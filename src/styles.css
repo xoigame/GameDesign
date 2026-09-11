@@ -880,3 +880,171 @@ button { font-family: inherit; font-size: inherit; cursor: pointer; }
 @media (max-width: 900px) {
   .panel-resizer { display: none; }
 }
+
+/* ---------------------------- thuật ngữ tra được --------------------------- */
+
+/* Inline code nói chung: nổi hơn một nhịp so với chữ thường. */
+.md code {
+  background: #1e2536;
+  color: #ffd089;
+  border: 1px solid rgba(255,208,137,.18);
+  padding: 1px 5px;
+}
+.md pre code { border: none; }
+
+/* Thuật ngữ có trong từ điển: đổi hẳn sang màu tím-hồng + gạch chân đứt nét,
+   để phân biệt với inline code thường (tên biến, API) không bấm được. */
+.term {
+  all: unset;
+  display: inline;
+  cursor: help;
+}
+.term:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; border-radius: 4px; }
+
+.md code.is-term {
+  background: rgba(196,160,255,.14);
+  color: #e0ccff;
+  border: 1px solid rgba(196,160,255,.30);
+  border-bottom-style: dashed;
+  border-bottom-color: rgba(196,160,255,.75);
+  transition: background .12s, color .12s;
+}
+.term:hover code.is-term {
+  background: rgba(196,160,255,.26);
+  color: #f2e9ff;
+  border-color: rgba(196,160,255,.6);
+}
+.term.is-open code.is-term {
+  background: rgba(196,160,255,.32);
+  color: #fff;
+  border-color: #c4a0ff;
+  border-bottom-style: solid;
+}
+
+/* Dấu hiệu bấm được — chỉ hiện ở bản màn hình rộng, mobile đã chật chữ rồi. */
+.md code.is-term::after {
+  content: '?';
+  font-size: .72em; font-weight: 700;
+  vertical-align: 1px; margin-left: 3px;
+  opacity: .55;
+}
+.term.is-open code.is-term::after { opacity: .9; }
+
+/* ------------------------------- popover ---------------------------------- */
+
+/* fixed vì panel có overflow-y: auto — absolute sẽ bị cắt khi cuộn. */
+.term-pop {
+  position: fixed;
+  z-index: 90;
+  display: block;
+  width: min(360px, calc(100vw - 20px));
+  background: var(--bg-2);
+  border: 1px solid var(--line-2);
+  border-radius: 10px;
+  box-shadow: 0 14px 40px rgba(0,0,0,.55);
+  padding: 11px 13px 12px;
+  font-family: var(--sans);
+  animation: term-in .12s ease-out;
+}
+@keyframes term-in {
+  from { opacity: 0; transform: translateY(-4px); }
+  to   { opacity: 1; transform: none; }
+}
+
+.term-arrow {
+  position: absolute;
+  top: -5px;
+  width: 9px; height: 9px;
+  margin-left: -4.5px;
+  background: var(--bg-2);
+  border-left: 1px solid var(--line-2);
+  border-top: 1px solid var(--line-2);
+  transform: rotate(45deg);
+}
+.term-pop.is-above .term-arrow {
+  top: auto; bottom: -5px;
+  border-left: none; border-top: none;
+  border-right: 1px solid var(--line-2);
+  border-bottom: 1px solid var(--line-2);
+}
+
+.term-head {
+  display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 8px;
+  margin-bottom: 6px;
+}
+.term-head strong {
+  color: #d9bfff;
+  font-size: calc(13px * var(--fs));
+  font-weight: 700;
+  font-family: var(--mono);
+}
+.term-alias {
+  color: var(--fg-3);
+  font-size: calc(10.5px * var(--fs));
+  font-style: normal;
+}
+
+.term-body {
+  display: block;
+  color: var(--fg-2);
+  font-size: calc(12.5px * var(--fs));
+  line-height: 1.62;
+}
+.term-p { display: block; margin: 0 0 .55em; }
+.term-p:last-child { margin-bottom: 0; }
+.term-body code {
+  background: #1e2536; color: #ffd089;
+  border-radius: 4px; padding: 1px 4px;
+  font-family: var(--mono); font-size: .88em;
+}
+
+.term-go {
+  display: inline-block;
+  margin-top: 9px;
+  background: rgba(196,160,255,.13);
+  border: 1px solid rgba(196,160,255,.32);
+  color: #d9bfff;
+  border-radius: 6px;
+  padding: 4px 10px;
+  font-size: calc(11px * var(--fs));
+  font-family: var(--sans);
+  cursor: pointer;
+}
+.term-go:hover { background: rgba(196,160,255,.24); border-color: #c4a0ff; color: #fff; }
+
+/* Mobile: bỏ dấu '?' cho đỡ rối, popover rộng gần hết màn. */
+@media (max-width: 900px) {
+  .md code.is-term::after { content: none; }
+  .term-pop { width: calc(100vw - 20px); padding: 12px 14px 13px; }
+}
+
+/* Tab prompt trước đây dùng inline code màu tím; nay màu tím dành riêng cho
+   thuật ngữ tra được, nên mọi inline code thường dùng chung màu hổ phách. */
+.md.ai-md code { background: #1e2536; color: #ffd089; }
+.md.ai-md pre code { background: none; color: #c8d3e8; }
+.md.ai-md code.is-term { background: rgba(196,160,255,.14); color: #e0ccff; }
+.md.ai-md .term:hover code.is-term { background: rgba(196,160,255,.26); color: #f2e9ff; }
+.md.ai-md .term.is-open code.is-term { background: rgba(196,160,255,.32); color: #fff; }
+
+/* Thuật ngữ nằm trong văn xuôi (rehypeGlossary chèn) — giữ font chữ thường,
+   chỉ đổi màu + gạch chân đứt nét, nên đọc liền mạch chứ không như code. */
+.term-kw {
+  color: #d9b8ff;
+  font-weight: 600;
+  border-bottom: 1px dashed rgba(196,160,255,.6);
+  padding-bottom: 0.5px;
+  transition: color .12s, background .12s;
+}
+.term:hover .term-kw {
+  color: #f0e4ff;
+  background: rgba(196,160,255,.16);
+  border-bottom-color: #c4a0ff;
+}
+.term.is-open .term-kw {
+  color: #fff;
+  background: rgba(196,160,255,.28);
+  border-bottom-style: solid;
+  border-bottom-color: #c4a0ff;
+}
+/* Thuật ngữ in đậm sẵn trong markdown thì đừng đậm thêm lần nữa. */
+.md strong .term-kw, .md b .term-kw { font-weight: inherit; }

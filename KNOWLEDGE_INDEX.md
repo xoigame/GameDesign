@@ -4,7 +4,7 @@
 > Đây là mục lục phẳng của toàn bộ kho kiến thức, dành cho AI agent (Codex / Claude Code)
 > đọc nhanh trước khi mở từng file `content/**/*.md` chi tiết.
 
-Cập nhật: `2026-09-11T07:57:10.132Z` · 81 node · 68 deep · 13 stub · 101452 từ
+Cập nhật: `2026-09-11T08:26:14.099Z` · 81 node · 68 deep · 13 stub · 101452 từ
 
 Mức độ: **29 cơ bản** · 36 trung cấp · 16 chuyên sâu
 
