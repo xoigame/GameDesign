@@ -37,6 +37,7 @@ Thêm một file `.md` → node tự xuất hiện trên mindmap, tự vào mụ
 
 ## Tính năng web
 
+- **Ba chế độ ngôn ngữ** — VI · EN · VI·EN (song ngữ hai cột). Node chưa dịch tự lùi về bản gốc kèm thông báo
 - **Lộ trình đọc 1→58** — mỗi node có số thứ tự; panel có nút ← → để đi tiếp đúng thứ tự
 - **Chỉnh cỡ chữ** — nút A− / A+ (90%–150%), nhớ lựa chọn, vùng chạm 42px trên điện thoại
 - **Sơ đồ minh hoạ** — SVG nội tuyến trong markdown, tự đổi màu theo theme, cuộn ngang trên màn hẹp
@@ -87,6 +88,24 @@ Sidebar mở sẵn tab **Lộ trình** — danh sách 1→58 theo thứ tự nê
 Giai đoạn A+B (15 node, tất cả đều ● cơ bản) là **phần tối thiểu để bắt đầu giao việc cho AI**. Các giai đoạn sau tra khi cần, không phải đọc tuần tự.
 
 `read` trong frontmatter là **khoá sắp xếp thưa** (bội số 10), không phải số hiển thị — chèn node mới vào khe trống mà không phải đánh số lại cả kho.
+
+## Đa ngữ
+
+Bản gốc viết bằng tiếng Việt. Bản dịch nằm ở file song song:
+
+```
+content/01-foundations/core-loop.md      ← bản gốc (vi)
+content/01-foundations/core-loop.en.md   ← bản tiếng Anh
+```
+
+Chuyển chế độ bằng nút **VI / EN / VI·EN** ở góc trên sidebar. Chế độ song ngữ
+mở panel rộng ra và xếp hai bản cạnh nhau — tiện để tra thuật ngữ.
+
+File dịch **chỉ chứa phần chữ** (`title` + `summary` + nội dung). Cấu trúc cây, thứ tự
+đọc, mức độ, tag đều chỉ lấy từ file gốc, nên thiếu bản dịch không làm hỏng gì —
+UI tự lùi về bản gốc và gắn chip `EN ✕`.
+
+Prompt nhờ AI dịch một node có sẵn trong [`content/_SCHEMA.md`](content/_SCHEMA.md).
 
 ## Nạp sách vào kho
 

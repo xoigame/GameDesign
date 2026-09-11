@@ -5,6 +5,7 @@ import rehypeRaw from 'rehype-raw'
 import { buildAiContext } from '../lib/aiContext.js'
 import { LEVEL_VI, LEVEL_GLYPH, LEVEL_HINT } from '../lib/levels.js'
 import { FONT_STEPS } from '../App.jsx'
+import { t, field, text as tx, hasTranslation } from '../lib/i18n.js'
 
 /** Biến link `#id` (từ wiki-link [[id]]) thành nút điều hướng trong app. */
 const mdComponents = (onSelect) => ({
@@ -21,15 +22,17 @@ const mdComponents = (onSelect) => ({
   },
 })
 
-/** Đổi [[id]] thành link markdown trỏ tới node tương ứng. */
-const linkify = (text, nodesById) =>
-  text.replace(/\[\[([A-Za-z0-9-]+)\]\]/g, (m, id) => {
-    const t = nodesById.get(id)
-    return t ? `[${t.title}](#${t.id})` : m
+/** Đổi [[id]] thành link markdown trỏ tới node tương ứng, tiêu đề theo ngôn ngữ. */
+const linkify = (content, nodesById, lang) =>
+  content.replace(/\[\[([A-Za-z0-9-]+)\]\]/g, (m, id) => {
+    const target = nodesById.get(id)
+    if (!target) return m
+    const label = tx(target, 'title', lang === 'both' ? 'vi' : lang)
+    return `[${label}](#${target.id})`
   })
 
 export default function DetailPanel({
-  node, nodesById, relations, readingPath, fontScale, setFontScale, onSelect, onClose,
+  node, nodesById, relations, readingPath, fontScale, setFontScale, lang, onSelect, onClose,
 }) {
   const [copied, setCopied] = useState('')
   const [tab, setTab] = useState('doc')
@@ -66,11 +69,20 @@ export default function DetailPanel({
     return chain
   }, [node, nodesById])
 
-  const body = useMemo(() => linkify(node.body, nodesById), [node, nodesById])
-  const aiPrompt = useMemo(
-    () => (node.aiPrompt ? linkify(node.aiPrompt, nodesById) : ''), [node, nodesById])
-  const unity = useMemo(
-    () => (node.unity ? linkify(node.unity, nodesById) : ''), [node, nodesById])
+  const hasEn = hasTranslation(node, 'en')
+  const en = node.i18n && node.i18n.en
+
+  /** Lấy nội dung một mục theo chế độ ngôn ngữ hiện tại. */
+  const pick = (key) => {
+    if (lang === 'en' && en && en[key]) return linkify(en[key], nodesById, lang)
+    return node[key] ? linkify(node[key], nodesById, lang) : ''
+  }
+  const pickEn = (key) => (en && en[key] ? linkify(en[key], nodesById, 'en') : '')
+  const pickVi = (key) => (node[key] ? linkify(node[key], nodesById, 'vi') : '')
+
+  const body = useMemo(() => pick('body'), [node, nodesById, lang])
+  const aiPrompt = useMemo(() => pick('aiPrompt'), [node, nodesById, lang])
+  const unity = useMemo(() => pick('unity'), [node, nodesById, lang])
 
   const linked = useMemo(() => {
     const ids = new Set()
@@ -99,42 +111,82 @@ export default function DetailPanel({
   }
 
   const TABS = [
-    { id: 'doc', label: 'Nội dung', on: true },
-    { id: 'prompt', label: '🤖 Prompt cho AI', on: true },
-    { id: 'unity', label: '🎮 Unity', on: !!node.unity },
-  ].filter((t) => t.on)
+    { id: 'doc', label: t('tabDoc', lang), on: true },
+    { id: 'prompt', label: t('tabPrompt', lang), on: true },
+    { id: 'unity', label: t('tabUnity', lang), on: !!node.unity },
+  ].filter((x) => x.on)
 
-  const md = (text) => (
+  const md = (content) => (
     <ReactMarkdown remarkPlugins={[remarkGfm]} rehypePlugins={[rehypeRaw]}
                    components={mdComponents(onSelect)}>
-      {text}
+      {content}
     </ReactMarkdown>
   )
+
+  /**
+   * Hiển thị một mục theo chế độ ngôn ngữ.
+   * 'both' → hai cột cạnh nhau (tự xếp chồng trên màn hẹp).
+   * 'en' mà node chưa dịch → hiện bản gốc kèm thông báo, không để trống.
+   */
+  const renderPane = (key, extraClass = '') => {
+    if (lang === 'both') {
+      const enText = pickEn(key)
+      return (
+        <div className={'bi ' + extraClass}>
+          <div className="bi-col">
+            <span className="bi-tag">VI</span>
+            <div className="md">{md(pickVi(key))}</div>
+          </div>
+          <div className="bi-col">
+            <span className="bi-tag is-en">EN</span>
+            {enText
+              ? <div className="md">{md(enText)}</div>
+              : <p className="empty">{t('notTranslated', 'vi')}</p>}
+          </div>
+        </div>
+      )
+    }
+    const content = pick(key)
+    return (
+      <>
+        {lang === 'en' && !hasEn && (
+          <p className="lang-note">{t('notTranslated', lang)}</p>
+        )}
+        <div className={'md ' + extraClass}>{md(content)}</div>
+      </>
+    )
+  }
 
   return (
     <aside className="panel" style={{ '--accent': node.color }}>
       <div className="panel-head">
         <div className="crumbs">
           {breadcrumb.map((b) => (
-            <button key={b.id} className="crumb" onClick={() => onSelect(b.id)}>{b.title}</button>
+            <button key={b.id} className="crumb" onClick={() => onSelect(b.id)}>{tx(b, 'title', lang === 'both' ? 'vi' : lang)}</button>
           ))}
         </div>
-        <div className="fs-ctl" role="group" aria-label="Cỡ chữ">
+        <div className="fs-ctl" role="group" aria-label={t('fontSize', lang)}>
           <button onClick={() => stepFont(-1)} disabled={fsIndex <= 0}
-                  title="Chữ nhỏ hơn" aria-label="Chữ nhỏ hơn">A−</button>
-          <span className="fs-val" title="Cỡ chữ hiện tại">{Math.round(fontScale * 100)}%</span>
+                  title={t('fontSize', lang) + ' −'} aria-label={t('fontSize', lang) + ' −'}>A−</button>
+          <span className="fs-val" title={t('fontSize', lang)}>{Math.round(fontScale * 100)}%</span>
           <button onClick={() => stepFont(1)} disabled={fsIndex >= FONT_STEPS.length - 1}
-                  title="Chữ to hơn" aria-label="Chữ to hơn">A+</button>
+                  title={t('fontSize', lang) + ' +'} aria-label={t('fontSize', lang) + ' +'}>A+</button>
         </div>
-        <button className="icon-btn" onClick={onClose} title="Đóng (Esc)">✕</button>
+        <button className="icon-btn" onClick={onClose} title={t('closeEsc', lang)}>✕</button>
       </div>
 
       <h1 className="panel-title">
         {node.icon ? <span className="panel-icon">{node.icon}</span> : null}
-        {node.title}
+        {tx(node, 'title', lang === 'both' ? 'vi' : lang)}
       </h1>
 
-      {node.summary ? <p className="panel-summary">{node.summary}</p> : null}
+      {lang === 'both' && field(node, 'title', 'en').translated && (
+        <p className="panel-title-en">{field(node, 'title', 'en').text}</p>
+      )}
+
+      {tx(node, 'summary', lang === 'both' ? 'vi' : lang)
+        ? <p className="panel-summary">{tx(node, 'summary', lang === 'both' ? 'vi' : lang)}</p>
+        : null}
 
       <div className="panel-meta">
         <span className="chip read" title="Thứ tự trong lộ trình đọc">#{node.readIndex}</span>
@@ -142,10 +194,13 @@ export default function DetailPanel({
           {LEVEL_GLYPH[node.level] || '·'} {LEVEL_VI[node.level] || 'chưa phân loại'}
         </span>
         <span className={'chip status-' + node.status}>
-          {node.status === 'deep' ? 'đã viết sâu' : 'stub'}
+          {node.status === 'deep' ? t('statusDeep', lang) : t('statusStub', lang)}
         </span>
-        {node.tags.map((t) => <span key={t} className="chip">#{t}</span>)}
-        <span className="chip ghost">{node.words} từ</span>
+        {node.tags.map((tag) => <span key={tag} className="chip">#{tag}</span>)}
+        <span className="chip ghost">{node.words} {t('words', lang)}</span>
+        {!hasEn && (
+          <span className="chip untranslated" title={t('notTranslated', 'vi')}>EN ✕</span>
+        )}
         <code className="chip path">content/{node.path}</code>
       </div>
 
@@ -165,20 +220,20 @@ export default function DetailPanel({
         <>
           <div className="panel-actions">
             <button className="btn" onClick={() => copy('node')}>
-              {copied === 'node' ? '✓ Đã copy' : 'Copy cho AI'}
+              {copied === 'node' ? t('copied', lang) : t('copyForAi', lang)}
             </button>
             {children.length > 0 && (
               <button className="btn ghost" onClick={() => copy('subtree')}>
-                {copied === 'subtree' ? '✓ Đã copy' : `Copy cả nhánh (${children.length})`}
+                {copied === 'subtree' ? t('copied', lang) : `${t('copyBranch', lang)} (${children.length})`}
               </button>
             )}
             {copied === 'err' && (
-              <span className="copy-err">Không copy được — hãy dùng HTTPS/localhost</span>
+              <span className="copy-err">{t('copyErr', lang)}</span>
             )}
           </div>
-          <div className="panel-body md">
+          <div className="panel-body">
             {body
-              ? md(body)
+              ? renderPane('body')
               : <p className="empty">
                   Node này chưa có nội dung. Mở <code>content/{node.path}</code> và viết thêm.
                 </p>}
@@ -189,49 +244,42 @@ export default function DetailPanel({
       {tab === 'prompt' && (
         <section className="tab-pane ai-pane">
           <div className="pane-head">
-            <p className="pane-hint">
-              Cách diễn đạt yêu cầu cho chủ đề này để AI hiểu đúng ý — phải nêu rõ gì,
-              mẫu prompt, và bẫy thường gặp.
-            </p>
+            <p className="pane-hint">{t('promptHint', lang)}</p>
             {aiPrompt && (
               <button className="btn" onClick={() => copy('prompt')}>
-                {copied === 'prompt' ? '✓ Đã copy' : 'Copy mục này'}
+                {copied === 'prompt' ? t('copied', lang) : t('copySection', lang)}
               </button>
             )}
           </div>
-          <div className="md ai-md">
-            {aiPrompt
-              ? md(aiPrompt)
-              : <p className="empty">
-                  Chưa có. Thêm mục <code>## 🤖 Prompt cho AI</code> vào cuối
-                  <code> content/{node.path}</code>.
-                </p>}
-          </div>
+          {aiPrompt
+            ? renderPane('aiPrompt', 'ai-md')
+            : <p className="empty">
+                Chưa có. Thêm mục <code>## 🤖 Prompt cho AI</code> vào cuối
+                <code> content/{node.path}</code>.
+              </p>}
         </section>
       )}
 
       {tab === 'unity' && (
         <section className="tab-pane unity-pane">
           <div className="pane-head">
-            <p className="pane-hint">
-              Hiện thực hoá bước này trong Unity — component nào, đặt ở đâu, code mẫu.
-            </p>
+            <p className="pane-hint">{t('unityHint', lang)}</p>
             <button className="btn" onClick={() => copy('unity')}>
-              {copied === 'unity' ? '✓ Đã copy' : 'Copy mục này'}
+              {copied === 'unity' ? t('copied', lang) : t('copySection', lang)}
             </button>
           </div>
-          <div className="md unity-md">{md(unity)}</div>
+          {renderPane('unity', 'unity-md')}
         </section>
       )}
 
       {children.length > 0 && (
         <section className="panel-section">
-          <h3>Node con</h3>
+          <h3>{t('children', lang)}</h3>
           <div className="pill-row">
             {children.map((c) => (
               <button key={c.id} className="pill" style={{ '--accent': c.color }}
                       onClick={() => onSelect(c.id)}>
-                {c.icon ? c.icon + ' ' : ''}{c.title}
+                {c.icon ? c.icon + ' ' : ''}{tx(c, 'title', lang === 'both' ? 'vi' : lang)}
                 {c.status === 'stub' && <span className="pill-dot" />}
               </button>
             ))}
@@ -241,7 +289,7 @@ export default function DetailPanel({
 
       {node.refs.length > 0 && (
         <section className="panel-section">
-          <h3>Nguồn tham khảo</h3>
+          <h3>{t('refs', lang)}</h3>
           <ul className="ref-list">
             {node.refs.map((r) => <li key={r}>{r}</li>)}
           </ul>
@@ -250,18 +298,18 @@ export default function DetailPanel({
 
       {(prev || next) && (
         <section className="panel-section">
-          <h3>Lộ trình đọc</h3>
+          <h3>{t('readingPath', lang)}</h3>
           <div className="path-nav">
             {prev
               ? <button className="pathnav-btn" onClick={() => onSelect(prev.id)}>
                   <span className="pn-dir">← #{prev.readIndex}</span>
-                  <span className="pn-title">{prev.title}</span>
+                  <span className="pn-title">{tx(prev, 'title', lang === 'both' ? 'vi' : lang)}</span>
                 </button>
               : <span />}
             {next && (
               <button className="pathnav-btn next" onClick={() => onSelect(next.id)}>
                 <span className="pn-dir">#{next.readIndex} →</span>
-                <span className="pn-title">{next.title}</span>
+                <span className="pn-title">{tx(next, 'title', lang === 'both' ? 'vi' : lang)}</span>
               </button>
             )}
           </div>
@@ -270,12 +318,12 @@ export default function DetailPanel({
 
       {linked.length > 0 && (
         <section className="panel-section">
-          <h3>Liên quan</h3>
+          <h3>{t('related', lang)}</h3>
           <div className="pill-row">
             {linked.map((c) => (
               <button key={c.id} className="pill" style={{ '--accent': c.color }}
                       onClick={() => onSelect(c.id)}>
-                {c.title}
+                {tx(c, 'title', lang === 'both' ? 'vi' : lang)}
               </button>
             ))}
           </div>

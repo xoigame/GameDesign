@@ -1,12 +1,19 @@
 import { memo } from 'react'
 import { Handle, Position } from '@xyflow/react'
 import { LEVEL_VI, LEVEL_GLYPH } from '../lib/levels.js'
+import { text as tx, field } from '../lib/i18n.js'
 
 function MindNode({ data }) {
   const {
     node, side, isRoot, isSelected, onPath, dimmed,
-    collapsed, childCount, onToggle,
+    collapsed, childCount, onToggle, lang,
   } = data
+
+  // Trên mindmap luôn hiện MỘT tiêu đề cho gọn; chế độ song ngữ dùng bản gốc
+  // và đưa bản dịch vào tooltip.
+  const primary = lang === 'en' ? 'en' : 'vi'
+  const title = tx(node, 'title', primary)
+  const alt = lang === 'both' ? field(node, 'title', 'en') : null
 
   const cls = [
     'mind-node',
@@ -21,7 +28,8 @@ function MindNode({ data }) {
 
   const tip =
     '#' + node.readIndex + ' · ' + LEVEL_VI[node.level] +
-    (node.summary ? '\n' + node.summary : '')
+    (alt && alt.translated ? '\n' + alt.text : '') +
+    (node.summary ? '\n' + tx(node, 'summary', primary) : '')
 
   return (
     <div className={cls} style={{ '--accent': node.color }} title={tip}>
@@ -33,7 +41,7 @@ function MindNode({ data }) {
       <span className="mn-bar" />
       <span className="mn-num" title={'Thứ tự đọc: ' + node.readIndex}>{node.readIndex}</span>
       {node.icon ? <span className="mn-icon">{node.icon}</span> : null}
-      <span className="mn-title">{node.title}</span>
+      <span className="mn-title">{title}</span>
 
       <span className="mn-lv" title={LEVEL_VI[node.level]}>{LEVEL_GLYPH[node.level] || '·'}</span>
       {node.status === 'stub' && <span className="mn-dot" title="Stub — chưa viết sâu" />}

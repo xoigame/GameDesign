@@ -56,6 +56,14 @@ Mục `## 🤖 Prompt cho AI` **bắt buộc có ở mọi node** — build tác
 
 Cây node **suy ra từ cây thư mục** — không khai báo ở đâu khác. Quy ước đầy đủ: `content/_SCHEMA.md`.
 
+## Đa ngữ
+
+Bản gốc tiếng Việt là nguồn chân lý. Bản dịch ở file song song `<tên>.en.md` cùng thư mục, chỉ chứa `title` + `summary` trong frontmatter — mọi metadata khác (`read`, `level`, `tags`, `related`) chỉ nằm ở file gốc.
+
+Trong file dịch dùng `## 🤖 Prompt for AI` (build nhận cả hai ngôn ngữ). SVG trong bản dịch phải đổi id của `<marker>/<defs>` (thêm hậu tố `-en`) vì cả hai bản cùng hiện trên một trang ở chế độ song ngữ.
+
+Đổi tên file gốc thì đổi luôn file dịch — build cảnh báo "bản dịch mồ côi".
+
 ## Mục Unity
 
 Node hiện thực hoá được trong Unity thì có mục `## 🎮 Unity` ở cuối (sau mục 🤖). Build tách thành `node.unity`, web hiện thành tab thứ ba. **Không bắt buộc** — node lý thuyết thì bỏ qua. Code trong mục này phải chạy được, không phải giả mã. Cấu trúc đầy đủ ở `content/_SCHEMA.md`.

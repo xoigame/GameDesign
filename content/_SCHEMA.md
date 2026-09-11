@@ -175,6 +175,63 @@ Một câu: trong Unity, điểm mấu chốt của bước này là gì.
 - Sơ đồ setup (Hierarchy / Inspector) dùng `<figure class="fig">` như mọi hình khác —
   xem mục Hình minh hoạ ở trên.
 
+## Bản dịch — file song song
+
+Kho viết gốc bằng tiếng Việt. Bản dịch nằm ở **file song song** cùng thư mục:
+
+```
+content/01-foundations/core-loop.md       ← bản gốc (tiếng Việt)
+content/01-foundations/core-loop.en.md    ← bản tiếng Anh
+```
+
+Web có 3 chế độ: **VI** · **EN** · **VI·EN** (song ngữ hai cột).
+
+**File dịch chỉ chứa phần chữ.** Frontmatter chỉ cần `title` và `summary`:
+
+```markdown
+---
+title: Core Loop
+summary: The chain of actions a player repeats constantly — …
+---
+
+Nội dung dịch…
+
+## 🤖 Prompt for AI
+
+…
+```
+
+Mọi thứ khác (`id`, `read`, `level`, `tags`, `related`, `order`, vị trí trên
+mindmap) **chỉ lấy từ file gốc**. Nhờ vậy thiếu bản dịch không bao giờ làm hỏng
+graph — UI tự lùi về bản gốc kèm thông báo, và node hiện chip `EN ✕`.
+
+**Tiêu đề mục trong file dịch:** dùng `## 🤖 Prompt for AI` (build nhận cả hai
+ngôn ngữ). Mục `## 🎮 Unity` giữ nguyên tên.
+
+**Đổi tên file gốc thì nhớ đổi cả file dịch** — build cảnh báo "bản dịch mồ côi"
+nếu `.en.md` không có file `.md` tương ứng.
+
+### Nhờ AI dịch
+
+```
+Dịch content/<đường-dẫn>.md sang tiếng Anh, ghi ra <đường-dẫn>.en.md
+
+Quy tắc:
+- Frontmatter CHỈ giữ title và summary. Bỏ read/level/tags/related/order/refs.
+- Giữ NGUYÊN cấu trúc heading, bảng, code block, và mọi [[wiki-link]].
+- Giữ nguyên thuật ngữ chuyên ngành tiếng Anh đã có (core loop, hitstop…).
+- Đổi `## 🤖 Prompt cho AI` thành `## 🤖 Prompt for AI`. Giữ `## 🎮 Unity`.
+- SVG trong <figure>: dịch phần <text>, GIỮ NGUYÊN toạ độ và class.
+  Đổi id của <marker>/<defs> thêm hậu tố -en để không trùng với bản gốc.
+- KHÔNG để dòng trống bên trong <figure>.
+- Dịch cho người đọc là lập trình viên game, không dịch word-by-word.
+
+Xong thì chạy `npm run check`.
+```
+
+Dòng về `id` của `<marker>` quan trọng: hai bản cùng hiện trên một trang ở chế
+độ song ngữ, id trùng sẽ làm mũi tên biến mất ở một trong hai cột.
+
 ## Liên kết trong nội dung
 
 Viết `[[id-cua-node]]` ở bất kỳ đâu trong thân bài. Build sẽ:

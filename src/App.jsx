@@ -4,6 +4,7 @@ import MindMap from './components/MindMap.jsx'
 import Sidebar from './components/Sidebar.jsx'
 import DetailPanel from './components/DetailPanel.jsx'
 import { buildFullExport, buildPromptPlaybook } from './lib/aiContext.js'
+import { t } from './lib/i18n.js'
 
 const norm = (s) =>
   String(s || '').toLowerCase().normalize('NFD')
@@ -12,6 +13,14 @@ const norm = (s) =>
 
 /** Các mức cỡ chữ cho phần đọc. 1 = mặc định. */
 export const FONT_STEPS = [0.9, 1, 1.15, 1.3, 1.5]
+
+function readLang() {
+  try {
+    const v = localStorage.getItem('gdb:lang')
+    if (v === 'vi' || v === 'en' || v === 'both') return v
+  } catch { /* private mode */ }
+  return 'vi'
+}
 
 function readFontScale() {
   try {
@@ -22,9 +31,9 @@ function readFontScale() {
 }
 
 const MODES = [
-  { id: 'mindmap', label: 'Mindmap', hint: 'Toả hai bên quanh gốc' },
-  { id: 'tree', label: 'Cây', hint: 'Trái sang phải' },
-  { id: 'radial', label: 'Toả tròn', hint: 'Vòng tròn quanh gốc' },
+  { id: 'mindmap', key: 'modeMindmap', hint: 'Toả hai bên quanh gốc' },
+  { id: 'tree', key: 'modeTree', hint: 'Trái sang phải' },
+  { id: 'radial', key: 'modeRadial', hint: 'Vòng tròn quanh gốc' },
 ]
 
 export default function App() {
@@ -39,6 +48,12 @@ export default function App() {
   const [showRelations, setShowRelations] = useState(false)
   const [navOpen, setNavOpen] = useState(false)   // drawer sidebar trên mobile
   const [fontScale, setFontScale] = useState(readFontScale)
+  const [lang, setLang] = useState(readLang)
+
+  useEffect(() => {
+    try { localStorage.setItem('gdb:lang', lang) } catch { /* private mode */ }
+    document.documentElement.lang = lang === 'en' ? 'en' : 'vi'
+  }, [lang])
   const searchRef = useRef(null)
 
   // Cỡ chữ áp qua biến CSS --fs; mọi rule chữ trong panel nhân với nó.
@@ -82,9 +97,12 @@ export default function App() {
       if (hasL && !activeLevels.has(n.level)) continue
       if (hasT && !n.tags.some((t) => activeTags.has(t))) continue
       if (hasQ) {
+        // luôn tìm trên CẢ HAI ngôn ngữ: gõ "behavior tree" phải ra kết quả
+        // kể cả khi đang xem bản tiếng Việt
+        const en = n.i18n.en
         const hay = norm(
-          n.title + ' ' + n.summary + ' ' + n.tags.join(' ') + ' ' +
-          n.id + ' ' + n.body + ' ' + n.aiPrompt
+          [n.title, n.summary, n.tags.join(' '), n.id, n.body, n.aiPrompt, n.unity,
+           en && en.title, en && en.summary, en && en.body].filter(Boolean).join(' ')
         )
         if (!hay.includes(q)) continue
       }
@@ -205,12 +223,12 @@ export default function App() {
       </div>
     )
   }
-  if (!graph) return <div className="boot"><span className="spinner" />Đang nạp kho kiến thức…</div>
+  if (!graph) return <div className="boot"><span className="spinner" />{t('loading', lang)}</div>
 
   const selected = selectedId ? nodesById.get(selectedId) : null
 
   return (
-    <div className={'app' + (selected ? ' has-panel' : '') + (navOpen ? ' nav-open' : '')}>
+    <div className={'app' + (selected ? ' has-panel' : '') + (navOpen ? ' nav-open' : '') + (lang === 'both' ? ' lang-both' : '')}>
       {navOpen && (
         <button className="scrim" onClick={() => setNavOpen(false)} aria-label="Đóng menu" />
       )}
@@ -228,6 +246,8 @@ export default function App() {
         toggleTag={toggleTag}
         activeLevels={activeLevels}
         toggleLevel={toggleLevel}
+        lang={lang}
+        setLang={setLang}
         collapsed={collapsed}
         onToggle={toggle}
         matchSet={matchSet}
@@ -240,7 +260,7 @@ export default function App() {
           className="nav-toggle"
           onClick={() => setNavOpen((v) => !v)}
           aria-label="Mở danh mục"
-          title="Danh mục · lộ trình đọc"
+          title={t('openMenu', lang)}
         >☰</button>
 
         <div className="topbar">
@@ -251,17 +271,17 @@ export default function App() {
                 className={mode === m.id ? 'on' : ''}
                 onClick={() => setMode(m.id)}
                 title={m.hint}
-              >{m.label}</button>
+              >{t(m.key, lang)}</button>
             ))}
           </div>
           <div className="topbar-right">
-            <button className="tbtn" onClick={expandAll} title="Mở hết">⤢ Mở hết</button>
-            <button className="tbtn" onClick={collapseAll} title="Thu gọn hết">⤡ Thu gọn</button>
+            <button className="tbtn" onClick={expandAll} title="Mở hết">{t('expandAll', lang)}</button>
+            <button className="tbtn" onClick={collapseAll} title="Thu gọn hết">{t('collapseAll', lang)}</button>
             <button
               className={'tbtn' + (showRelations ? ' on' : '')}
               onClick={() => setShowRelations((v) => !v)}
               title="Hiện TẤT CẢ liên kết ngang. Mặc định chỉ hiện liên kết của node đang chọn."
-            >⇢ Mọi liên kết</button>
+            >{t('allRelations', lang)}</button>
           </div>
         </div>
 
@@ -277,6 +297,7 @@ export default function App() {
             mode={mode}
             keepSet={keepSet}
             showRelations={showRelations}
+            lang={lang}
           />
         </ReactFlowProvider>
       </main>
@@ -289,6 +310,7 @@ export default function App() {
           readingPath={graph.readingPath}
           fontScale={fontScale}
           setFontScale={setFontScale}
+          lang={lang}
           onSelect={select}
           onClose={() => setSelectedId(null)}
         />

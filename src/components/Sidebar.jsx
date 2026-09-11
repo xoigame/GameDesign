@@ -1,11 +1,12 @@
 import { useMemo, useState } from 'react'
 import { LEVELS, LEVEL_VI, LEVEL_GLYPH, LEVEL_HINT } from '../lib/levels.js'
+import { LANG_MODES, t, text as tx } from '../lib/i18n.js'
 
 export default function Sidebar({
   graph, nodesById, rootId, selectedId, onSelect,
   query, setQuery, searchRef, activeTags, toggleTag,
   collapsed, onToggle, matchSet, onExport, onExportPlaybook,
-  activeLevels, toggleLevel,
+  activeLevels, toggleLevel, lang, setLang,
 }) {
   const [tab, setTab] = useState('path')
   const root = nodesById.get(rootId)
@@ -39,7 +40,7 @@ export default function Sidebar({
             >▸</button>
           ) : <span className="tree-caret placeholder" />}
           <span className="tree-dot" />
-          <span className="tree-label">{n.icon ? n.icon + ' ' : ''}{n.title}</span>
+          <span className="tree-label">{n.icon ? n.icon + ' ' : ''}{tx(n, 'title', lang)}</span>
           {n.status === 'stub' && <span className="tree-stub" title="stub">·</span>}
         </div>
         {isOpen && n.children.map((c) => <TreeItem key={c} id={c} depth={depth + 1} />)}
@@ -52,10 +53,21 @@ export default function Sidebar({
       <header className="side-head">
         <div className="brand">
           <span className="brand-mark">🧠</span>
-          <div>
+          <div className="brand-text">
             <strong>GameDesign Brain</strong>
             <small>Game Design &amp; AI in Games</small>
           </div>
+        </div>
+        <div className="lang-switch" role="group" aria-label={t('langTitle', lang)}>
+          {LANG_MODES.map((m) => (
+            <button
+              key={m.id}
+              className={lang === m.id ? 'on' : ''}
+              onClick={() => setLang(m.id)}
+              title={m.title}
+              aria-pressed={lang === m.id}
+            >{m.label}</button>
+          ))}
         </div>
       </header>
 
@@ -63,7 +75,7 @@ export default function Sidebar({
         <input
           ref={searchRef}
           className="search"
-          placeholder="Tìm kiến thức…  ( / )"
+          placeholder={t('searchPlaceholder', lang)}
           value={query}
           onChange={(e) => setQuery(e.target.value)}
         />
@@ -98,15 +110,15 @@ export default function Sidebar({
       </div>
 
       <div className="tabs">
-        <button className={tab === 'path' ? 'on' : ''} onClick={() => setTab('path')}>Lộ trình</button>
-        <button className={tab === 'tree' ? 'on' : ''} onClick={() => setTab('tree')}>Cây</button>
-        <button className={tab === 'branch' ? 'on' : ''} onClick={() => setTab('branch')}>Nhánh</button>
+        <button className={tab === 'path' ? 'on' : ''} onClick={() => setTab('path')}>{t('tabPath', lang)}</button>
+        <button className={tab === 'tree' ? 'on' : ''} onClick={() => setTab('tree')}>{t('tabTree', lang)}</button>
+        <button className={tab === 'branch' ? 'on' : ''} onClick={() => setTab('branch')}>{t('tabBranch', lang)}</button>
       </div>
 
       <div className="side-scroll">
         {matchSet ? (
           <div className="results">
-            <div className="results-head">{matchSet.size} kết quả</div>
+            <div className="results-head">{matchSet.size} {t('results', lang)}</div>
             {results.map((n) => (
               <div
                 key={n.id}
@@ -114,11 +126,11 @@ export default function Sidebar({
                 style={{ '--accent': n.color }}
                 onClick={() => onSelect(n.id)}
               >
-                <div className="result-title"><span className="path-num">{n.readIndex}</span>{n.icon ? ' ' + n.icon : ''} {n.title}</div>
-                {n.summary && <div className="result-sum">{n.summary}</div>}
+                <div className="result-title"><span className="path-num">{n.readIndex}</span>{n.icon ? ' ' + n.icon : ''} {tx(n, 'title', lang)}</div>
+                {tx(n, 'summary', lang) && <div className="result-sum">{tx(n, 'summary', lang)}</div>}
               </div>
             ))}
-            {!results.length && <div className="empty">Không tìm thấy gì.</div>}
+            {!results.length && <div className="empty">{t('noResults', lang)}</div>}
           </div>
         ) : tab === 'path' ? (
           <div className="path-list">
@@ -131,13 +143,13 @@ export default function Sidebar({
                   className={'path-item lv-' + (n.level || 'none') + (id === selectedId ? ' is-active' : '')}
                   style={{ '--accent': n.color }}
                   onClick={() => onSelect(id)}
-                  title={n.summary}
+                  title={tx(n, 'summary', lang)}
                 >
                   <span className="path-num">{n.readIndex}</span>
                   <span className="path-glyph" title={LEVEL_VI[n.level]}>
                     {LEVEL_GLYPH[n.level] || '·'}
                   </span>
-                  <span className="path-label">{n.icon ? n.icon + ' ' : ''}{n.title}</span>
+                  <span className="path-label">{n.icon ? n.icon + ' ' : ''}{tx(n, 'title', lang)}</span>
                   {n.status === 'stub' && <span className="tree-stub" title="stub">·</span>}
                 </div>
               )
@@ -160,8 +172,8 @@ export default function Sidebar({
                 >
                   <span className="branch-icon">{b.icon || '◆'}</span>
                   <span className="branch-main">
-                    <strong>{b.title}</strong>
-                    <small>{b.summary || `${count} node`}</small>
+                    <strong>{tx(b, 'title', lang)}</strong>
+                    <small>{tx(b, 'summary', lang) || `${count} node`}</small>
                   </span>
                   <span className="branch-count">{count}</span>
                 </button>
@@ -173,21 +185,21 @@ export default function Sidebar({
 
       <footer className="side-foot">
         <div className="stats">
-          <span><b>{graph.stats.nodes}</b> node</span>
-          <span><b>{graph.stats.deep}</b> deep</span>
-          <span><b>{graph.stats.stub}</b> stub</span>
-          <span><b>{graph.stats.words.toLocaleString('vi-VN')}</b> từ</span>
+          <span><b>{graph.stats.nodes}</b> {t('node', lang)}</span>
+          <span><b>{graph.stats.deep}</b> {t('deep', lang)}</span>
+          <span><b>{graph.stats.stub}</b> {t('stub', lang)}</span>
+          <span><b>{graph.stats.words.toLocaleString('vi-VN')}</b> {t('words', lang)}</span>
         </div>
         <button
           className="btn wide"
           onClick={onExportPlaybook}
-          title="Chỉ phần hướng dẫn viết prompt của mọi node — nhỏ gọn, dán thẳng vào chat"
-        >🤖 Xuất playbook prompt (.md)</button>
+          title={t('exportPlaybookTitle', lang)}
+        >{t('exportPlaybook', lang)}</button>
         <button
           className="btn ghost wide"
           onClick={onExport}
-          title="Toàn bộ kiến thức + prompt — dùng khi AI không đọc được ổ đĩa"
-        >⭳ Xuất toàn bộ kho (.md)</button>
+          title={t('exportAllTitle', lang)}
+        >{t('exportAll', lang)}</button>
       </footer>
     </aside>
   )

@@ -4,7 +4,7 @@
 > Đây là mục lục phẳng của toàn bộ kho kiến thức, dành cho AI agent (Codex / Claude Code)
 > đọc nhanh trước khi mở từng file `content/**/*.md` chi tiết.
 
-Cập nhật: `2026-09-11T03:41:56.693Z` · 58 node · 45 deep · 13 stub · 36552 từ
+Cập nhật: `2026-09-11T03:54:21.871Z` · 58 node · 45 deep · 13 stub · 36552 từ
 
 Mức độ: **21 cơ bản** · 25 trung cấp · 12 chuyên sâu
 
@@ -76,10 +76,10 @@ thức cơ bản (ai cũng nên đọc), trung cấp (cần nền), hay chuyên 
 
 ## Cây kiến thức
 
-- ● `#1` **GameDesign Brain** `#root` 🤖 — Kho kiến thức mindmap về Game Design và AI trong game — đồng thời là bộ não thiết kế cho AI agent đọc trước khi sinh code. → `content/index.md`
+- ● `#1` **GameDesign Brain** `#root` 🤖 🇬🇧 — Kho kiến thức mindmap về Game Design và AI trong game — đồng thời là bộ não thiết kế cho AI agent đọc trước khi sinh code. → `content/index.md`
   - ● `#2` **Nền tảng Game Design** `#foundations` 🤖 — Những nguyên lý phải nắm trước khi viết dòng code đầu tiên — core loop, động lực người chơi, MDA, game feel. → `content/01-foundations/index.md`
-    - ● `#3` **Design Pillars** `#design-pillars` 🤖 — Ba câu định nghĩa game của bạn — công cụ ra quyết định, và là thứ đầu tiên AI agent cần đọc. → `content/01-foundations/design-pillars.md`
-    - ● `#4` **Core Loop** `#core-loop` 🤖 — Chuỗi hành động người chơi lặp lại liên tục — nếu vòng này không vui trong 30 giây, không hệ thống meta nào cứu nổi. → `content/01-foundations/core-loop.md`
+    - ● `#3` **Design Pillars** `#design-pillars` 🤖 🇬🇧 — Ba câu định nghĩa game của bạn — công cụ ra quyết định, và là thứ đầu tiên AI agent cần đọc. → `content/01-foundations/design-pillars.md`
+    - ● `#4` **Core Loop** `#core-loop` 🤖 🇬🇧 — Chuỗi hành động người chơi lặp lại liên tục — nếu vòng này không vui trong 30 giây, không hệ thống meta nào cứu nổi. → `content/01-foundations/core-loop.md`
     - ● `#5` **Động lực người chơi** `#player-motivation` 🤖 — Vì sao người ta chơi tiếp — Self-Determination Theory, Bartle, Quantic Foundry và cách chuyển thành hệ thống cụ thể. → `content/01-foundations/player-motivation.md`
     - ● `#6` **Game Feel & Juice** `#game-feel` 🤖 🎮 — Lớp phản hồi cảm giác biến một prototype đúng chức năng thành một game đã tay — kèm số liệu cụ thể để đưa cho AI. → `content/01-foundations/game-feel.md`
     - ◐ `#23` **MDA Framework** `#mda-framework` 🤖 — Mechanics → Dynamics → Aesthetics — ngôn ngữ chung để truy ngược từ cảm xúc mong muốn về luật chơi cụ thể. → `content/01-foundations/mda-framework.md`
@@ -109,7 +109,7 @@ thức cơ bản (ai cũng nên đọc), trung cấp (cần nền), hay chuyên 
     - ◐ `#38` **Audio Design** `#audio-design` 🤖 — Thiết kế SFX — layering, biến thể chống lặp, chia dải tần, và vì sao âm thanh là phản hồi rẻ nhất. → `content/08-presentation/audio-design.md`
     - ○ `#39` **Audio Implementation** `#audio-implementation` 🤖 🎮 — Kiến trúc bus, mixing, ducking, âm thanh không gian — phần kỹ thuật quyết định game nghe sạch hay đục. → `content/08-presentation/audio-implementation.md`
     - ○ `#40` **Adaptive Music** `#adaptive-music` 🤖 — Nhạc thay đổi theo trạng thái game — vertical layering, horizontal resequencing, và bài toán chuyển mượt. → `content/08-presentation/adaptive-music.md`
-  - ● `#41` **AI trong Game** `#game-ai` 🤖 — AI điều khiển NPC và gameplay — FSM, Behavior Tree, GOAP, Utility AI, pathfinding, AI Director, LLM-NPC. → `content/04-game-ai/index.md`
+  - ● `#41` **AI trong Game** `#game-ai` 🤖 🇬🇧 — AI điều khiển NPC và gameplay — FSM, Behavior Tree, GOAP, Utility AI, pathfinding, AI Director, LLM-NPC. → `content/04-game-ai/index.md`
     - ◐ `#42` **Finite State Machine** `#fsm` 🤖 🎮 — Máy trạng thái hữu hạn — kiến trúc AI đơn giản nhất, đủ dùng cho phần lớn kẻ địch nhỏ, và giới hạn của nó. → `content/04-game-ai/fsm.md`
     - ◐ `#43` **Behavior Tree** `#behavior-tree` 🤖 — Cây hành vi — chuẩn công nghiệp cho AI NPC: cấu trúc node, blackboard, và cách tránh cây phình to. → `content/04-game-ai/behavior-tree.md`
     - ○ `#49` **GOAP** `#goap` 🤖 — Goal-Oriented Action Planning — NPC tự tìm chuỗi hành động để đạt mục tiêu, thay vì làm theo kịch bản. → `content/04-game-ai/goap.md`
@@ -138,6 +138,8 @@ thức cơ bản (ai cũng nên đọc), trung cấp (cần nền), hay chuyên 
 > **Ký hiệu:** ● cơ bản · ◐ trung cấp · ○ chuyên sâu · `#N` = thứ tự trong lộ trình đọc
 >
 > 🎮 = node có mục **Unity**: cách hiện thực hoá bước đó trong Unity (code C# + sơ đồ setup).
+>
+> 🇬🇧 = node đã có bản dịch tiếng Anh tại `<tên-file>.en.md`.
 >
 > 🤖 = node có mục **Prompt cho AI**: hướng dẫn cách diễn đạt yêu cầu cho
 > chủ đề đó (phải nêu rõ gì, mẫu prompt, bẫy thường gặp). Đọc mục này trước

@@ -88,6 +88,23 @@ function walk(dir, acc = []) {
 
 const stripNumPrefix = (s) => s.replace(/^\d+[-_]/, '')
 
+/**
+ * Đa ngữ theo kiểu FILE SONG SONG:
+ *   content/01-foundations/core-loop.md      → bản gốc (tiếng Việt)
+ *   content/01-foundations/core-loop.en.md   → bản dịch tiếng Anh
+ * Cấu trúc cây, id, read, level… chỉ lấy từ file gốc. File dịch chỉ đóng góp
+ * phần chữ, nên thiếu bản dịch không bao giờ làm hỏng graph.
+ */
+const BASE_LANG = 'vi'
+const TRANSLATED_LANGS = ['en']
+
+/** 'a/b/core-loop.en.md' → { base: 'a/b/core-loop.md', lang: 'en' } hoặc null */
+function parseLangSuffix(rel) {
+  const m = rel.match(/^(.*)\.([a-z]{2})\.md$/)
+  if (!m || !TRANSLATED_LANGS.includes(m[2])) return null
+  return { base: m[1] + '.md', lang: m[2] }
+}
+
 function countWords(body) {
   return body.replace(/```[\s\S]*?```/g, ' ').split(/\s+/).filter(Boolean).length
 }
@@ -97,7 +114,12 @@ function countWords(body) {
  * thành tab và để AI đọc đúng phần nó cần.
  */
 const SECTIONS = [
-  { key: 'aiPrompt', re: /^##[ \t]*(?:🤖[ \t]*)?Prompt cho AI[ \t]*$/, required: true },
+  // Nhận cả tiêu đề tiếng Việt lẫn tiếng Anh, vì file .en.md dùng bản dịch.
+  {
+    key: 'aiPrompt',
+    re: /^##[ \t]*(?:🤖[ \t]*)?(?:Prompt cho AI|Prompt for AI)[ \t]*$/,
+    required: true,
+  },
   { key: 'unity', re: /^##[ \t]*(?:🎮[ \t]*)?Unity[ \t]*$/, required: false },
 ]
 
@@ -168,7 +190,38 @@ function build({ strict = false, quiet = false } = {}) {
     process.exit(1)
   }
 
-  const files = walk(CONTENT_DIR)
+  const allFiles = walk(CONTENT_DIR)
+
+  // Tách file gốc và file dịch trước, để file dịch không tạo node riêng.
+  const files = []
+  const translations = new Map()   // base rel -> { lang -> {data, body, aiPrompt, unity} }
+
+  for (const file of allFiles) {
+    const rel = path.relative(CONTENT_DIR, file).split(path.sep).join('/')
+    const hit = parseLangSuffix(rel)
+    if (!hit) { files.push(file); continue }
+
+    const parsed = parseFrontmatter(fs.readFileSync(file, 'utf8'))
+    const sections = extractSections(parsed.body)
+    if (!translations.has(hit.base)) translations.set(hit.base, {})
+    translations.get(hit.base)[hit.lang] = {
+      title: parsed.data.title ? String(parsed.data.title) : '',
+      summary: parsed.data.summary ? String(parsed.data.summary) : '',
+      body: sections.body,
+      aiPrompt: sections.aiPrompt,
+      unity: sections.unity,
+      path: rel,
+    }
+  }
+
+  // bản dịch mồ côi: dễ xảy ra khi đổi tên file gốc
+  for (const baseRel of translations.keys()) {
+    if (!fs.existsSync(path.join(CONTENT_DIR, baseRel))) {
+      warnings.push('Bản dịch mồ côi (không có file gốc): ' +
+        Object.values(translations.get(baseRel)).map((t) => t.path).join(', '))
+    }
+  }
+
   const nodes = new Map()
   const seenFile = new Map()
 
@@ -232,6 +285,8 @@ function build({ strict = false, quiet = false } = {}) {
       body,
       aiPrompt,
       unity,
+      // { en: {title, summary, body, aiPrompt, unity} } — thiếu thì UI tự lùi về bản gốc
+      i18n: translations.get(rel) || {},
     })
   }
 
@@ -397,6 +452,9 @@ function build({ strict = false, quiet = false } = {}) {
       relations: relations.length,
       withPrompt: list.length - missingPrompt.length,
       withUnity: list.filter((n) => n.unity).length,
+      translated: Object.fromEntries(
+        TRANSLATED_LANGS.map((lg) => [lg, list.filter((n) => n.i18n[lg]).length])
+      ),
       basic: list.filter((n) => n.level === 'basic').length,
       intermediate: list.filter((n) => n.level === 'intermediate').length,
       advanced: list.filter((n) => n.level === 'advanced').length,
@@ -404,6 +462,8 @@ function build({ strict = false, quiet = false } = {}) {
     },
     tags: allTags,
     levels: LEVELS,
+    baseLang: BASE_LANG,
+    langs: [BASE_LANG, ...TRANSLATED_LANGS],
     readingPath: readingPath.map((n) => n.id),
     nodes: list,
     relations,
@@ -419,6 +479,7 @@ function build({ strict = false, quiet = false } = {}) {
       '[graph] ' + s.nodes + ' node · ' + s.branches + ' nhánh · ' +
       s.deep + ' deep / ' + s.stub + ' stub · ' + s.relations + ' liên kết · ' +
       s.withPrompt + '/' + s.nodes + ' có prompt · ' + s.withUnity + ' có Unity · ' +
+      TRANSLATED_LANGS.map((lg) => s.translated[lg] + '/' + s.nodes + ' ' + lg).join(' · ') + ' · ' +
       s.basic + ' cơ bản / ' + s.intermediate + ' trung cấp / ' + s.advanced + ' chuyên sâu · ' +
       s.words + ' từ'
     )
@@ -469,7 +530,7 @@ function renderIndex(graph, nodes) {
   const line = (id, prefix) => {
     const n = nodes.get(id)
     const badge = n.status === 'stub' ? ' _(stub — cần viết thêm)_' : ''
-    const prompt = (n.aiPrompt ? ' 🤖' : '') + (n.unity ? ' 🎮' : '')
+    const prompt = (n.aiPrompt ? ' 🤖' : '') + (n.unity ? ' 🎮' : '') + (n.i18n.en ? ' 🇬🇧' : '')
     const mark = { basic: '●', intermediate: '◐', advanced: '○' }[n.level] || '·'
     L.push(prefix + '- ' + mark + ' `#' + n.readIndex + '` **' + n.title + '** `#' + n.id + '`' +
            badge + prompt + ' — ' + (n.summary || '(chưa có summary)') +
@@ -481,6 +542,8 @@ function renderIndex(graph, nodes) {
   L.push('> **Ký hiệu:** ● cơ bản · ◐ trung cấp · ○ chuyên sâu · `#N` = thứ tự trong lộ trình đọc')
   L.push('>')
   L.push('> 🎮 = node có mục **Unity**: cách hiện thực hoá bước đó trong Unity (code C# + sơ đồ setup).')
+  L.push('>')
+  L.push('> 🇬🇧 = node đã có bản dịch tiếng Anh tại `<tên-file>.en.md`.')
   L.push('>')
   L.push('> 🤖 = node có mục **Prompt cho AI**: hướng dẫn cách diễn đạt yêu cầu cho')
   L.push('> chủ đề đó (phải nêu rõ gì, mẫu prompt, bẫy thường gặp). Đọc mục này trước')

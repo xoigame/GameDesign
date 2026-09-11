@@ -63,6 +63,19 @@ Khi người dùng làm việc với Unity: **đọc mục này trước khi vi�
 phần "Bẫy Unity cụ thể" — đó là những lỗi chỉ lộ ra trong Unity mà không lộ ra khi
 đọc code. Node thuần lý thuyết không có mục này, đừng bịa ra.
 
+## Đa ngữ
+
+Kho viết gốc bằng **tiếng Việt**. Bản dịch nằm ở file song song `<tên>.en.md` cùng thư mục.
+
+Trong `graph.json`, bản dịch nằm ở `node.i18n.en` (gồm title, summary, body, aiPrompt, unity).
+Các trường ở cấp cao nhất (`node.body`, `node.title`…) **luôn là bản gốc tiếng Việt**.
+`KNOWLEDGE_INDEX.md` đánh dấu 🇬🇧 cho node đã có bản dịch.
+
+Khi được nhờ dịch: chỉ tạo file `.en.md` với frontmatter `title` + `summary`;
+mọi metadata khác chỉ tồn tại ở file gốc. Quy tắc đầy đủ ở `content/_SCHEMA.md`.
+
+**Đừng dịch bằng cách sửa file gốc.** Bản gốc tiếng Việt là nguồn chân lý.
+
 ## Cách điều hướng
 
 1. **`KNOWLEDGE_INDEX.md`** — mục lục phẳng, tự sinh. Liệt kê mọi node kèm id, summary, đường dẫn file. Đọc file này để biết có gì, rồi chỉ mở những file thật sự cần.
