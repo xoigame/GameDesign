@@ -4,7 +4,7 @@
 > Đây là mục lục phẳng của toàn bộ kho kiến thức, dành cho AI agent (Codex / Claude Code)
 > đọc nhanh trước khi mở từng file `content/**/*.md` chi tiết.
 
-Cập nhật: `2026-09-11T06:58:27.818Z` · 76 node · 63 deep · 13 stub · 82252 từ
+Cập nhật: `2026-09-11T07:00:03.829Z` · 76 node · 63 deep · 13 stub · 82296 từ
 
 Mức độ: **24 cơ bản** · 36 trung cấp · 16 chuyên sâu
 
@@ -110,7 +110,7 @@ thức cơ bản (ai cũng nên đọc), trung cấp (cần nền), hay chuyên 
     - ○ `#24` **Balancing & Math** `#balancing-math` 🤖 🎮 — Công thức, bảng số và mô phỏng Monte Carlo — thay việc đoán mò bằng việc đo đạc. → `content/02-systems/balancing-math.md`
     - ◐ `#20` **Difficulty Curve** `#difficulty-curve` 🤖 🎮 — Điều tiết thử thách quanh vùng dòng chảy — răng cưa, trợ năng, và dynamic difficulty làm đúng cách. → `content/02-systems/difficulty-curve.md`
     - ◐ `#21` **Randomness & RNG** `#randomness` _(stub — cần viết thêm)_ 🤖 🎮 — Input vs output randomness, pity system, shuffle bag — dùng ngẫu nhiên để tạo kịch tính chứ không tạo bất công. → `content/02-systems/randomness.md`
-    - ◐ `#22` **Meta Systems** `#meta-systems` _(stub — cần viết thêm)_ 🤖 — Những gì giữ người chơi giữa các phiên — căn cứ, bộ sưu tập, nhiệm vụ hằng ngày, mùa giải. → `content/02-systems/meta-systems.md`
+    - ◐ `#22` **Meta Systems** `#meta-systems` _(stub — cần viết thêm)_ 🤖 🎮 — Những gì giữ người chơi giữa các phiên — căn cứ, bộ sưu tập, nhiệm vụ hằng ngày, mùa giải. → `content/02-systems/meta-systems.md`
   - ● `#25` **Level & Content Design** `#content-design` 🤖 🎮 — Đổ nội dung vào bộ khung hệ thống — màn chơi, nhịp độ, sinh thủ tục, kể chuyện, giao diện. → `content/03-content-design/index.md`
     - ◐ `#26` **Level Design** `#level-design` 🤖 🎮 — Dẫn dắt người chơi bằng không gian — sight line, landmark, vòng lặp không gian, và dạy học không lời. → `content/03-content-design/level-design.md`
     - ○ `#30` **Procedural Generation** `#procedural-generation` 🤖 🎮 — Sinh nội dung bằng thuật toán — các kỹ thuật chính, và vì sao "vô hạn" thường đồng nghĩa với "nhạt". → `content/03-content-design/procedural-generation.md`
@@ -407,7 +407,6 @@ thức cơ bản (ai cũng nên đọc), trung cấp (cần nền), hay chuyên 
 - `#systems` ↔ `#meta-systems` (mention)
 - `#systems` ↔ `#data-driven-design` (mention)
 - `#meta-systems` ↔ `#core-loop` (mention)
-- `#meta-systems` ↔ `#unity-save-data` (mention)
 - `#progression` ↔ `#balancing-math` (mention)
 - `#progression` ↔ `#agent-guardrails` (mention)
 - `#content-design` ↔ `#level-design` (mention)

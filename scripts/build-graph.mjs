@@ -147,6 +147,17 @@ function normalizeLevel(raw, id, warnings) {
  * Quét theo dòng và theo dõi code fence, vì các mục này chứa block ``` có thể
  * lẫn ký tự '#' bên trong (nhất là mục Unity với code C#).
  */
+/**
+ * Đếm code fence. Số lẻ = có fence chưa đóng, và đó là lỗi IM LẶNG rất khó
+ * thấy: mọi heading sau fence đó bị coi là nằm trong code block, nên các mục
+ * đặc biệt (🤖 / 🎮) không được tách ra và biến mất khỏi web.
+ */
+function countFences(body) {
+  let n = 0
+  for (const line of body.split('\n')) if (/^\s*(```|~~~)/.test(line)) n++
+  return n
+}
+
 function extractSections(body) {
   const lines = body.split('\n')
   const found = []          // { key, start, end }
@@ -229,6 +240,15 @@ function build({ strict = false, quiet = false } = {}) {
     const rel = path.relative(CONTENT_DIR, file).split(path.sep).join('/')
     const parsed = parseFrontmatter(fs.readFileSync(file, 'utf8'))
     const data = parsed.data
+
+    const fences = countFences(parsed.body)
+    if (fences % 2 !== 0) {
+      errors.push(
+        'Code fence chưa đóng trong ' + rel + ' (' + fences + ' fence, số lẻ) — ' +
+        'mọi heading sau fence đó sẽ bị coi là code và các mục 🤖/🎮 sẽ biến mất'
+      )
+    }
+
     const { body, aiPrompt, unity } = extractSections(parsed.body)
 
     const segments = rel.split('/')

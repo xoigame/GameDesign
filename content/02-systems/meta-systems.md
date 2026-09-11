@@ -51,6 +51,9 @@ Ràng buộc cứng:
 
 Với mỗi hệ thống bạn đề xuất, trả lời: "nếu bỏ nó đi, game TỆ HƠN hay chỉ NGẮN HƠN?"
 Cái nào chỉ ngắn hơn thì loại.
+```
+
+**Bẫy thường gặp:** AI đề xuất "nhiệm vụ hằng ngày + chuỗi đăng nhập + battle pass" cho mọi thể loại. Bắt nó trả lời câu "tệ hơn hay ngắn hơn" cho từng hệ thống là cách lọc nhanh nhất.
 
 ## 🎮 Unity
 
