@@ -4,9 +4,9 @@
 > Đây là mục lục phẳng của toàn bộ kho kiến thức, dành cho AI agent (Codex / Claude Code)
 > đọc nhanh trước khi mở từng file `content/**/*.md` chi tiết.
 
-Cập nhật: `2026-09-11T04:08:42.441Z` · 58 node · 45 deep · 13 stub · 38302 từ
+Cập nhật: `2026-09-11T06:34:55.727Z` · 76 node · 63 deep · 13 stub · 72845 từ
 
-Mức độ: **21 cơ bản** · 25 trung cấp · 12 chuyên sâu
+Mức độ: **24 cơ bản** · 36 trung cấp · 16 chuyên sâu
 
 ## Lộ trình đọc
 
@@ -73,6 +73,24 @@ thức cơ bản (ai cũng nên đọc), trung cấp (cần nền), hay chuyên 
 | 56 | **Chọn Tech Stack** `#tech-stack` | Trung cấp | stub | `content/06-production/tech-stack.md` |
 | 57 | **Performance** `#performance` | Chuyên sâu | stub | `content/06-production/performance.md` |
 | 58 | **Sinh Asset bằng AI** `#asset-generation` | Chuyên sâu | stub | `content/05-ai-assisted-dev/asset-generation.md` |
+| 59 | **Unity thực chiến** `#unity` | Cơ bản | deep | `content/09-unity/index.md` |
+| 60 | **Vòng đời game & Scene flow** `#unity-game-loop` | Cơ bản | deep | `content/09-unity/unity-game-loop.md` |
+| 61 | **Tổ chức dự án & Assembly** `#unity-project-structure` | Trung cấp | deep | `content/09-unity/unity-project-structure.md` |
+| 62 | **Design Pattern trong Unity** `#unity-design-patterns` | Trung cấp | deep | `content/09-unity/unity-design-patterns.md` |
+| 63 | **Vật lý trong Unity** `#unity-physics` | Trung cấp | deep | `content/09-unity/unity-physics.md` |
+| 64 | **Animation trong Unity** `#unity-animation` | Trung cấp | deep | `content/09-unity/unity-animation.md` |
+| 65 | **Input System** `#unity-input` | Cơ bản | deep | `content/09-unity/unity-input.md` |
+| 66 | **Camera & Cinemachine** `#unity-camera` | Trung cấp | deep | `content/09-unity/unity-camera.md` |
+| 67 | **UI trong Unity** `#unity-ui` | Trung cấp | deep | `content/09-unity/unity-ui.md` |
+| 68 | **Audio trong Unity** `#unity-audio` | Trung cấp | deep | `content/09-unity/unity-audio.md` |
+| 69 | **VFX & Hiệu ứng** `#unity-vfx` | Trung cấp | deep | `content/09-unity/unity-vfx.md` |
+| 70 | **Shader trong URP** `#unity-shader` | Chuyên sâu | deep | `content/09-unity/unity-shader.md` |
+| 71 | **Ánh sáng & Post-processing** `#unity-lighting` | Trung cấp | deep | `content/09-unity/unity-lighting.md` |
+| 72 | **Lưu game & dữ liệu** `#unity-save-data` | Trung cấp | deep | `content/09-unity/unity-save-data.md` |
+| 73 | **Tối ưu hoá Unity** `#unity-optimization` | Chuyên sâu | deep | `content/09-unity/unity-optimization.md` |
+| 74 | **Build & nền tảng** `#unity-build-platform` | Chuyên sâu | deep | `content/09-unity/unity-build-platform.md` |
+| 75 | **Multiplayer & Netcode** `#unity-multiplayer` | Chuyên sâu | deep | `content/09-unity/unity-multiplayer.md` |
+| 76 | **Editor Tools tự viết** `#unity-editor-tools` | Trung cấp | deep | `content/09-unity/unity-editor-tools.md` |
 
 ## Cây kiến thức
 
@@ -132,6 +150,24 @@ thức cơ bản (ai cũng nên đọc), trung cấp (cần nền), hay chuyên 
     - ◐ `#55` **Playtesting & Metrics** `#playtesting-metrics` 🤖 — Đo cái gì, hỏi thế nào, và vì sao người chơi nói sai về chính trải nghiệm của họ. → `content/06-production/playtesting-metrics.md`
     - ◐ `#56` **Chọn Tech Stack** `#tech-stack` _(stub — cần viết thêm)_ 🤖 — Engine, ngôn ngữ, công cụ — chọn theo dự án và theo mức độ AI hỗ trợ được. → `content/06-production/tech-stack.md`
     - ○ `#57` **Performance** `#performance` _(stub — cần viết thêm)_ 🤖 🎮 — Ngân sách frame, profiling, và những nguyên nhân giật lag phổ biến nhất. → `content/06-production/performance.md`
+  - ● `#59` **Unity thực chiến** `#unity` 🤖 — Kinh nghiệm hiện thực hoá game trong Unity — vật lý, animation, pattern, UI, audio, shader, ánh sáng, tối ưu, multiplayer. Không phải docs, là những gì lộ ra khi làm thật. → `content/09-unity/index.md`
+    - ● `#60` **Vòng đời game & Scene flow** `#unity-game-loop` 🤖 — Bootstrap scene, state machine cấp ứng dụng, thứ tự Awake/Start, Time.timeScale và mọi thứ hỏng theo nó — xương sống mà mọi hệ thống khác móc vào. → `content/09-unity/unity-game-loop.md`
+    - ◐ `#61` **Tổ chức dự án & Assembly** `#unity-project-structure` 🤖 — Thư mục theo feature, Assembly Definition đúng liều, prefab variant thay kế thừa, scene additive để 4 người không giẫm chân, và Git không phá project. → `content/09-unity/unity-project-structure.md`
+    - ◐ `#62` **Design Pattern trong Unity** `#unity-design-patterns` 🤖 — ScriptableObject ba vai, singleton có giới hạn, service locator có kỷ luật, FSM bằng class thường, pool có sẵn — pattern nào sống được trong MonoBehaviour và bẫy Unity của từng cái. → `content/09-unity/unity-design-patterns.md`
+    - ◐ `#72` **Lưu game & dữ liệu** `#unity-save-data` 🤖 — Một class SaveData phẳng có version, ghi atomic, migration theo chuỗi, lưu id thay tham chiếu — và vì sao PlayerPrefs chỉ dành cho âm lượng. → `content/09-unity/unity-save-data.md`
+    - ◐ `#63` **Vật lý trong Unity** `#unity-physics` 🤖 — Rigidbody hay tự viết, FixedUpdate và interpolation, collision matrix, raycast không cấp phát — và vì sao platformer tốt gần như không dùng physics engine. → `content/09-unity/unity-physics.md`
+    - ◐ `#64` **Animation trong Unity** `#unity-animation` 🤖 — Animator Controller là bảng điều khiển hiển thị, không phải bộ não — giữ nó dưới 30 state, tắt Has Exit Time, và biết lúc nào nên bỏ nó mà điều khiển bằng code. → `content/09-unity/unity-animation.md`
+    - ● `#65` **Input System** `#unity-input` 🤖 — Chọn Input System mới từ ngày đầu, gom mọi cách đọc về một InputReader duy nhất, và đừng đọc nút bấm trong FixedUpdate — phần lớn "input bị nuốt" là ở đó. → `content/09-unity/unity-input.md`
+    - ◐ `#66` **Camera & Cinemachine** `#unity-camera` 🤖 — Camera là hệ gameplay, không phải trang trí — dùng Cinemachine 3 thay vì tự viết follow, nhưng hiểu Brain, dead zone, impulse và pixel perfect đủ để biết nó đang làm gì. → `content/09-unity/unity-camera.md`
+    - ◐ `#67` **UI trong Unity** `#unity-ui` 🤖 — UGUI vẫn là lựa chọn cho UI in-game năm 2026; cái giết frame không phải số phần tử mà là Canvas rebuild — tách Canvas theo tần suất đổi, tắt Raycast Target, và đừng lồng Layout Group. → `content/09-unity/unity-ui.md`
+    - ◐ `#68` **Audio trong Unity** `#unity-audio` 🤖 — Import settings quyết định RAM và CPU nhiều hơn code; pool AudioSource thay PlayOneShot; nhạc đúng nhịp chỉ có một cách là PlayScheduled trên dspTime. → `content/09-unity/unity-audio.md`
+    - ◐ `#69` **VFX & Hiệu ứng** `#unity-vfx` 🤖 — Shuriken cho gameplay và mobile, VFX Graph cho số lượng; kẻ giết frame là overdraw chứ không phải số hạt; và mọi hiệu ứng nổ đều phải đi qua pool. → `content/09-unity/unity-vfx.md`
+    - ○ `#70` **Shader trong URP** `#unity-shader` 🤖 — Shader Graph lo 80% material, HLSL tay cho phần còn lại — nhưng thứ quyết định frame rate không phải shader đẹp hay xấu, mà là nó có phá SRP Batcher hay không. → `content/09-unity/unity-shader.md`
+    - ◐ `#71` **Ánh sáng & Post-processing** `#unity-lighting` 🤖 — Linear color space từ ngày đầu, baked cho mọi thứ đứng yên, realtime chỉ cho thứ thật sự đổi — và post-processing là nơi mobile mất frame nhiều nhất mà không ai để ý. → `content/09-unity/unity-lighting.md`
+    - ○ `#73` **Tối ưu hoá Unity** `#unity-optimization` 🤖 — Đo trên máy đích với build thật, xác định CPU hay GPU trước khi chạm code — và nhận ra rằng import settings quyết định hiệu năng nhiều hơn mọi thuật toán bạn viết. → `content/09-unity/unity-optimization.md`
+    - ○ `#74` **Build & nền tảng** `#unity-build-platform` 🤖 — Build ra máy thật từ tuần đầu và build hàng đêm trên CI — vì IL2CPP, stripping, bộ nhớ và driver GPU là những lỗi chỉ tồn tại ngoài Editor, và chúng tích luỹ âm thầm. → `content/09-unity/unity-build-platform.md`
+    - ○ `#75` **Multiplayer & Netcode** `#unity-multiplayer` 🤖 — Multiplayer làm từ ngày đầu hoặc không bao giờ — retrofit gần như là viết lại. Chọn stack theo thể loại và ngân sách, không tin client, và test với lag giả từ tuần đầu. → `content/09-unity/unity-multiplayer.md`
+    - ◐ `#76` **Editor Tools tự viết** `#unity-editor-tools` 🤖 — Một giờ viết tool tiết kiệm mười giờ của team; tool là thứ để designer không phải gọi lập trình viên — và là việc AI agent làm tốt nhất trong toàn bộ dự án Unity. → `content/09-unity/unity-editor-tools.md`
   - ● `#14` **Blueprints** `#blueprints` 🤖 — Nơi chứa GDD của game thật bạn đang làm — lớp mà AI agent trực tiếp thực thi. → `content/07-blueprints/index.md`
     - ● `#15` **GDD Template** `#gdd-template` 🤖 — Mẫu tài liệu thiết kế sẵn sàng cho AI đọc — sao chép, điền vào, chỉ agent tới đó. → `content/07-blueprints/gdd-template.md`
 
@@ -278,6 +314,70 @@ thức cơ bản (ai cũng nên đọc), trung cấp (cần nền), hay chuyên 
 - `#ux-flow` ↔ `#onboarding` (related)
 - `#ux-flow` ↔ `#ux-hud` (related)
 - `#ux-hud` ↔ `#combat-systems` (related)
+- `#unity` ↔ `#production` (related)
+- `#unity` ↔ `#presentation` (related)
+- `#unity` ↔ `#architecture-patterns` (related)
+- `#unity` ↔ `#performance` (related)
+- `#unity-animation` ↔ `#animation-game` (related)
+- `#unity-animation` ↔ `#game-feel` (related)
+- `#unity-animation` ↔ `#combat-systems` (related)
+- `#unity-animation` ↔ `#unity-physics` (related)
+- `#unity-audio` ↔ `#audio-implementation` (related)
+- `#unity-audio` ↔ `#audio-design` (related)
+- `#unity-audio` ↔ `#adaptive-music` (related)
+- `#unity-audio` ↔ `#unity-optimization` (related)
+- `#unity-build-platform` ↔ `#tech-stack` (related)
+- `#unity-build-platform` ↔ `#unity-optimization` (related)
+- `#unity-build-platform` ↔ `#unity-save-data` (related)
+- `#unity-build-platform` ↔ `#unity-project-structure` (related)
+- `#unity-camera` ↔ `#game-feel` (related)
+- `#unity-camera` ↔ `#level-design` (related)
+- `#unity-camera` ↔ `#unity-vfx` (related)
+- `#unity-camera` ↔ `#unity-physics` (related)
+- `#unity-design-patterns` ↔ `#architecture-patterns` (related)
+- `#unity-design-patterns` ↔ `#data-driven-design` (related)
+- `#unity-design-patterns` ↔ `#unity-game-loop` (related)
+- `#unity-design-patterns` ↔ `#agent-guardrails` (related)
+- `#unity-editor-tools` ↔ `#ai-workflow` (related)
+- `#unity-editor-tools` ↔ `#data-driven-design` (related)
+- `#unity-editor-tools` ↔ `#unity-project-structure` (related)
+- `#unity-editor-tools` ↔ `#playtesting-metrics` (related)
+- `#unity-game-loop` ↔ `#core-loop` (related)
+- `#unity-game-loop` ↔ `#architecture-patterns` (related)
+- `#unity-game-loop` ↔ `#unity-save-data` (related)
+- `#unity-input` ↔ `#game-feel` (related)
+- `#unity-input` ↔ `#accessibility` (related)
+- `#unity-input` ↔ `#ux-flow` (related)
+- `#unity-input` ↔ `#unity-game-loop` (related)
+- `#unity-lighting` ↔ `#art-direction` (related)
+- `#unity-lighting` ↔ `#unity-shader` (related)
+- `#unity-lighting` ↔ `#unity-optimization` (related)
+- `#unity-lighting` ↔ `#unity-build-platform` (related)
+- `#unity-multiplayer` ↔ `#combat-systems` (related)
+- `#unity-multiplayer` ↔ `#architecture-patterns` (related)
+- `#unity-multiplayer` ↔ `#unity-game-loop` (related)
+- `#unity-multiplayer` ↔ `#unity-optimization` (related)
+- `#unity-optimization` ↔ `#performance` (related)
+- `#unity-optimization` ↔ `#unity-ui` (related)
+- `#unity-optimization` ↔ `#unity-shader` (related)
+- `#unity-physics` ↔ `#game-feel` (related)
+- `#unity-physics` ↔ `#combat-systems` (related)
+- `#unity-physics` ↔ `#unity-game-loop` (related)
+- `#unity-physics` ↔ `#unity-optimization` (related)
+- `#unity-project-structure` ↔ `#tech-stack` (related)
+- `#unity-project-structure` ↔ `#ai-workflow` (related)
+- `#unity-save-data` ↔ `#data-driven-design` (related)
+- `#unity-save-data` ↔ `#progression` (related)
+- `#unity-save-data` ↔ `#unity-design-patterns` (related)
+- `#unity-shader` ↔ `#art-direction` (related)
+- `#unity-shader` ↔ `#unity-vfx` (related)
+- `#unity-ui` ↔ `#ui-design` (related)
+- `#unity-ui` ↔ `#ux-hud` (related)
+- `#unity-ui` ↔ `#ux-flow` (related)
+- `#unity-ui` ↔ `#accessibility` (related)
+- `#unity-ui` ↔ `#unity-input` (related)
+- `#unity-vfx` ↔ `#game-feel` (related)
+- `#unity-vfx` ↔ `#unity-optimization` (related)
 - `#core-loop` ↔ `#randomness` (mention)
 - `#core-loop` ↔ `#gdd-for-ai` (mention)
 - `#core-loop` ↔ `#prompt-patterns` (mention)
@@ -374,6 +474,51 @@ thức cơ bản (ai cũng nên đọc), trung cấp (cần nền), hay chuyên 
 - `#presentation` ↔ `#audio-implementation` (mention)
 - `#presentation` ↔ `#adaptive-music` (mention)
 - `#presentation` ↔ `#asset-generation` (mention)
+- `#unity` ↔ `#unity-game-loop` (mention)
+- `#unity` ↔ `#unity-project-structure` (mention)
+- `#unity` ↔ `#unity-design-patterns` (mention)
+- `#unity` ↔ `#unity-save-data` (mention)
+- `#unity` ↔ `#unity-physics` (mention)
+- `#unity` ↔ `#unity-animation` (mention)
+- `#unity` ↔ `#unity-input` (mention)
+- `#unity` ↔ `#unity-camera` (mention)
+- `#unity` ↔ `#unity-ui` (mention)
+- `#unity` ↔ `#unity-audio` (mention)
+- `#unity` ↔ `#unity-vfx` (mention)
+- `#unity` ↔ `#unity-shader` (mention)
+- `#unity` ↔ `#unity-lighting` (mention)
+- `#unity` ↔ `#unity-optimization` (mention)
+- `#unity` ↔ `#unity-build-platform` (mention)
+- `#unity` ↔ `#unity-multiplayer` (mention)
+- `#unity` ↔ `#unity-editor-tools` (mention)
+- `#unity` ↔ `#animation-game` (mention)
+- `#unity` ↔ `#audio-implementation` (mention)
+- `#unity-animation` ↔ `#unity-ui` (mention)
+- `#unity-audio` ↔ `#unity-editor-tools` (mention)
+- `#unity-audio` ↔ `#ux-flow` (mention)
+- `#unity-camera` ↔ `#accessibility` (mention)
+- `#unity-design-patterns` ↔ `#fsm` (mention)
+- `#unity-design-patterns` ↔ `#unity-animation` (mention)
+- `#unity-design-patterns` ↔ `#behavior-tree` (mention)
+- `#unity-design-patterns` ↔ `#unity-optimization` (mention)
+- `#unity-design-patterns` ↔ `#unity-ui` (mention)
+- `#unity-editor-tools` ↔ `#unity-build-platform` (mention)
+- `#unity-editor-tools` ↔ `#agent-guardrails` (mention)
+- `#unity-game-loop` ↔ `#unity-audio` (mention)
+- `#unity-game-loop` ↔ `#unity-build-platform` (mention)
+- `#unity-input` ↔ `#unity-physics` (mention)
+- `#unity-lighting` ↔ `#unity-vfx` (mention)
+- `#unity-multiplayer` ↔ `#unity-physics` (mention)
+- `#unity-optimization` ↔ `#unity-editor-tools` (mention)
+- `#unity-project-structure` ↔ `#unity-design-patterns` (mention)
+- `#unity-project-structure` ↔ `#architecture-patterns` (mention)
+- `#unity-project-structure` ↔ `#unity-game-loop` (mention)
+- `#unity-save-data` ↔ `#unity-editor-tools` (mention)
+- `#unity-ui` ↔ `#unity-editor-tools` (mention)
+- `#unity-ui` ↔ `#unity-game-loop` (mention)
+- `#unity-ui` ↔ `#unity-shader` (mention)
+- `#unity-ui` ↔ `#unity-build-platform` (mention)
+- `#unity-vfx` ↔ `#data-driven-design` (mention)
 - `#root` ↔ `#blueprints` (mention)
 - `#root` ↔ `#foundations` (mention)
 - `#root` ↔ `#systems` (mention)
@@ -382,7 +527,8 @@ thức cơ bản (ai cũng nên đọc), trung cấp (cần nền), hay chuyên 
 - `#root` ↔ `#game-ai` (mention)
 - `#root` ↔ `#ai-assisted-dev` (mention)
 - `#root` ↔ `#production` (mention)
+- `#root` ↔ `#unity` (mention)
 
 ## Tag
 
-`accessibility` · `advanced` · `ai` · `ai-dev` · `algorithm` · `analysis` · `animation` · `architecture` · `art` · `asset` · `audio` · `blueprint` · `code` · `combat` · `content` · `core` · `data` · `decision-making` · `design-system` · `difficulty` · `documentation` · `economy` · `experimental` · `feel` · `flow` · `foundations` · `fundamentals` · `genre` · `hud` · `industry-standard` · `key` · `level` · `llm` · `math` · `meta` · `ml` · `movement` · `music` · `narrative` · `navigation` · `npc` · `onboarding` · `optimization` · `pacing` · `pattern` · `pillar` · `planning` · `polish` · `practical` · `presentation` · `process` · `procgen` · `production` · `progression` · `project` · `prompt` · `psychology` · `retention` · `rng` · `safety` · `simulation` · `spec` · `systems` · `tech` · `template` · `testing` · `theory` · `tooling` · `ui` · `ux` · `visual` · `workflow`
+`accessibility` · `advanced` · `ai` · `ai-dev` · `algorithm` · `analysis` · `animation` · `architecture` · `art` · `asset` · `audio` · `blueprint` · `build` · `camera` · `code` · `combat` · `content` · `core` · `data` · `decision-making` · `design-system` · `difficulty` · `documentation` · `economy` · `editor` · `engine` · `experimental` · `feel` · `flow` · `foundations` · `fundamentals` · `gameplay` · `genre` · `hud` · `implementation` · `industry-standard` · `input` · `key` · `level` · `lifecycle` · `lighting` · `llm` · `math` · `meta` · `ml` · `mobile` · `movement` · `multiplayer` · `music` · `narrative` · `navigation` · `netcode` · `npc` · `onboarding` · `optimization` · `pacing` · `pattern` · `performance` · `persistence` · `physics` · `pillar` · `planning` · `platform` · `polish` · `practical` · `presentation` · `process` · `procgen` · `production` · `progression` · `project` · `prompt` · `psychology` · `rendering` · `retention` · `rng` · `safety` · `save` · `scene` · `shader` · `simulation` · `spec` · `systems` · `team` · `tech` · `template` · `testing` · `theory` · `tooling` · `ui` · `unity` · `urp` · `ux` · `vfx` · `visual` · `workflow`

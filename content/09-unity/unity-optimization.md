@@ -1,0 +1,180 @@
+---
+title: Tối ưu hoá Unity
+icon: ⚡
+summary: Đo trên máy đích với build thật, xác định CPU hay GPU trước khi chạm code — và nhận ra rằng import settings quyết định hiệu năng nhiều hơn mọi thuật toán bạn viết.
+status: deep
+read: 740
+level: advanced
+order: 140
+tags: [unity, optimization, performance]
+related: [performance, unity-ui, unity-shader, unity-build-platform]
+---
+
+Quy trình đúng chỉ có một: **build Development lên máy yếu nhất, nối Profiler qua máy thật, chụp 300 frame ở cảnh đông nhất, rồi mới mở code**. Profiler trong Editor đo cả Editor; máy dev có GPU gấp 20 lần điện thoại; và thứ tốn nhất trên mobile (băng thông bộ nhớ, nhiệt) không tồn tại trên PC. Mọi tối ưu làm trước bước này là đoán.
+
+Ngân sách frame, GC alloc cơ bản, `NonAlloc`, và overlay `ProfilerRecorder` đã ở [[performance]]. Node này đi tiếp: xác định bottleneck, từng lớp CPU/GPU/bộ nhớ, và cái gì đáng làm sớm.
+
+## Bước 0: CPU hay GPU?
+
+Mở Profiler → CPU Usage → Timeline, tìm trên main thread:
+- **`Gfx.WaitForPresentOnGfxThread`** lớn → CPU đợi GPU → **GPU-bound**. Tối ưu code C# lúc này vô ích; đi tới phần GPU.
+- **`Gfx.WaitForCommands`** lớn → main thread đợi render thread → quá nhiều draw call / state change → phần batching.
+- **`WaitForTargetFPS`** → bạn đang chạm `targetFrameRate` hoặc vsync, mọi thứ ổn.
+- Không có cái nào, main thread đầy script/physics/animation → **CPU-bound**, đi tới phần CPU.
+
+Nhớ hai trạng thái: nhiệt độ làm số đổi sau 10 phút chơi, nên chụp ở phút 1 **và** phút 15. **Profile Analyzer** (package) so hai capture theo phân phối — "trung vị tăng 1.2ms ở `Animator.Update`" thay vì nhìn hai biểu đồ đoán.
+
+## CPU: những khoản nợ hay gặp
+
+**Script.** Mỗi `Update()` là một lần gọi native→managed ~0.5µs dù rỗng: 500 script rỗng = 0.25ms mỗi frame, chưa làm gì. Manager tick tập trung với `List<ITickable>` hoặc xoá `Update` khỏi script không cần. LINQ, `foreach` trên `List<T>` (ổn), `foreach` trên interface `IEnumerable<T>` (boxing enumerator), closure bắt biến cục bộ trong lambda, `string` nối trong log — đều là alloc. `Debug.Log` **vẫn chạy trong bản Release** và tốn: format chuỗi, lấy stack trace. Bọc bằng hàm `[Conditional("UNITY_EDITOR")]` hoặc tắt `Debug.unityLogger.logEnabled` ngoài Editor.
+
+**Physics.** Xem [[unity-physics]] về collision matrix và buffer; ở đây chỉ nhắc con số cần nhìn: `Physics.Processing` và số bước `FixedUpdate` mỗi frame khi frame tụt.
+
+**Animator.** `Culling Mode: Cull Update Transforms` cho mọi nhân vật không phải player — ngoài camera thì chỉ tính state machine, không tính bone. Rig import bật *Optimize Game Objects* để bỏ 60 Transform con (mỗi Transform là một object Unity đồng bộ mỗi frame); giữ lại bone cần gắn vũ khí bằng *Extra Transforms to Expose*. Quality Settings → *Skin Weights*: 2 bone trên mobile là đủ, 4 chỉ cho nhân vật chính. 50 kẻ địch × 40 bone × 4 weight là thứ Profiler hiện tên `MeshSkinning.Update`.
+
+**Canvas.** Một chữ đổi là cả Canvas rebuild — tách Canvas theo tần suất đổi, xem [[unity-ui]]. Trong Profiler nó tên `Canvas.SendWillRenderCanvases` và `Canvas.BuildBatch`.
+
+## GPU: draw call, batch và fill rate
+
+Bốn cơ chế gom draw call, và chúng loại trừ nhau theo thứ tự ưu tiên:
+
+| Cơ chế | Điều kiện | Cái giá |
+|---|---|---|
+| **SRP Batcher** (mặc định URP) | Cùng shader variant, shader tương thích | Không có — nhưng `MaterialPropertyBlock` và `renderer.material` phá nó, xem [[unity-shader]] |
+| **Static Batching** | Object Static, cùng material | Gộp mesh lúc build → **bộ nhớ ×2** (mỗi instance giữ bản copy vertex đã transform); 1000 cây static là 1000 mesh copy |
+| **GPU Instancing** | Cùng mesh + material, gọi `Graphics.RenderMeshInstanced` hoặc GPU Resident Drawer (Unity 6, cần Forward+) | Setup code; URP ưu tiên SRP Batcher nếu renderer tương thích |
+| **Dynamic Batching** | Mesh < 300 đỉnh, cùng material | Gần vô dụng trên URP vì SRP Batcher đã làm tốt hơn; tốn CPU transform mỗi frame. Tắt. |
+
+Trên mobile, **fill rate và băng thông** thường thắng draw call. Một particle system 200 hạt full-screen alpha là 200 lần vẽ toàn màn hình ở 1080p — GPU chết mà Frame Debugger chỉ hiện 1 draw call. Rendering Debugger → Overdraw đỏ đậm là dấu hiệu; cách chữa nằm ở [[unity-vfx]] (particle nhỏ, ít lớp, Additive). UI full-screen panel mờ 50% chồng lên game 3D là một lớp overdraw không ai tính.
+
+## Texture — 80% bộ nhớ, 50% băng thông
+
+Bộ nhớ của một texture 2048×2048 kèm mipmap:
+
+| Định dạng | Kích cỡ | Ghi chú |
+|---|---|---|
+| RGBA32 (không nén) | **21 MB** | "Trông đúng trong Editor" và giết máy 3GB |
+| ETC2 RGBA8 | 5.3 MB | Android cũ, chất lượng kém ở gradient |
+| **ASTC 6×6** | **2.5 MB** | Mặc định nên chọn cho cả Android và iOS hiện đại |
+| ASTC 8×8 | 1.4 MB | Texture nền, normal map ít chi tiết |
+| ASTC 4×4 | 5.3 MB | UI, texture nhân vật chính cần nét |
+
+Ba việc bắt buộc, làm bằng **Preset** và validator import (xem [[unity-editor-tools]]) chứ không làm tay:
+- Platform Override cho Android/iOS: format ASTC, **Max Size** theo mục đích (UI icon 256, prop 512, nhân vật 1024, hầu như không gì cần 2048 trên màn 1080p).
+- **Mipmap Streaming** bật (Quality Settings → Texture Streaming, budget ví dụ 256MB) + texture bật *Streaming Mipmaps* → chỉ tải mip cần cho khoảng cách camera.
+- Sprite atlas cho 2D/UI — không phải vì draw call (SRP Batcher không áp dụng cho UI/sprite), mà vì UGUI batch theo texture.
+
+## Mesh, LOD và culling
+
+- **LOD Group** với tỉ lệ thực dụng: LOD0 tới 60% chiều cao màn hình, LOD1 tới 25%, LOD2 tới 8%, Cull dưới đó. Mỗi LOD giảm ~50–70% tam giác. Object nhỏ dưới 1m chỉ cần LOD0 + Cull. Crossfade tốn shader variant và overdraw — tắt trên mobile.
+- **Read/Write Enabled** trên mesh và texture: tắt (mặc định) — bật là giữ bản copy trong RAM cho CPU đọc, gấp đôi bộ nhớ. Chỉ bật ở mesh bạn thật sự sửa bằng code.
+- **Occlusion Culling** (Window → Rendering → Occlusion Culling → Bake) đáng khi indoor nhiều phòng, thành phố dày; không đáng ở đồng bằng mở hoặc top-down (mọi thứ đều thấy). Cost bake và runtime CPU query — đo trước sau.
+- **Camera far plane** đúng khoảng nhìn thực (top-down: 50, không phải 1000) và `Camera.layerCullDistances` cho layer trang trí nhỏ (cull ở 30m dù far plane 200m).
+
+## Bộ nhớ: rò rỉ và giữ lại
+
+**Memory Profiler** (package `com.unity.memoryprofiler`): chụp snapshot ở menu, chơi 10 phút, chụp lại, tab *Compare* — cái gì tăng mà không nên tăng. Bốn nguồn phổ biến:
+- `renderer.material` / `new Material` không `Destroy` → Material Count tăng đều theo số kẻ địch từng spawn.
+- `Texture2D`/`Mesh`/`RenderTexture` tạo lúc chạy không `Destroy`/`Release`.
+- Addressables handle không `Release` → bundle không bao giờ unload.
+- Asset tham chiếu từ ScriptableObject/static field → giữ trong RAM dù đã đổi scene. `Resources.UnloadUnusedAssets()` sau khi unload scene mới dọn được thứ **không còn tham chiếu**.
+
+Trên mobile, hệ điều hành giết app ở ngưỡng bộ nhớ, không báo lỗi — xem ngưỡng ở [[unity-build-platform]]. `Application.lowMemory` là cảnh báo cuối để xoá cache.
+
+## Burst + Jobs — khi nào đáng
+
+Đáng: **> 5.000 phần tử**, hàm thuần trên mảng số (boids, pathfinding grid, culling tự viết, mesh deform, sinh địa hình). Không đáng: 50 kẻ địch gọi `GetComponent`, logic có `GameObject`/`Transform`/class, hoặc thứ chỉ chạy một lần khi load. Burst không chạy trên WebGL (rơi về C# thường, main thread).
+
+```csharp
+using Unity.Burst; using Unity.Collections; using Unity.Jobs; using Unity.Mathematics;
+
+[BurstCompile]
+struct IntegrateJob : IJobParallelFor {
+    [ReadOnly] public NativeArray<float3> velocity;
+    public NativeArray<float3> position;
+    public float dt;
+    public void Execute(int i) => position[i] += velocity[i] * dt;
+}
+
+// gọi trong Update — Persistent allocator cho mảng sống nhiều frame, Dispose trong OnDestroy
+var job = new IntegrateJob { velocity = vel, position = pos, dt = Time.deltaTime };
+JobHandle h = job.Schedule(pos.Length, 128);     // batch 64–256; nhỏ hơn là overhead, lớn hơn là mất song song
+h.Complete();                                     // hoặc Complete ở LateUpdate để CPU làm việc khác trong lúc chờ
+```
+
+Ghi kết quả về Transform bằng `IJobParallelForTransform` với `TransformAccessArray` — không đọc `NativeArray` rồi gán `transform.position` trong vòng for, điều đó trả lại 90% chi phí vừa tiết kiệm. Cần `Unity.Collections`, `Unity.Mathematics`, `Unity.Burst` trong asmdef; lần đầu vào Play Mode Burst biên dịch mất vài giây — không phải game chậm.
+
+## Mobile: nhiệt, targetFrameRate, và 30 vs 60
+
+`Application.targetFrameRate` mặc định trên mobile là **30** — không đặt thì game chạy 30 dù máy làm được 60. `QualitySettings.vSyncCount` bị bỏ qua trên mobile; chỉ `targetFrameRate` có tác dụng. Con số đúng không phải "cao nhất có thể": máy chạy 60 FPS ở 90% GPU sẽ **throttle sau 8–12 phút** xuống 40 FPS giật, trong khi 30 FPS ổn định ở 45% GPU chạy cả giờ. Game hành động nhanh chọn 60 và phải chừa 40% ngân sách; game chiến thuật/puzzle chọn 30 và dùng phần dư cho hình ảnh. **Adaptive Performance** (package, provider Samsung/Android) cho biết mức nhiệt và tự hạ Render Scale/LOD bias trước khi hệ điều hành throttle — đáng cài cho mọi game mobile 3D.
+
+## Thời gian load
+
+- **Shader warmup** ở màn loading từ `ShaderVariantCollection` (xem [[unity-shader]]) — không thì khựng 200–500ms mỗi lần thấy material mới.
+- **Addressables preload** dependency cho level kế ngay khi vào level này; `Addressables.DownloadDependenciesAsync` ở màn chọn level.
+- `Awake`/`Start` nặng (dựng lưới 100×100, parse JSON 5MB) chia qua nhiều frame: coroutine `yield return null` mỗi 2ms công việc, hoặc Unity 6 `await Awaitable.NextFrameAsync()`. Người chơi thấy loading bar nhích còn hơn đóng băng 3 giây rồi hiện.
+- Scene load: `LoadSceneAsync` + `allowSceneActivation = false` tới khi sẵn sàng; tách cảnh nặng thành additive để tải phần nhìn thấy trước.
+
+## Tối ưu sớm: sai và đúng
+
+**Sai** — tốn thời gian, không có số chứng minh:
+- ECS/DOTS cho game 50 object. Hoặc Jobs cho vòng lặp 200 phần tử.
+- Tự viết object pool khi `UnityEngine.Pool.ObjectPool<T>` có sẵn từ 2021.
+- `struct` hoá mọi thứ, cache `transform` (đã cache nội bộ từ Unity 5), so chuỗi bằng hash tự viết.
+- Gộp mesh tay khi SRP Batcher đã lo.
+
+**Đúng** — rẻ khi làm ở tuần 1, đắt gấp trăm khi làm ở tháng 6:
+- Preset import cho texture/audio/mesh theo thư mục, validator chặn asset sai.
+- Collision matrix và layer đặt xong trước khi có 200 prefab.
+- Canvas tách theo tần suất cập nhật ngay từ màn HUD đầu tiên.
+- `targetFrameRate` và Render Scale nối vào menu cài đặt từ bản build đầu.
+- Assembly Definition để compile 3 giây thay 40 — không phải hiệu năng game, nhưng là hiệu năng team.
+
+## Bẫy lộ ra khi build
+
+- Editor dùng texture không nén để hiện nhanh — chỉ build mới thấy ASTC làm mờ normal map; đổi normal map sang ASTC 4×4 hoặc 5×5.
+- `Development Build` chậm hơn Release 10–30% (IL2CPP Debug config, profiler hook) — con số cuối cùng phải đo trên Release với `ProfilerRecorder` overlay.
+- Memory Profiler trong Editor đếm cả asset Editor giữ — chỉ snapshot trên build mới đúng.
+- Throttling làm hai lần đo cách nhau 10 phút khác 30% — luôn để máy nguội, tháo sạc trước khi đo.
+
+## Kiểm tra nhanh
+- Trên build Development, máy đích, cảnh đông nhất: `Gfx.WaitForPresentOnGfxThread` chiếm bao nhiêu % frame? > 30% là GPU-bound.
+- Memory Profiler: tổng texture trong RAM < 1/3 ngân sách (ví dụ < 400MB trên máy 3GB)? Texture nào RGBA32 lớn hơn 512?
+- Frame Debugger cảnh đông nhất: số batch < 150 trên mobile, < 1000 trên PC?
+- Chơi 15 phút liên tục trên máy đích: FPS phút 15 so phút 1 tụt bao nhiêu? > 15% là nhiệt.
+- Tìm `Update()` trong toàn bộ code, đếm: có bao nhiêu cái không thật sự cần chạy mỗi frame?
+
+## 🤖 Prompt cho AI
+
+AI "tối ưu" bằng cách viết lại thuật toán C# trong khi bottleneck là GPU fill rate hoặc texture 21MB — nó chưa đo nên không biết, và mặc định mọi vấn đề là code.
+
+**Phải nêu rõ:**
+- Kết quả profile thật: CPU hay GPU-bound, marker nào tốn nhất, trên máy nào
+- Máy đích yếu nhất, FPS mục tiêu (30 hay 60) và ngân sách ms cho hệ thống đang sửa
+- Số phần tử ở tình huống xấu nhất (kẻ địch, hạt, draw call)
+- Package đã có (Burst, Collections, Addressables, Adaptive Performance) — CẤM thêm mới
+- Ràng buộc bộ nhớ (RAM tổng, ngân sách texture)
+- Cái gì **không được** đổi (API public, thứ tự render, format save)
+
+**Mẫu prompt**
+
+```
+Tối ưu hệ thống boids 3.000 con trong Unity 6 (6000.0.x), URP, Android Mali-G52, mục tiêu 60 FPS.
+
+Số đo hiện tại (Profiler trên build Development, máy thật):
+- Boids.Update 9.8ms main thread, GC Alloc 0 B. Gfx.WaitForPresent ~0. → CPU-bound ở script này.
+- Mỗi boid là MonoBehaviour có Update, dùng Physics.OverlapSphereNonAlloc tìm 8 láng giềng.
+
+Mục tiêu: Boids ≤ 2.5ms.
+Bắt buộc:
+- Chuyển sang IJobParallelFor + [BurstCompile], NativeArray<float3> cho position/velocity, spatial hash trên NativeParallelMultiHashMap. CẤM Physics API trong job.
+- Ghi về Transform bằng IJobParallelForTransform. CẤM gán transform.position trong vòng for C#.
+- Một MonoBehaviour quản lý toàn bộ, KHÔNG có Update trên từng boid.
+- Persistent allocator, Dispose đúng trong OnDestroy. Không cấp phát mỗi frame.
+- Chỉ dùng Unity.Burst, Unity.Collections, Unity.Mathematics có sẵn. KHÔNG dùng Entities/ECS.
+- Không đổi interface public IBoidSpawner đang được UI gọi.
+
+Sau khi viết: nêu marker Profiler nào tôi cần nhìn để xác nhận, và điểm nào chưa chắc chạy trên IL2CPP.
+```
+
+**Bẫy thường gặp:** AI schedule job rồi `Complete()` ngay dòng sau trong `Update` — code chạy, nhanh hơn nhờ Burst, nhưng main thread vẫn đứng chờ nên phần song song gần như bằng 0. Kết quả trông "tối ưu xong" trong khi mất nửa lợi ích. Yêu cầu schedule ở `Update`, `Complete()` ở `LateUpdate`, và đo cả hai cách.

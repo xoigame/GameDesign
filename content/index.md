@@ -18,12 +18,12 @@ Khi nhờ AI viết game, vấn đề lớn nhất không phải là AI code ké
 
 Kho này lấp đúng khoảng trống đó theo hai lớp:
 
-1. **Lớp kiến thức** (nhánh 1–6) — nguyên lý game design và AI in game. Đây là vốn hiểu biết chung: AI đọc để có chung ngôn ngữ và chuẩn mực với bạn.
+1. **Lớp kiến thức** (nhánh 1–6, 8, 9) — nguyên lý game design và AI in game. Đây là vốn hiểu biết chung: AI đọc để có chung ngôn ngữ và chuẩn mực với bạn.
 2. **Lớp bản thiết kế** ([[blueprints]]) — GDD của game cụ thể bạn đang làm. Đây mới là thứ AI thực thi.
 
 Thiếu lớp 1, AI làm ra game "đúng yêu cầu nhưng chán". Thiếu lớp 2, AI không có gì để làm.
 
-## Tám nhánh
+## Chín nhánh
 
 | Nhánh | Nội dung | Dùng khi |
 |---|---|---|
@@ -34,6 +34,7 @@ Thiếu lớp 1, AI làm ra game "đúng yêu cầu nhưng chán". Thiếu lớp
 | [[game-ai]] | AI điều khiển NPC/gameplay: FSM, Behavior Tree, GOAP, Utility AI, pathfinding | Làm cho enemy/NPC thông minh |
 | [[ai-assisted-dev]] | Dùng AI (Codex/Claude) để **làm** game | Muốn AI code hộ mà kết quả dùng được |
 | [[production]] | Kiến trúc, data-driven, đo đạc, hiệu năng | Biến prototype thành sản phẩm |
+| [[unity]] | Unity thực chiến: vật lý, animation, pattern, UI, audio, VFX, shader, ánh sáng, tối ưu, build, multiplayer | Hiện thực hoá trong Unity mà không dính bẫy |
 | [[blueprints]] | GDD của game thật + template | Bắt tay vào một dự án cụ thể |
 
 Phân biệt quan trọng: **[[game-ai]] là AI *trong* game** (con quái biết né đạn). **[[ai-assisted-dev]] là AI *làm ra* game** (Claude viết script cho con quái đó). Hai thứ hoàn toàn khác nhau, đừng lẫn.

@@ -11,12 +11,12 @@ When you ask an AI to write a game, the hard part is not that the AI codes badly
 
 This vault closes that gap in two layers:
 
-1. **Knowledge layer** (branches 1–6, 8) — principles of game design and game AI. This is shared vocabulary: the AI reads it so you both mean the same thing by the same words.
+1. **Knowledge layer** (branches 1–6, 8, 9) — principles of game design and game AI. This is shared vocabulary: the AI reads it so you both mean the same thing by the same words.
 2. **Blueprint layer** ([[blueprints]]) — the GDD of the specific game you are building. This is the part the AI actually executes.
 
 Without layer 1, the AI ships a game that is "technically what you asked for, and dull". Without layer 2, it has nothing to build.
 
-## The eight branches
+## The nine branches
 
 | Branch | Covers | Reach for it when |
 |---|---|---|
@@ -27,6 +27,7 @@ Without layer 1, the AI ships a game that is "technically what you asked for, an
 | [[game-ai]] | FSM, Behavior Tree, GOAP, Utility AI, pathfinding | Making enemies and NPCs feel smart |
 | [[ai-assisted-dev]] | Using AI (Codex/Claude) **to build** the game | You want the AI to write code you can actually ship |
 | [[production]] | Architecture, data-driven design, metrics, performance | Turning a prototype into a product |
+| [[unity]] | Unity in practice: physics, animation, patterns, UI, audio, VFX, shaders, lighting, optimization, builds, multiplayer | Implementing in Unity without the usual traps |
 | [[blueprints]] | A real GDD plus a template | Starting a specific project |
 
 An important distinction: **[[game-ai]] is AI *inside* the game** (a monster that dodges). **[[ai-assisted-dev]] is AI that *makes* the game** (Claude writing the script for that monster). They are different disciplines; do not conflate them.

@@ -9,11 +9,11 @@ Hai lớp, phục vụ hai mục đích khác nhau:
 
 | Lớp | Thư mục | Vai trò của bạn |
 |---|---|---|
-| **Kiến thức** | `content/01-*` … `content/06-*`, `content/08-*` | Đọc để hiểu bối cảnh và chuẩn mực. Đây là nền tri thức chung giữa bạn và người dùng. |
+| **Kiến thức** | `content/01-*` … `content/06-*`, `content/08-*`, `content/09-*` | Đọc để hiểu bối cảnh và chuẩn mực. Đây là nền tri thức chung giữa bạn và người dùng. |
 | **Bản thiết kế** | `content/07-blueprints/` | **Đây mới là thứ bạn thực thi.** GDD của game cụ thể đang được làm. |
 
 Nếu người dùng nhờ bạn *làm ra một game*, tài liệu quyết định nằm ở `content/07-blueprints/`.
-Bảy nhánh còn lại là để bạn hiểu *vì sao* thiết kế được viết như vậy.
+Tám nhánh còn lại là để bạn hiểu *vì sao* thiết kế được viết như vậy — riêng `content/09-unity/` nói *làm thế nào* trong Unity.
 
 ## Lộ trình đọc và mức độ
 
@@ -59,7 +59,9 @@ Node nào hiện thực hoá được trong Unity thì có thêm mục `## 🎮 
 
 Trong `graph.json` nó nằm ở trường `node.unity`. `KNOWLEDGE_INDEX.md` đánh dấu 🎮 cho node có mục này.
 
-Khi người dùng làm việc với Unity: **đọc mục này trước khi viết code**, và tôn trọng
+Nhánh `content/09-unity/` (id `unity`) là nhánh lấy Unity làm trục: mỗi node là một mảng (vật lý, animation, UI, shader, tối ưu…) với kinh nghiệm thực chiến, bẫy và checklist. Node trong nhánh đó **không có** mục 🎮 riêng vì toàn thân bài đã là Unity.
+
+Khi người dùng làm việc với Unity: **đọc node tương ứng trong `09-unity/` rồi đọc mục 🎮 của node kỹ thuật liên quan trước khi viết code**, và tôn trọng
 phần "Bẫy Unity cụ thể" — đó là những lỗi chỉ lộ ra trong Unity mà không lộ ra khi
 đọc code. Node thuần lý thuyết không có mục này, đừng bịa ra.
 
@@ -84,7 +86,7 @@ mọi metadata khác chỉ tồn tại ở file gốc. Quy tắc đầy đủ �
 
 Cú pháp `[[node-id]]` trong nội dung là liên kết tới node khác. Ví dụ `[[behavior-tree]]` → `content/04-game-ai/behavior-tree.md`.
 
-## Bản đồ nhanh 8 nhánh
+## Bản đồ nhanh 9 nhánh
 
 | Id nhánh | Nội dung | Mở khi cần |
 |---|---|---|
@@ -95,6 +97,7 @@ Cú pháp `[[node-id]]` trong nội dung là liên kết tới node khác. Ví d
 | `game-ai` | FSM, Behavior Tree, GOAP, Utility AI, pathfinding, AI Director, LLM-NPC | Viết AI cho NPC/enemy |
 | `ai-assisted-dev` | Quy trình làm game với AI, GDD cho AI, prompt pattern, guardrails | **Đọc khi làm việc trong kho này** |
 | `production` | Kiến trúc, data-driven, playtest metrics, hiệu năng | Viết code, tổ chức dự án |
+| `unity` | Kinh nghiệm thực chiến Unity: vòng đời game, pattern, vật lý, animation, input, camera, UI, audio, VFX, shader, ánh sáng, tối ưu, build, multiplayer, editor tools | **Viết code Unity** — đọc node tương ứng trước khi sinh code |
 | `blueprints` | GDD dự án thật + template | **Thực thi yêu cầu của người dùng** |
 
 **Lưu ý phân biệt:** `game-ai` là AI *trong* game (NPC thông minh). `ai-assisted-dev` là dùng AI để *làm ra* game. Đừng lẫn hai nhánh này.
@@ -114,7 +117,7 @@ npm run check
 ```
 Báo lỗi trùng id, `parent`/`related` trỏ sai, `[[wiki-link]]` gãy, chu trình trong cây.
 
-**Không tự ý:** đổi cấu trúc 8 nhánh, đổi `id` của node đã tồn tại, xoá node — hãy hỏi người dùng trước.
+**Không tự ý:** đổi cấu trúc 9 nhánh, đổi `id` của node đã tồn tại, xoá node — hãy hỏi người dùng trước.
 
 ## Khi được nhờ làm game
 

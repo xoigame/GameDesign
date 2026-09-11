@@ -94,7 +94,7 @@ Luật: **đề xuất trước, sửa sau**. Khi hai nguồn mâu thuẫn thì 
 
 ## Ràng buộc
 
-- Giữ nguyên cấu trúc 8 nhánh trừ khi được yêu cầu đổi.
+- Giữ nguyên cấu trúc 9 nhánh trừ khi được yêu cầu đổi.
 - Đừng đổi `id` của node đã tồn tại — các node khác đang tham chiếu tới nó.
 - Đừng xoá node; nếu nội dung lỗi thời, hãy sửa và ghi chú.
 - Nội dung viết bằng **tiếng Việt, thuật ngữ chuyên ngành giữ tiếng Anh** (core loop, behavior tree, faucet/drain…).
