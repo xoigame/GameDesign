@@ -3,7 +3,7 @@ title: AI trong Game
 icon: 🤖
 summary: AI điều khiển NPC và gameplay — FSM, Behavior Tree, GOAP, Utility AI, pathfinding, AI Director, LLM-NPC.
 status: deep
-read: 320
+read: 420
 level: basic
 order: 40
 tags: [ai, npc]

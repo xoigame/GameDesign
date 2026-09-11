@@ -9,11 +9,11 @@ Hai lớp, phục vụ hai mục đích khác nhau:
 
 | Lớp | Thư mục | Vai trò của bạn |
 |---|---|---|
-| **Kiến thức** | `content/01-*` … `content/06-*` | Đọc để hiểu bối cảnh và chuẩn mực. Đây là nền tri thức chung giữa bạn và người dùng. |
+| **Kiến thức** | `content/01-*` … `content/06-*`, `content/08-*` | Đọc để hiểu bối cảnh và chuẩn mực. Đây là nền tri thức chung giữa bạn và người dùng. |
 | **Bản thiết kế** | `content/07-blueprints/` | **Đây mới là thứ bạn thực thi.** GDD của game cụ thể đang được làm. |
 
 Nếu người dùng nhờ bạn *làm ra một game*, tài liệu quyết định nằm ở `content/07-blueprints/`.
-Sáu nhánh còn lại là để bạn hiểu *vì sao* thiết kế được viết như vậy.
+Bảy nhánh còn lại là để bạn hiểu *vì sao* thiết kế được viết như vậy.
 
 ## Lộ trình đọc và mức độ
 
@@ -52,6 +52,17 @@ Cách bạn nên dùng mục này:
 
 Trong `graph.json`, mục này nằm ở trường riêng `node.aiPrompt` (đã tách khỏi `node.body`).
 
+## Mục 🎮 Unity — tuỳ chọn
+
+Node nào hiện thực hoá được trong Unity thì có thêm mục `## 🎮 Unity`: component nào,
+đặt ở đâu, code C# chạy được, bẫy riêng của Unity, và cách kiểm chứng.
+
+Trong `graph.json` nó nằm ở trường `node.unity`. `KNOWLEDGE_INDEX.md` đánh dấu 🎮 cho node có mục này.
+
+Khi người dùng làm việc với Unity: **đọc mục này trước khi viết code**, và tôn trọng
+phần "Bẫy Unity cụ thể" — đó là những lỗi chỉ lộ ra trong Unity mà không lộ ra khi
+đọc code. Node thuần lý thuyết không có mục này, đừng bịa ra.
+
 ## Cách điều hướng
 
 1. **`KNOWLEDGE_INDEX.md`** — mục lục phẳng, tự sinh. Liệt kê mọi node kèm id, summary, đường dẫn file. Đọc file này để biết có gì, rồi chỉ mở những file thật sự cần.
@@ -60,13 +71,14 @@ Trong `graph.json`, mục này nằm ở trường riêng `node.aiPrompt` (đã 
 
 Cú pháp `[[node-id]]` trong nội dung là liên kết tới node khác. Ví dụ `[[behavior-tree]]` → `content/04-game-ai/behavior-tree.md`.
 
-## Bản đồ nhanh 7 nhánh
+## Bản đồ nhanh 8 nhánh
 
 | Id nhánh | Nội dung | Mở khi cần |
 |---|---|---|
 | `foundations` | Core loop, động lực người chơi, MDA, game feel, design pillars | Thiết kế ý tưởng, quyết định hướng đi |
 | `systems` | Kinh tế, tiến trình, chiến đấu, cân bằng toán, độ khó | Xây hệ thống gameplay, cân bằng số |
-| `content-design` | Level, procgen, nhịp độ, narrative, UX | Tạo nội dung, màn chơi, giao diện |
+| `content-design` | Level, procgen, nhịp độ, narrative, onboarding | Tạo nội dung, màn chơi |
+| `presentation` | Art direction, animation, UI, HUD, UX flow, trợ năng, âm thanh | Làm giao diện, hiệu ứng, âm thanh |
 | `game-ai` | FSM, Behavior Tree, GOAP, Utility AI, pathfinding, AI Director, LLM-NPC | Viết AI cho NPC/enemy |
 | `ai-assisted-dev` | Quy trình làm game với AI, GDD cho AI, prompt pattern, guardrails | **Đọc khi làm việc trong kho này** |
 | `production` | Kiến trúc, data-driven, playtest metrics, hiệu năng | Viết code, tổ chức dự án |
@@ -89,7 +101,7 @@ npm run check
 ```
 Báo lỗi trùng id, `parent`/`related` trỏ sai, `[[wiki-link]]` gãy, chu trình trong cây.
 
-**Không tự ý:** đổi cấu trúc 7 nhánh, đổi `id` của node đã tồn tại, xoá node — hãy hỏi người dùng trước.
+**Không tự ý:** đổi cấu trúc 8 nhánh, đổi `id` của node đã tồn tại, xoá node — hãy hỏi người dùng trước.
 
 ## Khi được nhờ làm game
 

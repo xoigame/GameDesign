@@ -23,13 +23,14 @@ Kho này lấp đúng khoảng trống đó theo hai lớp:
 
 Thiếu lớp 1, AI làm ra game "đúng yêu cầu nhưng chán". Thiếu lớp 2, AI không có gì để làm.
 
-## Bảy nhánh
+## Tám nhánh
 
 | Nhánh | Nội dung | Dùng khi |
 |---|---|---|
 | [[foundations]] | Nền tảng thiết kế: core loop, động lực người chơi, MDA, game feel | Bắt đầu một ý tưởng game mới |
 | [[systems]] | Systems design: kinh tế, tiến trình, combat, cân bằng số | Thiết kế các hệ thống chạy trong game |
-| [[content-design]] | Level, màn chơi, procedural, narrative, UX | Đổ nội dung vào bộ khung hệ thống |
+| [[content-design]] | Level, màn chơi, procedural, narrative | Đổ nội dung vào bộ khung hệ thống |
+| [[presentation]] | Nghe nhìn & UX: art direction, animation, UI, HUD, âm thanh, trợ năng | Biến hệ thống thành thứ người chơi cảm nhận được |
 | [[game-ai]] | AI điều khiển NPC/gameplay: FSM, Behavior Tree, GOAP, Utility AI, pathfinding | Làm cho enemy/NPC thông minh |
 | [[ai-assisted-dev]] | Dùng AI (Codex/Claude) để **làm** game | Muốn AI code hộ mà kết quả dùng được |
 | [[production]] | Kiến trúc, data-driven, đo đạc, hiệu năng | Biến prototype thành sản phẩm |

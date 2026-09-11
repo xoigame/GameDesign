@@ -3,7 +3,7 @@ title: Perception & Senses
 icon: 👁️
 summary: Tầm nhìn, thính giác, trí nhớ — hệ thống làm cho AI vừa công bằng vừa trông có vẻ công bằng.
 status: stub
-read: 350
+read: 450
 level: intermediate
 order: 80
 tags: [ai, npc, systems]
@@ -68,3 +68,83 @@ và debug gizmo vẽ nón nhìn + giá trị awareness trên đầu mỗi NPC.
 ```
 
 **Bẫy thường gặp:** AI viết `if (Vector3.Distance(transform.position, player.position) < 15) chase()`. Chạy đúng, nhưng NPC "nhìn xuyên tường" và người chơi cảm thấy bị lừa ngay lập tức.
+
+## 🎮 Unity
+
+Perception trong Unity là nơi rất dễ viết ra AI "nhìn xuyên tường" mà không nhận ra.
+
+**Component & nơi đặt**
+- `Perception.cs` — trên NPC, chạy độc lập với FSM/BT
+- Ghi kết quả vào blackboard; **logic quyết định chỉ đọc blackboard**
+
+**Code — nón nhìn có kiểm tra che khuất**
+
+```csharp
+public class Perception : MonoBehaviour {
+    [SerializeField] float viewAngle = 110f;
+    [SerializeField] float viewRange = 18f;
+    [SerializeField] LayerMask targetMask, obstacleMask;
+    [SerializeField] float timeToDetect = 1.2f;
+
+    public float Awareness { get; private set; }     // 0..1, KHÔNG phải bool
+    public Vector3 LastKnownPos { get; private set; }
+
+    readonly Collider[] buf = new Collider[8];
+
+    public void Tick(float dt) {
+        float visibility = ComputeVisibility();
+        Awareness = Mathf.Clamp01(visibility > 0f
+            ? Awareness + visibility * dt / timeToDetect
+            : Awareness - 0.25f * dt);
+        if (visibility > 0f) LastKnownPos = target.position;
+    }
+
+    float ComputeVisibility() {
+        int n = Physics.OverlapSphereNonAlloc(transform.position, viewRange, buf, targetMask);
+        for (int i = 0; i < n; i++) {
+            Vector3 dir = (buf[i].transform.position - transform.position);
+            if (Vector3.Angle(transform.forward, dir) > viewAngle * 0.5f) continue;
+
+            // BẮT BUỘC: chặn bởi tường thì không thấy
+            if (Physics.Raycast(transform.position, dir.normalized, dir.magnitude, obstacleMask))
+                continue;
+
+            float distFactor = 1f - dir.magnitude / viewRange;
+            return Mathf.Clamp01(distFactor);
+        }
+        return 0f;
+    }
+}
+```
+
+**Thang nhận biết, không phải công tắc**
+
+`Awareness` là số 0..1, không phải `bool canSee`. Điều này cho người chơi **cửa sổ để rút lui** trước khi bị phát hiện hẳn — và đó chính là gameplay lén lút.
+
+Ngưỡng: `0.5` = nghi ngờ (NPC quay đầu nhìn), `1.0` = phát hiện.
+
+**Gizmo — vẽ nón nhìn ngay từ đầu**
+
+```csharp
+#if UNITY_EDITOR
+void OnDrawGizmosSelected() {
+    UnityEditor.Handles.color = new Color(1, 1, 0, 0.15f);
+    UnityEditor.Handles.DrawSolidArc(transform.position, Vector3.up,
+        Quaternion.Euler(0, -viewAngle / 2f, 0) * transform.forward,
+        viewAngle, viewRange);
+    UnityEditor.Handles.Label(transform.position + Vector3.up * 2.2f,
+        $"aware {Awareness:F2}");
+}
+#endif
+```
+
+Không nhìn được nón nhìn thì không chỉnh được perception. Đây là 10 dòng đáng giá nhất của mục này.
+
+**Chỉ báo cho người chơi**
+
+Awareness phải hiện ra UI (dấu chấm than mờ dần, thanh nhỏ trên đầu NPC). Không có chỉ báo, lén lút thành trò đoán mò — và đó cũng là vấn đề trợ năng.
+
+**Kiểm tra nhanh**
+- Grep trong FSM/BT: có chỗ nào đọc `player.transform` trực tiếp không? Phải bằng 0.
+- Đứng sau tường trong tầm nhìn: NPC có phát hiện không? (không được)
+- `Awareness` có hiện lên UI cho người chơi thấy không?

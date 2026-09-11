@@ -3,7 +3,7 @@ title: Pathfinding
 icon: 🧭
 summary: A*, NavMesh, flow field, hierarchical — chọn đúng thuật toán tìm đường cho quy mô của bạn.
 status: deep
-read: 360
+read: 460
 level: intermediate
 order: 50
 tags: [ai, algorithm, navigation]
@@ -95,3 +95,87 @@ Cài A* cho lưới 2D (C#, không phụ thuộc Unity).
 ```
 
 Yêu cầu *"không cấp phát trong vòng lặp"* và *"trả về đường gần nhất khi thất bại"* là hai điều AI thường bỏ qua và là hai nguồn bug/giật lag phổ biến nhất trong thực tế.
+
+## 🎮 Unity
+
+Unity có NavMesh sẵn và nó tốt — **đừng tự viết A\* cho 3D** trừ khi có lý do đặc biệt.
+
+**Component & nơi đặt**
+- `NavMeshSurface` — trên một GameObject trong scene (cần package **AI Navigation**)
+- `NavMeshAgent` — trên prefab NPC
+- `PathRequestManager.cs` — singleton, giới hạn số lần tìm đường mỗi frame
+
+**Setup NavMesh (Unity 2022+ / Unity 6)**
+
+Từ Unity 2022, NavMesh tách thành package riêng: `Window > Package Manager > AI Navigation`. Component cũ `Navigation` trong menu Window đã bị bỏ.
+
+1. Thêm `NavMeshSurface` vào một GameObject
+2. Chọn `Collect Objects: All` hoặc theo layer
+3. Bấm **Bake**
+4. Với chỗ nhảy/thang: dùng `NavMeshLink`
+
+**Thông số quan trọng trên NavMeshAgent**
+
+```
+Speed                4      m/s
+Angular Speed        360    độ/giây — thấp quá thì NPC quay như xe tải
+Acceleration         12     m/s²
+Stopping Distance    1.5    ← đặt = tầm đánh, nếu không NPC dúi vào người chơi
+Auto Braking         ✓      tắt nếu muốn đi mượt qua nhiều waypoint
+Obstacle Avoidance   Quality: Good / Priority: 50 (random 30-70 mỗi NPC)
+```
+
+**`Priority` phải ngẫu nhiên hoá.** Nếu mọi agent cùng priority 50, chúng đùn nhau thành khối và kẹt. Random 30–70 lúc spawn là xong.
+
+**Giới hạn số lần tìm đường mỗi frame**
+
+Đây là nguyên nhân giật lag phổ biến nhất khi có nhiều NPC:
+
+```csharp
+public class PathRequestManager : MonoBehaviour {
+    public static PathRequestManager I;
+    readonly Queue<(NavMeshAgent agent, Vector3 dest)> queue = new();
+    const int MaxPerFrame = 4;
+
+    void Awake() => I = this;
+
+    public void Request(NavMeshAgent a, Vector3 dest) => queue.Enqueue((a, dest));
+
+    void Update() {
+        for (int i = 0; i < MaxPerFrame && queue.Count > 0; i++) {
+            var (agent, dest) = queue.Dequeue();
+            if (agent != null && agent.isOnNavMesh) agent.SetDestination(dest);
+        }
+    }
+}
+```
+
+**Hành vi khi thất bại — đừng để NPC đứng im**
+
+```csharp
+var path = new NavMeshPath();
+agent.CalculatePath(dest, path);
+
+if (path.status == NavMeshPathStatus.PathComplete) {
+    agent.SetPath(path);
+} else if (path.status == NavMeshPathStatus.PathPartial) {
+    agent.SetPath(path);                      // đi được tới đâu hay tới đó
+} else {
+    // PathInvalid — tìm điểm hợp lệ gần nhất thay vì bỏ cuộc
+    if (NavMesh.SamplePosition(dest, out var hit, 5f, NavMesh.AllAreas))
+        agent.SetDestination(hit.position);
+}
+```
+
+NPC đứng đờ ra vì không tìm được đường là lỗi trông tệ hơn nhiều so với đi tới chỗ gần đúng.
+
+**Cho game 2D**
+
+NavMesh của Unity là 3D. Với 2D có hai lựa chọn:
+- Tự viết A* trên lưới (xem code mẫu ở tab Prompt cho AI) — thường đơn giản hơn cho 2D top-down
+- Dùng NavMesh với collider xoay 90° — làm được nhưng gượng
+
+**Kiểm tra nhanh**
+- 30 NPC cùng đuổi người chơi: Profiler cho thấy Navigation < 1ms/frame?
+- Chặn đường đích hoàn toàn: NPC đi tới điểm gần nhất chứ không đứng im?
+- `agent.isOnNavMesh` được kiểm tra trước mọi `SetDestination` chứ?

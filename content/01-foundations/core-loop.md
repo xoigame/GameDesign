@@ -14,9 +14,39 @@ related: [progression, player-motivation, game-feel]
 
 Công thức tổng quát:
 
-```
-Hành động → Phản hồi → Phần thưởng → Năng lực mới → (quay lại) Hành động
-```
+<figure class="fig">
+<svg viewBox="0 0 660 200" role="img" aria-label="Vòng lặp bốn bước: Hành động, Phản hồi, Phần thưởng, Năng lực mới, rồi quay lại Hành động">
+  <defs>
+    <marker id="cl-a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+      <path d="M0 0 L10 5 L0 10 z" fill="#6ea8fe"/>
+    </marker>
+  </defs>
+  <g class="fig-box-g">
+    <rect x="14"  y="26" width="140" height="54" rx="9" class="fig-box"/>
+    <rect x="184" y="26" width="140" height="54" rx="9" class="fig-box"/>
+    <rect x="354" y="26" width="140" height="54" rx="9" class="fig-box"/>
+    <rect x="524" y="26" width="122" height="54" rx="9" class="fig-box"/>
+  </g>
+  <text x="84"  y="49" text-anchor="middle" class="fig-label" font-size="14">Hành động</text>
+  <text x="84"  y="68" text-anchor="middle" class="fig-muted" font-size="11">bấm nút</text>
+  <text x="254" y="49" text-anchor="middle" class="fig-label" font-size="14">Phản hồi</text>
+  <text x="254" y="68" text-anchor="middle" class="fig-muted" font-size="11">hitstop, âm thanh</text>
+  <text x="424" y="49" text-anchor="middle" class="fig-label" font-size="14">Phần thưởng</text>
+  <text x="424" y="68" text-anchor="middle" class="fig-muted" font-size="11">loot, XP</text>
+  <text x="585" y="49" text-anchor="middle" class="fig-label" font-size="14">Năng lực mới</text>
+  <text x="585" y="68" text-anchor="middle" class="fig-muted" font-size="11">mạnh hơn</text>
+  <g stroke="#6ea8fe" stroke-width="2" marker-end="url(#cl-a)" fill="none">
+    <path d="M156 53 H180"/>
+    <path d="M326 53 H350"/>
+    <path d="M496 53 H520"/>
+    <path d="M585 82 V132 Q585 150 567 150 H102 Q84 150 84 132 V86"/>
+  </g>
+  <text x="334" y="172" text-anchor="middle" class="fig-muted" font-size="11">
+    lặp lại hàng nghìn lần — mỗi vòng người chơi phải mạnh hơn một chút
+  </text>
+</svg>
+<figcaption>Vòng lặp khép kín: điểm mấu chốt là mũi tên quay về — nếu vòng kết thúc ở &ldquo;phần thưởng&rdquo; mà năng lực không đổi, đó chỉ là điểm số chứ chưa phải core loop.</figcaption>
+</figure>
 
 ## Ví dụ thật
 

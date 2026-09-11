@@ -3,7 +3,7 @@ title: Machine Learning & RL
 icon: 🧬
 summary: Học tăng cường và ML-Agents trong game — khi nào đáng dùng, và vì sao thường thì không.
 status: stub
-read: 420
+read: 520
 level: advanced
 order: 100
 tags: [ai, ml, advanced, experimental]

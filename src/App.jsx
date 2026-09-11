@@ -10,6 +10,17 @@ const norm = (s) =>
     .replace(/[̀-ͯ]/g, '')
     .replace(/đ/g, 'd')
 
+/** Các mức cỡ chữ cho phần đọc. 1 = mặc định. */
+export const FONT_STEPS = [0.9, 1, 1.15, 1.3, 1.5]
+
+function readFontScale() {
+  try {
+    const v = Number(localStorage.getItem('gdb:fontScale'))
+    if (FONT_STEPS.includes(v)) return v
+  } catch { /* private mode: dùng mặc định */ }
+  return 1
+}
+
 const MODES = [
   { id: 'mindmap', label: 'Mindmap', hint: 'Toả hai bên quanh gốc' },
   { id: 'tree', label: 'Cây', hint: 'Trái sang phải' },
@@ -27,7 +38,14 @@ export default function App() {
   const [activeLevels, setActiveLevels] = useState(() => new Set())
   const [showRelations, setShowRelations] = useState(false)
   const [navOpen, setNavOpen] = useState(false)   // drawer sidebar trên mobile
+  const [fontScale, setFontScale] = useState(readFontScale)
   const searchRef = useRef(null)
+
+  // Cỡ chữ áp qua biến CSS --fs; mọi rule chữ trong panel nhân với nó.
+  useEffect(() => {
+    document.documentElement.style.setProperty('--fs', String(fontScale))
+    try { localStorage.setItem('gdb:fontScale', String(fontScale)) } catch { /* private mode */ }
+  }, [fontScale])
 
   /* ------------------------------- load data ------------------------------ */
   useEffect(() => {
@@ -269,6 +287,8 @@ export default function App() {
           nodesById={nodesById}
           relations={graph.relations}
           readingPath={graph.readingPath}
+          fontScale={fontScale}
+          setFontScale={setFontScale}
           onSelect={select}
           onClose={() => setSelectedId(null)}
         />

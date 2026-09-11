@@ -18,15 +18,37 @@ Vấn đề với đường cong khó: kỹ năng người chơi tăng theo đư
 
 Độ khó tăng đều tuyến tính gây mệt mỏi. Hình dạng hiệu quả là **răng cưa đi lên**:
 
-```
-khó
- │      ╱│    ╱│      ╱│
- │    ╱  │  ╱  │    ╱  │
- │  ╱    │╱    │  ╱    │
- │╱      ╵     ╵╱      ╵
- └──────────────────────── thời gian
-   học   thử   nghỉ   đỉnh
-```
+<figure class="fig">
+<svg viewBox="0 0 660 250" role="img" aria-label="Đường cong độ khó hình răng cưa đi lên, so với đường tuyến tính">
+  <line x1="52" y1="200" x2="646" y2="200" class="fig-line"/>
+  <line x1="52" y1="24"  x2="52"  y2="200" class="fig-line"/>
+  <text x="14" y="30"  class="fig-muted" font-size="11">khó</text>
+  <text x="600" y="220" class="fig-muted" font-size="11">thời gian →</text>
+  <path d="M52 190 L646 96" stroke="#6b7488" stroke-width="1.5" stroke-dasharray="5 4" fill="none"/>
+  <text x="470" y="128" class="fig-muted" font-size="11">tuyến tính — gây mệt</text>
+  <path d="M52 190 L112 150 L142 172 L202 118 L232 142 L292 88 L322 116 L382 62 L412 92 L472 44 L502 76 L562 32 L592 62 L646 30"
+        stroke="#6ea8fe" stroke-width="2.5" fill="none" stroke-linejoin="round"/>
+  <g fill="#6ea8fe">
+    <circle cx="112" cy="150" r="3.5"/><circle cx="202" cy="118" r="3.5"/>
+    <circle cx="292" cy="88"  r="3.5"/><circle cx="382" cy="62" r="3.5"/>
+    <circle cx="472" cy="44"  r="3.5"/><circle cx="562" cy="32" r="3.5"/>
+  </g>
+  <g class="fig-muted" font-size="10" text-anchor="middle">
+    <text x="82"  y="212">học</text>
+    <text x="127" y="212">nghỉ</text>
+    <text x="172" y="212">luyện</text>
+    <text x="217" y="212">nghỉ</text>
+    <text x="262" y="212">đỉnh</text>
+  </g>
+  <rect x="118" y="158" width="28" height="26" rx="3" fill="#51cf9b" opacity="0.16"/>
+  <rect x="208" y="126" width="28" height="26" rx="3" fill="#51cf9b" opacity="0.16"/>
+  <rect x="298" y="96"  width="28" height="26" rx="3" fill="#51cf9b" opacity="0.16"/>
+  <text x="330" y="240" text-anchor="middle" font-size="11" fill="#51cf9b">
+    ô xanh = đoạn hạ xuống — nơi người chơi CẢM NHẬN được mình đã mạnh lên
+  </text>
+</svg>
+<figcaption>Đoạn hạ xuống sau mỗi đỉnh không phải thời gian lãng phí. Nội dung từng khó nay thành dễ — đó chính là bằng chứng tiến bộ mà thanh XP không thay thế được.</figcaption>
+</figure>
 
 Mỗi răng cưa là một chu kỳ: **giới thiệu cơ chế (dễ) → luyện tập → thử thách đỉnh → hạ xuống**. Đoạn hạ xuống không phải thời gian lãng phí — nó là lúc người chơi *cảm nhận được mình đã mạnh lên*, vì nội dung từng khó nay đã dễ.
 

@@ -3,7 +3,7 @@ title: LLM-driven NPC
 icon: 💬
 summary: Dùng mô hình ngôn ngữ cho NPC — kiến trúc, chi phí, độ trễ, và những rào cản thật sự chưa ai giải xong.
 status: deep
-read: 410
+read: 510
 level: advanced
 order: 70
 tags: [ai, llm, npc, experimental]

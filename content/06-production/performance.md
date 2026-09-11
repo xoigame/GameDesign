@@ -3,7 +3,7 @@ title: Performance
 icon: ⚡
 summary: Ngân sách frame, profiling, và những nguyên nhân giật lag phổ biến nhất.
 status: stub
-read: 480
+read: 580
 level: advanced
 order: 50
 tags: [production, optimization]
@@ -76,3 +76,74 @@ Sau khi viết xong, tự rà lại code và chỉ ra mọi chỗ còn cấp ph�
 ```
 
 **Bẫy thường gặp:** giật lag định kỳ do GC, không phải FPS thấp. 60 FPS có một cú khựng 200ms mỗi 10 giây cảm thấy tệ hơn 40 FPS ổn định.
+
+## 🎮 Unity
+
+Unity có sẵn công cụ đo rất tốt. Vấn đề là **đo sai chỗ** hoặc đo quá muộn.
+
+**Đo trước, tối ưu sau**
+
+`Window > Analysis > Profiler`. Ba cột cần nhìn đầu tiên:
+- **GC Alloc** — cột quan trọng nhất. Bất kỳ giá trị nào > 0 B mỗi frame là nguồn giật lag tương lai.
+- **Time ms** — so với ngân sách 16.6ms (60 FPS)
+- **Calls** — số lần gọi bất thường thường lộ ra vòng lặp sai
+
+**Bật Deep Profile chỉ khi cần** — nó làm chậm game 5–10 lần và bóp méo số liệu. Dùng để tìm hàm nào tốn, không dùng để đo con số tuyệt đối.
+
+**Đo trong game, không chỉ trong Profiler**
+
+```csharp
+using Unity.Profiling;
+
+public class PerfHud : MonoBehaviour {
+    ProfilerRecorder mainThread, gcAlloc, drawCalls;
+
+    void OnEnable() {
+        mainThread = ProfilerRecorder.StartNew(ProfilerCategory.Internal, "Main Thread", 15);
+        gcAlloc    = ProfilerRecorder.StartNew(ProfilerCategory.Memory, "GC Allocated In Frame");
+        drawCalls  = ProfilerRecorder.StartNew(ProfilerCategory.Render, "Draw Calls Count");
+    }
+    void OnDisable() { mainThread.Dispose(); gcAlloc.Dispose(); drawCalls.Dispose(); }
+
+    void OnGUI() {
+        GUI.Label(new Rect(10, 10, 300, 60),
+            $"CPU {mainThread.LastValue / 1e6f:F1} ms\n" +
+            $"GC  {gcAlloc.LastValue} B\n" +
+            $"Draw {drawCalls.LastValue}");
+    }
+}
+```
+
+Overlay này chạy được **trong build thật trên máy thật** — nơi số liệu mới đúng. Profiler trong Editor luôn lạc quan hơn thực tế.
+
+**Ba nguồn cấp phát hay gặp trong Unity**
+
+```csharp
+// ❌ tạo mảng mới mỗi frame
+void Update() { var hits = Physics2D.OverlapCircleAll(pos, r); }
+// ✅ dùng NonAlloc + buffer dùng lại
+readonly Collider2D[] buf = new Collider2D[16];
+void Update() { int n = Physics2D.OverlapCircleNonAlloc(pos, r, buf); }
+
+// ❌ nối chuỗi mỗi frame
+scoreText.text = "Score: " + score;
+// ✅ chỉ cập nhật khi đổi
+if (score != lastScore) { scoreText.SetText("Score: {0}", score); lastScore = score; }
+
+// ❌ LINQ trong vòng lặp nóng
+var closest = enemies.OrderBy(e => Vector3.Distance(e.pos, p)).First();
+// ✅ vòng for thường
+```
+
+`TMP_Text.SetText` với format không cấp phát, khác `text = string.Format(...)`.
+
+**Giật lag quan trọng hơn FPS trung bình**
+
+60 FPS với một cú khựng 200ms mỗi 10 giây cảm thấy tệ hơn 40 FPS ổn định. Trong Profiler, tìm các cột cao đột biến chứ không nhìn đường trung bình.
+
+Hai nguồn khựng phổ biến: GC chạy (xem trên) và `Instantiate` lúc chạy (xem object pooling ở [[architecture-patterns]]).
+
+**Kiểm tra nhanh**
+- Profiler ở trạng thái chơi bình thường: GC Alloc = 0 B/frame?
+- Build ra máy yếu nhất bạn nhắm tới — không phải máy dev.
+- Khi có 100 kẻ địch: frame time có vượt ngân sách không?

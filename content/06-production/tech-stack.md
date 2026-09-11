@@ -3,7 +3,7 @@ title: Chọn Tech Stack
 icon: 🔧
 summary: Engine, ngôn ngữ, công cụ — chọn theo dự án và theo mức độ AI hỗ trợ được.
 status: stub
-read: 470
+read: 570
 level: intermediate
 order: 40
 tags: [production, tooling]

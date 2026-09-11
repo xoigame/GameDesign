@@ -3,7 +3,7 @@ title: Architecture Patterns
 icon: 🧱
 summary: ECS, component, event bus, object pool — chọn kiến trúc theo quy mô thật của dự án, không theo xu hướng.
 status: deep
-read: 450
+read: 550
 level: intermediate
 order: 10
 tags: [production, architecture, code]
@@ -114,3 +114,77 @@ Viết quy ước kiến trúc vào `CLAUDE.md` — đây là cách rẻ nhất 
 ```
 
 Ràng buộc *"logic không phụ thuộc UnityEngine"* đặc biệt có giá trị: nó ép agent viết code kiểm thử được, và tự động cho bạn khả năng mô phỏng.
+
+## 🎮 Unity
+
+Unity đẩy bạn về phía component sẵn rồi. Việc cần làm là **giữ logic tách khỏi MonoBehaviour**.
+
+**Cấu trúc thư mục khuyến nghị**
+
+```
+Assets/Scripts/
+├── Core/            ← C# thuần, KHÔNG using UnityEngine
+│   ├── Combat/      DamageCalculator, StatusEffects
+│   └── Economy/     ShopPricing, LootRoller
+├── Unity/           ← MonoBehaviour, chỉ là lớp vỏ mỏng
+└── Tests/
+    └── EditMode/    ← test Core/, chạy trong mili giây
+```
+
+Ranh giới `Core/` không phụ thuộc `UnityEngine` là thứ cho bạn:
+- Test chạy ở **EditMode** (mili giây) thay vì PlayMode (vài giây mỗi lần)
+- Mô phỏng 10.000 trận không cần render — xem [[balancing-math]]
+- AI agent tự kiểm chứng được thay đổi của nó
+
+**Object pooling — Unity đã có sẵn**
+
+Đừng tự viết pool. `UnityEngine.Pool.ObjectPool<T>` có từ Unity 2021:
+
+```csharp
+using UnityEngine.Pool;
+
+public class BulletSpawner : MonoBehaviour {
+    [SerializeField] Bullet prefab;
+    ObjectPool<Bullet> pool;
+
+    void Awake() {
+        pool = new ObjectPool<Bullet>(
+            createFunc:      () => Instantiate(prefab),
+            actionOnGet:     b  => b.gameObject.SetActive(true),
+            actionOnRelease: b  => b.gameObject.SetActive(false),
+            actionOnDestroy: b  => Destroy(b.gameObject),
+            collectionCheck: true,      // BẬT trong dev: bắt lỗi release hai lần
+            defaultCapacity: 32,
+            maxSize: 256);
+    }
+
+    public Bullet Spawn() {
+        var b = pool.Get();
+        b.Init(onDone: () => pool.Release(b));
+        return b;
+    }
+}
+```
+
+`collectionCheck: true` bắt được lỗi trả cùng một object về pool hai lần — bug rất khó truy nếu không có nó. Tắt nó trong build release.
+
+**Singleton — giới hạn số lượng**
+
+Unity làm singleton quá dễ nên dự án nào cũng có 15 cái. Nguyên tắc: tối đa 3, và chúng phải là **dịch vụ không trạng thái game** (AudioManager, ConfigLoader, TimeManager). Mọi thứ khác truyền qua tham chiếu hoặc ScriptableObject.
+
+**Cái bẫy `GetComponent` trong Update**
+
+```csharp
+// ❌ chạy 60 lần/giây × số object
+void Update() => GetComponent<Rigidbody2D>().velocity = v;
+
+// ✅ cache một lần
+Rigidbody2D rb;
+void Awake() => rb = GetComponent<Rigidbody2D>();
+void Update() => rb.linearVelocity = v;      // Unity 6 đổi tên: velocity -> linearVelocity
+```
+
+**Kiểm tra nhanh**
+- `grep -r "using UnityEngine" Assets/Scripts/Core/` → phải rỗng.
+- Test EditMode chạy dưới 1 giây cho toàn bộ `Core/`.
+- Không có `Instantiate`/`Destroy` nào trong code chạy mỗi frame.

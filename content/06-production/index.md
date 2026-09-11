@@ -3,7 +3,7 @@ title: Production & Tech
 icon: 🏭
 summary: Biến prototype thành sản phẩm — kiến trúc, data-driven, đo đạc, hiệu năng.
 status: deep
-read: 430
+read: 530
 level: basic
 order: 60
 tags: [production, tech]

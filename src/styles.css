@@ -12,6 +12,7 @@
   --fg-2: #a7b0c2;
   --fg-3: #6b7488;
   --accent: #6ea8fe;
+  --fs: 1;                 /* he so co chu, doi boi nut A-/A+ */
   --radius: 10px;
   --font: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
   --mono: 'JetBrains Mono', 'Cascadia Code', Consolas, monospace;
@@ -361,11 +362,11 @@ button { font-family: inherit; font-size: inherit; cursor: pointer; }
 .icon-btn:hover { color: var(--fg); border-color: var(--line-2); }
 
 .panel-title {
-  font-size: 23px; margin: 4px 0 8px; line-height: 1.24; font-weight: 680;
+  font-size: calc(23px * var(--fs)); margin: 4px 0 8px; line-height: 1.24; font-weight: 680;
   display: flex; align-items: baseline; gap: 9px;
 }
 .panel-icon { font-size: 22px; }
-.panel-summary { color: var(--fg-2); margin: 0 0 14px; line-height: 1.6; font-size: 14px; }
+.panel-summary { color: var(--fg-2); margin: 0 0 14px; line-height: 1.6; font-size: calc(14px * var(--fs)); }
 
 .panel-meta { display: flex; flex-wrap: wrap; gap: 5px; margin-bottom: 14px; }
 .chip {
@@ -403,7 +404,7 @@ button { font-family: inherit; font-size: inherit; cursor: pointer; }
   overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
 }
 
-.ref-list { margin: 0; padding-left: 18px; color: var(--fg-2); font-size: 12.5px; line-height: 1.7; }
+.ref-list { margin: 0; padding-left: 18px; color: var(--fg-2); font-size: calc(12.5px * var(--fs)); line-height: 1.7; }
 .ref-list li::marker { color: var(--fg-3); }
 
 .panel-actions { display: flex; flex-wrap: wrap; gap: 7px; align-items: center; margin-bottom: 18px; }
@@ -462,15 +463,15 @@ button { font-family: inherit; font-size: inherit; cursor: pointer; }
 
 /* ------------------------------ markdown body ---------------------------- */
 
-.md { line-height: 1.72; color: #d3d9e4; font-size: 14px; }
+.md { line-height: 1.72; color: #d3d9e4; font-size: calc(14px * var(--fs)); }
 .md > *:first-child { margin-top: 0; }
 .md h1, .md h2, .md h3, .md h4 { color: var(--fg); line-height: 1.35; margin: 1.7em 0 .6em; font-weight: 650; }
-.md h1 { font-size: 20px; }
+.md h1 { font-size: 1.43em; }
 .md h2 {
-  font-size: 17px; padding-bottom: 6px; border-bottom: 1px solid var(--line);
+  font-size: 1.21em; padding-bottom: 6px; border-bottom: 1px solid var(--line);
 }
-.md h3 { font-size: 14.5px; color: var(--accent); }
-.md h4 { font-size: 13px; color: var(--fg-2); }
+.md h3 { font-size: 1.04em; color: var(--accent); }
+.md h4 { font-size: 0.93em; color: var(--fg-2); }
 .md p { margin: 0 0 .95em; }
 .md ul, .md ol { padding-left: 21px; margin: 0 0 1em; }
 .md li { margin-bottom: .38em; }
@@ -486,13 +487,13 @@ button { font-family: inherit; font-size: inherit; cursor: pointer; }
 .md a.wikilink::before { content: '◈ '; opacity: .6; font-size: 10px; }
 .md code {
   background: #1b2131; color: #ffd9a0; padding: 1.5px 5px; border-radius: 4px;
-  font-family: var(--mono); font-size: 12.2px;
+  font-family: var(--mono); font-size: 0.87em;
 }
 .md pre {
   background: #0e121c; border: 1px solid var(--line); border-radius: 9px;
   padding: 13px 15px; overflow-x: auto; margin: 0 0 1.1em;
 }
-.md pre code { background: none; color: #c8d3e8; padding: 0; font-size: 12.2px; line-height: 1.62; }
+.md pre code { background: none; color: #c8d3e8; padding: 0; font-size: 0.87em; line-height: 1.62; }
 .md blockquote {
   margin: 0 0 1.1em; padding: 9px 15px;
   border-left: 3px solid var(--accent);
@@ -500,7 +501,7 @@ button { font-family: inherit; font-size: inherit; cursor: pointer; }
   border-radius: 0 7px 7px 0; color: var(--fg-2);
 }
 .md blockquote p:last-child { margin-bottom: 0; }
-.md table { border-collapse: collapse; width: 100%; margin: 0 0 1.2em; font-size: 13px; display: block; overflow-x: auto; }
+.md table { border-collapse: collapse; width: 100%; margin: 0 0 1.2em; font-size: 0.93em; display: block; overflow-x: auto; }
 .md th, .md td { border: 1px solid var(--line); padding: 7px 11px; text-align: left; }
 .md th { background: var(--bg-3); color: var(--fg); font-weight: 600; }
 .md tr:nth-child(even) td { background: rgba(255,255,255,.017); }
@@ -570,12 +571,145 @@ button { font-family: inherit; font-size: inherit; cursor: pointer; }
 }
 
 @media (max-width: 420px) {
-  .panel-title { font-size: 20px; }
-  .md { font-size: 13.5px; }
+  .panel-title { font-size: calc(20px * var(--fs)); }
+  .md { font-size: calc(13.5px * var(--fs)); }
   .md pre { padding: 11px 12px; }
-  .md pre code { font-size: 11.5px; }
+  .md pre code { font-size: 0.85em; }
   .path-nav { flex-direction: column; }
   .pathnav-btn.next { text-align: left; align-items: flex-start; }
   .lvchip { font-size: 10px; }
   .panel-actions .btn { flex: 1; }
+}
+
+/* ------------------------ nút chỉnh cỡ chữ (A− / A+) ---------------------- */
+
+.fs-ctl {
+  display: flex; align-items: center; gap: 1px; flex: none;
+  background: var(--bg-3); border: 1px solid var(--line); border-radius: 7px;
+  padding: 1px;
+}
+.fs-ctl button {
+  background: none; border: none; color: var(--fg-2);
+  min-width: 26px; height: 24px; border-radius: 5px;
+  font-size: 12.5px; line-height: 1; padding: 0; letter-spacing: .5px;
+  display: inline-flex; align-items: center; justify-content: center;
+}
+.fs-ctl button:hover:not(:disabled) { background: var(--line); color: var(--fg); }
+.fs-ctl button:disabled { opacity: .35; cursor: default; }
+.fs-val {
+  min-width: 34px; text-align: center;
+  color: var(--fg-3); font-size: 10px; font-family: var(--mono);
+  font-variant-numeric: tabular-nums;
+}
+
+/* Mobile: vùng chạm 44px và chữ to hơn cho dễ bấm */
+@media (max-width: 900px) {
+  .fs-ctl { padding: 2px; }
+  .fs-ctl button { min-width: 42px; height: 40px; font-size: 15px; }
+  .fs-val { min-width: 42px; font-size: 12px; }
+  .panel-head { gap: 8px; }
+  .crumbs { flex: 1 1 100%; order: -1; }
+}
+
+/* --------------------- hình minh hoạ SVG trong markdown ------------------- */
+
+.md svg {
+  display: block;
+  max-width: 100%;
+  height: auto;
+  margin: 4px 0 1.3em;
+}
+/* Khung cuộn ngang cho sơ đồ rộng — trang không bao giờ được cuộn ngang */
+.md .fig {
+  margin: 0 0 1.3em;
+  padding: 14px 14px 10px;
+  background: #0e121c;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  overflow-x: auto;
+}
+.md .fig svg { margin: 0 auto; }
+.md .fig figcaption,
+.md .fig-cap {
+  margin-top: 10px;
+  color: var(--fg-3);
+  font-size: calc(11.5px * var(--fs));
+  line-height: 1.55;
+  text-align: center;
+}
+/* Chữ trong SVG dùng biến để đổi theo theme và theo cỡ chữ */
+.md .fig text { font-family: var(--font); fill: var(--fg-2); }
+.md .fig .fig-label { fill: var(--fg); font-weight: 600; }
+.md .fig .fig-muted { fill: var(--fg-3); }
+.md .fig .fig-box { fill: var(--bg-3); stroke: var(--line-2); }
+.md .fig .fig-line { stroke: var(--line-2); fill: none; }
+
+/* Sơ đồ trên màn hình hẹp: giữ kích thước tối thiểu và cho cuộn ngang TRONG
+   khung .fig, thay vì co nhỏ tới mức không đọc được chữ. Trang vẫn không
+   bao giờ cuộn ngang vì .fig đã có overflow-x: auto. */
+@media (max-width: 900px) {
+  .md .fig svg { min-width: 480px; }
+  .md .fig { position: relative; }
+  .md .fig::after {
+    content: '↔ vuốt ngang để xem hết';
+    display: block;
+    margin-top: 8px;
+    text-align: center;
+    color: var(--fg-3);
+    font-size: calc(10.5px * var(--fs));
+  }
+}
+
+/* ------------------------------ tab trong panel --------------------------- */
+
+.panel-tabs {
+  display: flex; gap: 3px;
+  margin: 0 0 16px;
+  border-bottom: 1px solid var(--line);
+  overflow-x: auto;
+}
+.ptab {
+  background: none; border: none; border-bottom: 2px solid transparent;
+  color: var(--fg-3); padding: 8px 12px; font-size: 12.5px;
+  white-space: nowrap; border-radius: 6px 6px 0 0;
+  transition: color .12s, border-color .12s, background .12s;
+}
+.ptab:hover { color: var(--fg-2); background: var(--bg-3); }
+.ptab.on { color: var(--fg); border-bottom-color: var(--accent); }
+.ptab-prompt.on { color: #c4aeff; border-bottom-color: #b197fc; }
+.ptab-unity.on  { color: #7fe3ef; border-bottom-color: #4dd4e0; }
+
+.tab-pane { margin-bottom: 8px; }
+.pane-head {
+  display: flex; align-items: flex-start; gap: 12px;
+  margin-bottom: 14px;
+}
+.pane-hint {
+  flex: 1; margin: 0;
+  color: var(--fg-3); font-size: calc(12px * var(--fs)); line-height: 1.55;
+}
+.pane-head .btn { flex: none; }
+
+/* sắc thái riêng cho từng tab */
+.ai-pane .btn {
+  background: rgba(177,151,252,.16); border-color: rgba(177,151,252,.45); color: #c4aeff;
+}
+.ai-pane .btn:hover { background: rgba(177,151,252,.28); }
+.ai-md h3 { color: #c4aeff; }
+.ai-md code { background: rgba(177,151,252,.12); color: #ddd0ff; }
+.ai-md pre code { background: none; color: #c8d3e8; }
+
+.unity-pane .btn {
+  background: rgba(77,212,224,.16); border-color: rgba(77,212,224,.45); color: #7fe3ef;
+}
+.unity-pane .btn:hover { background: rgba(77,212,224,.28); }
+.unity-md h3 { color: #7fe3ef; }
+.unity-md code { background: rgba(77,212,224,.12); color: #b8eef5; }
+.unity-md pre { border-color: rgba(77,212,224,.22); }
+.unity-md pre code { background: none; color: #c8d3e8; }
+
+@media (max-width: 900px) {
+  .ptab { padding: 11px 12px; font-size: 13px; }
+  .pane-head { flex-direction: column; gap: 10px; }
+  .pane-head .btn { width: 100%; }
 }

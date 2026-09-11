@@ -92,7 +92,14 @@ function countWords(body) {
   return body.replace(/```[\s\S]*?```/g, ' ').split(/\s+/).filter(Boolean).length
 }
 
-const AI_HEADING = /^##[ \t]*(?:🤖[ \t]*)?Prompt cho AI[ \t]*$/
+/**
+ * Các mục đặc biệt được tách khỏi thân bài thành trường riêng, để web render
+ * thành tab và để AI đọc đúng phần nó cần.
+ */
+const SECTIONS = [
+  { key: 'aiPrompt', re: /^##[ \t]*(?:🤖[ \t]*)?Prompt cho AI[ \t]*$/, required: true },
+  { key: 'unity', re: /^##[ \t]*(?:🎮[ \t]*)?Unity[ \t]*$/, required: false },
+]
 
 /** Mức độ kiến thức. Chấp nhận cả tiếng Việt lẫn tiếng Anh trong frontmatter. */
 const LEVELS = ['basic', 'intermediate', 'advanced']
@@ -114,32 +121,42 @@ function normalizeLevel(raw, id, warnings) {
 }
 
 /**
- * Tách mục "## 🤖 Prompt cho AI" ra khỏi thân bài thành trường riêng.
- * Quét theo dòng và theo dõi code fence, vì mục này thường chứa block ``` có
- * thể lẫn ký tự '#' bên trong.
+ * Tách các mục đặc biệt (Prompt cho AI, Unity) khỏi thân bài thành trường riêng.
+ * Quét theo dòng và theo dõi code fence, vì các mục này chứa block ``` có thể
+ * lẫn ký tự '#' bên trong (nhất là mục Unity với code C#).
  */
-function extractAiPrompt(body) {
+function extractSections(body) {
   const lines = body.split('\n')
-  let start = -1
-  let end = lines.length
+  const found = []          // { key, start, end }
   let inFence = false
 
   for (let i = 0; i < lines.length; i++) {
     if (/^\s*(```|~~~)/.test(lines[i])) { inFence = !inFence; continue }
     if (inFence) continue
-    if (start === -1) {
-      if (AI_HEADING.test(lines[i])) start = i
-    } else if (/^##[ \t]/.test(lines[i])) {
-      end = i
-      break
-    }
-  }
-  if (start === -1) return { body, aiPrompt: '' }
 
-  const aiPrompt = lines.slice(start + 1, end).join('\n').trim()
-  const rest = [...lines.slice(0, start), ...lines.slice(end)]
+    // bất kỳ heading cấp 2 nào cũng đóng mục đang mở
+    const open = found.length ? found[found.length - 1] : null
+    if (open && open.end === -1 && /^##[ \t]/.test(lines[i])) open.end = i
+
+    const hit = SECTIONS.find((sec) => sec.re.test(lines[i]))
+    if (hit) found.push({ key: hit.key, start: i, end: -1 })
+  }
+  const last = found.length ? found[found.length - 1] : null
+  if (last && last.end === -1) last.end = lines.length
+
+  const out = { body }
+  for (const sec of SECTIONS) out[sec.key] = ''
+  if (!found.length) return out
+
+  for (const f of found) out[f.key] = lines.slice(f.start + 1, f.end).join('\n').trim()
+
+  // bỏ mọi dòng thuộc các mục đã tách ra khỏi thân bài
+  const drop = new Set()
+  for (const f of found) for (let i = f.start; i < f.end; i++) drop.add(i)
+  out.body = lines.filter((_, i) => !drop.has(i))
     .join('\n').replace(/\n{3,}/g, '\n\n').trim()
-  return { body: rest, aiPrompt }
+
+  return out
 }
 
 function build({ strict = false, quiet = false } = {}) {
@@ -159,7 +176,7 @@ function build({ strict = false, quiet = false } = {}) {
     const rel = path.relative(CONTENT_DIR, file).split(path.sep).join('/')
     const parsed = parseFrontmatter(fs.readFileSync(file, 'utf8'))
     const data = parsed.data
-    const { body, aiPrompt } = extractAiPrompt(parsed.body)
+    const { body, aiPrompt, unity } = extractSections(parsed.body)
 
     const segments = rel.split('/')
     const fileName = segments[segments.length - 1].replace(/\.md$/, '')
@@ -211,9 +228,10 @@ function build({ strict = false, quiet = false } = {}) {
       order: typeof data.order === 'number' ? data.order : 999,
       collapsed: data.collapsed === true,
       path: rel,
-      words: countWords(body) + countWords(aiPrompt),
+      words: countWords(body) + countWords(aiPrompt) + countWords(unity),
       body,
       aiPrompt,
+      unity,
     })
   }
 
@@ -378,6 +396,7 @@ function build({ strict = false, quiet = false } = {}) {
       stub: list.filter((n) => n.status === 'stub').length,
       relations: relations.length,
       withPrompt: list.length - missingPrompt.length,
+      withUnity: list.filter((n) => n.unity).length,
       basic: list.filter((n) => n.level === 'basic').length,
       intermediate: list.filter((n) => n.level === 'intermediate').length,
       advanced: list.filter((n) => n.level === 'advanced').length,
@@ -399,7 +418,7 @@ function build({ strict = false, quiet = false } = {}) {
     console.log(
       '[graph] ' + s.nodes + ' node · ' + s.branches + ' nhánh · ' +
       s.deep + ' deep / ' + s.stub + ' stub · ' + s.relations + ' liên kết · ' +
-      s.withPrompt + '/' + s.nodes + ' có prompt · ' +
+      s.withPrompt + '/' + s.nodes + ' có prompt · ' + s.withUnity + ' có Unity · ' +
       s.basic + ' cơ bản / ' + s.intermediate + ' trung cấp / ' + s.advanced + ' chuyên sâu · ' +
       s.words + ' từ'
     )
@@ -450,7 +469,7 @@ function renderIndex(graph, nodes) {
   const line = (id, prefix) => {
     const n = nodes.get(id)
     const badge = n.status === 'stub' ? ' _(stub — cần viết thêm)_' : ''
-    const prompt = n.aiPrompt ? ' 🤖' : ''
+    const prompt = (n.aiPrompt ? ' 🤖' : '') + (n.unity ? ' 🎮' : '')
     const mark = { basic: '●', intermediate: '◐', advanced: '○' }[n.level] || '·'
     L.push(prefix + '- ' + mark + ' `#' + n.readIndex + '` **' + n.title + '** `#' + n.id + '`' +
            badge + prompt + ' — ' + (n.summary || '(chưa có summary)') +
@@ -460,6 +479,8 @@ function renderIndex(graph, nodes) {
   line(graph.root, '')
   L.push('')
   L.push('> **Ký hiệu:** ● cơ bản · ◐ trung cấp · ○ chuyên sâu · `#N` = thứ tự trong lộ trình đọc')
+  L.push('>')
+  L.push('> 🎮 = node có mục **Unity**: cách hiện thực hoá bước đó trong Unity (code C# + sơ đồ setup).')
   L.push('>')
   L.push('> 🤖 = node có mục **Prompt cho AI**: hướng dẫn cách diễn đạt yêu cầu cho')
   L.push('> chủ đề đó (phải nêu rõ gì, mẫu prompt, bẫy thường gặp). Đọc mục này trước')

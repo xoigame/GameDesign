@@ -3,7 +3,7 @@ title: Data-Driven Design
 icon: 🗄️
 summary: Tách dữ liệu khỏi code — quyết định kiến trúc quan trọng nhất cho việc cân bằng và cho làm việc với AI.
 status: deep
-read: 440
+read: 540
 level: intermediate
 order: 20
 tags: [production, architecture, key]
@@ -128,3 +128,76 @@ KHÔNG: hardcode số trong code, kể cả "tạm thời"
 Không có ranh giới này, agent sẽ rải hằng số khắp code trong lúc "sửa cho chạy", và vài phiên sau bạn mất khả năng cân bằng game. Xem [[agent-guardrails]].
 
 Ngoài ra, dữ liệu dạng JSON/CSV là thứ **AI thao tác cực tốt**: sinh 30 biến thể kẻ địch theo schema, kiểm tra tham chiếu chéo, phát hiện giá trị bất thường — đều là việc nó làm nhanh và chính xác.
+
+## 🎮 Unity
+
+Unity có sẵn công cụ tốt nhất cho việc này: **ScriptableObject**. Nhưng nó có một điểm rất dễ dính bẫy.
+
+**Component & nơi đặt**
+- `Assets/Data/` — mọi ScriptableObject cấu hình
+- `Assets/Data/Balance/*.csv` — bảng số lớn, import qua editor script
+
+**Code**
+
+```csharp
+[CreateAssetMenu(menuName = "Game/Weapon Data")]
+public class WeaponData : ScriptableObject {
+    public float damage = 12f;
+    public float cooldown = 0.4f;
+    public AnimationCurve damageByLevel = AnimationCurve.Linear(1, 12, 50, 220);
+
+    // Validate ngay trong Editor — dữ liệu hỏng lộ ra lúc sửa, không phải lúc chạy
+    void OnValidate() {
+        if (damage <= 0)      Debug.LogError($"{name}: damage phải > 0", this);
+        if (cooldown < 0.05f) Debug.LogError($"{name}: cooldown < 0.05s là quá ngắn", this);
+    }
+}
+```
+
+**⚠️ Bẫy lớn nhất: ScriptableObject bị sửa vĩnh viễn trong Editor**
+
+Nếu code làm `weaponData.damage += 5`, giá trị đó **ghi thẳng vào asset** và còn nguyên sau khi thoát Play Mode. Build thì không sao (asset chỉ đọc), nhưng trong Editor bạn sẽ âm thầm phá cân bằng game của chính mình.
+
+```csharp
+// ❌ SAI — sửa asset gốc
+void ApplyBuff() => data.damage *= 1.5f;
+
+// ✅ ĐÚNG — ScriptableObject chỉ đọc, trạng thái lúc chạy nằm ở instance
+public class WeaponInstance {
+    readonly WeaponData data;
+    public float DamageMultiplier = 1f;
+    public float Damage => data.damage * DamageMultiplier;
+}
+```
+
+**Quy tắc: ScriptableObject = read-only lúc chạy.** Mọi thứ thay đổi được phải nằm trong class runtime riêng.
+
+**Hot reload — chỉnh số khi game đang chạy**
+
+Ưu điểm lớn của ScriptableObject: sửa giá trị trong Inspector **lúc Play Mode là có hiệu lực ngay**, và (khác với sửa field trên MonoBehaviour) giá trị **không bị revert** khi thoát Play.
+
+Đây chính là vòng lặp cân bằng nhanh mà [[balancing-math]] cần. Tận dụng: mở Inspector khoá (lock) asset config, chơi, chỉnh, thấy ngay.
+
+**Bảng số lớn thì dùng CSV**
+
+Với 200 kẻ địch, Inspector không phải chỗ để sửa. Giữ CSV làm nguồn, viết editor script import thành ScriptableObject:
+
+```csharp
+[MenuItem("Tools/Import Balance CSV")]
+static void Import() {
+    foreach (var row in ReadCsv("Assets/Data/Balance/enemies.csv")) {
+        var so = LoadOrCreate<EnemyData>($"Assets/Data/Enemies/{row["id"]}.asset");
+        so.hp     = float.Parse(row["hp"]);
+        so.damage = float.Parse(row["damage"]);
+        EditorUtility.SetDirty(so);
+    }
+    AssetDatabase.SaveAssets();
+}
+```
+
+Cân bằng trên Google Sheets, export CSV, bấm một nút. Xem [[agent-guardrails]] về việc phân quyền cho AI trên lớp dữ liệu này.
+
+**Kiểm tra nhanh**
+- Grep code tìm phép gán vào field của ScriptableObject — phải bằng 0.
+- Sửa một giá trị lúc Play Mode: có hiệu lực ngay không?
+- `OnValidate` có bắt được giá trị vô lý không? Thử nhập `damage = -5`.

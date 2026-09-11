@@ -74,3 +74,104 @@ hit_feedback:
 ```
 
 Sau đó bạn tự tinh chỉnh bằng tay — đây là phần **bắt buộc phải có con người trong vòng lặp**. Kinh nghiệm thực tế: nhờ AI dựng hệ thống có tham số hoá và phơi mọi hằng số ra một file config ([[data-driven-design]]), rồi bạn ngồi chỉnh số trong lúc game đang chạy.
+
+## 🎮 Unity
+
+Game feel trong Unity gần như hoàn toàn là **ba thứ rẻ tiền**: hitstop, flash, screenshake. Làm đúng ba cái này đã được ~70% cảm giác.
+
+**Component & nơi đặt**
+- `HitFeedback.cs` — đặt trên prefab kẻ địch và người chơi
+- `FeelConfig` (ScriptableObject) — một asset duy nhất, mọi thứ đọc từ đây
+- `TimeManager.cs` — singleton, chỉ nó được phép đụng `Time.timeScale`
+
+**Code**
+
+```csharp
+[CreateAssetMenu(menuName = "Game/Feel Config")]
+public class FeelConfig : ScriptableObject {
+    [Header("Hitstop")]
+    public float lightHitstopMs = 60f;
+    public float heavyHitstopMs = 90f;
+    public float killHitstopMs  = 150f;
+
+    [Header("Flash")]
+    public Color flashColor = Color.white;
+    public float flashMs = 70f;
+
+    [Header("Screenshake")]
+    public float amplitude = 6f;      // pixel ở độ phân giải tham chiếu
+    public float shakeMs = 140f;
+}
+```
+
+```csharp
+public class TimeManager : MonoBehaviour {
+    public static TimeManager I { get; private set; }
+    Coroutine running;
+
+    void Awake() => I = this;
+
+    /// Dừng hình khi trúng đòn. Dùng Realtime vì timeScale đang bằng 0.
+    public void Hitstop(float ms) {
+        if (running != null) StopCoroutine(running);
+        running = StartCoroutine(Freeze(ms / 1000f));
+    }
+
+    IEnumerator Freeze(float seconds) {
+        Time.timeScale = 0f;
+        yield return new WaitForSecondsRealtime(seconds);
+        Time.timeScale = 1f;
+        running = null;
+    }
+}
+```
+
+```csharp
+public class HitFeedback : MonoBehaviour {
+    [SerializeField] FeelConfig cfg;
+    [SerializeField] SpriteRenderer sr;      // cache trong Awake, không GetComponent lúc chạy
+
+    static readonly int FlashAmount = Shader.PropertyToID("_FlashAmount");
+    MaterialPropertyBlock mpb;               // tránh tạo material instance mỗi lần
+
+    void Awake() {
+        sr  = GetComponent<SpriteRenderer>();
+        mpb = new MaterialPropertyBlock();
+    }
+
+    public void OnHit(bool heavy) {
+        TimeManager.I.Hitstop(heavy ? cfg.heavyHitstopMs : cfg.lightHitstopMs);
+        StartCoroutine(Flash());
+        CameraShake.I.Shake(cfg.amplitude, cfg.shakeMs);
+    }
+
+    IEnumerator Flash() {
+        sr.GetPropertyBlock(mpb);
+        mpb.SetFloat(FlashAmount, 1f);
+        sr.SetPropertyBlock(mpb);
+
+        yield return new WaitForSecondsRealtime(cfg.flashMs / 1000f);
+
+        sr.GetPropertyBlock(mpb);
+        mpb.SetFloat(FlashAmount, 0f);
+        sr.SetPropertyBlock(mpb);
+    }
+}
+```
+
+**Ba cái bẫy Unity cụ thể**
+
+1. **`WaitForSeconds` vô dụng khi `timeScale = 0`.** Hitstop dùng `WaitForSecondsRealtime`, nếu không coroutine đứng mãi mãi.
+2. **Đổi `sr.material` tạo material instance mới mỗi object** → tăng draw call, rò bộ nhớ. Dùng `MaterialPropertyBlock`.
+3. **Screenshake phải nhân với hệ số trợ năng.** Xem [[accessibility]] — để `ShakeScale = 0` là tắt hẳn, và nó phải là *một* biến duy nhất, không rải `transform.position +=` khắp nơi.
+
+**Screenshake: tự viết hay Cinemachine?**
+- Tự viết: đủ cho 2D, kiểm soát hoàn toàn, không thêm package.
+- Cinemachine Impulse: đúng hơn cho 3D và nhiều camera, nhưng phải học hệ thống Impulse Source/Listener.
+
+Với dự án nhỏ, tự viết một `CameraShake` 30 dòng có `amplitude`, `duration`, `falloff` là đủ và dễ chỉnh hơn.
+
+**Kiểm tra nhanh**
+- Tắt hết particle và âm thanh, chỉ để hitstop + flash. Vẫn thấy "đã tay" không? Nếu có, nền tảng đúng.
+- Đặt `ShakeScale = 0` trong settings — game vẫn chơi được bình thường chứ?
+- Profiler: `OnHit` không được cấp phát (GC Alloc = 0 B).

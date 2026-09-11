@@ -3,7 +3,7 @@
 Kho kiến thức **mindmap** về Game Design và AI trong game — đồng thời là **bộ não thiết kế** để AI agent (Codex, Claude Code, Cursor) đọc trước khi sinh code game.
 
 <p align="center">
-  <em>49 node · 7 nhánh · ~25.000 từ · lộ trình đọc 1→49 · 19 cơ bản / 20 trung cấp / 10 chuyên sâu</em>
+  <em>58 node · 8 nhánh · ~33.000 từ · lộ trình đọc 1→58 · 21 cơ bản / 25 trung cấp / 12 chuyên sâu</em>
 </p>
 
 ---
@@ -37,7 +37,9 @@ Thêm một file `.md` → node tự xuất hiện trên mindmap, tự vào mụ
 
 ## Tính năng web
 
-- **Lộ trình đọc 1→49** — mỗi node có số thứ tự; panel có nút ← → để đi tiếp đúng thứ tự
+- **Lộ trình đọc 1→58** — mỗi node có số thứ tự; panel có nút ← → để đi tiếp đúng thứ tự
+- **Chỉnh cỡ chữ** — nút A− / A+ (90%–150%), nhớ lựa chọn, vùng chạm 42px trên điện thoại
+- **Sơ đồ minh hoạ** — SVG nội tuyến trong markdown, tự đổi màu theo theme, cuộn ngang trên màn hẹp
 - **Mức độ kiến thức** — ● cơ bản / ◐ trung cấp / ○ chuyên sâu, lọc được ngay ở sidebar
 - **3 kiểu layout** — Mindmap hai bên, Cây trái–phải, Toả tròn
 - **Thu gọn / mở rộng** từng nhánh, hoặc toàn bộ
@@ -45,9 +47,9 @@ Thêm một file `.md` → node tự xuất hiện trên mindmap, tự vào mụ
 - **Lọc theo tag**
 - **Liên kết ngang** giữa các node (nét đứt), làm nổi khi chọn node
 - **Panel chi tiết** render markdown đầy đủ: bảng, code block, blockquote
-- **Khối 🤖 Prompt cho AI** ở mỗi node — khối riêng, có nút copy: phải nêu rõ gì, mẫu prompt, bẫy thường gặp
+- **3 tab mỗi node** — Nội dung · 🤖 Prompt cho AI · 🎮 Unity (tab Unity chỉ hiện khi node có phần hiện thực hoá)
 - **Copy cho AI** — copy một node hoặc cả nhánh dưới dạng markdown có ngữ cảnh, dán thẳng vào chat
-- **Xuất playbook prompt** — gộp riêng mục 🤖 của cả 49 node thành một file nhỏ gọn
+- **Xuất playbook prompt** — gộp riêng mục 🤖 của cả 58 node thành một file nhỏ gọn
 - **Xuất toàn bộ** kho thành một file `.md` duy nhất
 - Minimap, pan/zoom, theme tối
 
@@ -57,7 +59,8 @@ Thêm một file `.md` → node tự xuất hiện trên mindmap, tự vào mụ
 |---|---|
 | 🎯 **Nền tảng** | Design pillars, core loop, động lực người chơi, game feel, MDA |
 | ⚙️ **Systems** | Kinh tế, tiến trình, chiến đấu, cân bằng toán, đường cong khó, RNG |
-| 🗺️ **Content** | Level design, procedural generation, nhịp độ, narrative, UX/HUD |
+| 🗺️ **Content** | Level design, procedural generation, nhịp độ, narrative, onboarding |
+| 🎨 **Nghe nhìn & UX** | Art direction, animation, UI, HUD, UX flow, trợ năng, âm thanh, adaptive music |
 | 🤖 **AI trong game** | FSM, Behavior Tree, GOAP, Utility AI, pathfinding, AI Director, LLM-NPC |
 | 🛠️ **Làm game với AI** | Quy trình, GDD cho AI đọc, prompt pattern, agent guardrails |
 | 🏭 **Production** | Kiến trúc, data-driven design, playtest metrics, hiệu năng |
@@ -69,16 +72,17 @@ Trạng thái node: `deep` = đã viết đủ dùng · `stub` = mới có khung
 
 ## Lộ trình đọc
 
-Sidebar mở sẵn tab **Lộ trình** — danh sách 1→49 theo thứ tự nên đọc, chia 6 giai đoạn:
+Sidebar mở sẵn tab **Lộ trình** — danh sách 1→58 theo thứ tự nên đọc, chia 7 giai đoạn:
 
 | Giai đoạn | # | Nội dung |
 |---|---|---|
 | A. Nhập môn | 1–8 | Pillars, core loop, động lực, game feel |
 | B. Giao việc cho AI | 9–15 | Quy trình, GDD cho máy đọc, prompt, guardrails, template |
 | C. Hệ thống | 16–24 | Tiến trình, kinh tế, combat, độ khó, cân bằng |
-| D. Nội dung | 25–31 | Level, onboarding, nhịp độ, UX, procgen |
-| E. AI trong game | 32–42 | FSM → BT → perception → pathfinding → utility → GOAP → LLM |
-| F. Production | 43–49 | Data-driven, kiến trúc, đo đạc, hiệu năng |
+| D. Nội dung | 25–30 | Level, onboarding, nhịp độ, narrative, procgen |
+| E. Nghe nhìn & UX | 31–40 | Art direction → animation → UI → HUD → UX flow → trợ năng → âm thanh |
+| F. AI trong game | 41–51 | FSM → BT → perception → pathfinding → utility → GOAP → LLM |
+| G. Production | 52–58 | Data-driven, kiến trúc, đo đạc, hiệu năng |
 
 Giai đoạn A+B (15 node, tất cả đều ● cơ bản) là **phần tối thiểu để bắt đầu giao việc cho AI**. Các giai đoạn sau tra khi cần, không phải đọc tuần tự.
 
@@ -145,7 +149,7 @@ Mục 🤖 luôn gồm ba phần, và mỗi phần chống một kiểu hỏng k
 **3. Copy cả nhánh** — nút **Copy cả nhánh** trong panel. Kèm cả kiến thức lẫn prompt của mọi node con.
 
 **4. Xuất file** — sidebar có hai nút:
-- **🤖 Xuất playbook prompt** — chỉ 49 mục 🤖, nhỏ gọn, dán thẳng vào chat được.
+- **🤖 Xuất playbook prompt** — chỉ 58 mục 🤖, nhỏ gọn, dán thẳng vào chat được.
 - **⭳ Xuất toàn bộ kho** — mọi thứ. Dùng khi AI không đọc được ổ đĩa.
 
 ## Lệnh
@@ -167,7 +171,8 @@ GameDesign/
 ├── content/               ← NGUỒN CHÂN LÝ
 │   ├── _SCHEMA.md
 │   ├── index.md
-│   └── 01-foundations/ … 07-blueprints/
+│   └── 01-foundations/ … 08-presentation/
+├── sources/               ← thả sách vào đây (không commit)
 ├── scripts/
 │   ├── build-graph.mjs    ← parser + validator + generator
 │   └── dev.mjs

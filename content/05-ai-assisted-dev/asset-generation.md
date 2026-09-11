@@ -3,7 +3,7 @@ title: Sinh Asset bằng AI
 icon: 🎨
 summary: Sprite, âm thanh, nhạc, 3D — công cụ, giới hạn, và vấn đề nhất quán phong cách.
 status: stub
-read: 490
+read: 590
 level: advanced
 order: 50
 tags: [ai-dev, asset, art]

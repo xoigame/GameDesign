@@ -3,7 +3,7 @@ title: GOAP
 icon: 🎯
 summary: Goal-Oriented Action Planning — NPC tự tìm chuỗi hành động để đạt mục tiêu, thay vì làm theo kịch bản.
 status: deep
-read: 400
+read: 500
 level: advanced
 order: 30
 tags: [ai, planning, advanced]

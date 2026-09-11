@@ -3,7 +3,7 @@ title: Behavior Tree
 icon: 🌳
 summary: Cây hành vi — chuẩn công nghiệp cho AI NPC: cấu trúc node, blackboard, và cách tránh cây phình to.
 status: deep
-read: 340
+read: 440
 level: intermediate
 order: 20
 tags: [ai, pattern, industry-standard]

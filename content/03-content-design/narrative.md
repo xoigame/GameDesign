@@ -3,7 +3,7 @@ title: Narrative Design
 icon: 📖
 summary: Kể chuyện bằng phương tiện của game — không gian, cơ chế, hệ thống — chứ không chỉ bằng cắt cảnh.
 status: stub
-read: 300
+read: 290
 level: intermediate
 order: 40
 tags: [content, narrative]

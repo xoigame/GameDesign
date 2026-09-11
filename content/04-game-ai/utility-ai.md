@@ -3,7 +3,7 @@ title: Utility AI
 icon: 📊
 summary: Chấm điểm mọi lựa chọn rồi chọn cái cao nhất — kiến trúc linh hoạt nhất cho NPC có nhiều nhu cầu cạnh tranh.
 status: deep
-read: 380
+read: 480
 level: advanced
 order: 40
 tags: [ai, decision-making]

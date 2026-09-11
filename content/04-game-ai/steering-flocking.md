@@ -3,7 +3,7 @@ title: Steering & Flocking
 icon: 🐦
 summary: Chuyển động mượt và hành vi bầy đàn — seek, flee, arrive, separation, và ba luật của Boids.
 status: stub
-read: 370
+read: 470
 level: advanced
 order: 90
 tags: [ai, movement]

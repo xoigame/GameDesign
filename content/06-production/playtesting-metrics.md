@@ -3,7 +3,7 @@ title: Playtesting & Metrics
 icon: 📊
 summary: Đo cái gì, hỏi thế nào, và vì sao người chơi nói sai về chính trải nghiệm của họ.
 status: deep
-read: 460
+read: 560
 level: intermediate
 order: 30
 tags: [production, testing, data]

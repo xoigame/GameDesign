@@ -56,6 +56,14 @@ Mục `## 🤖 Prompt cho AI` **bắt buộc có ở mọi node** — build tác
 
 Cây node **suy ra từ cây thư mục** — không khai báo ở đâu khác. Quy ước đầy đủ: `content/_SCHEMA.md`.
 
+## Mục Unity
+
+Node hiện thực hoá được trong Unity thì có mục `## 🎮 Unity` ở cuối (sau mục 🤖). Build tách thành `node.unity`, web hiện thành tab thứ ba. **Không bắt buộc** — node lý thuyết thì bỏ qua. Code trong mục này phải chạy được, không phải giả mã. Cấu trúc đầy đủ ở `content/_SCHEMA.md`.
+
+## Hình minh hoạ
+
+Node có thể chứa SVG nội tuyến trong `<figure class="fig">`. **Tuyệt đối không để dòng trống bên trong figure** — markdown coi dòng trống là kết thúc khối HTML thô, phần SVG sau đó bị đẩy ra ngoài `<svg>` và render thành chữ lộn xộn. Lỗi này không trông giống lỗi cú pháp nên rất dễ bỏ sót. Class dùng chung và quy ước đầy đủ ở `content/_SCHEMA.md`.
+
 ## Quy ước code
 
 - ES modules, không TypeScript.
@@ -78,7 +86,7 @@ Luật: **đề xuất trước, sửa sau**. Khi hai nguồn mâu thuẫn thì 
 
 ## Ràng buộc
 
-- Giữ nguyên cấu trúc 7 nhánh trừ khi được yêu cầu đổi.
+- Giữ nguyên cấu trúc 8 nhánh trừ khi được yêu cầu đổi.
 - Đừng đổi `id` của node đã tồn tại — các node khác đang tham chiếu tới nó.
 - Đừng xoá node; nếu nội dung lỗi thời, hãy sửa và ghi chú.
 - Nội dung viết bằng **tiếng Việt, thuật ngữ chuyên ngành giữ tiếng Anh** (core loop, behavior tree, faucet/drain…).

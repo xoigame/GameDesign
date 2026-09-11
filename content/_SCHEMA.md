@@ -98,6 +98,83 @@ Ba phần này trả lời ba câu khác nhau, đừng gộp:
 
 Tiêu đề chấp nhận cả `## Prompt cho AI` (không emoji), nhưng nên giữ emoji cho đồng bộ.
 
+## Hình minh hoạ (SVG nội tuyến)
+
+Node có thể chứa sơ đồ SVG viết thẳng trong markdown:
+
+```html
+<figure class="fig">
+<svg viewBox="0 0 660 200" role="img" aria-label="Mô tả cho người dùng screen reader">
+  <rect x="14" y="26" width="140" height="54" rx="9" class="fig-box"/>
+  <text x="84" y="49" text-anchor="middle" class="fig-label" font-size="14">Nhãn</text>
+</svg>
+<figcaption>Chú thích dưới hình.</figcaption>
+</figure>
+```
+
+> ⚠️ **TUYỆT ĐỐI KHÔNG để dòng trống bên trong `<figure>`.**
+> Trong markdown, một dòng trống **kết thúc khối HTML thô** — phần SVG sau dòng
+> trống sẽ bị đẩy ra ngoài `<svg>` và render thành chữ lộn xộn. Đây là lỗi rất
+> dễ vấp và trông không giống lỗi cú pháp.
+
+**Class dùng chung** (tự đổi màu theo theme, đừng hardcode màu cho những thứ này):
+
+| Class | Dùng cho |
+|---|---|
+| `fig-box` | Khung hộp nền |
+| `fig-line` | Đường nối, trục |
+| `fig-label` | Chữ chính |
+| `fig-muted` | Chữ phụ, ghi chú |
+
+Màu nhấn thì hardcode được, nên dùng đúng bảng màu của app:
+`#6ea8fe` xanh dương · `#51cf9b` xanh lá · `#ffd43b` vàng · `#ff8787` đỏ · `#b197fc` tím
+
+**Quy tắc khác**
+- `viewBox` rộng khoảng 660 là vừa khung panel.
+- Luôn có `role="img"` và `aria-label` mô tả nội dung sơ đồ.
+- `id` của `<marker>`/`<defs>` phải **duy nhất trong toàn kho** (đặt tiền tố theo node, ví dụ `cl-a` cho core-loop) — nhiều node có thể cùng hiện trên một trang.
+- Trên màn hình hẹp sơ đồ tự cuộn ngang trong khung, không co nhỏ.
+
+## Mục tuỳ chọn: `## 🎮 Unity`
+
+Node nào hiện thực hoá được trong Unity thì thêm mục này ở **cuối file, sau mục 🤖**.
+Build tách nó thành trường `node.unity`, web hiện thành **tab thứ ba** trong panel.
+
+Khác mục 🤖, mục này **không bắt buộc** — node thuần lý thuyết (`mda-framework`,
+`player-motivation`, các node `index`) thì bỏ qua, tab sẽ không hiện.
+
+Cấu trúc chuẩn:
+
+```markdown
+## 🎮 Unity
+
+Một câu: trong Unity, điểm mấu chốt của bước này là gì.
+
+**Component & nơi đặt**
+- `TênScript.cs` — đặt ở đâu
+- `TênConfig` (ScriptableObject) — trong `Assets/Data/...`
+
+**Code**
+
+​```csharp
+// code chạy được, không phải giả mã
+​```
+
+**Bẫy Unity cụ thể**
+- Thứ chỉ sai trong Unity (timeScale, GetComponent, Has Exit Time…)
+
+**Kiểm tra nhanh**
+- Việc kiểm chứng được, làm trong vài giây
+```
+
+**Nguyên tắc viết mục này**
+- Code phải **chạy được**, không phải giả mã. Nêu rõ phiên bản nếu API đã đổi
+  (ví dụ `rb.velocity` → `rb.linearVelocity` từ Unity 6).
+- Ưu tiên nói **cái bẫy riêng của Unity** hơn là lặp lại kiến thức đã có ở thân bài.
+- "Kiểm tra nhanh" phải kiểm chứng được, không phải lời khuyên chung.
+- Sơ đồ setup (Hierarchy / Inspector) dùng `<figure class="fig">` như mọi hình khác —
+  xem mục Hình minh hoạ ở trên.
+
 ## Liên kết trong nội dung
 
 Viết `[[id-cua-node]]` ở bất kỳ đâu trong thân bài. Build sẽ:

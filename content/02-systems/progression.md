@@ -88,3 +88,76 @@ progression:
 ```
 
 Dòng `forbidden` quan trọng không kém các dòng còn lại — nó ngăn agent "giúp" bạn bằng cách thêm nâng cấp chỉ số vĩnh viễn vì đó là thứ phổ biến nhất trong dữ liệu huấn luyện của nó. Xem [[agent-guardrails]].
+
+## 🎮 Unity
+
+Unity có `AnimationCurve` — công cụ tuyệt vời cho đường cong tiến trình mà ít người dùng đúng chỗ.
+
+**Component & nơi đặt**
+- `ProgressionConfig` (ScriptableObject) — đường cong XP, HP, chi phí
+- `PlayerStats.cs` — đọc curve, không chứa hằng số
+
+**Code**
+
+```csharp
+[CreateAssetMenu(menuName = "Game/Progression Config")]
+public class ProgressionConfig : ScriptableObject {
+    [Header("Đường cong — chỉnh trực tiếp bằng chuột trong Inspector")]
+    public AnimationCurve xpToNextLevel =
+        AnimationCurve.EaseInOut(1f, 100f, 50f, 12000f);
+
+    public AnimationCurve hpByLevel =
+        AnimationCurve.Linear(1f, 100f, 50f, 500f);
+
+    [Header("Kiểm tra nhịp độ")]
+    public float targetMinutesPerLevel = 15f;
+
+    public float XpFor(int level)  => xpToNextLevel.Evaluate(level);
+    public float HpFor(int level)  => hpByLevel.Evaluate(level);
+}
+```
+
+**Vì sao AnimationCurve hơn công thức**
+
+Công thức `100 * level^1.8` khó hình dung. `AnimationCurve` cho bạn **kéo bằng chuột và nhìn thấy hình dạng ngay** — bao gồm cả chỗ dốc đột ngột (tường cày cuốc) mà công thức che giấu.
+
+Nhược điểm: khó tái tạo ngoài Unity (ví dụ trong script mô phỏng Python). Cách dung hoà: dùng curve để *tìm* hình dạng, rồi fit một công thức xấp xỉ cho phần mô phỏng.
+
+**Editor tool: kiểm tra tường cày cuốc**
+
+```csharp
+[CustomEditor(typeof(ProgressionConfig))]
+public class ProgressionConfigEditor : Editor {
+    public override void OnInspectorGUI() {
+        DrawDefaultInspector();
+        var cfg = (ProgressionConfig)target;
+
+        if (GUILayout.Button("Kiểm tra nhịp độ")) {
+            for (int lv = 1; lv < 50; lv++) {
+                float minutes = cfg.XpFor(lv) / XpPerMinute(lv);
+                if (minutes > cfg.targetMinutesPerLevel * 1.5f)
+                    Debug.LogWarning($"Tường cày cuốc ở cấp {lv}: {minutes:F0} phút");
+            }
+        }
+    }
+}
+```
+
+Một nút trong Inspector, và nó bắt được đúng vấn đề mà [[balancing-math]] mô tả — trước khi người chơi gặp phải.
+
+**Meta-progression: lưu ở đâu**
+
+Không dùng `PlayerPrefs` cho tiến trình thật. Nó lưu trong registry (Windows), dễ mất, không sao lưu được, giới hạn kích thước.
+
+```csharp
+// Dùng JSON trong Application.persistentDataPath
+var json = JsonUtility.ToJson(saveData, prettyPrint: true);
+File.WriteAllText(Path.Combine(Application.persistentDataPath, "save.json"), json);
+```
+
+Và luôn giữ một bản backup trước khi ghi đè — xem [[ux-flow]].
+
+**Kiểm tra nhanh**
+- Bấm "Kiểm tra nhịp độ" — có cảnh báo tường nào không?
+- Grep số cứng liên quan XP/HP trong code — phải bằng 0.
+- `PlayerPrefs` chỉ dùng cho settings, không cho tiến trình?

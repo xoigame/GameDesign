@@ -18,7 +18,8 @@ Nếu [[systems]] là bộ luật, thì content design là **những tình huố
 - **[[procedural-generation]]** — sinh nội dung bằng thuật toán, và vì sao "vô hạn" thường có nghĩa là "nhạt".
 - **[[pacing]]** — nhịp căng–chùng qua toàn bộ hành trình.
 - **[[narrative]]** — kể chuyện qua không gian, cơ chế và hệ thống.
-- **[[ux-hud]]** — trình bày thông tin để người chơi ra quyết định đúng.
+
+> Phần trình bày — giao diện, âm thanh, art direction — đã tách thành nhánh riêng: [[presentation]].
 
 ## Nguyên tắc xuyên suốt
 

@@ -3,7 +3,7 @@ title: AI Director
 icon: 🎬
 summary: AI ở tầng hệ thống điều tiết nhịp độ cả trận — mô hình Left 4 Dead và cách tự dựng một cái.
 status: deep
-read: 390
+read: 490
 level: advanced
 order: 60
 tags: [ai, pacing, systems]

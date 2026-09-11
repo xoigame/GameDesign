@@ -3,7 +3,7 @@ title: Procedural Generation
 icon: 🌀
 summary: Sinh nội dung bằng thuật toán — các kỹ thuật chính, và vì sao "vô hạn" thường đồng nghĩa với "nhạt".
 status: deep
-read: 310
+read: 300
 level: advanced
 order: 20
 tags: [content, procgen, algorithm]

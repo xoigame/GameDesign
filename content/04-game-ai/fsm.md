@@ -3,7 +3,7 @@ title: Finite State Machine
 icon: 🔄
 summary: Máy trạng thái hữu hạn — kiến trúc AI đơn giản nhất, đủ dùng cho phần lớn kẻ địch nhỏ, và giới hạn của nó.
 status: deep
-read: 330
+read: 430
 level: intermediate
 order: 10
 tags: [ai, pattern, fundamentals]
@@ -105,3 +105,91 @@ Ràng buộc:
 ```
 
 Dòng `BẤT KỲ -> Flee` là chỗ nên cân nhắc chuyển thẳng sang Hierarchical FSM — nếu bạn có hơn hai luật kiểu "từ bất kỳ đâu", FSM phẳng đã hết đất dùng.
+
+## 🎮 Unity
+
+FSM là thứ nên tự viết bằng C# thuần, **không** dùng Animator làm state machine gameplay.
+
+**Component & nơi đặt**
+- `EnemyBrain.cs` — MonoBehaviour trên prefab kẻ địch, giữ state hiện tại
+- `States/` — mỗi state một file C# thuần (không kế thừa MonoBehaviour)
+- `EnemyConfig` (ScriptableObject) — mọi hằng số thời gian và khoảng cách
+
+**Code**
+
+```csharp
+public abstract class State {
+    public virtual void Enter(EnemyBrain a) { }
+    public abstract State Update(EnemyBrain a, float dt);
+    public virtual void Exit(EnemyBrain a) { }
+}
+
+public class ChaseState : State {
+    public override void Enter(EnemyBrain a) => a.Anim.CrossFade("Run", 0.1f);
+
+    public override State Update(EnemyBrain a, float dt) {
+        if (a.Hp01 < a.Cfg.fleeEnter)                 return new FleeState();
+        if (!a.Sees && a.TimeSinceSeen > a.Cfg.forget) return new PatrolState();
+        if (a.DistanceToPlayer < a.Cfg.attackRange)   return new AttackState();
+        a.MoveTowards(a.LastKnownPos, dt);
+        return this;
+    }
+
+    public override void Exit(EnemyBrain a) => a.StopAllCoroutines();  // dọn dẹp!
+}
+```
+
+```csharp
+public class EnemyBrain : MonoBehaviour {
+    [SerializeField] EnemyConfig cfg;
+    public EnemyConfig Cfg => cfg;
+    public Animator Anim { get; private set; }
+
+    State state;
+    float tickTimer;
+
+    void Awake() {
+        Anim = GetComponent<Animator>();      // cache, không gọi trong Update
+        state = new PatrolState();
+        state.Enter(this);
+        // lệch pha giữa các NPC để không tick dồn vào cùng frame
+        tickTimer = Random.Range(0f, 1f / cfg.tickHz);
+    }
+
+    void Update() {
+        tickTimer -= Time.deltaTime;
+        if (tickTimer > 0f) return;
+        float dt = 1f / cfg.tickHz;
+        tickTimer += dt;
+
+        var next = state.Update(this, dt);
+        if (next != state) {
+            state.Exit(this);
+            state = next;
+            state.Enter(this);
+        }
+    }
+
+#if UNITY_EDITOR
+    void OnDrawGizmosSelected() {
+        UnityEditor.Handles.Label(transform.position + Vector3.up * 2f,
+                                  state?.GetType().Name ?? "-");
+    }
+#endif
+}
+```
+
+**Ba điểm Unity cụ thể**
+
+1. **Đừng dùng Animator Controller làm FSM gameplay.** Animator state machine khó debug, khó test, và trộn lẫn chuyện hiển thị với luật chơi. Animator chỉ nên nhận lệnh từ FSM của bạn.
+2. **Tick 8–10 Hz là đủ**, không cần mỗi frame. Với 30 NPC, đây là khác biệt lớn về CPU. Nhớ lệch pha khởi tạo, nếu không cả 30 con cùng tick một frame và gây spike.
+3. **`Exit()` phải dọn coroutine.** Đây là nguồn bug số một của FSM trong Unity: chuyển state mà coroutine cũ vẫn chạy.
+
+**Gizmo debug — làm ngay từ đầu**
+
+In tên state lên đầu NPC bằng `Handles.Label` trong `OnDrawGizmosSelected`. Ba dòng code, và nó là lý do FSM dễ gỡ lỗi hơn mọi kiến trúc khác. Xem [[behavior-tree]] khi FSM vượt ~6 state.
+
+**Kiểm tra nhanh**
+- Chọn một NPC trong Scene view — có thấy tên state đang chạy không?
+- Đổi `tickHz` từ 10 xuống 2 — hành vi vẫn đúng, chỉ chậm hơn?
+- Profiler với 30 NPC: AI không được vượt 1ms/frame.
