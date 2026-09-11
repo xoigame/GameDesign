@@ -151,6 +151,23 @@ Trình bày diff theo từng bước nhỏ, đừng viết lại cả file một
 
 ## 🤖 Prompt cho AI
 
+**Dùng AI thế nào để cải thiện prompt của chính bạn**
+
+Việc ít người làm mà hiệu quả cao: **đưa prompt của bạn cho AI trước khi gửi nó đi làm.**
+
+```
+Đây là prompt tôi định gửi cho một coding agent:
+<dán prompt>
+
+Đừng thực hiện nó. Thay vào đó:
+1. Mọi chỗ agent sẽ phải TỰ QUYẾT vì tôi không nói rõ
+2. Với mỗi chỗ, đoán agent sẽ mặc định chọn gì
+3. Ràng buộc PHỦ ĐỊNH nào tôi đang thiếu — thứ tôi KHÔNG muốn nhưng chưa cấm
+4. Viết lại cho chặt, giữ nguyên ý định của tôi
+```
+
+Mất 20 giây, và nó bắt được đúng loại thiếu sót gây ra kết quả "đúng mà không dùng được". Xem [[ai-limits]] về hai prompt tự kiểm khác.
+
 Node này *là* tập mẫu prompt. Phần dưới là cách dùng AI để **cải thiện chính prompt của bạn**.
 
 **Mẫu prompt: nhờ AI vá lỗ hổng trong prompt**

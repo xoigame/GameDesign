@@ -74,10 +74,15 @@ Thư mục/file bắt đầu bằng `_` hoặc `.` bị bỏ qua.
 Build script tách mục này ra khỏi thân bài thành trường riêng (`node.aiPrompt`), nên
 trên web nó hiện thành một khối riêng có nút copy, và có thể xuất gộp thành playbook.
 
-Cấu trúc chuẩn — mục đích là **chống viết chung chung**:
+Cấu trúc chuẩn **bốn phần, theo thứ tự** — mục đích là chống viết chung chung:
 
 ```markdown
 ## 🤖 Prompt cho AI
+
+**Dùng AI thế nào cho <loại việc này>**
+
+<Vai của AI ở chủ đề này. Việc nào giao được, việc nào không. Quy trình mấy
+bước. Nếu có nhiều chế độ dùng thì lập bảng: chế độ | khi nào | câu mở đầu.>
 
 **Phải nêu rõ** (thiếu là AI tự bịa):
 - <tham số / quyết định cụ thể AI sẽ điền đại nếu bạn không nói>
@@ -91,10 +96,23 @@ Cấu trúc chuẩn — mục đích là **chống viết chung chung**:
 **Bẫy thường gặp:** <AI hay làm sai gì ở đúng chủ đề này>
 ```
 
-Ba phần này trả lời ba câu khác nhau, đừng gộp:
-- *Phải nêu rõ* — bạn thiếu thông tin gì trong đầu bài
-- *Mẫu prompt* — diễn đạt ra sao cho máy hiểu
-- *Bẫy* — vì sao kết quả trông đúng mà vẫn sai
+Bốn phần trả lời bốn câu khác nhau, đừng gộp:
+
+| Phần | Trả lời câu |
+|---|---|
+| *Dùng AI thế nào* | **Có nên giao việc này cho AI không, và giao phần nào?** |
+| *Phải nêu rõ* | Tôi thiếu thông tin gì trong đầu bài? |
+| *Mẫu prompt* | Diễn đạt ra sao cho máy hiểu? |
+| *Bẫy* | Vì sao kết quả trông đúng mà vẫn sai? |
+
+Phần đầu là phần **quan trọng nhất và mới nhất**: nó ngăn việc giao cho AI đúng
+loại việc nó không làm được. Build đếm độ phủ phần này và in ra (`x có howto`),
+nên biết được còn node nào chưa có.
+
+Nội dung phần đầu phải **cụ thể cho chủ đề**. "Hãy nêu rõ yêu cầu" là câu vô
+nghĩa; "ở khâu cân bằng, bắt nó chạy mô phỏng chứ đừng nhận con số nó khẳng
+định" thì có nghĩa. Xem [[ai-for-design]], [[ai-for-build]], [[ai-for-publish]]
+về vai của AI ở ba khâu, và [[ai-limits]] về chỗ không nên giao.
 
 Tiêu đề chấp nhận cả `## Prompt cho AI` (không emoji), nhưng nên giữ emoji cho đồng bộ.
 

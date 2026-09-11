@@ -45,6 +45,8 @@ Nội dung. Liên kết tới node khác bằng [[id-node]].
 
 ## 🤖 Prompt cho AI
 
+**Dùng AI thế nào cho <loại việc này>** …
+
 **Phải nêu rõ:** …
 
 **Mẫu prompt** …
@@ -52,7 +54,7 @@ Nội dung. Liên kết tới node khác bằng [[id-node]].
 **Bẫy thường gặp:** …
 ```
 
-Mục `## 🤖 Prompt cho AI` **bắt buộc có ở mọi node** — build tách nó thành trường riêng `node.aiPrompt`, và `npm run check` báo lỗi nếu thiếu.
+Mục `## 🤖 Prompt cho AI` gồm **bốn phần theo thứ tự**: `**Dùng AI thế nào…**` (vai của AI cho loại việc này, chia việc, quy trình) → `**Phải nêu rõ**` → `**Mẫu prompt**` → `**Bẫy thường gặp**`. Build đếm độ phủ phần đầu (`x có howto`). Mục này **bắt buộc có ở mọi node** — build tách nó thành trường riêng `node.aiPrompt`, và `npm run check` báo lỗi nếu thiếu.
 
 Cây node **suy ra từ cây thư mục** — không khai báo ở đâu khác. Quy ước đầy đủ: `content/_SCHEMA.md`.
 
@@ -107,4 +109,4 @@ Luật: **đề xuất trước, sửa sau**. Khi hai nguồn mâu thuẫn thì 
 - Đừng xoá node; nếu nội dung lỗi thời, hãy sửa và ghi chú.
 - Nội dung viết bằng **tiếng Việt, thuật ngữ chuyên ngành giữ tiếng Anh** (core loop, behavior tree, faucet/drain…).
 - Sau khi sửa content, chạy `npm run check` và sửa hết cảnh báo.
-- Node mới bắt buộc có `read` và `level`, và mục `## 🤖 Prompt cho AI` ở cuối theo cấu trúc 3 phần trong `content/_SCHEMA.md`. Nội dung mục đó phải **cụ thể cho chủ đề** — không viết lời khuyên chung chung.
+- Node mới bắt buộc có `read` và `level`, và mục `## 🤖 Prompt cho AI` ở cuối theo cấu trúc 4 phần trong `content/_SCHEMA.md`. Nội dung mục đó phải **cụ thể cho chủ đề** — không viết lời khuyên chung chung.

@@ -50,6 +50,20 @@ That last row is the important one. AI speeds up everything *except* knowing whe
 
 ## 🤖 Prompt for AI
 
+**How to use AI — the branch about using AI**
+
+The mistake that matters most: **the same tool plays a completely different role in each phase.**
+
+| Phase | AI's role | What you keep | Node |
+|---|---|---|---|
+| **Design** | Critic + calculator | Every decision, taste, judging "is this fun" | [[ai-for-design]] |
+| **Build** | Code labourer | Approving the plan, running it, integration | [[ai-for-build]] |
+| **Publish** | Drafter + analyst | Reading and sending — all output faces outward | [[ai-for-publish]] |
+
+Using the wrong role is the most common source of disappointment: asking it to author during design, or letting it auto-send during publish.
+
+Start with [[ai-tooling]] for tool criteria; read [[ai-limits]] before delegating anything you cannot verify.
+
 This branch is about *how to work*, so the "prompt" here is the **session setup** you send at the start of each working block.
 
 **Session setup template**

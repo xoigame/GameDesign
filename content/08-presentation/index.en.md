@@ -43,6 +43,20 @@ The pragmatic line: **decide the systems early, produce the content late.** Lock
 
 ## 🤖 Prompt for AI
 
+**How to use AI in this branch**
+
+Here AI is **weakest on taste and strongest on systematising**. Split the work along exactly that line:
+
+| Delegate | Keep |
+|---|---|
+| Build a design system from the numbers you supply | Choosing palette, type, style |
+| Write validators (contrast, touch targets, palette) | Judging "does this look right" |
+| Audio bus architecture, ducking table | Listening and mixing |
+| A pipeline that forces assets into one style | Approving assets |
+| Frame data → animation state machine | Tuning timing until it feels right |
+
+The effective opener: *"I decide the aesthetics; you build the system so I can tune fast."* The one that leads to disappointment: *"design a nice UI for me."*
+
 This is where AI is **weakest on taste and strongest on systematising**. Do not ask it to "make it look good"; ask it to build the system and enforce the constraints.
 
 **What you must state** (otherwise it takes engine defaults):

@@ -31,6 +31,24 @@ Nếu [[systems]] là bộ luật, thì content design là **những tình huố
 
 ## 🤖 Prompt cho AI
 
+**Dùng AI thế nào ở nhánh này**
+
+Nội dung là chỗ AI sinh ra với chi phí gần bằng không — vừa là cơ hội vừa là bẫy.
+
+**Trình tự bắt buộc:**
+
+```
+1. BẠN làm 3-10 mẫu BẰNG TAY
+2. BẠN viết ra VÌ SAO chúng hay
+3. AI  mã hoá thành ràng buộc + validator
+4. AI  sinh số lượng theo khuôn đó
+5. BẠN sàng lọc
+```
+
+Bỏ bước 1–2 là cách chắc chắn có 50 nhiệm vụ đúng format mà không cái nào thú vị.
+
+Riêng với procgen, việc đáng nhờ nhất **không phải bộ sinh mà là validator** — nó tốn công hơn và AI viết nhanh hơn. Xem [[procedural-generation]].
+
 AI sinh nội dung với chi phí gần như bằng không, và đó vừa là cơ hội vừa là cái bẫy.
 
 Cơ hội: biến thể, sắp xếp, bản nháp đầu, mô tả vật phẩm, lore rời rạc — AI làm tốt và nhanh.

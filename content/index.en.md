@@ -49,6 +49,18 @@ Node status: `deep` = written and usable · `stub` = skeleton only, needs fillin
 
 ## 🤖 Prompt for AI
 
+**How to use AI with this vault**
+
+Three ways, with real differences in cost and accuracy:
+
+| Way | When | Note |
+|---|---|---|
+| Agent **reads the files** in the repo | Default, if it has filesystem access | Cheapest, always current |
+| **Copy this section** / **Copy branch** | Delegating one specific task | ~1k / ~13k tokens |
+| **Export prompt playbook** | AI cannot read your disk | ~15k tokens |
+
+See [[ai-tooling]] for tool-selection criteria, and [[ai-limits]] for what not to delegate.
+
 The root node is not the place for a topic-specific prompt. But every request you send an AI about the project should open with a **positioning block** like the one below — it stops the model from defaulting to "the average game in its training data".
 
 **Session opener template**

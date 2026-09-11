@@ -35,6 +35,24 @@ The sane split: let AI generate **raw material and variants**, and keep the huma
 
 ## 🤖 Prompt for AI
 
+**How to use AI in this branch**
+
+Content is where AI generates at near-zero cost — both the opportunity and the trap.
+
+**The mandatory order:**
+
+```
+1. YOU make 3-10 examples BY HAND
+2. YOU write down WHY they are good
+3. AI  encodes that as constraints + a validator
+4. AI  generates volume against that template
+5. YOU curate
+```
+
+Skipping steps 1–2 reliably produces 50 correctly-formatted quests, none of them interesting.
+
+For procgen specifically, the most valuable thing to delegate is **not the generator but the validator** — it takes more work and AI writes it faster. See [[procedural-generation]].
+
 AI is weak at spatial layout and strong at enforcing constraints. Point it at the second job.
 
 **What you must state:**

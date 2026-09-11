@@ -43,7 +43,17 @@ A corollary: a lot of celebrated game AI is really **stagecraft**. F.E.A.R. enem
 
 ## 🤖 Prompt for AI
 
-Before asking an AI to **write** NPC behaviour, make it **choose an architecture** and defend the choice. This is the single biggest time-saver in this branch.
+**How to use AI in this branch**
+
+Two steps, and the first is the one people skip:
+
+**Step 1 — make it choose an architecture and defend the choice.** Describe the behaviour at the *observable* level, give the constraints (NPC count, CPU budget, how much designer control you need), then ask it to compare FSM / BT / Utility / GOAP for **this case** and recommend one. No code yet.
+
+**Step 2 — hand it the tree or table you already drew; it implements.** Do not let it design the priority structure; that is a design decision.
+
+**The trap specific to this branch:** AI defaults to proposing GOAP or machine learning because they sound smarter. For most indie games the right answer is FSM or Behavior Tree. The constraint *"I need to hand-tune without editing code"* usually eliminates both.
+
+And always ask for the **stagecraft layer**: intelligence the player cannot perceive is worth nothing.
 
 **What you must state:**
 - Desired behaviour described at the **observable** level, not the technical one

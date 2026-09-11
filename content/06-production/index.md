@@ -30,6 +30,16 @@ Nhánh này về **cách xây** chứ không về **xây cái gì**.
 
 ## 🤖 Prompt cho AI
 
+**Dùng AI thế nào ở nhánh này**
+
+Nhánh này AI làm được gần hết, vì nó thuần kỹ thuật và kiểm chứng được. Ba việc có ROI cao nhất — đều là việc lập trình viên hay làm sơ sài vì nhàm:
+
+1. **Editor tool và validator** — không đụng gameplay nên rủi ro thấp, mà tiết kiệm thời gian thật mỗi ngày.
+2. **Unit test cho logic thuần** — nó viết test tốt hơn nhiều người, và test là thứ cho phép nó tự kiểm chứng về sau.
+3. **CI, build script** — thuần script, chạy được là biết đúng.
+
+Việc **không** nhờ: quyết định kiến trúc mà chưa có số liệu. Hỏi "kiến trúc nào tốt hơn" mà không nêu số thực thể và ngân sách frame sẽ nhận về ECS cho một game 40 thực thể.
+
 Kiến trúc tốt khiến AI agent hiệu quả hơn rõ rệt:
 
 - **Ranh giới rõ ràng** → agent sửa một hệ thống mà không phá hệ thống khác.

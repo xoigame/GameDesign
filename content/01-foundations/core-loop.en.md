@@ -71,6 +71,16 @@ The micro loop keeps a player in *this session*. The macro loop brings them back
 
 ## 🤖 Prompt for AI
 
+**How to use AI for the core loop**
+
+Do not ask it to design your loop — ask it to **stress-test** the one you wrote. Three useful modes:
+
+1. **The 100th-repetition test** — "here is my loop; what is identical between repetition 1 and repetition 100?" It spots monotony you have gone blind to.
+2. **The no-reward test** — "strip out XP, score, and loot. Describe what is left." If the description sounds empty, you are using rewards to mask a flat mechanic.
+3. **Tier separation** — "which of these belongs to the micro, mid, and macro loop?" It catches loops that are actually only one tier.
+
+What it cannot do: tell you whether the loop is *fun*. That needs a controller in your hands. See [[ai-limits]].
+
 This is the section **AI invents most often**. Declare it explicitly in your [[gdd-for-ai]]:
 
 ```yaml

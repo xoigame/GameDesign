@@ -34,6 +34,16 @@ The inverse also holds: a messy codebase makes an agent produce more bugs — it
 
 ## 🤖 Prompt for AI
 
+**How to use AI in this branch**
+
+AI handles almost all of this branch, because it is purely technical and verifiable. The three highest-ROI jobs are all work programmers tend to skimp on because it is dull:
+
+1. **Editor tools and validators** — no gameplay risk, and they save real time every day.
+2. **Unit tests for pure logic** — it writes better tests than many people, and tests are what let it verify itself later.
+3. **CI and build scripts** — pure scripting; if it runs, it is right.
+
+What **not** to delegate: architecture decisions with no measurements yet. Asking "which architecture is better" without stating entity count and frame budget returns ECS for a game with 40 entities.
+
 Production is where AI is most useful for the work nobody enjoys: validators, test harnesses, CI config, editor tooling.
 
 **What you must state:**

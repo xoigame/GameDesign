@@ -45,6 +45,16 @@ Changing a pillar is not wrong. Changing it *quietly* is — that is the moment 
 
 ## 🤖 Prompt for AI
 
+**How to use AI for pillars**
+
+Two jobs, and neither is writing the pillars:
+
+**1. Test whether they are really pillars.** Feed it your three sentences and ask: *"which of these excludes no feature at all?"* A pillar that rules nothing out is a slogan. This takes twenty seconds and is the single most useful check in this node.
+
+**2. Turn them into rules a machine can enforce.** Give it a pillar in plain language and ask for a test that detects violations — a grep over a folder, an assertion over your data assets. See [[agent-guardrails]] and the 🎮 section below.
+
+What it must not do: **write the pillars**. They are the part of the design that makes the game yours; a model optimises toward the average of its training data, which is the opposite of what a pillar is for. See [[ai-limits]].
+
 This is the **highest-value context** you can hand Codex or Claude. Without pillars, the model falls back on the most generic option in its training data — meaning your game ends up looking like every YouTube tutorial.
 
 Put this at the top of your [[gdd-for-ai]]:

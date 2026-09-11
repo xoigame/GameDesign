@@ -36,6 +36,21 @@ Khác biệt cốt lõi so với content design: content design viết ra *"phò
 
 ## 🤖 Prompt cho AI
 
+**Dùng AI thế nào ở nhánh này**
+
+Đây là nhánh AI mạnh nhất trong toàn kho, vì systems design thuần toán và mô phỏng được.
+
+Quy trình bốn bước, lặp:
+
+```
+1. BẠN  mô tả hệ thống + ràng buộc + trần cứng
+2. AI   chuyển thành công thức và bảng số
+3. AI   viết harness mô phỏng 10.000 lượt, in phân bố
+4. BẠN  đọc phân bố, chỉnh ràng buộc → quay lại 3
+```
+
+**Luật một dòng cho cả nhánh:** bắt AI *chạy mô phỏng*, đừng nhận con số nó khẳng định. Nó đưa số nghe hợp lý rất thuyết phục, và đó là dạng sai khó phát hiện nhất — xem [[ai-limits]].
+
 Đây là mảng AI hỗ trợ **hiệu quả nhất** trong toàn bộ quá trình làm game, vì nó thuần toán và mô phỏng:
 
 1. Bạn mô tả hệ thống bằng lời + ràng buộc.

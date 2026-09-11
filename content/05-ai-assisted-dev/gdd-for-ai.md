@@ -122,6 +122,18 @@ Một mẹo hữu ích: cuối mỗi phiên làm việc, nhờ agent *"đọc l�
 
 ## 🤖 Prompt cho AI
 
+**Dùng AI thế nào để viết GDD**
+
+Không nhờ nó *viết* GDD — nhờ nó **phỏng vấn** bạn rồi ghi lại. Khác biệt là một bên cho ra tài liệu trung bình của ngành, một bên cho ra tài liệu của game bạn.
+
+Ba chế độ theo thứ tự dùng:
+
+1. **Phỏng vấn** — nó hỏi từng câu, bạn trả lời; nó truy vấn khi câu trả lời thiếu số.
+2. **Rà lỗ hổng** — đóng vai agent sắp code, liệt kê mọi chỗ phải tự đoán.
+3. **Phát hiện trôi dạt** — cuối mỗi phiên: đọc lại GDD, liệt kê chỗ code đã lệch khỏi tài liệu.
+
+Chế độ 3 là chế độ ít ai dùng và có giá trị cao nhất về lâu dài. GDD lỗi thời tệ hơn không có GDD, vì agent sẽ thực thi quyết định đã bị bãi bỏ.
+
 Bản thân việc **viết GDD** cũng nên nhờ AI — nhưng theo hướng nó phỏng vấn bạn, không phải nó bịa.
 
 **Mẫu prompt phỏng vấn để dựng GDD**

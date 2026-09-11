@@ -32,6 +32,19 @@ related: [ai-workflow, game-feel]
 
 ## 🤖 Prompt cho AI
 
+**Dùng AI thế nào cho asset**
+
+Chia làm hai việc rất khác nhau, và việc thứ hai quan trọng hơn:
+
+| Việc | AI làm | Ghi chú |
+|---|---|---|
+| **Sinh asset** | Công cụ sinh ảnh/âm thanh | Chất lượng từng cái thường ổn |
+| **Ép về một phong cách** | Coding agent viết pipeline | Đây là chỗ quyết định |
+
+Vấn đề thật không phải chất lượng một sprite mà là **nhất quán giữa 50 sprite**. Nên thứ đáng nhờ coding agent là *pipeline hậu kỳ* — `AssetPostprocessor` ép palette, PPU, viền, filter mode. Xem mục 🎮 phía dưới.
+
+Trình tự đúng: **dựng pipeline trước, sinh asset sau.** Làm ngược lại nghĩa là bạn có 50 file phải xử lý bằng tay.
+
 Vấn đề của asset sinh tự động là **nhất quán**, không phải chất lượng từng cái.
 
 **Phải nêu rõ:**

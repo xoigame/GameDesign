@@ -92,6 +92,22 @@ Dùng branch riêng cho những thay đổi lớn mang tính thử nghiệm. Đ�
 
 ## 🤖 Prompt cho AI
 
+**Dùng AI thế nào ở từng giai đoạn**
+
+Bảy giai đoạn, và vai của AI đổi ở mỗi giai đoạn — đây là bảng tra nên dán lên tường:
+
+| Giai đoạn | AI làm gì | Bạn làm gì |
+|---|---|---|
+| 1. Thiết kế | Phản biện ([[ai-for-design]]) | **Quyết định mọi thứ** |
+| 2. Viết GDD | Phỏng vấn bạn ([[gdd-for-ai]]) | Trả lời bằng số cụ thể |
+| 3. Dựng khung | Viết scaffolding, asmdef, test đầu tiên | Chốt ProjectSettings |
+| 4. Vertical slice | Code hệ thống + juice có tham số | **Chỉnh số cho đã tay** |
+| 5. Nhân rộng | Sinh biến thể theo khuôn đã duyệt | Duyệt khuôn trước |
+| 6. Cân bằng | Mô phỏng ([[balancing-math]]) | Playtest, đọc phân bố |
+| 7. Đánh bóng | Editor tool, validator | Cảm nhận, quyết định |
+
+Điểm dễ sai: nhảy từ giai đoạn 2 sang 5. Nhân rộng nội dung trước khi biết core loop có vui không là cách tốn thời gian nhất, và AI làm việc đó rất nhanh — nên càng dễ rơi vào.
+
 Vòng lặp làm việc tự nó là thứ cần viết thành prompt, đặc biệt bước "kế hoạch trước, code sau".
 
 **Mẫu prompt cho một nhiệm vụ đơn lẻ**

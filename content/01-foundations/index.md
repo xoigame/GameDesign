@@ -31,6 +31,14 @@ Nhánh này trả lời câu hỏi **"cái gì làm một trò chơi trở nên 
 
 ## 🤖 Prompt cho AI
 
+**Dùng AI thế nào ở nhánh này**
+
+Đây là nhánh AI ít hữu dụng nhất cho việc *quyết định* và hữu dụng nhất cho việc *phản biện*. Dùng nó như một publisher hoài nghi, không như người viết hộ.
+
+Ba việc cụ thể: phản biện pillar (pillar nào không loại trừ được gì?), chỉ ra phiên bản generic của ý tưởng bạn, và truy vấn ngược từ trải nghiệm về cơ chế. Xem [[ai-for-design]].
+
+**Không** nhờ: chốt pillar, đánh giá "có vui không", tinh chỉnh game feel. Xem [[ai-limits]].
+
 AI viết code rất nhanh nhưng **không có trực giác về cảm giác chơi**. Nó không biết animation lag 80ms làm cú đấm mất lực. Vì vậy phần này bạn phải tự quyết định và **viết ra thành số cụ thể** trong [[gdd-for-ai]] — ví dụ "hitstop 90ms, screenshake biên độ 6px trong 120ms" — thay vì mô tả "cho nó đã tay".
 
 ## 🎮 Unity

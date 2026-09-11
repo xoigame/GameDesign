@@ -125,6 +125,12 @@ const SECTIONS = [
   { key: 'code', re: /^##[ \t]*(?:💻[ \t]*)?(?:Code|Code demo)[ \t]*$/, required: false },
 ]
 
+/**
+ * Mục 🤖 phải có phần "Dùng AI thế nào" — hướng dẫn cách dùng AI cho loại
+ * tác vụ của node, không chỉ đưa mẫu prompt. Theo dõi độ phủ như các mục khác.
+ */
+const AI_HOWTO_RE = new RegExp('\\*\\*(?:Dùng AI thế nào|How to use AI)')
+
 /** Mức độ kiến thức. Chấp nhận cả tiếng Việt lẫn tiếng Anh trong frontmatter. */
 const LEVELS = ['basic', 'intermediate', 'advanced']
 const LEVEL_ALIASES = {
@@ -310,6 +316,7 @@ function build({ strict = false, quiet = false } = {}) {
       unity,
       code,
       // { en: {title, summary, body, aiPrompt, unity, code} } — thiếu thì UI tự lùi về bản gốc
+      hasAiHowto: AI_HOWTO_RE.test(aiPrompt),
       i18n: translations.get(rel) || {},
     })
   }
@@ -476,6 +483,7 @@ function build({ strict = false, quiet = false } = {}) {
       relations: relations.length,
       withPrompt: list.length - missingPrompt.length,
       withUnity: list.filter((n) => n.unity).length,
+      withAiHowto: list.filter((n) => n.hasAiHowto).length,
       withCode: list.filter((n) => n.code).length,
       translated: Object.fromEntries(
         TRANSLATED_LANGS.map((lg) => [lg, list.filter((n) => n.i18n[lg]).length])
@@ -503,7 +511,7 @@ function build({ strict = false, quiet = false } = {}) {
     console.log(
       '[graph] ' + s.nodes + ' node · ' + s.branches + ' nhánh · ' +
       s.deep + ' deep / ' + s.stub + ' stub · ' + s.relations + ' liên kết · ' +
-      s.withPrompt + '/' + s.nodes + ' có prompt · ' + s.withUnity + ' có Unity · ' + s.withCode + ' có Code · ' +
+      s.withPrompt + '/' + s.nodes + ' có prompt (' + s.withAiHowto + ' có howto) · ' + s.withUnity + ' có Unity · ' + s.withCode + ' có Code · ' +
       TRANSLATED_LANGS.map((lg) => s.translated[lg] + '/' + s.nodes + ' ' + lg).join(' · ') + ' · ' +
       s.basic + ' cơ bản / ' + s.intermediate + ' trung cấp / ' + s.advanced + ' chuyên sâu · ' +
       s.words + ' từ'

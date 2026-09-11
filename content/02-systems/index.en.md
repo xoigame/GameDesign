@@ -40,6 +40,21 @@ That loop used to take weeks. See [[balancing-math]] for the concrete method.
 
 ## 🤖 Prompt for AI
 
+**How to use AI in this branch**
+
+This is the strongest branch for AI in the whole vault, because systems design is pure math and simulable.
+
+A four-step loop, repeated:
+
+```
+1. YOU  describe the system + constraints + hard caps
+2. AI   turns it into formulas and tables
+3. AI   writes a harness simulating 10,000 runs, prints the distribution
+4. YOU  read the distribution, adjust constraints → back to 3
+```
+
+**One rule for the whole branch:** make the AI *run the simulation*; never accept a number it merely asserts. It states plausible-sounding figures very convincingly, and that is the hardest failure mode to catch — see [[ai-limits]].
+
 The rule for this whole branch: **make the AI run a simulation, never accept a number it merely asserts.**
 
 **What you must state:**

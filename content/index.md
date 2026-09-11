@@ -56,6 +56,18 @@ Trạng thái node: `deep` = đã viết đủ dùng · `stub` = mới có khung
 
 ## 🤖 Prompt cho AI
 
+**Dùng AI thế nào với kho này**
+
+Ba cách, chi phí và độ chính xác khác nhau rõ:
+
+| Cách | Khi nào | Lưu ý |
+|---|---|---|
+| Agent **đọc file** trong repo | Mặc định. Agent có filesystem. | Rẻ nhất, luôn đúng hiện trạng |
+| **Copy mục này** / **Copy cả nhánh** | Giao đúng một việc | ~1k / ~13k token |
+| **Xuất playbook prompt** | AI không đọc được ổ đĩa | ~15k token |
+
+Xem [[ai-tooling]] về tiêu chí chọn công cụ, và [[ai-limits]] về chỗ không nên nhờ.
+
 Node gốc không phải chỗ để viết prompt cụ thể. Nhưng mọi prompt gửi AI về dự án game đều nên mở đầu bằng **một khối định vị** như dưới đây — nó ngăn AI mặc định về "game trung bình của ngành".
 
 **Mẫu mở đầu cho mọi phiên làm việc**

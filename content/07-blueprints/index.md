@@ -55,6 +55,21 @@ Dùng thư mục con thì mindmap sẽ tự tạo nhánh phụ — tiện khi GD
 
 ## 🤖 Prompt cho AI
 
+**Dùng AI thế nào ở nhánh này**
+
+Đây là nhánh agent **thực thi**, nên quy trình khác các nhánh kiến thức: bắt nó **xác nhận ràng buộc trước khi viết dòng code nào**.
+
+```
+Bước 1: đọc AI_CONTEXT.md rồi GDD
+Bước 2: nhắc lại cho tôi — 3 pillar (kèm những gì mỗi cái loại trừ),
+        mọi bất biến INV-xx, mọi mục còn đánh ❓
+Bước 3: với các mục ❓, HỎI tôi từng câu một. Đừng tự quyết.
+Bước 4: đề xuất thứ tự triển khai theo 7 giai đoạn ở [[ai-workflow]]
+Chưa viết code.
+```
+
+Bước 2 và 3 lộ ra những chỗ bạn tưởng đã rõ mà chưa — rẻ hơn nhiều so với phát hiện sau 500 dòng code.
+
 Nhánh này là thứ agent **thực thi trực tiếp**. Prompt ở đây là cách trỏ agent vào đúng tài liệu.
 
 **Mẫu prompt bắt đầu một dự án**

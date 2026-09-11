@@ -46,6 +46,18 @@ Plus one architectural decision: **`Assets/Scripts/Core/` must not `using UnityE
 
 ## 🤖 Prompt for AI
 
+**How to use AI in this branch**
+
+This branch is hands-on Unity experience, so AI is most useful for two jobs:
+
+**1. Writing editor tools and validators.** No gameplay risk, immediately verifiable, and this is the kind of work that saves time every single day. See [[unity-editor-tools]].
+
+**2. Writing code from a spec you have already settled.** Given clear constraints (asmdef, no allocation in Update, defined failure behaviour), it is accurate.
+
+**The hard boundary in Unity:** an agent does not edit `.prefab`, `.unity`, `ProjectSettings`, Animator Controllers, or Shader Graphs — it corrupts GUIDs and the failure surfaces silently, several commits later. Full table in [[ai-limits]].
+
+**Always state the exact version** (`6000.0.32f1`, not "Unity 6"). Model knowledge has a cutoff; `rb.velocity` being renamed to `rb.linearVelocity` in Unity 6 is the canonical example.
+
 Working with an agent on Unity has one dominant failure mode: **it writes code for a different Unity version**, and the code looks correct.
 
 **What you must state in every Unity prompt:**

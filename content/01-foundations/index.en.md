@@ -28,7 +28,13 @@ AI writes code fast but **has no intuition for feel**. It does not know that 80m
 
 ## 🤖 Prompt for AI
 
-The foundations branch is where AI is least useful for *deciding* and most useful for *pressure-testing*. Use it as a critic, not an author.
+**How to use AI in this branch**
+
+This is the branch where AI is least useful for *deciding* and most useful for *pressure-testing*. Use it as a skeptical publisher, not a ghostwriter.
+
+Three concrete jobs: attack your pillars (which one excludes nothing?), name the generic version of your concept, and reason backwards from experience to mechanics. See [[ai-for-design]].
+
+**Do not** delegate: settling pillars, judging "is this fun", tuning game feel. See [[ai-limits]].
 
 **What you must state:**
 - Your reference games, and the one thing you want to do differently

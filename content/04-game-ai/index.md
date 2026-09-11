@@ -50,7 +50,17 @@ Hệ quả: rất nhiều "AI" trong game xuất sắc thực ra là **sân kh�
 
 ## 🤖 Prompt cho AI
 
-Trước khi nhờ AI **viết** AI cho NPC, hãy bắt nó **chọn kiến trúc** và biện minh. Đây là bước tiết kiệm nhiều thời gian nhất.
+**Dùng AI thế nào ở nhánh này**
+
+Hai bước, và bước một hay bị bỏ:
+
+**Bước 1 — bắt nó chọn kiến trúc và biện minh.** Mô tả hành vi ở mức *quan sát được*, cho ràng buộc (số NPC, ngân sách CPU, mức kiểm soát bạn cần), rồi yêu cầu so sánh FSM / BT / Utility / GOAP cho **trường hợp này** và khuyến nghị một cái. Chưa viết code.
+
+**Bước 2 — đưa cây/bảng đã vẽ sẵn, nó cài đặt.** Đừng để nó tự thiết kế cấu trúc ưu tiên; đó là quyết định thiết kế.
+
+**Bẫy đặc trưng của nhánh này:** AI mặc định đề xuất GOAP hoặc machine learning vì nghe thông minh hơn. Với phần lớn game indie, câu trả lời đúng là FSM hoặc Behavior Tree. Ràng buộc *"tôi cần chỉnh tay được mà không sửa code"* thường tự loại GOAP và RL.
+
+Và luôn yêu cầu **phần sân khấu**: AI thông minh mà người chơi không nhận ra thì bằng không.
 
 **Phải nêu rõ:**
 - Hành vi mong muốn mô tả ở mức **quan sát được**, không ở mức kỹ thuật

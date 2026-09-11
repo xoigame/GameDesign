@@ -24,11 +24,33 @@ Toàn bộ kho kiến thức này tồn tại để bạn viết được đặc
 
 ## Các node
 
-- **[[ai-workflow]]** — quy trình từ ý tưởng tới build chạy được, chia giai đoạn.
+**Bắt đầu ở đâu**
+- **[[ai-tooling]]** — bản đồ công cụ: coding agent, sinh asset, phân tích. Tiêu chí chọn quan trọng hơn danh sách tính năng.
+
+**Ba khâu của vòng đời — dùng AI ở đâu**
+- **[[ai-for-design]]** — khâu **thiết kế**. AI là người phản biện và cái máy tính, không phải tác giả.
+- **[[ai-for-build]]** — khâu **hiện thực hoá**. Chia nhiệm vụ, kế hoạch trước code, chỗ bạn vẫn phải tự vào Editor.
+- **[[ai-for-publish]]** — khâu **phát hành**. Store page, trailer, bản dịch, phân tích review, patch note.
+
+**Cách làm việc**
+- **[[ai-workflow]]** — quy trình 7 giai đoạn từ ý tưởng tới build chạy được.
 - **[[gdd-for-ai]]** — viết tài liệu thiết kế mà máy đọc được. Node quan trọng nhất nhánh này.
 - **[[prompt-patterns]]** — các mẫu prompt cho từng loại việc trong gamedev.
 - **[[agent-guardrails]]** — rào chắn để agent không phá vỡ thiết kế của bạn.
+- **[[ai-limits]]** — chỗ AI thất bại đáng tin cậy, và cách phát hiện khi mình nhờ sai việc.
 - **[[asset-generation]]** — sinh sprite, âm thanh, nhạc.
+
+## Ba khâu, ba cách dùng khác nhau
+
+Điểm dễ nhầm nhất: **cùng một công cụ nhưng vai của nó đổi hoàn toàn giữa ba khâu.**
+
+| Khâu | Vai của AI | Bạn giữ gì | Node |
+|---|---|---|---|
+| **Thiết kế** | Phản biện + máy tính | Mọi quyết định, gu, đánh giá "có vui không" | [[ai-for-design]] |
+| **Làm** | Thợ viết code | Duyệt kế hoạch, chạy thử, tích hợp | [[ai-for-build]] |
+| **Phát hành** | Người viết nháp + phân tích | Đọc và gửi — mọi đầu ra hướng ra ngoài | [[ai-for-publish]] |
+
+Dùng sai vai là nguồn thất vọng phổ biến nhất: nhờ nó làm tác giả ở khâu thiết kế, hoặc để nó tự động gửi ở khâu phát hành.
 
 ## Phân công hợp lý
 

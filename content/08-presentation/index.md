@@ -50,6 +50,20 @@ Ranh giới thực dụng: **quyết định hệ thống sớm, sản xuất n�
 
 ## 🤖 Prompt cho AI
 
+**Dùng AI thế nào ở nhánh này**
+
+Nhánh này AI **yếu nhất về thẩm mỹ, mạnh nhất về hệ thống hoá**. Chia việc theo đúng ranh giới đó:
+
+| Nhờ AI | Tự làm |
+|---|---|
+| Dựng design system từ thông số bạn đưa | Chọn bảng màu, font, phong cách |
+| Viết validator (tương phản, vùng chạm, palette) | Đánh giá "trông có ổn không" |
+| Kiến trúc audio bus, ducking table | Nghe và chỉnh mix |
+| Pipeline ép asset về một phong cách | Duyệt asset |
+| Frame data → animation state machine | Chỉnh timing cho đã tay |
+
+Câu mở đầu hiệu quả: *"tôi quyết định thẩm mỹ, bạn dựng hệ thống để tôi chỉnh nhanh"*. Câu dẫn tới thất vọng: *"thiết kế UI đẹp cho tôi"*.
+
 Nhánh này là chỗ AI **yếu nhất về thẩm mỹ nhưng mạnh nhất về hệ thống hoá**. Đừng nhờ nó "làm cho đẹp"; hãy nhờ nó dựng hệ thống và kiểm tra ràng buộc.
 
 **Phải nêu rõ** (thiếu là AI dùng mặc định của engine):

@@ -61,6 +61,18 @@ Nhiều node ở các nhánh kia có tab **🎮 Unity** với code cho đúng k�
 
 ## 🤖 Prompt cho AI
 
+**Dùng AI thế nào ở nhánh này**
+
+Nhánh này là kinh nghiệm Unity, nên AI có ích nhất ở hai việc:
+
+**1. Viết editor tool và validator.** Không đụng gameplay, kiểm chứng ngay, và đây là loại việc tiết kiệm thời gian mỗi ngày. Xem [[unity-editor-tools]].
+
+**2. Viết code từ đặc tả bạn đã chốt.** Với ràng buộc rõ (asmdef, không cấp phát trong Update, hành vi khi thất bại), nó viết chính xác.
+
+**Ranh giới cứng trong Unity:** agent không sửa `.prefab`, `.unity`, `ProjectSettings`, Animator Controller, Shader Graph — nó làm hỏng GUID và lỗi xuất hiện im lặng vài commit sau. Bảng đầy đủ ở [[ai-limits]].
+
+**Luôn nêu phiên bản chính xác** (`6000.0.32f1`, không phải "Unity 6"). Tri thức model có thời điểm cắt; `rb.velocity` đổi tên thành `rb.linearVelocity` ở Unity 6 là ví dụ điển hình.
+
 AI viết code Unity **chạy được nhưng không ship được**: dùng `FindObjectOfType` trong Update, `Resources.Load` khắp nơi, singleton cho mọi thứ, và không hề biết build target là gì.
 
 **Phải nêu rõ** (thiếu là AI mặc định về Unity 2019 + Built-in RP + PC):

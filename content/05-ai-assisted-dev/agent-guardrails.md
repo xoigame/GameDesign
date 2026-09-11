@@ -132,6 +132,18 @@ Chạy trong CI thì bất biến được thi hành kể cả khi bạn quên n
 
 ## 🤖 Prompt cho AI
 
+**Dùng AI thế nào để tự dựng rào chắn cho nó**
+
+Nghe ngược nhưng hiệu quả: **nhờ agent biến bất biến của bạn thành test**, rồi test đó ràng buộc chính nó.
+
+Ba việc theo thứ tự:
+
+1. **Sinh test từ bất biến** — bạn viết luật bằng tiếng Việt, nó viết test phát hiện vi phạm. Nếu một luật không test tự động được, nó nói ra và đề nghị viết lại cho kiểm tra được.
+2. **Rà soát cuối phiên** — đối chiếu thay đổi với `CLAUDE.md`, xuất bảng vi phạm. Chưa sửa gì.
+3. **Đưa vào CI** — test chạy tự động, đỏ khi ai đó (kể cả agent) vi phạm.
+
+Điểm mấu chốt: rào chắn **do máy thi hành** mạnh hơn rào chắn do bạn nhắc mỗi phiên. Bạn sẽ quên nhắc; CI thì không.
+
 Guardrails chỉ có tác dụng khi agent **kiểm tra được** chúng. Hãy nhờ AI biến bất biến thành test.
 
 **Mẫu prompt: sinh test từ bất biến**

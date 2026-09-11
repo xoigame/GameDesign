@@ -48,6 +48,21 @@ A subfolder automatically becomes a sub-branch on the mindmap — handy once a G
 
 ## 🤖 Prompt for AI
 
+**How to use AI in this branch**
+
+This is the branch an agent **executes**, so the process differs from the knowledge branches: make it **confirm the constraints before writing a line of code**.
+
+```
+Step 1: read AI_CONTEXT.md, then the GDD
+Step 2: recite back to me — the 3 pillars (with what each excludes),
+        every INV-xx invariant, every item still marked ❓
+Step 3: for the ❓ items, ASK me one question at a time. Do not decide.
+Step 4: propose an implementation order following the 7 phases in [[ai-workflow]]
+No code yet.
+```
+
+Steps 2 and 3 surface the parts you thought were clear but are not — far cheaper than discovering it after 500 lines.
+
 This is the branch the agent **executes**. The prompt here is about pointing it at the right document and making it confirm the constraints before writing anything.
 
 **Project kick-off prompt**
