@@ -286,6 +286,12 @@ Cấu trúc chuẩn **năm phần, theo thứ tự**:
   thì đó là dấu hiệu thân bài cần bổ sung, không phải chỗ để chế ra số.
 - Cờ đỏ là **câu trả lời sai mà nghe hay**, không phải lỗi ngớ ngẩn hiển nhiên.
 
+**Mục này được máy đọc lại.** Chế độ **🎤 Luyện phỏng vấn** trên web tách mục này thành
+thẻ hỏi–đáp: mỗi dòng trong bảng "Câu hay gặp" là một thẻ, và mặt sau ghép từ khung trả
+lời + đào tiếp + cờ đỏ + số nên thuộc. Parser ở `src/lib/practice.js` bám đúng năm nhãn
+in đậm ở trên — đổi tên nhãn thì thẻ của node đó biến mất khỏi bộ luyện tập mà build
+không báo gì. Nút **🎤 Xuất bộ ôn phỏng vấn** gom toàn bộ mục này thành một file markdown.
+
 ## Bản dịch — file song song
 
 Kho viết gốc bằng tiếng Việt. Bản dịch nằm ở **file song song** cùng thư mục:

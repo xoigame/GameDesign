@@ -3,7 +3,9 @@ import { ReactFlowProvider } from '@xyflow/react'
 import MindMap from './components/MindMap.jsx'
 import Sidebar from './components/Sidebar.jsx'
 import DetailPanel from './components/DetailPanel.jsx'
-import { buildFullExport, buildPromptPlaybook } from './lib/aiContext.js'
+import Practice from './components/Practice.jsx'
+import { buildDeck, loadProgress, masteryMap } from './lib/practice.js'
+import { buildFullExport, buildInterviewPack, buildPromptPlaybook } from './lib/aiContext.js'
 import { t } from './lib/i18n.js'
 
 const norm = (s) =>
@@ -35,6 +37,15 @@ function readPanelW() {
   return null
 }
 
+/** Chế độ xem: bản đồ kiến thức hay luyện phỏng vấn. */
+function readView() {
+  try {
+    const v = localStorage.getItem('gdb:view')
+    if (v === 'map' || v === 'practice') return v
+  } catch { /* private mode */ }
+  return 'map'
+}
+
 function readFontScale() {
   try {
     const v = Number(localStorage.getItem('gdb:fontScale'))
@@ -64,6 +75,8 @@ export default function App() {
   const [lang, setLang] = useState(readLang)
   const [panelW, setPanelW] = useState(readPanelW)
   const [resizing, setResizing] = useState(false)
+  const [view, setView] = useState(readView)
+  const [practiceProgress, setPracticeProgress] = useState(loadProgress)
 
   useEffect(() => {
     try { localStorage.setItem('gdb:lang', lang) } catch { /* private mode */ }
@@ -128,11 +141,21 @@ export default function App() {
       .catch((e) => setError(e.message))
   }, [])
 
+  useEffect(() => {
+    try { localStorage.setItem('gdb:view', view) } catch { /* private mode */ }
+  }, [view])
+
   const nodesById = useMemo(() => {
     const m = new Map()
     if (graph) for (const n of graph.nodes) m.set(n.id, n)
     return m
   }, [graph])
+
+  /* Lớp phủ "mức thuộc" trên mindmap: lấy từ tiến độ luyện phỏng vấn. */
+  const mastery = useMemo(() => {
+    if (!graph) return null
+    return masteryMap(buildDeck(graph, nodesById), practiceProgress)
+  }, [graph, nodesById, practiceProgress])
 
   /* -------------------------------- filter -------------------------------- */
   const matchSet = useMemo(() => {
@@ -247,6 +270,10 @@ export default function App() {
     if (graph) download(buildPromptPlaybook(graph, nodesById), 'gamedesign-brain-prompts.md')
   }
 
+  const exportInterview = () => {
+    if (graph) download(buildInterviewPack(graph, nodesById), 'gamedesign-brain-interview.md')
+  }
+
   /* ------------------------------- keyboard ------------------------------- */
   useEffect(() => {
     const onKey = (e) => {
@@ -304,6 +331,7 @@ export default function App() {
         matchSet={matchSet}
         onExport={exportAll}
         onExportPlaybook={exportPlaybook}
+        onExportInterview={exportInterview}
       />
 
       <main className="canvas">
@@ -316,15 +344,24 @@ export default function App() {
 
         <div className="topbar">
           <div className="seg">
-            {MODES.map((m) => (
-              <button
-                key={m.id}
-                className={mode === m.id ? 'on' : ''}
-                onClick={() => setMode(m.id)}
-                title={m.hint}
-              >{t(m.key, lang)}</button>
-            ))}
+            <button className={view === 'map' ? 'on' : ''} onClick={() => setView('map')}
+                    title="Bản đồ kiến thức">{t('viewMap', lang)}</button>
+            <button className={view === 'practice' ? 'on' : ''} onClick={() => setView('practice')}
+                    title="Hỏi — tự trả lời thành tiếng — tự chấm">{t('viewPractice', lang)}</button>
           </div>
+          {view === 'map' && (
+            <div className="seg">
+              {MODES.map((m) => (
+                <button
+                  key={m.id}
+                  className={mode === m.id ? 'on' : ''}
+                  onClick={() => setMode(m.id)}
+                  title={m.hint}
+                >{t(m.key, lang)}</button>
+              ))}
+            </div>
+          )}
+          {view === 'map' && (
           <div className="topbar-right">
             <button className="tbtn" onClick={expandAll} title="Mở hết">{t('expandAll', lang)}</button>
             <button className="tbtn" onClick={collapseAll} title="Thu gọn hết">{t('collapseAll', lang)}</button>
@@ -334,8 +371,18 @@ export default function App() {
               title="Hiện TẤT CẢ liên kết ngang. Mặc định chỉ hiện liên kết của node đang chọn."
             >{t('allRelations', lang)}</button>
           </div>
+          )}
         </div>
 
+        {view === 'practice' ? (
+          <Practice
+            graph={graph}
+            nodesById={nodesById}
+            lang={lang}
+            onSelect={select}
+            onProgress={setPracticeProgress}
+          />
+        ) : (
         <ReactFlowProvider>
           <MindMap
             nodesById={nodesById}
@@ -349,8 +396,10 @@ export default function App() {
             keepSet={keepSet}
             showRelations={showRelations}
             lang={lang}
+            mastery={mastery}
           />
         </ReactFlowProvider>
+        )}
       </main>
 
       {selected && (

@@ -121,3 +121,37 @@ export function buildFullExport(graph, nodesById) {
   walk(graph.root, 0)
   return L.join('\n')
 }
+
+/**
+ * Xuất bộ ôn phỏng vấn: mục 🎤 của mọi node, theo thứ tự lộ trình đọc.
+ * Dùng để đọc offline trên điện thoại trước buổi phỏng vấn.
+ */
+export function buildInterviewPack(graph, nodesById) {
+  const L = []
+  const nodes = graph.readingPath.map((id) => nodesById.get(id)).filter((n) => n && n.interview)
+
+  L.push('# GameDesign Brain — Bộ ôn phỏng vấn')
+  L.push('')
+  L.push('Mục **🎤 Phỏng vấn** của từng node, theo thứ tự lộ trình đọc: câu hay gặp theo mức,')
+  L.push('khung trả lời 60 giây, câu hỏi đào sâu, cờ đỏ, và số nên thuộc.')
+  L.push('')
+  L.push('**Cách dùng:** đọc câu hỏi, **trả lời thành tiếng**, rồi mới đọc khung trả lời.')
+  L.push('Đọc thầm cho cảm giác đã thuộc mà không kiểm chứng được gì.')
+  L.push('')
+  L.push(`Sinh lúc: ${new Date().toISOString()} · ${nodes.length}/${graph.stats.nodes} node có mục này`)
+  L.push('')
+  L.push('## Mục lục')
+  L.push('')
+  for (const n of nodes) L.push(`- \`#${n.readIndex}\` **${n.title}** — ${n.summary || ''}`)
+  L.push('')
+
+  for (const n of nodes) {
+    L.push('---')
+    L.push('')
+    L.push(`## ${n.icon ? n.icon + ' ' : ''}${n.title}  \`#${n.id}\``)
+    L.push('')
+    L.push(n.interview)
+    L.push('')
+  }
+  return L.join('\n')
+}

@@ -5,7 +5,7 @@ import { LANG_MODES, t, text as tx } from '../lib/i18n.js'
 export default function Sidebar({
   graph, nodesById, rootId, selectedId, onSelect,
   query, setQuery, searchRef, activeTags, toggleTag,
-  collapsed, onToggle, matchSet, onExport, onExportPlaybook,
+  collapsed, onToggle, matchSet, onExport, onExportPlaybook, onExportInterview,
   activeLevels, toggleLevel, lang, setLang,
 }) {
   const [tab, setTab] = useState('path')
@@ -195,6 +195,11 @@ export default function Sidebar({
           onClick={onExportPlaybook}
           title={t('exportPlaybookTitle', lang)}
         >{t('exportPlaybook', lang)}</button>
+        <button
+          className="btn ghost wide"
+          onClick={onExportInterview}
+          title={t('exportInterviewTitle', lang)}
+        >{t('exportInterview', lang)}</button>
         <button
           className="btn ghost wide"
           onClick={onExport}

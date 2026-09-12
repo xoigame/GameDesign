@@ -15,7 +15,7 @@ const ROOT_HEIGHT = 58
 
 export default function MindMap({
   nodesById, rootId, relations, collapsed, onToggle,
-  selectedId, onSelect, mode, keepSet, showRelations, lang,
+  selectedId, onSelect, mode, keepSet, showRelations, lang, mastery,
 }) {
   const { fitView } = useReactFlow()
   const nodesInitialized = useNodesInitialized()
@@ -80,6 +80,7 @@ export default function MindMap({
           childCount,
           onToggle,
           lang,
+          mastery: mastery ? mastery.get(id) ?? null : null,
         },
       })
     }
@@ -136,7 +137,7 @@ export default function MindMap({
     return { rfNodes, rfEdges }
   }, [
     nodesById, rootId, relations, mode, selectedId, pathToRoot,
-    effectiveCollapsed, collapsed, keepSet, showRelations, onToggle, filtering, lang,
+    effectiveCollapsed, collapsed, keepSet, showRelations, onToggle, filtering, lang, mastery,
   ])
 
   // Fit view khi đổi layout hoặc bộ lọc — chờ React Flow đo xong kích thước node,

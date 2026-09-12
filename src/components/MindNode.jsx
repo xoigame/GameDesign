@@ -6,7 +6,7 @@ import { text as tx, field } from '../lib/i18n.js'
 function MindNode({ data }) {
   const {
     node, side, isRoot, isSelected, onPath, dimmed,
-    collapsed, childCount, onToggle, lang,
+    collapsed, childCount, onToggle, lang, mastery,
   } = data
 
   // Trên mindmap luôn hiện MỘT tiêu đề cho gọn; chế độ song ngữ dùng bản gốc
@@ -39,6 +39,10 @@ function MindNode({ data }) {
       <Handle type="source" position={Position.Right} id="sr" className="rf-handle" />
 
       <span className="mn-bar" />
+      {mastery != null && mastery > 0 && (
+        <span className="mn-mastery" style={{ '--m': mastery }}
+              title={'Đã thuộc ' + Math.round(mastery * 100) + '% số câu phỏng vấn của node này'} />
+      )}
       <span className="mn-num" title={'Thứ tự đọc: ' + node.readIndex}>{node.readIndex}</span>
       {node.icon ? <span className="mn-icon">{node.icon}</span> : null}
       <span className="mn-title">{title}</span>
