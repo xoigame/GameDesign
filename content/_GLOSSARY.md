@@ -402,3 +402,39 @@ see: unity-lighting
 ## IL2CPP
 Backend biên dịch C# sang C++ của Unity. Cùng với stripping, đây là nguồn lỗi "chạy trong Editor mà crash trong build" — nên phải build ra máy đích từ tuần đầu.
 see: unity-build-platform
+
+## goroutine
+Đơn vị chạy song song của Go, rẻ hơn thread hệ điều hành nhiều lần (stack khởi điểm 8 KB rồi tự lớn) nên mở hàng chục nghìn cái là bình thường. Cái giá: goroutine không có đường thoát sẽ rò, và chỉ lộ ra sau vài ngày chạy liên tục.
+see: game-server-go
+
+## idempotency | idempotent
+Tính chất "gọi lại lần thứ hai không làm đổi kết quả". Với lệnh ghi đi qua mạng di động, đây là điều kiện tối thiểu để retry không nhân đôi vật phẩm — làm bằng một request_id do client sinh và ràng buộc UNIQUE ở database.
+see: game-server-go
+
+## sổ cái | ledger | append-only
+Bảng chỉ thêm, không sửa không xoá, mỗi thay đổi tài nguyên một dòng. Cho phép dựng lại số dư khi nghi ngờ, hoàn đồ có bằng chứng, và đo faucet/drain thật mà không cần dựng thêm hệ thống đo nào.
+see: game-server-go
+
+## ZSET | sorted set
+Kiểu dữ liệu Redis giữ tập phần tử kèm điểm và luôn ở trạng thái đã sắp xếp. Là cách đúng để làm bảng xếp hạng: lấy hạng của một người là O(log N), thay vì ORDER BY trên cả triệu dòng ở mỗi request.
+see: game-server-go
+
+## authoritative | server authoritative
+Server quyết kết quả, client chỉ gửi ý định. Endpoint nào nhận nguyên trạng thái (vàng, inventory) từ client là endpoint tự nhân bản vật phẩm — và nó trông hoàn toàn bình thường lúc review code.
+see: game-server-go
+
+## JWT
+Token đã ký, server đọc được mà không cần tra database. Dùng cho access token ngắn hạn (10–15 phút) đi kèm refresh token thu hồi được; đừng nhét dữ liệu game (vàng, level) vào vì nó cũ ngay khi vừa phát hành.
+see: game-server-go
+
+## CCU | concurrent users
+Số người chơi online cùng lúc — đơn vị để tính chi phí server và để chọn kiến trúc. Khác hẳn DAU: 100.000 DAU có thể chỉ tương ứng 3.000 CCU.
+see: game-server-go
+
+## p99
+Ngưỡng mà 99% request nằm dưới. Số trung bình luôn đẹp và luôn che mất chỗ đau; p99 mới là cái người chơi kể lại trên store.
+see: game-server-go
+
+## graceful shutdown
+Tắt process theo trình tự: ngừng nhận việc mới, làm nốt việc đang dở, rồi mới thoát. Thiếu nó thì mỗi lần deploy là một lần người chơi mất trận — và cả đội sẽ sợ deploy.
+see: game-server-go

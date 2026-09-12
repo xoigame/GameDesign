@@ -19,6 +19,7 @@ Nhánh này về **cách xây** chứ không về **xây cái gì**.
 - **[[playtesting-metrics]]** — đo cái gì, đo thế nào, và cách đọc kết quả.
 - **[[tech-stack]]** — chọn engine và công cụ.
 - **[[performance]]** — ngân sách và tối ưu.
+- **[[game-server-go]]** — backend Go cho game Unity: API, phòng realtime, Postgres và Redis.
 
 ## Nguyên tắc
 

@@ -1,28 +1,29 @@
 {
-  "generatedAt": "2026-09-12T14:33:18.631Z",
+  "generatedAt": "2026-09-12T14:47:01.515Z",
   "root": "root",
   "stats": {
-    "nodes": 81,
+    "nodes": 85,
     "branches": 9,
-    "deep": 68,
+    "deep": 72,
     "stub": 13,
-    "relations": 394,
-    "withPrompt": 81,
-    "withUnity": 63,
-    "withAiHowto": 19,
-    "glossaryTerms": 134,
-    "withCode": 17,
-    "withInterview": 18,
+    "relations": 414,
+    "withPrompt": 84,
+    "withUnity": 64,
+    "withAiHowto": 22,
+    "glossaryTerms": 149,
+    "withCode": 19,
+    "withInterview": 20,
     "translated": {
       "en": 12
     },
     "basic": 29,
-    "intermediate": 36,
-    "advanced": 16,
-    "words": 113516
+    "intermediate": 37,
+    "advanced": 19,
+    "words": 124429
   },
   "tags": [
     "accessibility",
+    "addressables",
     "advanced",
     "ai",
     "ai-dev",
@@ -33,20 +34,26 @@
     "art",
     "asset",
     "audio",
+    "backend",
     "blueprint",
     "build",
+    "burst",
     "camera",
     "code",
     "combat",
     "content",
     "core",
+    "csharp",
     "data",
+    "database",
     "decision-making",
     "design",
     "design-system",
     "difficulty",
     "documentation",
+    "dots",
     "economy",
+    "ecs",
     "editor",
     "engine",
     "experimental",
@@ -55,19 +62,24 @@
     "foundations",
     "fundamentals",
     "gameplay",
+    "gc",
     "genre",
+    "go",
     "hud",
     "implementation",
     "industry-standard",
     "input",
+    "jobs",
     "key",
     "level",
     "lifecycle",
     "lighting",
     "limits",
+    "live-ops",
     "llm",
     "marketing",
     "math",
+    "memory",
     "meta",
     "ml",
     "mobile",
@@ -105,6 +117,7 @@
     "safety",
     "save",
     "scene",
+    "server",
     "shader",
     "simulation",
     "spec",
@@ -1091,6 +1104,121 @@
         "aliases": [],
         "body": "Backend biên dịch C# sang C++ của Unity. Cùng với stripping, đây là nguồn lỗi \"chạy trong Editor mà crash trong build\" — nên phải build ra máy đích từ tuần đầu.",
         "see": "unity-build-platform"
+      },
+      "goroutine": {
+        "term": "goroutine",
+        "aliases": [],
+        "body": "Đơn vị chạy song song của Go, rẻ hơn thread hệ điều hành nhiều lần (stack khởi điểm 8 KB rồi tự lớn) nên mở hàng chục nghìn cái là bình thường. Cái giá: goroutine không có đường thoát sẽ rò, và chỉ lộ ra sau vài ngày chạy liên tục.",
+        "see": "game-server-go"
+      },
+      "idempotency": {
+        "term": "idempotency",
+        "aliases": [
+          "idempotent"
+        ],
+        "body": "Tính chất \"gọi lại lần thứ hai không làm đổi kết quả\". Với lệnh ghi đi qua mạng di động, đây là điều kiện tối thiểu để retry không nhân đôi vật phẩm — làm bằng một request_id do client sinh và ràng buộc UNIQUE ở database.",
+        "see": "game-server-go"
+      },
+      "idempotent": {
+        "term": "idempotency",
+        "aliases": [
+          "idempotent"
+        ],
+        "body": "Tính chất \"gọi lại lần thứ hai không làm đổi kết quả\". Với lệnh ghi đi qua mạng di động, đây là điều kiện tối thiểu để retry không nhân đôi vật phẩm — làm bằng một request_id do client sinh và ràng buộc UNIQUE ở database.",
+        "see": "game-server-go"
+      },
+      "so cai": {
+        "term": "sổ cái",
+        "aliases": [
+          "ledger",
+          "append-only"
+        ],
+        "body": "Bảng chỉ thêm, không sửa không xoá, mỗi thay đổi tài nguyên một dòng. Cho phép dựng lại số dư khi nghi ngờ, hoàn đồ có bằng chứng, và đo faucet/drain thật mà không cần dựng thêm hệ thống đo nào.",
+        "see": "game-server-go"
+      },
+      "ledger": {
+        "term": "sổ cái",
+        "aliases": [
+          "ledger",
+          "append-only"
+        ],
+        "body": "Bảng chỉ thêm, không sửa không xoá, mỗi thay đổi tài nguyên một dòng. Cho phép dựng lại số dư khi nghi ngờ, hoàn đồ có bằng chứng, và đo faucet/drain thật mà không cần dựng thêm hệ thống đo nào.",
+        "see": "game-server-go"
+      },
+      "append-only": {
+        "term": "sổ cái",
+        "aliases": [
+          "ledger",
+          "append-only"
+        ],
+        "body": "Bảng chỉ thêm, không sửa không xoá, mỗi thay đổi tài nguyên một dòng. Cho phép dựng lại số dư khi nghi ngờ, hoàn đồ có bằng chứng, và đo faucet/drain thật mà không cần dựng thêm hệ thống đo nào.",
+        "see": "game-server-go"
+      },
+      "zset": {
+        "term": "ZSET",
+        "aliases": [
+          "sorted set"
+        ],
+        "body": "Kiểu dữ liệu Redis giữ tập phần tử kèm điểm và luôn ở trạng thái đã sắp xếp. Là cách đúng để làm bảng xếp hạng: lấy hạng của một người là O(log N), thay vì ORDER BY trên cả triệu dòng ở mỗi request.",
+        "see": "game-server-go"
+      },
+      "sorted set": {
+        "term": "ZSET",
+        "aliases": [
+          "sorted set"
+        ],
+        "body": "Kiểu dữ liệu Redis giữ tập phần tử kèm điểm và luôn ở trạng thái đã sắp xếp. Là cách đúng để làm bảng xếp hạng: lấy hạng của một người là O(log N), thay vì ORDER BY trên cả triệu dòng ở mỗi request.",
+        "see": "game-server-go"
+      },
+      "authoritative": {
+        "term": "authoritative",
+        "aliases": [
+          "server authoritative"
+        ],
+        "body": "Server quyết kết quả, client chỉ gửi ý định. Endpoint nào nhận nguyên trạng thái (vàng, inventory) từ client là endpoint tự nhân bản vật phẩm — và nó trông hoàn toàn bình thường lúc review code.",
+        "see": "game-server-go"
+      },
+      "server authoritative": {
+        "term": "authoritative",
+        "aliases": [
+          "server authoritative"
+        ],
+        "body": "Server quyết kết quả, client chỉ gửi ý định. Endpoint nào nhận nguyên trạng thái (vàng, inventory) từ client là endpoint tự nhân bản vật phẩm — và nó trông hoàn toàn bình thường lúc review code.",
+        "see": "game-server-go"
+      },
+      "jwt": {
+        "term": "JWT",
+        "aliases": [],
+        "body": "Token đã ký, server đọc được mà không cần tra database. Dùng cho access token ngắn hạn (10–15 phút) đi kèm refresh token thu hồi được; đừng nhét dữ liệu game (vàng, level) vào vì nó cũ ngay khi vừa phát hành.",
+        "see": "game-server-go"
+      },
+      "ccu": {
+        "term": "CCU",
+        "aliases": [
+          "concurrent users"
+        ],
+        "body": "Số người chơi online cùng lúc — đơn vị để tính chi phí server và để chọn kiến trúc. Khác hẳn DAU: 100.000 DAU có thể chỉ tương ứng 3.000 CCU.",
+        "see": "game-server-go"
+      },
+      "concurrent users": {
+        "term": "CCU",
+        "aliases": [
+          "concurrent users"
+        ],
+        "body": "Số người chơi online cùng lúc — đơn vị để tính chi phí server và để chọn kiến trúc. Khác hẳn DAU: 100.000 DAU có thể chỉ tương ứng 3.000 CCU.",
+        "see": "game-server-go"
+      },
+      "p99": {
+        "term": "p99",
+        "aliases": [],
+        "body": "Ngưỡng mà 99% request nằm dưới. Số trung bình luôn đẹp và luôn che mất chỗ đau; p99 mới là cái người chơi kể lại trên store.",
+        "see": "game-server-go"
+      },
+      "graceful shutdown": {
+        "term": "graceful shutdown",
+        "aliases": [],
+        "body": "Tắt process theo trình tự: ngừng nhận việc mới, làm nốt việc đang dở, rồi mới thoát. Thiếu nó thì mỗi lần deploy là một lần người chơi mất trận — và cả đội sẽ sợ deploy.",
+        "see": "game-server-go"
       }
     }
   },
@@ -1167,11 +1295,13 @@
     "playtesting-metrics",
     "tech-stack",
     "performance",
+    "game-server-go",
     "asset-generation",
     "unity",
     "unity-game-loop",
     "unity-project-structure",
     "unity-design-patterns",
+    "unity-csharp-memory",
     "unity-physics",
     "unity-animation",
     "unity-input",
@@ -1183,7 +1313,9 @@
     "unity-lighting",
     "unity-save-data",
     "unity-optimization",
+    "unity-dots-jobs",
     "unity-build-platform",
+    "unity-addressables",
     "unity-multiplayer",
     "unity-editor-tools"
   ],
@@ -2785,7 +2917,7 @@
       ],
       "status": "stub",
       "read": 590,
-      "readIndex": 63,
+      "readIndex": 64,
       "level": "advanced",
       "refs": [],
       "order": 50,
@@ -3011,6 +3143,47 @@
       "color": "#f783ac"
     },
     {
+      "id": "game-server-go",
+      "title": "Server Go cho game",
+      "summary": "Backend Go cho game Unity — tách API trạng thái khỏi phòng realtime, để Postgres giữ chân lý và Redis giữ thứ hỏng được, và không bao giờ tin con số client gửi lên.",
+      "icon": "🐹",
+      "parent": "production",
+      "children": [],
+      "depth": 2,
+      "branch": "production",
+      "tags": [
+        "production",
+        "backend",
+        "server",
+        "database",
+        "go",
+        "live-ops"
+      ],
+      "related": [
+        "unity-multiplayer",
+        "architecture-patterns",
+        "unity-save-data",
+        "economy-design"
+      ],
+      "status": "deep",
+      "read": 585,
+      "readIndex": 63,
+      "level": "advanced",
+      "refs": [],
+      "order": 60,
+      "collapsed": false,
+      "path": "06-production/game-server-go.md",
+      "words": 4423,
+      "body": "Game online có hai thứ cùng tên \"server\" và người ta hay gộp làm một: **server netcode** giữ trận đấu đồng bộ từng tick, và **backend** giữ tài khoản, đồ đạc, tiền, bảng xếp hạng. Node này nói về cái thứ hai, viết bằng Go, cho client Unity. Phần netcode nằm ở [[unity-multiplayer]].\n\n## Hai cái \"server\", hai bài toán\n\n| | Server netcode (trận đấu) | Backend (tài khoản, kinh tế) |\n|---|---|---|\n| Trạng thái | Trong RAM, sống theo trận | Trong database, sống mãi |\n| Mất một process | Mất một trận | Mất tiền của người chơi |\n| Nhịp | 20–60 tick mỗi giây | Vài request mỗi phút mỗi người |\n| Giao thức | UDP hoặc WebSocket nhị phân | HTTPS + JSON |\n| Scale | Theo số phòng, phòng dính vào một máy | Theo CCU, nhân bản vô tư |\n| Deploy | Phải drain, không kill giữa trận | Rolling restart bất cứ lúc nào |\n| Hỏng thì | Giật, rớt trận | Nhân đôi vật phẩm, lạm phát, mất save |\n\nKhác nhau ở **mọi dòng**, nên đừng nhét chung một process. Hai lỗi kinh điển của việc gộp: giữ inventory trong RAM của phòng cho \"nhanh\" rồi phòng crash là đồ bay; hoặc phòng ghi thẳng vào Postgres mỗi tick — 30 write mỗi giây mỗi phòng, database chết ở phòng thứ năm mươi.\n\n<figure class=\"fig\">\n<svg viewBox=\"0 0 660 300\" role=\"img\" aria-label=\"Client Unity nối tới API Go stateless và Room server Go stateful; API dùng PostgreSQL và Redis; worker chạy job định kỳ\">\n  <defs>\n    <marker id=\"gsg-a\" viewBox=\"0 0 10 10\" refX=\"9\" refY=\"5\" markerWidth=\"7\" markerHeight=\"7\" orient=\"auto\">\n      <path d=\"M0 0 L10 5 L0 10 z\" fill=\"#6ea8fe\"/>\n    </marker>\n  </defs>\n  <g class=\"fig-box-g\">\n    <rect x=\"8\"   y=\"108\" width=\"118\" height=\"66\" rx=\"9\" class=\"fig-box\"/>\n    <rect x=\"196\" y=\"28\"  width=\"184\" height=\"62\" rx=\"9\" class=\"fig-box\"/>\n    <rect x=\"196\" y=\"122\" width=\"184\" height=\"62\" rx=\"9\" class=\"fig-box\"/>\n    <rect x=\"196\" y=\"218\" width=\"184\" height=\"56\" rx=\"9\" class=\"fig-box\"/>\n    <rect x=\"450\" y=\"28\"  width=\"196\" height=\"62\" rx=\"9\" class=\"fig-box\"/>\n    <rect x=\"450\" y=\"122\" width=\"196\" height=\"62\" rx=\"9\" class=\"fig-box\"/>\n    <rect x=\"450\" y=\"218\" width=\"196\" height=\"56\" rx=\"9\" class=\"fig-box\"/>\n  </g>\n  <text x=\"67\"  y=\"136\" text-anchor=\"middle\" class=\"fig-label\" font-size=\"13\">Unity client</text>\n  <text x=\"67\"  y=\"155\" text-anchor=\"middle\" class=\"fig-muted\" font-size=\"11\">chỉ gửi ý định</text>\n  <text x=\"288\" y=\"54\"  text-anchor=\"middle\" class=\"fig-label\" font-size=\"13\">API Go — stateless</text>\n  <text x=\"288\" y=\"74\"  text-anchor=\"middle\" class=\"fig-muted\" font-size=\"11\">REST/JSON · JWT · N bản</text>\n  <text x=\"288\" y=\"148\" text-anchor=\"middle\" class=\"fig-label\" font-size=\"13\">Room server Go — stateful</text>\n  <text x=\"288\" y=\"168\" text-anchor=\"middle\" class=\"fig-muted\" font-size=\"11\">WebSocket · tick 20Hz · RAM</text>\n  <text x=\"288\" y=\"242\" text-anchor=\"middle\" class=\"fig-label\" font-size=\"13\">Worker / cron</text>\n  <text x=\"288\" y=\"261\" text-anchor=\"middle\" class=\"fig-muted\" font-size=\"11\">reset mùa · đối soát IAP</text>\n  <text x=\"548\" y=\"54\"  text-anchor=\"middle\" class=\"fig-label\" font-size=\"13\">PostgreSQL</text>\n  <text x=\"548\" y=\"74\"  text-anchor=\"middle\" class=\"fig-muted\" font-size=\"11\">nguồn chân lý · transaction</text>\n  <text x=\"548\" y=\"148\" text-anchor=\"middle\" class=\"fig-label\" font-size=\"13\">Redis</text>\n  <text x=\"548\" y=\"168\" text-anchor=\"middle\" class=\"fig-muted\" font-size=\"11\">phiên · ZSET · matchmaking</text>\n  <text x=\"548\" y=\"242\" text-anchor=\"middle\" class=\"fig-label\" font-size=\"13\">ClickHouse / S3</text>\n  <text x=\"548\" y=\"261\" text-anchor=\"middle\" class=\"fig-muted\" font-size=\"11\">event, replay</text>\n  <g stroke=\"#6ea8fe\" stroke-width=\"2\" marker-end=\"url(#gsg-a)\" fill=\"none\">\n    <path d=\"M126 128 Q170 128 170 60 H192\"/>\n    <path d=\"M126 154 Q170 154 170 153 H192\"/>\n    <path d=\"M380 50 H446\"/>\n    <path d=\"M380 74 Q416 74 416 140 H446\"/>\n    <path d=\"M380 160 H446\"/>\n    <path d=\"M380 246 Q416 246 416 180 H446\"/>\n    <path d=\"M288 122 V96\"/>\n  </g>\n  <text x=\"168\" y=\"108\" text-anchor=\"middle\" class=\"fig-muted\" font-size=\"10\">HTTPS</text>\n  <text x=\"163\" y=\"176\" text-anchor=\"middle\" class=\"fig-muted\" font-size=\"10\">WebSocket</text>\n  <text x=\"330\" y=\"112\" text-anchor=\"start\" class=\"fig-muted\" font-size=\"10\">kết quả trận</text>\n</svg>\n<figcaption>Ba loại process, ba vòng đời khác nhau. Chỉ API và worker được phép ghi vào nguồn chân lý; room server gửi kết quả trận qua API thay vì tự ghi.</figcaption>\n</figure>\n\n## Vì sao Go — và cái giá của nó\n\n- **Goroutine rẻ.** Mỗi kết nối hai goroutine (một đọc, một ghi), stack khởi điểm 8 KB và tự lớn. Mười nghìn kết nối WebSocket trên một VM 2 vCPU là chuyện bình thường, không cần kiến trúc sự kiện vòng vèo như Node.\n- **GC dừng dưới 1ms.** Đủ cho backend và cho phòng tick 20–30Hz. **Không** đủ để thay C++/Rust ở simulation xác định 120Hz có rollback — ở đó mỗi allocation trong vòng lặp nóng mới là kẻ thù, và Go không cho bạn kiểm soát bố cục bộ nhớ.\n- **Một file binary tĩnh.** `GOOS=linux go build` rồi scp một file, hoặc image `FROM gcr.io/distroless/static` khoảng 15 MB. Không runtime cài kèm, không lệch phiên bản .NET giữa máy dev và máy chủ.\n- **Hệ sinh thái đúng nghề.** Agones (điều phối game server trên k8s), Open Match (matchmaking), Nakama (backend trọn gói), pgx, go-redis — đều viết bằng Go, nên khi bí thì đọc được mã nguồn của chính thứ mình đang dùng.\n\n**Cái giá phải trả: không dùng chung code với Unity.** Backend C# (ASP.NET Core) cho phép share nguyên file `DamageCalculator.cs` giữa client và server — với Go bạn định nghĩa struct hai lần, và **hai bản sẽ lệch nhau** vào một ngày không ai nhớ. Hai cách sống chung:\n\n1. Định nghĩa message **một lần** bằng protobuf hoặc FlatBuffers, sinh ra cả `.go` lẫn `.cs` trong CI. Lệch schema thành lỗi biên dịch thay vì lỗi runtime.\n2. Chia ranh giới theo loại logic: Go làm tài khoản, kinh tế, matchmaking, bảng xếp hạng (chỗ không cần mô phỏng gameplay); còn nếu cần server mô phỏng chiến đấu authoritative thì để Unity headless chạy chính code đó — xem [[unity-multiplayer]].\n\nChọn Go vì **vận hành rẻ và chịu tải tốt**, đừng chọn vì \"nhanh hơn C#\". Ở tải của một game indie thì cả hai đều thừa sức; thứ giết bạn là một query thiếu index, không phải ngôn ngữ.\n\n## Ba loại process, tách ngay từ đầu\n\n| Process | Giữ gì trong RAM | Restart giữa chừng |\n|---|---|---|\n| **API stateless** | Không gì cả | Vô hại — cứ rolling restart |\n| **Room server** | Toàn bộ trận đang chạy | Mất trận → phải drain trước khi thoát |\n| **Worker / cron** | Không gì cả | Vô hại, nhưng job phải chạy lại được từ đầu |\n\nLuật một câu: **state trong RAM chỉ được phép là thứ mất đi cũng không sao.** Không được phép mất thì nó phải nằm trong Postgres **trước khi** server trả về 200.\n\nĐừng nhét job nặng vào process API. Một job \"quét toàn bộ tài khoản để reset mùa\" chạy chung sẽ ăn hết pool kết nối database và request của người chơi bắt đầu timeout — hiện tượng quan sát được là \"game lag mỗi đầu giờ\", nguyên nhân lại nằm ở cron.\n\n## Một goroutine sở hữu một phòng\n\nCách viết room server sai nhất là một `map[string]*Room` dùng chung cộng với `sync.Mutex` rải khắp nơi: nó chạy đúng khi bạn test một mình và hỏng khi có hai mươi người. Cách đúng trong Go là **actor**: mỗi phòng một goroutine, goroutine đó là **chủ sở hữu duy nhất** của state, mọi thứ khác đi vào qua channel. Không mutex, nên không có deadlock và không có race để mà đi tìm.\n\n```go\n// Một phòng = một goroutine. Trường players CHỈ goroutine Run() được đụng tới.\ntype Room struct {\n    id      string\n    inbox   chan Msg          // có buffer: đầy thì ngắt client, không bao giờ block vòng lặp\n    join    chan *Player\n    leave   chan *Player\n    players map[string]*Player\n}\n\nfunc (r *Room) Run(ctx context.Context) {\n    const tickRate = 20\n    ticker := time.NewTicker(time.Second / tickRate)\n    defer ticker.Stop()\n    emptySince := time.Now()\n\n    for {\n        select {\n        case <-ctx.Done():                       // deploy: báo cho client rồi thoát sạch\n            r.broadcast(Msg{Type: \"server_shutdown\"})\n            return\n        case p := <-r.join:\n            r.players[p.ID] = p\n        case p := <-r.leave:\n            delete(r.players, p.ID)\n            if len(r.players) == 0 {\n                emptySince = time.Now()\n            }\n        case m := <-r.inbox:\n            r.apply(m)                           // ý định của client, đã validate\n        case now := <-ticker.C:\n            r.step(1.0 / tickRate)\n            r.broadcast(r.snapshot())\n            if len(r.players) == 0 && now.Sub(emptySince) > 30*time.Second {\n                return                           // phòng rỗng 30 giây thì tự dọn\n            }\n        }\n    }\n}\n\n// Gọi từ goroutine đọc socket. KHÔNG được block vòng lặp phòng vì một client mạng chậm.\nfunc (r *Room) Send(m Msg) bool {\n    select {\n    case r.inbox <- m:\n        return true\n    default:\n        return false      // hàng đợi đầy: client spam hoặc đã treo → ngắt kết nối nó\n    }\n}\n```\n\nBa lỗi đồng thời hay gặp, theo thứ tự mức độ phổ biến:\n\n- **Goroutine rò.** Client ngắt kết nối nhưng goroutine ghi vẫn chờ trên channel mãi mãi. Mọi goroutine phải có đường thoát bằng `ctx.Done()`, và `close` channel ở đúng một phía. Triệu chứng: số goroutine trong `/debug/pprof/goroutine` chỉ đi lên, không bao giờ xuống.\n- **Channel không buffer trong vòng lặp phòng.** `make(chan Msg)` bắt người gửi chờ người nhận; một client mạng 3G đủ để treo cả phòng. Có buffer thì phải có chính sách khi đầy — **drop hoặc kick**, không phải chờ.\n- **Ticker trôi.** Nếu một tick xử lý lâu hơn 50ms, `time.Ticker` bỏ nhịp chứ không dồn lại. Muốn mô phỏng đúng thời gian thì cộng dồn delta thật và chạy bù, đừng giả định mỗi tick đúng 50ms.\n\n`go build` không bắt được data race. Chạy `go test -race ./...` trong CI, và ít nhất một lần chạy server thật với `-race` dưới tải giả lập.\n\n## Giao thức: chọn theo loại dữ liệu\n\n| Giao thức | Độ trễ thực tế | Phía Unity | Dùng cho |\n|---|---|---|---|\n| REST + JSON | 50–200ms | `UnityWebRequest` có sẵn | Mọi thứ meta: login, shop, inventory, quest |\n| WebSocket + JSON | 30–80ms | cần thư viện (NativeWebSocket) | Chat, phòng chờ, turn-based, thông báo đẩy |\n| WebSocket + nhị phân | 20–60ms | thêm codegen protobuf | Realtime 10–30Hz, nhiều người một phòng |\n| UDP / KCP / QUIC | 10–40ms | thư viện riêng, WebGL không chạy | Action realtime, FPS |\n| gRPC | thấp | khó với IL2CPP và WebGL | **Giữa các service backend**, không nói chuyện thẳng với client |\n\nMặc định đúng cho phần lớn game mobile và indie: **REST cho meta, WebSocket cho realtime nhẹ.** Đừng mở màn bằng gRPC tới client — bạn đánh đổi khả năng debug bằng `curl` và khả năng đọc log proxy để lấy vài mili giây không ai cảm nhận được.\n\n## Database: mỗi loại dữ liệu về đúng chỗ\n\n| Dữ liệu | Chỗ của nó | Vì sao |\n|---|---|---|\n| Tài khoản, inventory, tiền, tiến trình | PostgreSQL | Cần transaction, không được phép mất |\n| Phiên đăng nhập, token thu hồi | Redis | Tự hết hạn; mất thì đăng nhập lại, không ai chết |\n| Bảng xếp hạng | Redis ZSET, cuối mùa chốt xuống Postgres | `ZREVRANK` là O(log N); `ORDER BY` trên một triệu dòng mỗi request thì không |\n| Hàng đợi matchmaking, presence | Redis | Sống vài giây, tốc độ quan trọng hơn độ bền |\n| Save state đơn, client tự sở hữu | Cột `jsonb` trong Postgres | Không cần quan hệ, chỉ cần lưu và trả nguyên khối |\n| Event analytics | ClickHouse / BigQuery / file | Postgres sẽ phình và chậm dần. Xem [[playtesting-metrics]] |\n| Replay, ảnh người chơi tạo | Object storage (S3/R2) | Đừng nhét binary lớn vào database |\n\nChưa biết chọn gì thì: **Postgres một mình đủ cho vài nghìn CCU đầu tiên.** Nó làm được cả `jsonb`, cả hàng đợi (`SELECT … FOR UPDATE SKIP LOCKED`), cả khoá phân tán (advisory lock). Thêm Redis khi đo được điểm nghẽn thật, không phải vì sơ đồ kiến trúc trông chuyên nghiệp hơn.\n\n### Sáu luật cho dữ liệu kinh tế\n\n1. **Tiền là số nguyên.** `bigint`, không bao giờ `float`. Vàng, gem, EXP, điểm — tất cả số nguyên; muốn chia nhỏ thì đổi đơn vị (lưu 1 vàng = 100 đơn vị) chứ đừng dùng dấu phẩy động.\n2. **Ràng buộc đặt ở database, không chỉ trong code.** `CHECK (gold >= 0)`, `UNIQUE (request_id)`, khoá ngoại. Code sẽ có bug; database là lưới an toàn cuối cùng và nó không bao giờ quên.\n3. **Sổ cái append-only.** Mỗi thay đổi tài nguyên là một dòng, không sửa, không xoá. Nó cho bạn ba thứ: dựng lại số dư khi nghi ngờ, hoàn đồ cho người chơi có bằng chứng, và đo faucet/drain thật của [[economy-design]] mà không cần dựng thêm hệ thống đo nào.\n4. **Mọi lệnh ghi đều idempotent.** Client sinh `request_id`, database `UNIQUE` nó. Mạng rớt giữa chừng là chuyện hàng ngày trên 4G; không có idempotency thì mỗi lần rớt là một lần nhân đôi hoặc mất trắng.\n5. **Một transaction cho một quyết định.** Trừ tiền và cộng đồ không được là hai request khác nhau — hai request là hai cơ hội để chỉ một nửa xảy ra.\n6. **Thời gian là của server.** Dùng `now()` của Postgres cho mọi mốc. Đọc timestamp client gửi lên nghĩa là mời người chơi chỉnh đồng hồ máy để tua idle game.\n\n```sql\n-- Số dư: giá trị hiện tại, có ràng buộc không âm ngay ở tầng database.\nCREATE TABLE wallet (\n  user_id    uuid PRIMARY KEY,\n  gold       bigint NOT NULL DEFAULT 0 CHECK (gold >= 0),\n  updated_at timestamptz NOT NULL DEFAULT now()\n);\n\n-- Sổ cái: mỗi thay đổi một dòng. request_id UNIQUE chính là cái chặn nhân đôi.\nCREATE TABLE wallet_tx (\n  id            bigserial PRIMARY KEY,\n  request_id    text UNIQUE NOT NULL,\n  user_id       uuid NOT NULL REFERENCES wallet(user_id),\n  delta         bigint NOT NULL,\n  balance_after bigint NOT NULL,\n  reason        text NOT NULL,          -- 'quest:12', 'buy:sword', 'iap:gems_500'\n  created_at    timestamptz NOT NULL DEFAULT now()\n);\nCREATE INDEX ON wallet_tx (user_id, created_at DESC);\n\nCREATE TABLE inventory (\n  user_id uuid NOT NULL,\n  item_id text NOT NULL,\n  qty     int  NOT NULL CHECK (qty >= 0),\n  PRIMARY KEY (user_id, item_id)\n);\n```\n\n<figure class=\"fig\">\n<svg viewBox=\"0 0 660 250\" role=\"img\" aria-label=\"Client gửi lệnh mua kèm requestId, server ghi vào database rồi mạng rớt; client gửi lại cùng requestId và server trả kết quả cũ mà không trừ tiền lần hai\">\n  <defs>\n    <marker id=\"gsg-b\" viewBox=\"0 0 10 10\" refX=\"9\" refY=\"5\" markerWidth=\"7\" markerHeight=\"7\" orient=\"auto\">\n      <path d=\"M0 0 L10 5 L0 10 z\" fill=\"#6ea8fe\"/>\n    </marker>\n    <marker id=\"gsg-c\" viewBox=\"0 0 10 10\" refX=\"9\" refY=\"5\" markerWidth=\"7\" markerHeight=\"7\" orient=\"auto\">\n      <path d=\"M0 0 L10 5 L0 10 z\" fill=\"#51cf9b\"/>\n    </marker>\n  </defs>\n  <g class=\"fig-box-g\">\n    <rect x=\"14\"  y=\"8\" width=\"120\" height=\"30\" rx=\"7\" class=\"fig-box\"/>\n    <rect x=\"250\" y=\"8\" width=\"150\" height=\"30\" rx=\"7\" class=\"fig-box\"/>\n    <rect x=\"510\" y=\"8\" width=\"136\" height=\"30\" rx=\"7\" class=\"fig-box\"/>\n  </g>\n  <text x=\"74\"  y=\"28\" text-anchor=\"middle\" class=\"fig-label\" font-size=\"12\">Unity client</text>\n  <text x=\"325\" y=\"28\" text-anchor=\"middle\" class=\"fig-label\" font-size=\"12\">API Go</text>\n  <text x=\"578\" y=\"28\" text-anchor=\"middle\" class=\"fig-label\" font-size=\"12\">PostgreSQL</text>\n  <g class=\"fig-line\" stroke-dasharray=\"4 5\" stroke-width=\"1\" fill=\"none\">\n    <path d=\"M74 42 V240\"/>\n    <path d=\"M325 42 V240\"/>\n    <path d=\"M578 42 V240\"/>\n  </g>\n  <g stroke=\"#6ea8fe\" stroke-width=\"2\" marker-end=\"url(#gsg-b)\" fill=\"none\">\n    <path d=\"M74 72 H321\"/>\n    <path d=\"M325 104 H574\"/>\n    <path d=\"M578 134 H329\"/>\n    <path d=\"M325 164 H78\"/>\n  </g>\n  <text x=\"197\" y=\"66\"  text-anchor=\"middle\" class=\"fig-label\" font-size=\"11\">POST /buy · requestId = 7f3a</text>\n  <text x=\"450\" y=\"98\"  text-anchor=\"middle\" class=\"fig-muted\" font-size=\"10\">BEGIN · trừ vàng · ghi sổ cái 7f3a · COMMIT</text>\n  <text x=\"452\" y=\"128\" text-anchor=\"middle\" class=\"fig-muted\" font-size=\"10\">gold = 250</text>\n  <text x=\"200\" y=\"158\" text-anchor=\"middle\" class=\"fig-muted\" font-size=\"10\">200 gold=250</text>\n  <text x=\"200\" y=\"184\" text-anchor=\"middle\" font-size=\"11\" fill=\"#ff8787\">✕ mạng rớt — client không nhận được gì</text>\n  <g stroke=\"#6ea8fe\" stroke-width=\"2\" marker-end=\"url(#gsg-b)\" fill=\"none\">\n    <path d=\"M74 208 H321\"/>\n  </g>\n  <text x=\"197\" y=\"202\" text-anchor=\"middle\" class=\"fig-label\" font-size=\"11\">gửi lại — CÙNG requestId = 7f3a</text>\n  <g stroke=\"#51cf9b\" stroke-width=\"2\" marker-end=\"url(#gsg-c)\" fill=\"none\">\n    <path d=\"M325 234 H78\"/>\n  </g>\n  <text x=\"332\" y=\"228\" text-anchor=\"start\" font-size=\"11\" fill=\"#51cf9b\">đã có 7f3a → trả lại 250, KHÔNG trừ lần hai</text>\n</svg>\n<figcaption>Idempotency không phải tính năng cao cấp — nó là điều kiện tối thiểu để một lệnh ghi đi qua mạng di động mà không nhân đôi hoặc mất trắng.</figcaption>\n</figure>\n\n```go\n// Mua vật phẩm: trừ tiền và cộng đồ trong CÙNG một transaction,\n// gọi hai lần với cùng requestID vẫn ra đúng một kết quả.\nfunc (s *Store) BuyItem(ctx context.Context, userID, itemID, requestID string, price int64) (int64, error) {\n    tx, err := s.pool.Begin(ctx)\n    if err != nil {\n        return 0, err\n    }\n    defer tx.Rollback(ctx)       // không làm gì nếu đã Commit\n\n    // 1. Chốt chặn idempotency: request này xử lý rồi thì trả lại kết quả cũ.\n    var balance int64\n    err = tx.QueryRow(ctx,\n        \"SELECT balance_after FROM wallet_tx WHERE request_id = $1\", requestID).Scan(&balance)\n    if err == nil {\n        return balance, nil\n    }\n    if !errors.Is(err, pgx.ErrNoRows) {\n        return 0, err\n    }\n\n    // 2. FOR UPDATE: hai request song song xếp hàng, thay vì cùng đọc 300 rồi cùng ghi 200.\n    if err = tx.QueryRow(ctx,\n        \"SELECT gold FROM wallet WHERE user_id = $1 FOR UPDATE\", userID).Scan(&balance); err != nil {\n        return 0, err\n    }\n    if balance < price {\n        return balance, ErrNotEnoughGold\n    }\n    balance -= price\n\n    if _, err = tx.Exec(ctx,\n        \"UPDATE wallet SET gold = $1, updated_at = now() WHERE user_id = $2\",\n        balance, userID); err != nil {\n        return 0, err\n    }\n    if _, err = tx.Exec(ctx,\n        `INSERT INTO inventory (user_id, item_id, qty) VALUES ($1, $2, 1)\n         ON CONFLICT (user_id, item_id) DO UPDATE SET qty = inventory.qty + 1`,\n        userID, itemID); err != nil {\n        return 0, err\n    }\n    // 3. Ghi sổ cái. UNIQUE(request_id) là thứ làm cho bước 1 có tác dụng.\n    if _, err = tx.Exec(ctx,\n        `INSERT INTO wallet_tx (request_id, user_id, delta, balance_after, reason)\n         VALUES ($1, $2, $3, $4, 'buy:' || $5)`,\n        requestID, userID, -price, balance, itemID); err != nil {\n        return 0, err\n    }\n    return balance, tx.Commit(ctx)\n}\n```\n\nKiểm chứng đoạn trên bằng đúng một test: 50 goroutine cùng mua một lúc, 50 `requestID` khác nhau, ví có đúng 10 lần giá tiền. Kết quả phải là 10 giao dịch thành công, 40 lỗi `ErrNotEnoughGold`, `gold = 0`, và `wallet_tx` có đúng 10 dòng. Test đó bắt được cả race lẫn transaction viết sai; thiếu nó thì code trên \"trông đúng\" mà vẫn sai.\n\n### Kết nối, khoá và migration\n\n- **Pool nhỏ hơn bạn tưởng.** `pgxpool` 10–25 kết nối mỗi instance là đủ; Postgres mặc định chỉ nhận 100 kết nối, mà mỗi kết nối là một process thật. Tám instance × 25 đã vượt — nhiều instance thì đặt PgBouncer ở giữa (transaction pooling), đừng nâng `max_connections`.\n- **Mọi query có `context` timeout** 2–3 giây. Không có nó, một query kẹt giữ kết nối, pool cạn dần, và toàn bộ API trả 503 vì một bảng thiếu index.\n- **Khoá theo thứ tự cố định.** Giao dịch chạm nhiều dòng (trade giữa hai người chơi) phải khoá theo `user_id` tăng dần. Hai transaction khoá ngược chiều nhau là deadlock, và nó chỉ xuất hiện khi có người chơi thật.\n- **Migration là một bước deploy riêng** (`goose`, `golang-migrate`), không phải auto-migrate lúc khởi động — ba instance khởi động cùng lúc cùng migrate là bảng nửa vời. Buộc phải chạy lúc start thì bọc bằng `pg_advisory_lock`.\n- **Đo bằng `pg_stat_statements`**, thêm index theo query thật. Trên máy dev với 1.000 dòng thì mọi query đều nhanh; index thiếu chỉ lộ ra ở dữ liệu thật.\n\n### Bảng xếp hạng: ZSET và cái bẫy của nó\n\n```go\n// ZADD GT: chỉ ghi khi điểm mới CAO HƠN. Dùng ZAdd thường thì một ván chơi tệ\n// sẽ ghi đè điểm cao nhất của chính người chơi đó — bug kinh điển của leaderboard.\nrdb.ZAddGT(ctx, \"lb:season12\", redis.Z{Score: float64(score), Member: userID})\n\ntop, _ := rdb.ZRevRangeWithScores(ctx, \"lb:season12\", 0, 99).Result()   // top 100\nrank, _ := rdb.ZRevRank(ctx, \"lb:season12\", userID).Result()            // hạng của riêng mình\n```\n\nScore trong ZSET là `float64`, nên số nguyên vượt 2^53 mất chính xác — cẩn thận nếu bạn gói tie-break (thời điểm đạt điểm) vào phần thập phân. Và **Redis không phải nguồn chân lý**: một lần evict hoặc restart không bật persistence là mất bảng xếp hạng cả mùa. Ghi điểm xuống Postgres trong cùng luồng, coi ZSET là chỉ mục đọc nhanh dựng lại được.\n\n## Server có thẩm quyền, kể cả khi game không có multiplayer\n\nGame một người mà có bảng xếp hạng hoặc có IAP thì vẫn cần đủ những điều này:\n\n- **Client gửi ý định, không gửi kết quả.** `POST /craft {\"recipe\":\"iron_sword\"}` chứ không phải `POST /inventory {…}`. Endpoint nào nhận nguyên inventory từ client là endpoint nhân bản vật phẩm — và nó trông hoàn toàn bình thường lúc review.\n- **Validate đủ năm thứ** cho mỗi hành động: có sở hữu không, đủ nguyên liệu không, đủ cấp không, hết cooldown chưa, trạng thái có hợp lệ không. Mỗi thứ một dòng `return`.\n- **Random do server quay**, seed ghi lại. Loot và gacha mà client quay thì người ta sẽ reroll tới khi ra đồ tốt. Xem [[randomness]].\n- **IAP verify phía server** với Apple/Google, lưu transaction id `UNIQUE`. Cùng một receipt gửi lại lần hai không được cộng gems lần hai.\n- **JWT ngắn hạn** (15 phút) + refresh token lưu trong database để thu hồi được. Đừng nhét `gold` hay `level` vào claim: nó cũ ngay lập tức và nó mời người ta thử sửa.\n- **Rate limit theo user và theo IP** (token bucket trong Redis). Kinh tế của bạn thường chết vì bot farm trước khi có đủ người chơi thật.\n- **Log mọi thay đổi tài nguyên kèm `reason`.** Không có nó thì không điều tra được khiếu nại và không hoàn đồ đúng người được.\n\n## Vận hành: bốn thứ làm ngay tuần đầu\n\n1. **Graceful shutdown.** `signal.NotifyContext` → ngừng nhận phòng mới → chờ trận đang chạy kết thúc (tối đa 2 phút) → `srv.Shutdown(ctx)`. Không có nó thì mỗi lần deploy là một lần người chơi mất trận, và bạn sẽ sợ deploy.\n2. **`/healthz` tách khỏi `/readyz`.** Cái đầu nói process còn sống, cái sau nói ping được database. Gộp làm một thì database chậm một giây là load balancer rút sạch instance.\n3. **Log có cấu trúc + metrics.** `log/slog` với request id truyền qua `context`; Prometheus đo p50/p95/**p99** theo từng endpoint — số trung bình luôn đẹp và luôn vô dụng. Mở `pprof` ở cổng nội bộ.\n4. **Backup và thử restore.** Backup chưa restore thử lần nào là backup chưa tồn tại. Mất save là thứ người chơi không tha thứ, khác hẳn một bug gameplay.\n\nTrước khi mở cửa: load test bằng `k6` hoặc `vegeta` ở 3–5 lần CCU dự kiến, nhìn p99 và số kết nối database đang mở. \"Chạy ổn trên máy tôi\" không phải số liệu.\n\n## Bẫy thường gặp\n\n| Bẫy | Lộ ra lúc nào |\n|---|---|\n| Gửi id `int64` qua JSON | Client JavaScript (web, dashboard, tool nội bộ) đọc thành float và sai ở id lớn — gửi id dạng **string** |\n| Decode JSON vào `interface{}` | Số trong Go thành `float64`, tiền lệch một đơn vị mà không ai biết vì sao |\n| `ZAdd` thay cho `ZAddGT` | Người chơi chơi tệ hơn tự hạ điểm cao nhất của chính mình |\n| Coi Redis là nguồn chân lý | Một lần evict là mất bảng xếp hạng cả mùa |\n| WebSocket không đặt read deadline và pong | Kết nối zombie tích lại, RAM lên đều rồi OOM sau ba ngày |\n| Channel không buffer trong vòng lặp phòng | Một client mạng chậm treo cả phòng |\n| Auto-migrate lúc khởi động | Hai instance migrate cùng lúc, bảng nửa vời, không rollback được |\n| Query không timeout | Một query kẹt làm cạn pool, toàn bộ API trả 503 |\n| Lấy thời gian từ client | Idle game bị tua bằng cách chỉnh đồng hồ máy |\n| Ghi state phòng xuống database mỗi tick | Database chết ở phòng thứ năm mươi — chỉ ghi ở mốc quan trọng và khi kết thúc trận |",
+      "aiPrompt": "**Dùng AI thế nào cho backend game**\n\nAI viết backend Go rất tốt ở phần *khung* và rất dở ở phần *ranh giới*. Chia việc theo đúng ranh giới đó:\n\n| Giao được | Đừng giao |\n|---|---|\n| Schema SQL, migration, query, index từ mô tả bảng | Quyết định cái gì là nguồn chân lý, cái gì được phép mất |\n| Handler CRUD, middleware auth / rate limit / log | Mô hình đồng thời của room server — ai sở hữu state |\n| Test đồng thời, load test k6, Dockerfile, CI | Quy tắc kinh tế: giá, trần, faucet/drain |\n| Sinh struct Go ↔ C# từ protobuf, viết client Unity | Câu \"đã an toàn rồi\" — phải chứng minh bằng test, không phải bằng lời |\n\nQuy trình bốn bước, dừng lại duyệt sau mỗi bước:\n\n1. **Bạn viết bất biến trước.** Vàng không âm, một `request_id` chỉ trừ tiền một lần, server quyết random, thời gian lấy từ server. AI không suy ra được những điều này từ đầu bài, và nó sẽ không tự hỏi.\n2. **Bắt nó sinh schema + migration + ràng buộc database trước**, trước khi viết một dòng handler. Ràng buộc sai thì mọi thứ phía trên vô nghĩa; và `CHECK (gold >= 0)` là thứ nó hay bỏ quên nhất vì code \"đã kiểm tra rồi\".\n3. **Handler kèm test cho đường hỏng**, không phải đường thành công: hết tiền, gọi hai lần cùng `request_id`, 50 goroutine mua cùng lúc, database timeout giữa transaction.\n4. **Bắt nó chạy `go test -race ./...` và dán output thật.** Code đồng thời không có race detector thì \"trông đúng\" là vô nghĩa — và AI rất sẵn lòng khẳng định là đã chạy.\n\nVới client Unity thì giao ngược lại: AI viết lớp gọi API, retry, parse JSON rất nhanh và ít sai; cái bạn phải tự quyết là **cái gì client được phép tự tính** (hiển thị, dự đoán) và cái gì phải chờ server xác nhận.\n\n**Phải nêu rõ** (thiếu là AI tự bịa):\n\n- **Nhịp ghi của game:** turn-based/idle (vài request mỗi phút) hay action realtime (20Hz). Quyết định toàn bộ kiến trúc, và AI mặc định coi mọi thứ là CRUD web.\n- **CCU mục tiêu và p99 chấp nhận được** — ví dụ 5.000 CCU, p99 dưới 200ms. Không có số thì nó sẽ đẻ ra kiến trúc microservice cho game 200 người chơi.\n- **Phiên bản và thư viện được phép:** Go 1.22+, PostgreSQL 16, Redis 7, Unity 6; `pgx` hay `database/sql`; `gorilla/websocket` hay `coder/websocket`.\n- **Cái gì authoritative:** server quyết tiền, loot, thời gian; client chỉ gửi ý định.\n- **Đơn vị tiền tệ là số nguyên, có trần, không âm** — nói thẳng, vì mặc định của JSON là số thực.\n- **Idempotency key do ai sinh** (client) và sống ở đâu (cột `UNIQUE` trong sổ cái).\n- **Triển khai ở đâu:** một VPS hay k8s + Agones. Khác nhau ở graceful shutdown, service discovery và cách scale phòng.\n- **Có build WebGL không** — WebGL nghĩa là không UDP và server phải trả CORS header.\n\n**Mẫu prompt**\n\n```\nViết service Go 1.22 làm backend cho game mobile idle RPG, client Unity 6.\nPostgreSQL 16 + Redis 7, một VPS, mục tiêu 5.000 CCU, p99 < 200ms.\n\nBẤT BIẾN — không được vi phạm dòng nào:\n- gold là bigint, CHECK (gold >= 0). KHÔNG dùng float cho bất kỳ tài nguyên nào.\n- Mọi endpoint ghi nhận request_id do client sinh. Gọi lại cùng request_id phải\n  trả đúng kết quả cũ và KHÔNG ghi lần hai — chặn bằng UNIQUE ở database,\n  không chỉ bằng if trong code.\n- Mọi thay đổi tài nguyên ghi một dòng vào bảng wallet_tx (append-only, có reason).\n- Thời gian lấy từ now() của Postgres. KHÔNG đọc timestamp client gửi lên.\n- Client chỉ gửi Ý ĐỊNH. KHÔNG có endpoint nào nhận gold/inventory từ client.\n\nEndpoint: POST /v1/claim-idle, POST /v1/buy, GET /v1/profile.\n\nGiao theo thứ tự, DỪNG LẠI chờ tôi duyệt sau mỗi bước:\n1. Migration SQL (goose) + toàn bộ ràng buộc database.\n2. Tầng store dùng pgx: mỗi quyết định một transaction, mọi query có context timeout 3s.\n3. Test: hết tiền; gọi 2 lần cùng request_id; 50 goroutine mua cùng lúc trên ví\n   chỉ đủ 10 lần. Chạy `go test -race ./...` và dán output THẬT, không tóm tắt.\n\nKHÔNG dùng ORM. KHÔNG auto-migrate lúc khởi động. KHÔNG biến toàn cục có thể ghi.\n```\n\n**Bẫy thường gặp:** AI sinh endpoint nhận nguyên trạng thái từ client (`POST /save {\"gold\": 99999}`) vì đó là cách viết CRUD phổ biến nhất trong dữ liệu huấn luyện — và nó trông hoàn toàn bình thường lúc review, chỉ sai về mặt *ai được quyền quyết*. Ba cái hay gặp nữa: dùng `float64` cho tiền vì JSON mặc định thế; dùng ORM với auto-migrate làm biến mất mọi `CHECK` và `UNIQUE` bạn đã yêu cầu; và viết room server bằng một `map` dùng chung với `sync.Mutex` rải rác thay vì một goroutine sở hữu state — bản mutex chạy đúng trong test một người và hỏng khi có hai mươi người vào cùng lúc.",
+      "unity": "Phía client chỉ có ba việc, nhưng làm sai cả ba thì backend viết tốt tới đâu cũng vô ích: gọi API đúng cách, **không tin dữ liệu local**, và sống sót khi mạng rớt giữa một lệnh ghi.\n\n**Component & nơi đặt**\n\n- `GameApi.cs` — đặt ở `Assets/Scripts/Net/`, trên một GameObject `DontDestroyOnLoad`.\n- `PendingRequest` — `requestId` của lệnh ghi **chưa được xác nhận**, ghi xuống đĩa *trước khi* gửi. Mở app lại thì gửi lại đúng id đó.\n- `JsonUtility` đủ cho DTO phẳng như dưới đây. Cần `Dictionary`, mảng ở cấp cao nhất, hay phân biệt \"field vắng mặt\" với \"field bằng 0\" thì thêm `com.unity.nuget.newtonsoft-json` qua Package Manager — và nhớ `link.xml` để IL2CPP không strip mất kiểu dùng qua reflection.\n\n**Code**\n\n```csharp\nusing System;\nusing System.Collections;\nusing System.Text;\nusing UnityEngine;\nusing UnityEngine.Networking;\n\n// Gọi backend Go: JWT ở header, requestId cho mọi lệnh GHI, retry có backoff + jitter.\npublic class GameApi : MonoBehaviour\n{\n    [SerializeField] string baseUrl = \"https://api.example.com\";\n    [SerializeField] int timeoutSeconds = 10;    // UnityWebRequest KHÔNG có timeout mặc định\n    [SerializeField] int maxRetry = 3;\n\n    string accessToken;\n    bool buyInFlight;                            // bấm 5 lần vẫn chỉ gửi 1 request\n\n    [Serializable] class BuyReq { public string requestId; public string itemId; }\n    [Serializable] public class BuyResp { public long gold; public string itemId; }\n\n    public IEnumerator Buy(string itemId, Action<BuyResp> onDone, Action<string> onFail)\n    {\n        if (buyInFlight) { onFail?.Invoke(\"đang xử lý\"); yield break; }\n        buyInFlight = true;\n\n        // requestId sinh MỘT LẦN và giữ nguyên qua mọi lần retry — đó là toàn bộ điểm của idempotency.\n        var body = JsonUtility.ToJson(new BuyReq {\n            requestId = Guid.NewGuid().ToString(\"N\"),\n            itemId = itemId,\n        });\n        yield return Post(baseUrl + \"/v1/buy\", body, onDone, onFail);\n        buyInFlight = false;\n    }\n\n    IEnumerator Post<T>(string url, string json, Action<T> onDone, Action<string> onFail)\n    {\n        float delay = 0.5f;\n        for (int attempt = 1; attempt <= maxRetry; attempt++)\n        {\n            using (var www = new UnityWebRequest(url, UnityWebRequest.kHttpVerbPOST))\n            {\n                www.uploadHandler = new UploadHandlerRaw(Encoding.UTF8.GetBytes(json));\n                www.downloadHandler = new DownloadHandlerBuffer();\n                www.SetRequestHeader(\"Content-Type\", \"application/json\");\n                if (!string.IsNullOrEmpty(accessToken))\n                    www.SetRequestHeader(\"Authorization\", \"Bearer \" + accessToken);\n                www.timeout = timeoutSeconds;\n\n                yield return www.SendWebRequest();\n\n                if (www.result == UnityWebRequest.Result.Success)\n                {\n                    onDone?.Invoke(JsonUtility.FromJson<T>(www.downloadHandler.text));\n                    yield break;\n                }\n\n                // 4xx là lỗi của chính mình: gửi lại vẫn sai. Chỉ thử lại lỗi mạng và 5xx.\n                bool retryable = www.result == UnityWebRequest.Result.ConnectionError\n                              || www.responseCode >= 500;\n                if (!retryable || attempt == maxRetry)\n                {\n                    onFail?.Invoke(www.responseCode + \" \" + www.error);\n                    yield break;\n                }\n            }\n            // Realtime, không phải WaitForSeconds: mở popup rồi đặt timeScale = 0\n            // thì retry sẽ đứng im vĩnh viễn.\n            yield return new WaitForSecondsRealtime(delay + UnityEngine.Random.Range(0f, 0.3f));\n            delay *= 2f;\n        }\n    }\n}\n```\n\n**Bẫy Unity cụ thể**\n\n- **`UnityWebRequest` không có timeout mặc định.** Mạng kiểu \"có sóng nhưng không đi đâu\" (wifi cổng captive, 4G chập chờn) làm coroutine chờ vô hạn, người chơi nhìn vòng xoay mãi. Luôn đặt `www.timeout`.\n- **`WaitForSeconds` chạy theo `timeScale`.** Popup nào đặt `timeScale = 0` là backoff của bạn chết. Dùng `WaitForSecondsRealtime` cho mọi thứ liên quan tới mạng.\n- **`JsonUtility` nuốt lỗi.** Server đổi tên field thì nó trả `0`/`null` chứ không báo gì — client hiện 0 vàng, không log, không ai biết vì sao. Có phiên bản hoá API (`/v1/`) và test hợp đồng giữa hai bên.\n- **Id `int64`:** Unity đọc `long` bình thường, nhưng nếu bạn còn có dashboard web hoặc đi qua một dịch vụ trung gian chạy JavaScript thì id vượt 2^53 sẽ sai **lặng lẽ**. Gửi id dạng string là an toàn nhất.\n- **`PlayerPrefs` không mã hoá** (registry trên Windows, XML trong `shared_prefs` trên Android). Refresh token nằm đó là đọc được trên máy đã root — chấp nhận được **nếu** server thu hồi được token, không chấp nhận được nếu token sống một năm.\n- **Tắt app giữa một lệnh ghi.** Request đã tới server, client chưa nhận phản hồi. Không lưu `requestId` xuống đĩa trước khi gửi thì người chơi \"mua rồi mà không có đồ\" — và họ đúng, tiền đã bị trừ thật.\n- **`Application.internetReachability` chỉ nói có mạng hay không**, không nói server còn sống. Đừng dùng nó thay cho retry thật.\n- **WebGL:** không UDP, và server Go phải trả `Access-Control-Allow-Origin`. Thiếu CORS thì trong Editor chạy ngon, bản WebGL im lặng hỏng — lỗi chỉ hiện trong console của trình duyệt.\n- **`OnApplicationPause(false)`** sau khi máy ngủ: token có thể đã hết hạn và state trong RAM đã cũ. Refresh token rồi đồng bộ lại từ server, đừng tin cái đang có.\n\n**Kiểm tra nhanh**\n\n- Bấm nút mua 5 lần thật nhanh: log server có **đúng một** dòng `buy:`, và `wallet_tx` thêm đúng một dòng.\n- Bật Airplane Mode ngay sau khi bấm mua rồi tắt app, mở lại: vật phẩm về **một** cái, vàng bị trừ **một** lần.\n- Chỉnh đồng hồ máy tiến một ngày: phần thưởng offline không đổi (server tính bằng `now()` của nó).\n- Dùng proxy (Charles/Proxyman) sửa response `gold` thành 999999: lần đồng bộ kế tiếp giá trị về đúng con số của server.\n- Tắt wifi trong Editor: sau `maxRetry` lần, UI hiện lỗi tử tế trong khoảng 10 giây, không treo vô hạn.",
+      "code": "",
+      "interview": "",
+      "hasAiHowto": true,
+      "i18n": {},
+      "color": "#f783ac"
+    },
+    {
       "id": "production",
       "title": "Production & Tech",
       "summary": "Biến prototype thành sản phẩm — kiến trúc, data-driven, đo đạc, hiệu năng.",
@@ -3021,7 +3194,8 @@
         "data-driven-design",
         "playtesting-metrics",
         "tech-stack",
-        "performance"
+        "performance",
+        "game-server-go"
       ],
       "depth": 1,
       "branch": "production",
@@ -3041,8 +3215,8 @@
       "order": 60,
       "collapsed": false,
       "path": "06-production/index.md",
-      "words": 666,
-      "body": "Nhánh này về **cách xây** chứ không về **xây cái gì**.\n\n## Các node\n\n- **[[architecture-patterns]]** — ECS, component, event bus, state machine ở tầng ứng dụng.\n- **[[data-driven-design]]** — tách dữ liệu khỏi code. Điều kiện tiên quyết để cân bằng và để AI hỗ trợ hiệu quả.\n- **[[playtesting-metrics]]** — đo cái gì, đo thế nào, và cách đọc kết quả.\n- **[[tech-stack]]** — chọn engine và công cụ.\n- **[[performance]]** — ngân sách và tối ưu.\n\n## Nguyên tắc\n\n**Kiến trúc phục vụ tốc độ lặp.** Ở giai đoạn tìm tòi, thứ quan trọng nhất là *sửa và thử nhanh*. Kiến trúc đẹp mà mỗi lần đổi số phải build lại 3 phút là kiến trúc sai cho giai đoạn đó.\n\n**Đừng tối ưu sớm, nhưng hãy đo sớm.** Đặt profiler vào từ đầu. Bạn không cần tối ưu ngay, nhưng cần biết khi nào mọi thứ bắt đầu xấu đi — và phát hiện sớm thì rẻ hơn nhiều.\n\n**Dữ liệu tách khỏi code là quyết định kiến trúc quan trọng nhất.** Nó quyết định bạn cân bằng game được nhanh tới đâu, và quyết định AI agent sửa số được an toàn tới đâu. Xem [[data-driven-design]].",
+      "words": 680,
+      "body": "Nhánh này về **cách xây** chứ không về **xây cái gì**.\n\n## Các node\n\n- **[[architecture-patterns]]** — ECS, component, event bus, state machine ở tầng ứng dụng.\n- **[[data-driven-design]]** — tách dữ liệu khỏi code. Điều kiện tiên quyết để cân bằng và để AI hỗ trợ hiệu quả.\n- **[[playtesting-metrics]]** — đo cái gì, đo thế nào, và cách đọc kết quả.\n- **[[tech-stack]]** — chọn engine và công cụ.\n- **[[performance]]** — ngân sách và tối ưu.\n- **[[game-server-go]]** — backend Go cho game Unity: API, phòng realtime, Postgres và Redis.\n\n## Nguyên tắc\n\n**Kiến trúc phục vụ tốc độ lặp.** Ở giai đoạn tìm tòi, thứ quan trọng nhất là *sửa và thử nhanh*. Kiến trúc đẹp mà mỗi lần đổi số phải build lại 3 phút là kiến trúc sai cho giai đoạn đó.\n\n**Đừng tối ưu sớm, nhưng hãy đo sớm.** Đặt profiler vào từ đầu. Bạn không cần tối ưu ngay, nhưng cần biết khi nào mọi thứ bắt đầu xấu đi — và phát hiện sớm thì rẻ hơn nhiều.\n\n**Dữ liệu tách khỏi code là quyết định kiến trúc quan trọng nhất.** Nó quyết định bạn cân bằng game được nhanh tới đâu, và quyết định AI agent sửa số được an toàn tới đâu. Xem [[data-driven-design]].",
       "aiPrompt": "**Dùng AI thế nào ở nhánh này**\n\nNhánh này AI làm được gần hết, vì nó thuần kỹ thuật và kiểm chứng được. Ba việc có ROI cao nhất — đều là việc lập trình viên hay làm sơ sài vì nhàm:\n\n1. **Editor tool và validator** — không đụng gameplay nên rủi ro thấp, mà tiết kiệm thời gian thật mỗi ngày.\n2. **Unit test cho logic thuần** — nó viết test tốt hơn nhiều người, và test là thứ cho phép nó tự kiểm chứng về sau.\n3. **CI, build script** — thuần script, chạy được là biết đúng.\n\nViệc **không** nhờ: quyết định kiến trúc mà chưa có số liệu. Hỏi \"kiến trúc nào tốt hơn\" mà không nêu số thực thể và ngân sách frame sẽ nhận về ECS cho một game 40 thực thể.\n\nKiến trúc tốt khiến AI agent hiệu quả hơn rõ rệt:\n\n- **Ranh giới rõ ràng** → agent sửa một hệ thống mà không phá hệ thống khác.\n- **Có test** → agent tự kiểm chứng được thay đổi của mình.\n- **Dữ liệu ngoài code** → chỉnh cân bằng không cần đụng tới logic.\n- **Quy ước nhất quán** → code sinh ra khớp với phần còn lại của dự án.\n\nNgược lại, một codebase rối sẽ khiến agent tạo ra nhiều lỗi hơn — nó không thấy được toàn cảnh và sẽ đoán.",
       "unity": "Toàn bộ nhánh này có bản Unity chi tiết ở [[unity]]: [[unity-project-structure]], [[unity-design-patterns]], [[unity-optimization]], [[unity-build-platform]].\n\n**Ba thứ dựng trong tuần đầu, không để sau**\n\n1. **Assembly Definition** — `Game.Core` với `noEngineReferences: true`. Nó cho bạn test EditMode nhanh và mô phỏng ngoài Unity; thêm sau nghĩa là sửa hàng trăm `using`.\n2. **`.gitignore` đúng cho Unity** — `Library/`, `Temp/`, `Logs/`, `obj/`, `*.csproj`, `*.sln`. Commit `Library/` một lần là repo phình lên hàng GB.\n3. **Build ra máy đích** — không phải cuối dự án, mà tuần đầu. IL2CPP, stripping, và giới hạn bộ nhớ chỉ lộ ra ở build thật. Xem [[unity-build-platform]].\n\n**Git cho Unity — ba thứ bắt buộc**\n\n```\n# .gitattributes — KHÔNG có dòng này thì scene/prefab merge sẽ hỏng im lặng\n*.unity   binary\n*.prefab  binary\n*.asset   binary\n```\n\nĐánh dấu binary làm git **từ chối** merge thay vì merge sai. Bạn sẽ phải chọn một bên — mệt, nhưng tốt hơn một scene hỏng không ai biết.\n\nVà bật **Force Text** cho serialization (`Project Settings > Editor > Asset Serialization > Force Text`) để diff đọc được, dù vẫn treat as binary khi merge.\n\n**Meta file phải commit**\n\n`.meta` giữ GUID. Không commit `.meta` nghĩa là mọi tham chiếu vỡ trên máy người khác. Đây là lỗi phổ biến nhất khi người mới setup Unity repo.\n\n**Kiểm tra nhanh**\n- `git check-attr merge Assets/Scenes/Main.unity` → binary?\n- `.meta` có được commit không?\n- `Library/` có trong `.gitignore` không?\n- Đã build ra máy đích ít nhất một lần chưa?",
       "code": "",
@@ -3671,6 +3845,7 @@
         "unity-game-loop",
         "unity-project-structure",
         "unity-design-patterns",
+        "unity-csharp-memory",
         "unity-save-data",
         "unity-physics",
         "unity-animation",
@@ -3682,7 +3857,9 @@
         "unity-shader",
         "unity-lighting",
         "unity-optimization",
+        "unity-dots-jobs",
         "unity-build-platform",
+        "unity-addressables",
         "unity-multiplayer",
         "unity-editor-tools"
       ],
@@ -3701,7 +3878,7 @@
       ],
       "status": "deep",
       "read": 600,
-      "readIndex": 64,
+      "readIndex": 65,
       "level": "basic",
       "refs": [],
       "order": 65,
@@ -3729,6 +3906,46 @@
       "color": "#4dd4e0"
     },
     {
+      "id": "unity-addressables",
+      "title": "Addressables và bộ nhớ asset",
+      "summary": "Ba cách tham chiếu asset và hậu quả bộ nhớ của từng cách, đếm tham chiếu của Addressables, asset bị nhân bản trong nhiều bundle, và quy trình cập nhật nội dung từ xa mà không phải nộp lại store.",
+      "icon": "📦",
+      "parent": "unity",
+      "children": [],
+      "depth": 2,
+      "branch": "unity",
+      "tags": [
+        "unity",
+        "addressables",
+        "memory",
+        "asset",
+        "build"
+      ],
+      "related": [
+        "unity-build-platform",
+        "unity-optimization",
+        "unity-project-structure",
+        "unity-csharp-memory"
+      ],
+      "status": "deep",
+      "read": 755,
+      "readIndex": 83,
+      "level": "advanced",
+      "refs": [],
+      "order": 155,
+      "collapsed": false,
+      "path": "09-unity/unity-addressables.md",
+      "words": 914,
+      "body": "Câu hỏi thật sự không phải \"dùng Addressables thế nào\" mà là **asset nào đang nằm trong RAM, vì ai, và bao giờ nó ra**. Unity có ba cách trả lời, và chọn sai cách là nguồn của hai lỗi kinh điển: app 300MB vì mọi thứ bị gói vào build, và app bị hệ điều hành kill vì texture không bao giờ được giải phóng.\n\n## Ba cách tham chiếu asset\n\n| Cách | Nạp lúc nào | Giải phóng lúc nào | Vấn đề |\n|---|---|---|---|\n| **Tham chiếu trực tiếp** (kéo prefab vào field) | Cùng lúc với scene/prefab chứa nó | Khi scene bị unload | Một prefab quái vật kéo theo toàn bộ texture, audio, VFX của nó — kể cả khi chưa spawn con nào |\n| **`Resources/`** | Khi gọi `Resources.Load` | `Resources.UnloadUnusedAssets()` (đắt) | **Mọi thứ trong thư mục luôn vào build**, kể cả asset không ai dùng; index làm chậm khởi động; không cập nhật từ xa được |\n| **Addressables** | Khi bạn gọi, bất đồng bộ | Khi **đếm tham chiếu về 0** | Phải tự quản lý handle; sai là rò rỉ hoặc destroy nhầm thứ đang dùng |\n\nLuật đơn giản để trả lời phỏng vấn: `Resources/` là **di sản** — đừng thêm mới. Tham chiếu trực tiếp dùng cho thứ nhỏ, luôn cần, đi cùng scene. Addressables cho mọi thứ to, tuỳ chọn, hoặc cần tải về sau.\n\n## Đếm tham chiếu — chỗ rò rỉ nằm ở đây\n\nAddressables đếm tham chiếu cho **cả asset lẫn bundle chứa nó**. `LoadAssetAsync` tăng một, `Release` giảm một; bundle chỉ được gỡ khỏi RAM khi mọi asset trong nó về 0.\n\nBa lỗi đi kèm, theo thứ tự hay gặp:\n\n1. **Load nhiều lần, release không lần nào.** Mở bảng inventory 30 lần là 30 handle tới cùng một icon; RAM lên đều và không bao giờ xuống. Chữa: giữ handle trong một field, release trong `OnDestroy`/khi đóng màn hình.\n2. **Release trong khi vẫn dùng.** Đếm về 0, bundle bị gỡ, texture trong scene thành ô vuông trắng hoặc material hồng — và lỗi hiện ở **chỗ khác**, chỗ đang hiển thị, chứ không ở chỗ gọi `Release`.\n3. **`InstantiateAsync` và `ReleaseInstance` bị trộn với `Instantiate` thường.** Nếu bạn `Addressables.InstantiateAsync` thì phải `Addressables.ReleaseInstance`; `Destroy` thường sẽ huỷ object mà **không** giảm đếm — rò rỉ im lặng.\n\nCách kiểm chứng duy nhất đáng tin: bật **Addressables Event Viewer** (`Window > Asset Management > Addressables > Event Viewer`) trong Play Mode và nhìn đường đếm tham chiếu có trở về đáy sau mỗi vòng mở–đóng màn hình không. Nếu nó bậc thang đi lên, bạn đang rò rỉ.\n\n## Nhóm và bundle: asset nhân bản là lỗi tốn nhất\n\nMỗi group sinh ra một hoặc nhiều bundle. Nếu hai group cùng tham chiếu một texture mà texture đó **không** được đánh Addressable, Unity **chép nó vào cả hai bundle** — build phình lên và RAM giữ hai bản khi cả hai bundle cùng nạp. Đây là lỗi phổ biến nhất khi mới chuyển sang Addressables, và nó không báo gì.\n\nCông cụ: `Window > Asset Management > Addressables > Analyze` → **Check Duplicate Bundle Dependencies**. Chạy nó **trước mỗi lần build**, không phải khi đã thấy vấn đề. Cách chữa: đánh Addressable cho asset dùng chung và đưa vào một group \"Shared\".\n\nChọn cách đóng gói trong group settings:\n\n| Bundle Mode | Khi nào | Đánh đổi |\n|---|---|---|\n| **Pack Together** | Nhóm luôn dùng cùng nhau (toàn bộ UI của một màn hình) | Một request, ít overhead; nhưng nạp là nạp hết |\n| **Pack Separately** | Asset dùng riêng lẻ, tuỳ chọn (skin, ngôn ngữ) | Nạp đúng cái cần; nhiều file nhỏ, nhiều request, catalog to hơn |\n| **Pack Together By Label** | Cắt theo nhãn: `level1`, `dlc`, `hd-texture` | Cân bằng thường dùng nhất |\n\nNguyên tắc thô: **cắt bundle theo lúc nội dung được cần**, không theo loại asset. \"Tất cả texture một bundle\" là cách chắc chắn để nạp 200MB cho một màn hình cần 3MB.\n\n## Cập nhật nội dung từ xa\n\nĐây là lý do thật sự nhiều studio mobile dùng Addressables: sửa số liệu cân bằng, thêm sự kiện, vá một prefab lỗi **mà không nộp lại store**.\n\nQuy trình rút gọn:\n\n1. Build player kèm `addressables_content_state.bin` — **giữ file này**, nó là mốc so sánh.\n2. Nội dung mới → *Update a Previous Build* với file state đó → sinh catalog mới + bundle đã đổi.\n3. Đẩy lên CDN. Client tải catalog, thấy hash khác, tải bundle mới.\n\nBa ràng buộc phải nói được:\n\n- **Không cập nhật được code.** Bundle chứa asset và dữ liệu, không chứa C# đã biên dịch (trừ đường vòng như scripting runtime khác, không nên). Sửa logic vẫn phải ra bản mới.\n- **Mất `addressables_content_state.bin` là mất khả năng cập nhật đúng cách** cho bản đó — phải ép người chơi tải lại toàn bộ. Commit nó, hoặc lưu cùng artifact của bản build.\n- **Phiên bản catalog phải khớp bản app.** Người chơi ở bản cũ kéo catalog mới là công thức cho crash khó hiểu; tách theo thư mục remote theo version app.\n\nTrên Android còn có **Play Asset Delivery** (install-time / fast-follow / on-demand) và iOS có On-Demand Resources; Addressables tích hợp được với PAD. Đây là thứ giữ base AAB dưới giới hạn 200MB của Google Play.",
+      "aiPrompt": "",
+      "unity": "",
+      "code": "",
+      "interview": "",
+      "hasAiHowto": false,
+      "i18n": {},
+      "color": "#4dd4e0"
+    },
+    {
       "id": "unity-animation",
       "title": "Animation trong Unity",
       "summary": "Animator Controller là bảng điều khiển hiển thị, không phải bộ não — giữ nó dưới 30 state, tắt Has Exit Time, và biết lúc nào nên bỏ nó mà điều khiển bằng code.",
@@ -3750,7 +3967,7 @@
       ],
       "status": "deep",
       "read": 650,
-      "readIndex": 69,
+      "readIndex": 71,
       "level": "intermediate",
       "refs": [],
       "order": 60,
@@ -3787,7 +4004,7 @@
       ],
       "status": "deep",
       "read": 690,
-      "readIndex": 73,
+      "readIndex": 75,
       "level": "intermediate",
       "refs": [],
       "order": 100,
@@ -3826,7 +4043,7 @@
       ],
       "status": "deep",
       "read": 750,
-      "readIndex": 79,
+      "readIndex": 82,
       "level": "advanced",
       "refs": [],
       "order": 150,
@@ -3864,7 +4081,7 @@
       ],
       "status": "deep",
       "read": 670,
-      "readIndex": 71,
+      "readIndex": 73,
       "level": "intermediate",
       "refs": [],
       "order": 80,
@@ -3877,6 +4094,47 @@
       "code": "Demo dựng ba `CinemachineCamera` (Follow / Aim / Boss) đổi bằng Priority qua một `CameraDirector` duy nhất, rung bằng Impulse với ngân sách force 0.3 / 1.0 / 2.0 và một hệ số trợ năng ở `Listener.Gain`, và `CinemachineTargetGroup` thêm boss vào khung khi vào trận — kiểm chứng được bằng thanh blend trong Inspector của Brain.\n\n**Setup**\n\n<figure class=\"fig\">\n<svg viewBox=\"0 0 660 380\" role=\"img\" aria-label=\"Hierarchy có Main Camera với CinemachineBrain và Impulse Listener, ba camera CM_Follow CM_Aim CM_Boss, BossGroup, CameraDirector, Player và Boss; Inspector hiện CinemachineCamera và Position Composer của CM_Follow, Brain của Main Camera và script Camera Director\">\n  <rect x=\"10\" y=\"10\" width=\"200\" height=\"360\" rx=\"8\" class=\"fig-box\"/>\n  <text x=\"22\" y=\"32\" class=\"fig-label\" font-size=\"13\" font-weight=\"600\">Hierarchy</text>\n  <line x1=\"10\" y1=\"42\" x2=\"210\" y2=\"42\" class=\"fig-line\"/>\n  <text x=\"22\" y=\"64\" class=\"fig-muted\" font-size=\"12\">▾ Main Camera</text>\n  <text x=\"38\" y=\"82\" class=\"fig-muted\" font-size=\"11\">CinemachineBrain</text>\n  <text x=\"38\" y=\"98\" class=\"fig-muted\" font-size=\"11\">CinemachineImpulseListener</text>\n  <rect x=\"16\" y=\"108\" width=\"188\" height=\"20\" rx=\"4\" fill=\"#6ea8fe\" opacity=\"0.18\"/>\n  <text x=\"22\" y=\"123\" class=\"fig-label\" font-size=\"12\" font-weight=\"600\">CM_Follow   (priority 10)</text>\n  <text x=\"22\" y=\"144\" class=\"fig-muted\" font-size=\"12\">CM_Aim       (20 khi bật, còn lại 0)</text>\n  <text x=\"22\" y=\"162\" class=\"fig-muted\" font-size=\"12\">CM_Boss      (30 khi bật, còn lại 0)</text>\n  <text x=\"22\" y=\"180\" class=\"fig-muted\" font-size=\"12\">BossGroup  (TargetGroup)</text>\n  <rect x=\"16\" y=\"188\" width=\"188\" height=\"20\" rx=\"4\" fill=\"#b197fc\" opacity=\"0.18\"/>\n  <text x=\"22\" y=\"203\" class=\"fig-label\" font-size=\"12\" font-weight=\"600\">CameraDirector (+ ImpulseSource)</text>\n  <text x=\"22\" y=\"224\" class=\"fig-muted\" font-size=\"12\">Player  (Rigidbody, Interpolate)</text>\n  <text x=\"22\" y=\"242\" class=\"fig-muted\" font-size=\"12\">Boss</text>\n  <line x1=\"10\" y1=\"258\" x2=\"210\" y2=\"258\" class=\"fig-line\"/>\n  <text x=\"22\" y=\"278\" class=\"fig-label\" font-size=\"12\" font-weight=\"600\">Brain chọn priority cao nhất</text>\n  <text x=\"22\" y=\"296\" class=\"fig-muted\" font-size=\"11\">Follow  10   luôn bật</text>\n  <text x=\"22\" y=\"312\" class=\"fig-muted\" font-size=\"11\">Aim     20   giữ chuột phải</text>\n  <text x=\"22\" y=\"328\" class=\"fig-muted\" font-size=\"11\">Boss    30   khi vào boss</text>\n  <text x=\"22\" y=\"344\" class=\"fig-muted\" font-size=\"11\">Blend giữa hai camera: 0.6 s</text>\n  <text x=\"22\" y=\"362\" class=\"fig-muted\" font-size=\"10\">Package: com.unity.cinemachine 3.x</text>\n  <rect x=\"226\" y=\"10\" width=\"424\" height=\"360\" rx=\"8\" class=\"fig-box\"/>\n  <text x=\"238\" y=\"32\" class=\"fig-label\" font-size=\"13\" font-weight=\"600\">Inspector</text>\n  <line x1=\"226\" y1=\"42\" x2=\"650\" y2=\"42\" class=\"fig-line\"/>\n  <rect x=\"234\" y=\"50\" width=\"408\" height=\"18\" rx=\"3\" fill=\"#6ea8fe\" opacity=\"0.22\"/>\n  <text x=\"242\" y=\"63\" class=\"fig-label\" font-size=\"12\" font-weight=\"600\">Cinemachine Camera  (CM_Follow)</text>\n  <text x=\"250\" y=\"82\" class=\"fig-muted\" font-size=\"11\">Priority</text><text x=\"440\" y=\"82\" class=\"fig-label\" font-size=\"11\">10</text>\n  <text x=\"250\" y=\"98\" class=\"fig-muted\" font-size=\"11\">Tracking Target</text><text x=\"440\" y=\"98\" class=\"fig-label\" font-size=\"11\">Player</text>\n  <rect x=\"234\" y=\"108\" width=\"408\" height=\"18\" rx=\"3\" fill=\"#51cf9b\" opacity=\"0.22\"/>\n  <text x=\"242\" y=\"121\" class=\"fig-label\" font-size=\"12\" font-weight=\"600\">Position Composer  (CM_Follow)</text>\n  <text x=\"250\" y=\"140\" class=\"fig-muted\" font-size=\"11\">Damping</text><text x=\"440\" y=\"140\" class=\"fig-label\" font-size=\"11\">X 0.5   Y 0.5   Z 0.5</text>\n  <text x=\"250\" y=\"156\" class=\"fig-muted\" font-size=\"11\">Composition ▸ Dead Zone</text><text x=\"440\" y=\"156\" class=\"fig-label\" font-size=\"11\">☑   0.1 × 0.2</text>\n  <text x=\"250\" y=\"172\" class=\"fig-muted\" font-size=\"11\">Look-ahead ▸ Time / Smoothing</text><text x=\"440\" y=\"172\" class=\"fig-label\" font-size=\"11\">0.3 s   /   10</text>\n  <text x=\"250\" y=\"188\" class=\"fig-muted\" font-size=\"11\">Composition ▸ Hard Limits</text><text x=\"440\" y=\"188\" class=\"fig-label\" font-size=\"11\">☑   0.8 × 0.8</text>\n  <rect x=\"234\" y=\"198\" width=\"408\" height=\"18\" rx=\"3\" fill=\"#ffd43b\" opacity=\"0.22\"/>\n  <text x=\"242\" y=\"211\" class=\"fig-label\" font-size=\"12\" font-weight=\"600\">Cinemachine Brain  (Main Camera)</text>\n  <text x=\"250\" y=\"230\" class=\"fig-muted\" font-size=\"11\">Default Blend</text><text x=\"440\" y=\"230\" class=\"fig-label\" font-size=\"11\">Ease In Out   0.6 s</text>\n  <text x=\"250\" y=\"246\" class=\"fig-muted\" font-size=\"11\">Update Method / Blend Update</text><text x=\"440\" y=\"246\" class=\"fig-label\" font-size=\"11\">Smart Update / Late Update</text>\n  <text x=\"250\" y=\"262\" class=\"fig-muted\" font-size=\"11\">Ignore Time Scale</text><text x=\"440\" y=\"262\" class=\"fig-label\" font-size=\"11\">☑   (script đặt ở Awake)</text>\n  <text x=\"250\" y=\"278\" class=\"fig-muted\" font-size=\"11\">Impulse Listener ▸ Gain</text><text x=\"440\" y=\"278\" class=\"fig-label\" font-size=\"11\">1.0   (= Shake Scale)</text>\n  <rect x=\"234\" y=\"288\" width=\"408\" height=\"18\" rx=\"3\" fill=\"#b197fc\" opacity=\"0.22\"/>\n  <text x=\"242\" y=\"301\" class=\"fig-label\" font-size=\"12\" font-weight=\"600\">Camera Director (Script)  (CameraDirector)</text>\n  <text x=\"250\" y=\"320\" class=\"fig-muted\" font-size=\"11\">Follow / Aim / Boss Cam</text><text x=\"440\" y=\"320\" class=\"fig-label\" font-size=\"11\">CM_Follow / CM_Aim / CM_Boss</text>\n  <text x=\"250\" y=\"336\" class=\"fig-muted\" font-size=\"11\">Boss Group / Impulse Source</text><text x=\"440\" y=\"336\" class=\"fig-label\" font-size=\"11\">BossGroup / Bump 0.2 s (cùng GO)</text>\n  <text x=\"250\" y=\"352\" class=\"fig-muted\" font-size=\"11\">Shake Scale</text><text x=\"440\" y=\"352\" class=\"fig-label\" font-size=\"11\">1.0</text>\n</svg>\n<figcaption>CM_Boss có Tracking Target = BossGroup và bật Group Framing trên Position Composer. Priority của Aim/Boss về 0 khi không dùng để Brain không bao giờ chọn nhầm. Rigidbody Player phải bật Interpolate.</figcaption>\n</figure>\n\n**Script**\n\n```csharp\n// CameraDirector.cs — Unity 6 (6000.x), Cinemachine 3.x (com.unity.cinemachine, namespace Unity.Cinemachine).\n// KHÔNG biên dịch trên Cinemachine 2.x (CinemachineVirtualCamera / FramingTransposer). Đặt trên GameObject\n// \"CameraDirector\" cùng với một CinemachineImpulseSource (Impulse Shape: Bump, Duration 0.2 s).\nusing Unity.Cinemachine;\nusing UnityEngine;\n\n[RequireComponent(typeof(CinemachineImpulseSource))]\npublic class CameraDirector : MonoBehaviour\n{\n    public enum State { Follow, Aim, Boss }\n\n    [Header(\"Cinemachine\")]\n    [SerializeField] CinemachineBrain brain;                  // trên Main Camera\n    [SerializeField] CinemachineImpulseListener listener;     // extension trên Main Camera\n    [SerializeField] CinemachineCamera followCam;             // priority 10, luôn bật\n    [SerializeField] CinemachineCamera aimCam;                // priority 20 khi bật\n    [SerializeField] CinemachineCamera bossCam;               // priority 30 khi bật, Tracking Target = BossGroup\n    [SerializeField] CinemachineTargetGroup bossGroup;\n\n    [Header(\"Priority — Brain chọn số cao nhất đang bật\")]\n    [SerializeField] int followPriority = 10;\n    [SerializeField] int aimPriority = 20;\n    [SerializeField] int bossPriority = 30;\n\n    [Header(\"Rung\")]\n    [Range(0f, 1f)] [SerializeField] float shakeScale = 1f;   // trợ năng: nhân MỘT lần ở Listener.Gain, không ở từng nguồn\n\n    [Header(\"Demo\")]\n    [SerializeField] Transform player;\n    [SerializeField] Transform demoBoss;\n\n    CinemachineImpulseSource impulse;\n    public State Current { get; private set; }\n\n    void Awake()\n    {\n        impulse = GetComponent<CinemachineImpulseSource>();\n        brain.IgnoreTimeScale = true;                  // rung và blend vẫn chạy khi hitstop timeScale = 0\n        SetShakeScale(shakeScale);\n\n        // Priority cố định theo trạng thái; camera không hoạt động về 0 để Brain không bao giờ chọn nhầm.\n        followCam.Priority = followPriority;           // CM3: gán int được nhờ implicit conversion sang PrioritySettings\n        aimCam.Priority = 0;\n        bossCam.Priority = 0;\n\n        if (bossGroup.Targets.Count == 0) bossGroup.AddMember(player, 1f, 1f);   // người chơi luôn là thành viên, weight 1\n        Current = State.Follow;\n    }\n\n    /// Điểm DUY NHẤT đổi trạng thái camera. Không GameObject nào khác được đụng Priority.\n    public void Set(State state)\n    {\n        if (state == Current) return;\n        aimCam.Priority  = state == State.Aim  ? aimPriority  : 0;\n        bossCam.Priority = state == State.Boss ? bossPriority : 0;\n        Current = state;\n    }\n\n    public void EnterBoss(Transform boss)\n    {\n        bossGroup.AddMember(boss, 0.6f, 3f);           // weight 0.6 < 1: khung nghiêng về người chơi\n        Set(State.Boss);\n    }\n\n    public void ExitBoss(Transform boss)\n    {\n        bossGroup.RemoveMember(boss);\n        Set(State.Follow);\n    }\n\n    /// Điểm DUY NHẤT được rung camera. force 0.3 đòn nhẹ / 1.0 đòn nặng / 2.0 kết liễu (tỉ lệ 1:3:6).\n    public void Shake(float force) => impulse.GenerateImpulseWithForce(force);\n\n    public void SetShakeScale(float scale)\n    {\n        shakeScale = Mathf.Clamp01(scale);\n        listener.Gain = shakeScale;                    // 0 = tắt hẳn mọi rung, kể cả boss chết — một nút vặn duy nhất\n    }\n\n    // --- demo input: thay bằng InputReader trong dự án thật (xem unity-input) ---\n    void Update()\n    {\n        var kb = UnityEngine.InputSystem.Keyboard.current;\n        var mouse = UnityEngine.InputSystem.Mouse.current;\n        if (kb == null || mouse == null) return;\n\n        if (Current != State.Boss)                     // đang boss thì Aim bị khoá — trạng thái cao hơn thắng\n            Set(mouse.rightButton.isPressed ? State.Aim : State.Follow);\n\n        if (kb.bKey.wasPressedThisFrame)\n        {\n            if (Current == State.Boss) ExitBoss(demoBoss);\n            else EnterBoss(demoBoss);\n        }\n\n        if (kb.fKey.wasPressedThisFrame)     Shake(0.3f);   // đòn nhẹ\n        if (kb.spaceKey.wasPressedThisFrame) Shake(1f);     // đòn nặng\n        if (kb.kKey.wasPressedThisFrame)     Shake(2f);     // kết liễu\n        if (kb.digit0Key.wasPressedThisFrame) SetShakeScale(shakeScale > 0f ? 0f : 1f);   // bật/tắt trợ năng\n    }\n\n    void OnValidate()\n    {\n        if (listener != null) listener.Gain = Mathf.Clamp01(shakeScale);   // kéo slider trong Editor thấy ngay\n    }\n}\n```\n\n**Chạy thử**\n- Play, giữ chuột phải: Inspector của CinemachineBrain hiện thanh blend `CM_Follow → CM_Aim` chạy trong 0.6 s, mục Live Camera đổi. Nhả: blend ngược, cũng 0.6 s. Đổi Default Blend thành Cut: đổi tức thì.\n- Nhấn B: `BossGroup ▸ Targets` từ 1 lên 2 thành viên (Player weight 1 radius 1, Boss weight 0.6 radius 3), CM_Boss Priority 30 → camera lùi ra bao cả hai, tâm khung lệch về Player. Giữ chuột phải lúc này: không đổi — Aim bị khoá bởi trạng thái Boss. Nhấn B lần nữa: Boss rời group, về Follow.\n- Nhấn F / Space / K: biên độ rung tăng theo 0.3 / 1.0 / 2.0 và dứt sau ~0.2 s (Bump). Nhấn 0: Shake Scale về 0, ba phím rung không còn tác dụng dù `GenerateImpulseWithForce` vẫn được gọi — chỉ có một chỗ để tắt.\n- Nhấn Space rồi ngay lập tức gõ `Time.timeScale = 0` (hoặc pause bằng nút ▮▮ rồi Step): rung vẫn chạy hết vì `IgnoreTimeScale`. Tắt cờ này: camera đứng kẹt lệch ở đỉnh biên độ cho tới khi resume.\n- Player chạy bằng Rigidbody thẳng 5 s trên màn 144Hz: nền không rung bậc. Tắt Interpolate trên Rigidbody: rung — chứng minh vấn đề nằm ở Rigidbody, không phải ở Damping của Composer.",
       "interview": "**Câu hay gặp**\n\n| Mức | Câu hỏi |\n|---|---|\n| Junior | Cinemachine gồm những phần nào? Brain và virtual camera khác nhau chỗ nào? |\n| Junior | Camera bám nhân vật nên viết trong `Update` hay `LateUpdate`? Vì sao? |\n| Mid | Camera chui qua tường ở góc hẹp. Anh xử lý thế nào? |\n| Mid | Camera rung nhẹ khi nhân vật chạy dù frame rate ổn. Nghi gì? |\n| Senior | Rung camera (hitstop + impulse) làm sao cho ra \"lực\" chứ không ra \"lag\"? |\n| Senior | Khi nào anh **không** dùng Cinemachine? |\n\n**Khung trả lời 60 giây** — \"Anh dựng camera cho game third-person thế nào?\"\n\n> Một `CinemachineBrain` trên Main Camera, nhiều virtual camera, chuyển qua lại bằng **priority** chứ không bật/tắt GameObject — nhờ vậy blend giữa hai góc máy là việc của Brain, không phải việc của tôi. Third-person thì Orbital Follow + Rotation Composer + **Deoccluder** chống xuyên tường.\n>\n> Chỗ ai cũng vấp là Deoccluder: để mặc định thì `Collide Against` gồm cả layer Default, nên camera né luôn cây cỏ, cột nhỏ và chính nhân vật — camera nhảy phựt liên tục và người ta đổ cho Cinemachine. Cách làm đúng là một layer riêng `CameraBlock` chỉ chứa tường và địa hình, cộng `IgnoreTag` cho nhân vật, `Damping When Occluded` = 0 để né tức thì và `Damping` ~0.5 để trở về từ tốn.\n>\n> Ngược lại, 2D pixel-perfect chỉ bám hoặc khoá phòng thì tôi **tự viết 30 dòng** — cần vị trí camera là bội số của 1/PPU, thêm damping vào là ra jitter.\n\n**Họ sẽ đào tiếp**\n\n- *\"Vì sao `LateUpdate`?\"* → Camera phải đọc vị trí **sau khi** nhân vật đã di chuyển trong frame đó; đặt ở `Update` thì tuỳ thứ tự script mà camera bám vị trí của frame trước — hiện ra thành giật nhẹ, không đều.\n- *\"Bám vật thể chạy bằng physics?\"* → Vị trí chuẩn nằm ở bước physics, nên camera phải theo `Update Method = Fixed`/`Smart` của Brain **và** rigidbody phải bật `Interpolate`. Thiếu một trong hai là rung, và người ta thường đi tối ưu fps thay vì sửa hai ô cài đặt.\n- *\"Rung mà thành lag?\"* → Bẫy kinh điển: hitstop đặt `timeScale = 0` trong 90ms trong khi `Brain.IgnoreTimeScale = false`, nên impulse **đứng hình ngay đỉnh biên độ** rồi bật về. Chạy thử không hitstop thì bình thường — lỗi chỉ xuất hiện khi ghép hai hệ thống. Rung cũng cần **ngân sách**: biên độ theo mức sự kiện, và một nguồn duy nhất cộng dồn, nếu không bốn hệ thống cùng rung là màn hình nhũn.\n- *\"Pixel perfect jitter?\"* → Orthographic size phải khớp PPU và chiều cao màn hình; camera phải snap về lưới pixel; và đừng để damping đẩy camera vào giữa hai pixel.\n- *\"Co-op hai người?\"* → `CinemachineTargetGroup` với weight/radius theo từng người chơi, cộng giới hạn zoom out; chỉ dùng cho co-op màn hình chung hoặc boss to.\n\n**Cờ đỏ**\n\n- Chuyển góc máy bằng `SetActive` từng camera (mất blend, mất state).\n- Thêm CinemachineBrain cho một camera đứng yên trong game puzzle một màn.\n- Viết camera collision bằng một raycast từ nhân vật tới camera rồi kẹp khoảng cách, không xử lý damping → camera giật liên tục.\n- Không biết Confiner 2D cần collider dạng polygon và cần bake lại khi đổi biên.\n- Đổi FOV liên tục để tạo cảm giác tốc độ mà không nói tới say chuyển động (motion sickness).\n\n**Số / ví dụ nên thuộc**\n\n- `Damping When Occluded` = 0, `Damping` ≈ 0.5, `Minimum Distance From Target` ≈ 0.3.\n- Camera bám physics: Brain `Update Method = Fixed` + rigidbody `Interpolate`.\n- Pixel perfect: vị trí camera là bội số của 1/PPU.",
       "hasAiHowto": false,
+      "i18n": {},
+      "color": "#4dd4e0"
+    },
+    {
+      "id": "unity-csharp-memory",
+      "title": "C#, GC và bộ nhớ trong Unity",
+      "summary": "Vì sao game khựng đều đặn mỗi vài giây, cái gì cấp phát mà nhìn code không ra, và chọn giữa Coroutine, async/await, UniTask và Awaitable — phần C# mà Unity trả lời khác .NET thường.",
+      "icon": "🧮",
+      "parent": "unity",
+      "children": [],
+      "depth": 2,
+      "branch": "unity",
+      "tags": [
+        "unity",
+        "csharp",
+        "memory",
+        "gc",
+        "performance"
+      ],
+      "related": [
+        "unity-optimization",
+        "unity-game-loop",
+        "unity-design-patterns",
+        "performance",
+        "unity-build-platform"
+      ],
+      "status": "deep",
+      "read": 635,
+      "readIndex": 69,
+      "level": "intermediate",
+      "refs": [],
+      "order": 35,
+      "collapsed": false,
+      "path": "09-unity/unity-csharp-memory.md",
+      "words": 2875,
+      "body": "Unity chạy C#, nhưng ba thứ khiến nó không giống .NET thường: **GC không nén và không phân thế hệ**, **ngân sách 16.6ms mỗi frame** biến một lần thu gom thành thứ người chơi nhìn thấy, và **IL2CPP là AOT** nên code chạy tốt trong Editor có thể nổ trên thiết bị. Node này là phần C# mà phỏng vấn Unity hỏi, và là phần [[unity-optimization]] giả định bạn đã biết.\n\n## GC của Unity: không nén, không phân thế hệ\n\nMono và IL2CPP dùng Boehm — một collector **conservative, non-generational, non-compacting**. Ba hệ quả thực tế, không cái nào có trong .NET trên server:\n\n- **Heap chỉ lớn lên.** Cấp phát 200MB một lần trong màn load thì heap giữ kích cỡ đó tới hết phiên chơi, dù đã thu gom xong. Trên máy 3GB, đó là khác biệt giữa sống và bị hệ điều hành kill.\n- **Phân mảnh.** Không nén nghĩa là sau vài giờ chơi, tổng chỗ trống còn nhiều nhưng không có khối liền đủ lớn, nên vẫn phải xin thêm bộ nhớ.\n- **Thời gian thu gom tỉ lệ với số object đang sống**, không phải số rác. Giữ 100 nghìn object nhỏ là trả giá ở *mọi* lần GC, kể cả khi không tạo thêm rác.\n\n**Incremental GC** (bật mặc định) chia việc thu gom ra nhiều frame, biến một spike 12ms thành vài lần 1–2ms. Nó **không giảm tổng chi phí**, không cứu được nếu bạn cấp phát nhanh hơn nó dọn, và có write barrier tốn nhẹ ở mỗi lần ghi tham chiếu. Nó là lưới an toàn, không phải giấy phép cấp phát.\n\nĐo bằng cột **GC Alloc** trong Profiler Hierarchy (sắp xếp giảm dần — nhìn 30 giây là ra thủ phạm), hoặc bằng overlay `ProfilerRecorder` như demo cuối node. Mục tiêu thực tế cho gameplay: **0 B mỗi frame ở trạng thái chơi bình thường**. Không phải \"ít\" mà là 0 — vì 200 B/frame × 60fps × 60 giây = 720KB mỗi phút, và đó là một cú khựng đang được hẹn giờ.\n\n## Cái gì cấp phát mà nhìn code không ra\n\n| Viết thế này | Cấp phát gì | Thay bằng |\n|---|---|---|\n| `foreach` trên biến kiểu `IEnumerable<T>` | Boxing enumerator | Giữ kiểu cụ thể (`List<T>`, mảng) — enumerator của chúng là struct |\n| `list.Where(...).OrderBy(...).ToArray()` | Delegate + closure + mảng mới | Vòng `for` và một buffer dùng lại |\n| `() => Do(localVar)` | Closure object mỗi lần tạo | Đưa biến thành field, hoặc cache delegate vào field |\n| `Debug.Log($\"hp {hp}\")` | String mới **và** vẫn chạy ở bản Release | Bọc trong hàm `[Conditional(\"UNITY_EDITOR\")]` |\n| `myEnum.ToString()` | Boxing + tra tên qua reflection | Bảng `string[]` tra theo `(int)` |\n| `Physics.RaycastAll` | Mảng mới mỗi lần gọi | `RaycastNonAlloc` với buffer là field |\n| `GetComponentsInChildren<T>()` | Mảng mới | Overload nhận sẵn `List<T>` |\n| `yield return new WaitForSeconds(1f)` | Object mới mỗi vòng lặp | `static readonly WaitForSeconds` cache lại |\n| Truyền struct vào tham số kiểu interface | Boxing struct lên heap | Generic `void Take<T>(T x) where T : IDamageable` |\n| `label.text = $\"{hp}/{max}\"` | String mới mỗi frame | `label.SetText(\"{0}/{1}\", hp, max)` — 0 B |\n\nBa dòng đầu chiếm phần lớn trường hợp thật. Và nhớ chiều ngược lại: `foreach` trên `List<T>` hay `Dictionary<K,V>` **không** cấp phát vì enumerator của chúng là struct. Câu \"đừng dùng foreach trong Unity\" là tàn dư từ Unity 5; nói ra bây giờ sẽ bị hỏi lại.\n\n## Struct, class, và chỗ struct phản chủ\n\n`Vector3`, `Quaternion`, `RaycastHit`, `Color` là struct — truyền đi là **copy**, không cấp phát. Tốt, cho tới khi:\n\n- **Struct lớn** (quá ~16–24 byte) truyền qua lại nhiều: chi phí copy vượt chi phí một tham chiếu. Dùng `in` cho tham số chỉ đọc, `ref` khi thật sự cần sửa.\n- **Struct trong `List<T>`**: `list[i].hp -= 10` **không biên dịch**, vì indexer trả về bản sao. Phải lấy ra, sửa, gán lại — hoặc dùng mảng, vì mảng trả về tham chiếu.\n- **Struct ép sang interface** → boxing. Đây là cái bẫy im lặng nhất: một `List<ITickable>` chứa struct, tick 500 lần mỗi frame, là 500 object rác mỗi frame.\n- **Struct có field thay đổi được** nằm trong class rồi sửa qua property: sửa lên bản sao, mất thay đổi, không cảnh báo.\n\nLuật thực dụng: struct cho dữ liệu nhỏ, bất biến, số lượng lớn. Class cho mọi thứ có định danh riêng.\n\n## Coroutine, async/await, UniTask, Awaitable\n\nBốn cách làm việc bất đồng bộ; câu hỏi luôn là *chọn cái nào và vì sao*:\n\n| | Coroutine | `async Task` | UniTask | `Awaitable` (Unity 6) |\n|---|---|---|---|---|\n| Cấp phát | Enumerator + mỗi `WaitForSeconds` | `Task` + state machine (class) | ~0 (struct + pool) | ~0 (pool nội bộ) |\n| Tự dừng khi GameObject destroy | **Có** — gắn với MonoBehaviour | **Không** | Có, qua token | Có, qua `destroyCancellationToken` |\n| Trả về giá trị | Không | Có | Có | Có |\n| `try/catch` quanh chỗ chờ | Không | Có | Có | Có |\n| Chạy trên thread khác | Không | Có | Có | Có (`BackgroundThreadAsync`) |\n| Cần package ngoài | Không | Không | **Có** | Không |\n\nCái bẫy đắt nhất nằm ở dòng thứ hai. `async void Start()` rồi `await` một request 3 giây, người chơi thoát scene — **task vẫn chạy**, và khi quay lại thì `this` đã bị destroy: `MissingReferenceException`, hoặc tệ hơn là sửa state của một object không còn tồn tại mà không báo gì. Từ Unity 2022, mọi MonoBehaviour có sẵn `destroyCancellationToken`; truyền nó vào **mọi** chỗ chờ — đây là luật, không phải khuyến nghị.\n\n```csharp\nasync Awaitable LoadAndShowAsync() {\n    var token = destroyCancellationToken;           // huỷ khi GameObject bị destroy\n    await Awaitable.WaitForSecondsAsync(0.5f, token);\n    await Awaitable.BackgroundThreadAsync();        // sang thread nền để parse\n    var parsed = Parse(rawJson);                    // KHÔNG đụng API Unity ở đây\n    await Awaitable.MainThreadAsync();              // quay về main thread trước khi chạm UI\n    label.SetText(parsed.title);\n}\n```\n\nCoroutine vẫn đúng cho thứ gắn chặt vòng đời GameObject và không cần trả giá trị: ngắn hơn, tự dọn. Đừng đổi cả dự án sang async vì \"hiện đại hơn\".\n\n## IL2CPP là AOT — thứ Editor không bắt được\n\nEditor chạy Mono có JIT; bản mobile chạy IL2CPP **không có JIT**. Những thứ biên dịch được nhưng nổ trên thiết bị:\n\n- **`System.Reflection.Emit`**, `dynamic`, và mọi thư viện sinh code lúc chạy — không dùng được.\n- **Generic virtual method trên value type** chưa xuất hiện ở đâu trong code tĩnh → `ExecutionEngineException` lúc gọi. Né bằng cách \"chạm\" tới tổ hợp generic đó một lần trong code, hoặc tránh generic virtual với struct.\n- **Managed Stripping** xoá code không ai gọi **tĩnh**: DTO chỉ được tạo qua reflection sẽ biến mất, deserialize ra object toàn giá trị mặc định mà **không có exception**. Chi tiết ở [[unity-build-platform]].\n\nNguyên tắc: thứ gì \"tìm kiểu theo tên\" đều phải ghim bằng `link.xml` hoặc `[Preserve]`, và phải test trên **bản Release**, không phải Development.\n\n## Native memory — phần không nằm trong GC\n\nTexture, mesh, audio buffer, render target nằm ở **native memory**, không phải managed heap. Nghĩa là:\n\n- Chúng thường chiếm **phần lớn RAM** của một game mobile, và `GC.Collect()` không đụng tới chúng.\n- `Resources.UnloadUnusedAssets()` mới là thứ trả lại chúng, và nó **đắt** (quét toàn bộ tham chiếu) — gọi ở màn hình loading, đừng gọi giữa gameplay.\n- `NativeArray`, `NativeList` (Collections package) cũng là native: **phải `Dispose`**, và `Allocator` quyết định vòng đời (`Temp` trong một frame, `TempJob` vài frame, `Persistent` lâu dài).\n\nMemory Profiler package là công cụ đúng để nhìn phần này; Profiler thường chỉ cho biết tổng.\n\n## Bẫy lộ ra khi build\n\n- Alloc trong `Update` nhìn \"vô hại\" trong Editor vì Editor đằng nào cũng cấp phát — chỉ bản build cho con số thật.\n- `Debug.Log` chạy cả ở Release, kéo theo format chuỗi và stack trace.\n- Heap phình trong màn load rồi không trả lại: máy 3GB chết ở màn thứ ba, máy dev 32GB không bao giờ thấy.\n- `async void` nuốt exception — lỗi biến mất không dấu vết.\n- `NativeArray` quên `Dispose`: Editor hiện leak warning khi thoát Play, bản build rò rỉ thật và im lặng.\n\n## Kiểm tra nhanh\n\n- [ ] Profiler ở trạng thái chơi bình thường: **GC Alloc = 0 B/frame**\n- [ ] Mọi chỗ `await` trong MonoBehaviour có `destroyCancellationToken`\n- [ ] Không `async void` nào ngoài event handler bắt buộc\n- [ ] `WaitForSeconds` được cache, không `new` trong vòng lặp\n- [ ] Mọi `NativeArray` có cặp cấp phát/`Dispose` nhìn thấy được\n- [ ] Đo trên bản build Release, máy yếu nhất, phút thứ 15",
+      "aiPrompt": "**Dùng AI thế nào cho việc tối ưu bộ nhớ**\n\nAI mạnh ở hai việc và yếu ở một việc. Mạnh: **soát một file để chỉ ra chỗ cấp phát** — nó nhận ra closure, boxing, LINQ nhanh hơn mắt người; và **viết lại một hàm sang phiên bản không alloc** khi bạn đã chỉ đúng hàm. Yếu: **quyết định cái gì đáng tối ưu**, vì nó không có Profiler — nó sẽ tối ưu hàm chạy ba lần mỗi màn và bỏ qua hàm chạy 500 lần mỗi frame.\n\nQuy trình đúng: bạn đo → bạn chọn hàm → AI viết lại → bạn đo lại. Đừng đảo thứ tự. Khi AI khẳng định \"cái này không cấp phát\", bắt nó nói **vì sao** (enumerator là struct? buffer dùng lại?) — lý do sai là dấu hiệu kết luận sai.\n\n**Phải nêu rõ** (thiếu là AI tự bịa):\n- Số đo hiện tại: bao nhiêu B/frame, ở hàm nào, đo bằng gì, trên thiết bị nào.\n- Phiên bản Unity và backend (Mono hay IL2CPP) — quyết định thứ gì dùng được.\n- Hàm đó chạy bao nhiêu lần mỗi frame. Không nói thì AI tối ưu nhầm chỗ.\n- Ràng buộc: có được thêm package (UniTask, Collections) không, có được đổi API công khai không.\n\n**Mẫu prompt**\n\n```\nUnity 6, IL2CPP, Android. Profiler báo TickEnemies() cấp phát 4.2 KB/frame,\ngọi 1 lần/frame với 120 enemy. File: <dán>\n\nViết lại để đạt 0 B/frame. Ràng buộc:\n- KHÔNG thêm package ngoài\n- KHÔNG đổi chữ ký public của EnemyManager\n- Giữ nguyên hành vi, kể cả thứ tự duyệt\nVới mỗi thay đổi, nói rõ nó bỏ được khoản cấp phát nào và vì sao.\nCuối cùng liệt kê những chỗ bạn NGHI còn alloc nhưng không chắc.\n```\n\n**Bẫy thường gặp:** AI thay `List<T>` bằng `NativeArray<T>` để \"bỏ GC\" mà không viết `Dispose`. Trong Editor chỉ hiện một leak warning lúc thoát Play — dễ bỏ qua; trên build là rò rỉ thật, im lặng, và lộ ra sau 40 phút chơi khi máy hết bộ nhớ. Bắt AI chỉ ra cặp cấp phát/giải phóng và `Allocator` cho **từng** native container nó thêm vào.",
+      "unity": "",
+      "code": "Demo dựng một overlay đo **GC Alloc mỗi frame** bằng `ProfilerRecorder`, và một công tắc chạy cùng một việc theo hai đường: đường cấp phát (LINQ + closure + string nội suy) và đường sạch (vòng `for` + buffer dùng lại + `SetText`). Nhấn Space để đổi và nhìn con số nhảy từ vài KB/frame về 0 — kiểm chứng ngay trong Play Mode, không cần mở Profiler.\n\n**Setup**\n\n<figure class=\"fig\">\n<svg viewBox=\"0 0 660 300\" role=\"img\" aria-label=\"Hierarchy có AllocLab với script Alloc Lab và Canvas chứa Label, Inspector hiện các trường Label, Mode, Enemy Count, Toggle Key và bảng kết quả mong đợi\">\n  <rect x=\"10\" y=\"10\" width=\"200\" height=\"280\" rx=\"8\" class=\"fig-box\"/>\n  <text x=\"22\" y=\"32\" class=\"fig-label\" font-size=\"13\" font-weight=\"600\">Hierarchy</text>\n  <line x1=\"10\" y1=\"42\" x2=\"210\" y2=\"42\" class=\"fig-line\"/>\n  <rect x=\"16\" y=\"52\" width=\"188\" height=\"20\" rx=\"4\" fill=\"#b197fc\" opacity=\"0.18\"/>\n  <text x=\"22\" y=\"67\" class=\"fig-label\" font-size=\"12\" font-weight=\"600\">AllocLab  (AllocLab.cs)</text>\n  <text x=\"22\" y=\"88\" class=\"fig-muted\" font-size=\"12\">▾ Canvas  (Screen Space Overlay)</text>\n  <text x=\"38\" y=\"106\" class=\"fig-muted\" font-size=\"11\">Label  (TextMeshProUGUI)</text>\n  <line x1=\"10\" y1=\"122\" x2=\"210\" y2=\"122\" class=\"fig-line\"/>\n  <text x=\"22\" y=\"142\" class=\"fig-label\" font-size=\"12\" font-weight=\"600\">Kết quả mong đợi</text>\n  <text x=\"22\" y=\"162\" class=\"fig-muted\" font-size=\"11\">Mode = Allocating</text>\n  <text x=\"34\" y=\"178\" class=\"fig-label\" font-size=\"11\">≈ 3–6 KB / frame</text>\n  <text x=\"22\" y=\"198\" class=\"fig-muted\" font-size=\"11\">Mode = Clean</text>\n  <text x=\"34\" y=\"214\" class=\"fig-label\" font-size=\"11\">0 B / frame</text>\n  <line x1=\"10\" y1=\"230\" x2=\"210\" y2=\"230\" class=\"fig-line\"/>\n  <text x=\"22\" y=\"250\" class=\"fig-muted\" font-size=\"10\">Số trong Editor chỉ để so hai</text>\n  <text x=\"22\" y=\"264\" class=\"fig-muted\" font-size=\"10\">đường với nhau. Con số thật</text>\n  <text x=\"22\" y=\"278\" class=\"fig-muted\" font-size=\"10\">lấy ở bản build Release.</text>\n  <rect x=\"226\" y=\"10\" width=\"424\" height=\"280\" rx=\"8\" class=\"fig-box\"/>\n  <text x=\"238\" y=\"32\" class=\"fig-label\" font-size=\"13\" font-weight=\"600\">Inspector</text>\n  <line x1=\"226\" y1=\"42\" x2=\"650\" y2=\"42\" class=\"fig-line\"/>\n  <rect x=\"234\" y=\"50\" width=\"408\" height=\"18\" rx=\"3\" fill=\"#b197fc\" opacity=\"0.22\"/>\n  <text x=\"242\" y=\"63\" class=\"fig-label\" font-size=\"12\" font-weight=\"600\">Alloc Lab (Script)  (AllocLab)</text>\n  <text x=\"250\" y=\"82\" class=\"fig-muted\" font-size=\"11\">Label</text><text x=\"440\" y=\"82\" class=\"fig-label\" font-size=\"11\">Label (TextMeshProUGUI)</text>\n  <text x=\"250\" y=\"98\" class=\"fig-muted\" font-size=\"11\">Mode</text><text x=\"440\" y=\"98\" class=\"fig-label\" font-size=\"11\">Allocating ▾</text>\n  <text x=\"250\" y=\"114\" class=\"fig-muted\" font-size=\"11\">Enemy Count</text><text x=\"440\" y=\"114\" class=\"fig-label\" font-size=\"11\">200</text>\n  <text x=\"250\" y=\"130\" class=\"fig-muted\" font-size=\"11\">Toggle Key</text><text x=\"440\" y=\"130\" class=\"fig-label\" font-size=\"11\">Space ▾</text>\n  <rect x=\"234\" y=\"144\" width=\"408\" height=\"18\" rx=\"3\" fill=\"#51cf9b\" opacity=\"0.22\"/>\n  <text x=\"242\" y=\"157\" class=\"fig-label\" font-size=\"12\" font-weight=\"600\">Overlay hiện gì</text>\n  <text x=\"250\" y=\"176\" class=\"fig-muted\" font-size=\"11\">GC Alloc / frame</text><text x=\"440\" y=\"176\" class=\"fig-label\" font-size=\"11\">byte, trung bình 15 frame</text>\n  <text x=\"250\" y=\"192\" class=\"fig-muted\" font-size=\"11\">GC Reserved</text><text x=\"440\" y=\"192\" class=\"fig-label\" font-size=\"11\">MB — heap đã xin, không trả lại</text>\n  <text x=\"250\" y=\"208\" class=\"fig-muted\" font-size=\"11\">Mode hiện tại</text><text x=\"440\" y=\"208\" class=\"fig-label\" font-size=\"11\">Allocating / Clean</text>\n  <rect x=\"234\" y=\"222\" width=\"408\" height=\"18\" rx=\"3\" fill=\"#ffd43b\" opacity=\"0.22\"/>\n  <text x=\"242\" y=\"235\" class=\"fig-label\" font-size=\"12\" font-weight=\"600\">Yêu cầu</text>\n  <text x=\"250\" y=\"254\" class=\"fig-muted\" font-size=\"11\">TextMeshPro</text><text x=\"440\" y=\"254\" class=\"fig-label\" font-size=\"11\">có sẵn trong Unity 6</text>\n  <text x=\"250\" y=\"270\" class=\"fig-muted\" font-size=\"11\">Input</text><text x=\"440\" y=\"270\" class=\"fig-label\" font-size=\"11\">Input System (package mới)</text>\n</svg>\n<figcaption>Một GameObject, một script, một label. Nhấn Space để đổi Mode và nhìn con số đổi theo ngay trong Play Mode.</figcaption>\n</figure>\n\n**Script**\n\n```csharp\n// AllocLab.cs — Unity 6 (6000.x). Gắn lên GameObject \"AllocLab\", kéo một TextMeshProUGUI vào Label.\n// Nhấn Space để đổi giữa đường cấp phát và đường sạch, nhìn GC Alloc/frame đổi theo.\nusing System.Collections;\nusing System.Collections.Generic;\nusing System.Linq;\nusing TMPro;\nusing Unity.Profiling;\nusing UnityEngine;\nusing UnityEngine.InputSystem;\n\npublic class AllocLab : MonoBehaviour\n{\n    public enum Mode { Allocating, Clean }\n\n    [SerializeField] TextMeshProUGUI label;\n    [SerializeField] Mode mode = Mode.Allocating;\n    [SerializeField] int enemyCount = 200;\n    [SerializeField] Key toggleKey = Key.Space;\n\n    ProfilerRecorder allocRecorder;      // byte cấp phát trong frame\n    ProfilerRecorder reservedRecorder;   // heap đã xin của hệ điều hành\n\n    struct Enemy { public int hp; public float distance; }\n\n    readonly List<Enemy> enemies = new();\n    readonly List<Enemy> buffer = new();                    // dùng lại, không cấp phát mỗi frame\n    static readonly WaitForSeconds OneSecond = new(1f);     // cache, không new trong coroutine\n\n    void OnEnable()\n    {\n        allocRecorder = ProfilerRecorder.StartNew(ProfilerCategory.Memory, \"GC Allocated In Frame\", 15);\n        reservedRecorder = ProfilerRecorder.StartNew(ProfilerCategory.Memory, \"GC Reserved Memory\");\n\n        enemies.Clear();\n        for (int i = 0; i < enemyCount; i++)\n            enemies.Add(new Enemy { hp = Random.Range(1, 100), distance = Random.Range(0f, 50f) });\n\n        StartCoroutine(HeartbeatRoutine());\n    }\n\n    void OnDisable()\n    {\n        allocRecorder.Dispose();\n        reservedRecorder.Dispose();\n    }\n\n    void Update()\n    {\n        var kb = Keyboard.current;\n        if (kb != null && kb[toggleKey].wasPressedThisFrame)\n            mode = mode == Mode.Allocating ? Mode.Clean : Mode.Allocating;\n\n        int near = mode == Mode.Allocating ? CountNearAllocating() : CountNearClean();\n        if (label == null) return;\n\n        if (mode == Mode.Allocating)\n            // string nội suy: một string mới mỗi frame — chính dòng này cũng là alloc\n            label.text = $\"Allocating | {AverageAlloc()} B/frame | heap {ReservedMb():0.0} MB | gan: {near}\";\n        else\n            // SetText format thẳng vào buffer nội bộ của TMP: 0 B\n            label.SetText(\"Clean | {0} B/frame | heap {1:0.0} MB | gan: {2}\", AverageAlloc(), ReservedMb(), near);\n    }\n\n    // ---- đường CẤP PHÁT: LINQ + closure + mảng mới mỗi frame ----\n    int CountNearAllocating()\n    {\n        float limit = 10f;                                  // biến cục bộ bị closure bắt\n        var near = enemies.Where(e => e.distance < limit)    // delegate + closure object\n                          .OrderBy(e => e.distance)          // comparer + buffer nội bộ\n                          .ToArray();                        // mảng mới mỗi frame\n        return near.Length;\n    }\n\n    // ---- đường SẠCH: vòng for trên List<T>, buffer dùng lại ----\n    int CountNearClean()\n    {\n        buffer.Clear();                                      // giữ capacity, không cấp phát\n        for (int i = 0; i < enemies.Count; i++)\n        {\n            var e = enemies[i];                              // struct: copy trên stack\n            if (e.distance < 10f) buffer.Add(e);\n        }\n        return buffer.Count;\n    }\n\n    IEnumerator HeartbeatRoutine()\n    {\n        // \"yield return new WaitForSeconds(1f)\" tạo một object mỗi vòng; cache thì không.\n        while (enabled) yield return OneSecond;\n    }\n\n    long AverageAlloc()\n    {\n        if (!allocRecorder.Valid || allocRecorder.Count == 0) return 0;\n        long sum = 0;\n        for (int i = 0; i < allocRecorder.Count; i++) sum += allocRecorder.GetSample(i).Value;\n        return sum / allocRecorder.Count;\n    }\n\n    float ReservedMb() => reservedRecorder.Valid ? reservedRecorder.LastValue / (1024f * 1024f) : 0f;\n}\n```\n\n**Chạy thử**\n- Play với `Mode = Allocating`: overlay hiện khoảng **3–6 KB/frame** (đổi theo `Enemy Count`), và `heap` nhích lên đều.\n- Nhấn Space: con số về **0 B/frame** và đứng yên; `heap` ngừng lớn.\n- Mở Profiler → Hierarchy → sắp xếp theo cột **GC Alloc**: ở Allocating, `AllocLab.Update` nằm đầu bảng; ở Clean nó biến khỏi danh sách.",
+      "interview": "**Câu hay gặp**\n\n| Mức | Câu hỏi |\n|---|---|\n| Junior | `struct` và `class` khác nhau thế nào? `Vector3` là cái nào? |\n| Junior | Coroutine dừng khi nào? |\n| Mid | Game khựng đều mỗi vài giây dù fps trung bình vẫn ổn. Nghi gì? |\n| Mid | Kể ba thứ cấp phát mà nhìn code không thấy. |\n| Senior | `async/await` trong MonoBehaviour nguy hiểm ở đâu? |\n| Senior | Vì sao code chạy trong Editor mà nổ trên bản IL2CPP? |\n\n**Khung trả lời 60 giây** — \"Game khựng đều mỗi vài giây, anh làm gì?\"\n\n> Nghi GC trước: khựng **đều đặn theo chu kỳ** là chữ ký của nó, khác hẳn tụt fps liên tục. Mở Profiler, sắp xếp Hierarchy theo cột **GC Alloc** giảm dần — thường 30 giây là ra hàm thủ phạm, và gần như luôn là LINQ, closure trong lambda, hoặc string nối trong `Update`.\n>\n> Phần nên nói thêm là **vì sao nó đau hơn ở Unity**: collector là Boehm — không nén, không phân thế hệ — nên heap chỉ lớn lên chứ không co lại, và thời gian mỗi lần thu gom tỉ lệ với **số object đang sống**, không phải số rác vừa tạo. Incremental GC chia spike ra nhiều frame nhưng không giảm tổng chi phí.\n>\n> Mục tiêu tôi đặt là 0 B/frame ở trạng thái chơi bình thường. Không phải cầu toàn: 200 B/frame ở 60fps là 720KB mỗi phút — một cú khựng đang được hẹn giờ.\n\n**Họ sẽ đào tiếp**\n\n- *\"Ba thứ cấp phát mà nhìn không ra?\"* → Closure bắt biến cục bộ trong lambda; boxing khi struct bị ép sang interface (một `List<ITickable>` chứa struct, tick 500 lần/frame = 500 object rác); và `foreach` trên biến kiểu **interface** `IEnumerable<T>`. Nói được cả chiều ngược lại mới thuyết phục: `foreach` trên `List<T>` **không** alloc vì enumerator là struct.\n- *\"`async/await` nguy ở đâu?\"* → `Task` **không** tự huỷ khi GameObject bị destroy. Người chơi thoát scene giữa lúc đang chờ, continuation quay lại và chạm vào `this` đã chết. Từ Unity 2022 mọi MonoBehaviour có `destroyCancellationToken` — truyền vào mọi chỗ chờ. Và `async void` nuốt exception, chỉ dùng cho event handler bắt buộc.\n- *\"UniTask hay Awaitable?\"* → `Awaitable` của Unity 6 có sẵn, không thêm package, đủ cho phần lớn việc. UniTask hơn về số toán tử và chạy được trên phiên bản Unity cũ. Coroutine chưa chết: ngắn hơn và tự dừng theo vòng đời GameObject.\n- *\"Vì sao IL2CPP nổ mà Editor không?\"* → Editor chạy Mono có JIT, build là AOT: `Reflection.Emit` và `dynamic` không tồn tại; generic virtual trên value type chưa dùng tĩnh thì ném `ExecutionEngineException`; Managed Stripping xoá thứ chỉ gọi qua reflection, làm deserialize ra object rỗng **mà không có exception nào**.\n- *\"`list[i].hp -= 10` với `List<struct>`?\"* → Không biên dịch, vì indexer trả về **bản sao**. Phải lấy ra, sửa, gán lại — hoặc dùng mảng, vì mảng trả về tham chiếu.\n\n**Cờ đỏ**\n\n- \"Tôi gọi `GC.Collect()` cho chắc\" — đẩy nguyên một spike vào đúng frame mình gọi.\n- \"Đừng dùng `foreach` trong Unity\" — đúng với Unity 5, sai từ lâu.\n- Không phân biệt managed heap và native memory: texture, mesh, audio buffer **không** nằm trong GC heap, và chúng thường mới là phần lớn RAM.\n- Đo GC alloc trong Editor rồi kết luận cho bản build.\n- Tối ưu theo cảm giác, không có con số trước/sau.\n\n**Số / ví dụ nên thuộc**\n\n- Ngân sách thực tế: **0 B/frame** khi chơi bình thường; 200 B/frame ≈ 720KB/phút.\n- GC của Unity là Boehm: **non-generational, non-compacting**, heap không trả lại hệ điều hành.\n- `ProfilerRecorder` với `\"GC Allocated In Frame\"` và `\"GC Reserved Memory\"` để đo tại chỗ.\n- `destroyCancellationToken` — có sẵn trong MonoBehaviour từ Unity 2022.",
+      "hasAiHowto": true,
       "i18n": {},
       "color": "#4dd4e0"
     },
@@ -3903,7 +4161,7 @@
       ],
       "status": "deep",
       "read": 630,
-      "readIndex": 67,
+      "readIndex": 68,
       "level": "intermediate",
       "refs": [],
       "order": 30,
@@ -3916,6 +4174,47 @@
       "code": "Demo dựng ba vai của ScriptableObject cùng lúc: asset `OnWaveCleared` là event channel, asset `LivingEnemies` là runtime set mà enemy tự đăng ký trong `OnEnable`/`OnDisable`, và `EnemySpawner` dùng `ObjectPool<Enemy>` có sẵn với reset đầy đủ trong `actionOnGet`. Kiểm chứng được: pool xoay vòng đúng 20 object cho vô số wave, danh sách runtime set rỗng khi thoát Play, và channel bắn đúng một lần mỗi wave.\n\n**Setup**\n\n<figure class=\"fig\">\n<svg viewBox=\"0 0 660 330\" role=\"img\" aria-label=\"Hierarchy có EnemySpawner với 20 con P_Enemy trong pool, Project có hai asset OnWaveCleared và LivingEnemies; Inspector hiện EnemySpawner, VoidEventChannel và EnemyRuntimeSet\">\n  <rect x=\"10\" y=\"10\" width=\"200\" height=\"310\" rx=\"8\" class=\"fig-box\"/>\n  <text x=\"22\" y=\"32\" class=\"fig-label\" font-size=\"13\" font-weight=\"600\">Hierarchy</text>\n  <line x1=\"10\" y1=\"42\" x2=\"210\" y2=\"42\" class=\"fig-line\"/>\n  <text x=\"22\" y=\"64\" class=\"fig-muted\" font-size=\"12\">▾ Level01</text>\n  <rect x=\"16\" y=\"72\" width=\"188\" height=\"20\" rx=\"4\" fill=\"#6ea8fe\" opacity=\"0.18\"/>\n  <text x=\"22\" y=\"87\" class=\"fig-label\" font-size=\"12\" font-weight=\"600\">▾ EnemySpawner</text>\n  <text x=\"38\" y=\"106\" class=\"fig-muted\" font-size=\"11\">P_Enemy(Clone) ×20  (con, pool)</text>\n  <text x=\"22\" y=\"126\" class=\"fig-muted\" font-size=\"11\">Main Camera</text>\n  <text x=\"22\" y=\"158\" class=\"fig-label\" font-size=\"12\" font-weight=\"600\">Project</text>\n  <text x=\"22\" y=\"176\" class=\"fig-muted\" font-size=\"11\">_Project/Core/Events/</text>\n  <text x=\"34\" y=\"194\" font-size=\"11\" fill=\"#51cf9b\">OnWaveCleared.asset</text>\n  <text x=\"22\" y=\"212\" class=\"fig-muted\" font-size=\"11\">_Project/Core/Sets/</text>\n  <text x=\"34\" y=\"230\" font-size=\"11\" fill=\"#ffd43b\">LivingEnemies.asset</text>\n  <text x=\"22\" y=\"248\" class=\"fig-muted\" font-size=\"11\">Features/Combat/Prefabs/</text>\n  <text x=\"34\" y=\"266\" class=\"fig-muted\" font-size=\"11\">P_Enemy.prefab</text>\n  <text x=\"22\" y=\"292\" class=\"fig-muted\" font-size=\"11\">P_Enemy: Enemy (Max Hp 30, Lifetime 3)</text>\n  <text x=\"22\" y=\"308\" class=\"fig-muted\" font-size=\"11\">+ Rigidbody (Use Gravity ☐) + Collider</text>\n  <rect x=\"226\" y=\"10\" width=\"424\" height=\"310\" rx=\"8\" class=\"fig-box\"/>\n  <text x=\"238\" y=\"32\" class=\"fig-label\" font-size=\"13\" font-weight=\"600\">Inspector</text>\n  <line x1=\"226\" y1=\"42\" x2=\"650\" y2=\"42\" class=\"fig-line\"/>\n  <rect x=\"234\" y=\"50\" width=\"408\" height=\"18\" rx=\"3\" fill=\"#6ea8fe\" opacity=\"0.22\"/>\n  <text x=\"242\" y=\"63\" class=\"fig-label\" font-size=\"12\" font-weight=\"600\">Enemy Spawner (Script)</text>\n  <text x=\"250\" y=\"82\" class=\"fig-muted\" font-size=\"11\">Prefab</text><text x=\"440\" y=\"82\" class=\"fig-label\" font-size=\"11\">P_Enemy (Enemy)</text>\n  <text x=\"250\" y=\"98\" class=\"fig-muted\" font-size=\"11\">Pool Default / Pool Max</text><text x=\"440\" y=\"98\" class=\"fig-label\" font-size=\"11\">20   /   100</text>\n  <text x=\"250\" y=\"114\" class=\"fig-muted\" font-size=\"11\">Enemies Per Wave</text><text x=\"440\" y=\"114\" class=\"fig-label\" font-size=\"11\">10</text>\n  <text x=\"250\" y=\"130\" class=\"fig-muted\" font-size=\"11\">Spawn Interval / Spawn Radius</text><text x=\"440\" y=\"130\" class=\"fig-label\" font-size=\"11\">0.2   /   6</text>\n  <text x=\"250\" y=\"146\" class=\"fig-muted\" font-size=\"11\">Runtime Set</text><text x=\"440\" y=\"146\" class=\"fig-label\" font-size=\"11\">LivingEnemies</text>\n  <text x=\"250\" y=\"162\" class=\"fig-muted\" font-size=\"11\">Wave Cleared Channel</text><text x=\"440\" y=\"162\" class=\"fig-label\" font-size=\"11\">OnWaveCleared</text>\n  <rect x=\"234\" y=\"172\" width=\"408\" height=\"18\" rx=\"3\" fill=\"#51cf9b\" opacity=\"0.22\"/>\n  <text x=\"242\" y=\"185\" class=\"fig-label\" font-size=\"12\" font-weight=\"600\">OnWaveCleared (Void Event Channel)</text>\n  <text x=\"250\" y=\"204\" class=\"fig-muted\" font-size=\"11\">Description</text><text x=\"440\" y=\"204\" class=\"fig-label\" font-size=\"11\">Spawner raise khi LivingEnemies rỗng</text>\n  <text x=\"250\" y=\"220\" class=\"fig-muted\" font-size=\"11\">listeners</text><text x=\"440\" y=\"220\" class=\"fig-label\" font-size=\"11\">[NonSerialized] — không hiện, không vào asset</text>\n  <rect x=\"234\" y=\"230\" width=\"408\" height=\"18\" rx=\"3\" fill=\"#ffd43b\" opacity=\"0.22\"/>\n  <text x=\"242\" y=\"243\" class=\"fig-label\" font-size=\"12\" font-weight=\"600\">LivingEnemies (Enemy Runtime Set)</text>\n  <text x=\"250\" y=\"262\" class=\"fig-muted\" font-size=\"11\">Items</text><text x=\"440\" y=\"262\" class=\"fig-label\" font-size=\"11\">0  ([NonSerialized], rỗng khi thoát Play)</text>\n  <text x=\"250\" y=\"278\" class=\"fig-muted\" font-size=\"11\">Count lúc Play</text><text x=\"440\" y=\"278\" class=\"fig-label\" font-size=\"11\">0 → 10 → 0 → 10 …</text>\n  <text x=\"250\" y=\"304\" class=\"fig-muted\" font-size=\"11\">Hai asset SO này được cả Spawner lẫn UI/audio tham chiếu — không ai FindObjectsByType.</text>\n</svg>\n<figcaption>Spawner giữ pool làm con của chính nó: unload scene là pool đi theo, không còn stack chứa object đã destroy. Enemy không biết Spawner, chỉ biết runtime set và callback trả về pool.</figcaption>\n</figure>\n\n**Script**\n\n```csharp\n// VoidEventChannel.cs — Unity 6 (6000.x). Asset: Create ▸ Events ▸ Void Channel → _Project/Core/Events/OnWaveCleared.asset\nusing System;\nusing UnityEngine;\n\n[CreateAssetMenu(menuName = \"Events/Void Channel\", fileName = \"OnSomething\")]\npublic sealed class VoidEventChannel : ScriptableObject\n{\n    [TextArea] [SerializeField] string description;   // cho designer biết ai raise, ai nghe — không dùng lúc chạy\n\n    [NonSerialized] Action listeners;                 // KHÔNG serialize: không được ghi vào asset khi Save Project\n    [NonSerialized] int raiseCount;\n\n    public int ListenerCount => listeners?.GetInvocationList().Length ?? 0;\n    public int RaiseCount => raiseCount;\n\n    public void Raise() { raiseCount++; listeners?.Invoke(); }\n    public void Register(Action a)   => listeners += a;\n    public void Unregister(Action a) => listeners -= a;\n\n    // Lớp bảo vệ thứ hai: subscriber MonoBehaviour gỡ trong OnDisable là lớp chính;\n    // OnDisable của SO chạy khi Domain Reload / unload asset, dọn nốt những gì còn sót.\n    void OnDisable() { listeners = null; raiseCount = 0; }\n}\n```\n\n```csharp\n// EnemyRuntimeSet.cs — Unity 6 (6000.x). Asset: Create ▸ Runtime Sets ▸ Enemy → _Project/Core/Sets/LivingEnemies.asset\nusing System;\nusing System.Collections.Generic;\nusing UnityEngine;\n\n[CreateAssetMenu(menuName = \"Runtime Sets/Enemy\", fileName = \"LivingEnemies\")]\npublic sealed class EnemyRuntimeSet : ScriptableObject\n{\n    [NonSerialized] List<Enemy> items = new(64);      // thiếu [NonSerialized] = danh sách object chết dính vào asset\n\n    public IReadOnlyList<Enemy> Items => items;\n    public int Count => items.Count;\n\n    /// <summary>Bắn khi phần tử cuối rời set. Khai `event` để không ai `=` ghi đè cả danh sách.</summary>\n    public event Action Emptied;\n\n    public void Add(Enemy e)    { if (!items.Contains(e)) items.Add(e); }\n    public void Remove(Enemy e) { if (items.Remove(e) && items.Count == 0) Emptied?.Invoke(); }\n\n    void OnDisable() { items.Clear(); Emptied = null; }   // thoát Play: không dính sang lần Play sau\n}\n```\n\n```csharp\n// Enemy.cs — Unity 6 (6000.x). Trên prefab P_Enemy cùng Rigidbody (Use Gravity ☐) + Collider bất kỳ.\n// Đăng ký vào runtime set theo cặp OnEnable/OnDisable; chết thì TRẢ VỀ POOL, không Destroy.\nusing UnityEngine;\n\npublic sealed class Enemy : MonoBehaviour\n{\n    [SerializeField] float maxHp = 30f;\n    [SerializeField] float lifetime = 3f;      // demo: tự chết sau N giây để thấy pool xoay vòng\n\n    public float Hp { get; private set; }\n\n    EnemyRuntimeSet set;                       // Spawner gán qua Init — Enemy không biết Spawner là ai\n    System.Action<Enemy> release;\n    Rigidbody rb;\n    TrailRenderer trail;\n    float age;\n    bool released;\n\n    void Awake()\n    {\n        rb = GetComponent<Rigidbody>();\n        trail = GetComponent<TrailRenderer>();  // có thể null — reset có kiểm tra\n    }\n\n    public void Init(EnemyRuntimeSet runtimeSet, System.Action<Enemy> releaseToPool)\n    {\n        set = runtimeSet;\n        release = releaseToPool;\n    }\n\n    void OnEnable()  { if (set != null) set.Add(this); }\n    void OnDisable() { if (set != null) set.Remove(this); }\n\n    /// <summary>Pool gọi trong actionOnGet, SAU SetActive(true). Mọi thứ SetActive KHÔNG tự reset nằm ở đây.</summary>\n    public void ResetState()\n    {\n        Hp = maxHp;\n        age = 0f;\n        released = false;\n        transform.localScale = Vector3.one;    // từng bị parent vào object có scale khác thì lệch\n        if (rb != null) { rb.linearVelocity = Vector3.zero; rb.angularVelocity = Vector3.zero; }   // 2022 LTS: rb.velocity\n        if (trail != null) trail.Clear();      // không Clear: vệt kéo từ chỗ chết cũ sang chỗ spawn mới\n        StopAllCoroutines();\n    }\n\n    public void TakeDamage(float dmg) { Hp -= dmg; if (Hp <= 0f) Die(); }\n\n    void Update()\n    {\n        age += Time.deltaTime;\n        if (age >= lifetime) Die();\n    }\n\n    void Die()\n    {\n        if (released) return;                  // collectionCheck của pool sẽ ném lỗi nếu Release hai lần\n        released = true;\n        release?.Invoke(this);\n    }\n}\n```\n\n```csharp\n// EnemySpawner.cs — Unity 6 (6000.x). Trên GameObject \"EnemySpawner\" trong scene Level.\n// Pool có sẵn của Unity; việc của ta là createFunc + reset trong actionOnGet, và nghe runtime set để biết wave sạch.\nusing System.Collections;\nusing UnityEngine;\nusing UnityEngine.Pool;\n\npublic sealed class EnemySpawner : MonoBehaviour\n{\n    [Header(\"Pool\")]\n    [SerializeField] Enemy prefab;\n    [SerializeField] int poolDefault = 20;\n    [SerializeField] int poolMax = 100;\n\n    [Header(\"Wave\")]\n    [SerializeField] int enemiesPerWave = 10;\n    [SerializeField] float spawnInterval = 0.2f;\n    [SerializeField] float spawnRadius = 6f;\n\n    [Header(\"Kênh ScriptableObject\")]\n    [SerializeField] EnemyRuntimeSet runtimeSet;\n    [SerializeField] VoidEventChannel waveClearedChannel;\n\n    ObjectPool<Enemy> pool;\n    int wave;\n\n    void Awake()\n    {\n        pool = new ObjectPool<Enemy>(\n            createFunc: Create,\n            actionOnGet: e => { e.gameObject.SetActive(true); e.ResetState(); },   // SetActive trước để Rigidbody nhận velocity\n            actionOnRelease: e => e.gameObject.SetActive(false),\n            actionOnDestroy: e => Destroy(e.gameObject),\n            collectionCheck: true,                                                // Editor: bắt Release hai lần\n            defaultCapacity: poolDefault,\n            maxSize: poolMax);\n    }\n\n    void OnEnable()  => runtimeSet.Emptied += OnAllDead;\n    void OnDisable() { runtimeSet.Emptied -= OnAllDead; StopAllCoroutines(); }\n\n    void Start() => StartCoroutine(SpawnWave());\n\n    Enemy Create()\n    {\n        var e = Instantiate(prefab, transform);   // con của Spawner: unload scene là pool đi theo\n        e.Init(runtimeSet, pool.Release);         // Init SAU Instantiate — OnEnable đầu tiên chưa có set nên không Add\n        e.gameObject.SetActive(false);\n        return e;\n    }\n\n    IEnumerator SpawnWave()\n    {\n        wave++;\n        for (int i = 0; i < enemiesPerWave; i++)\n        {\n            var e = pool.Get();                   // thiếu thì Create, không thì lấy object cũ → actionOnGet\n            var dir = Random.insideUnitCircle.normalized * spawnRadius;\n            e.transform.SetPositionAndRotation(transform.position + new Vector3(dir.x, 0f, dir.y), Quaternion.identity);\n            yield return new WaitForSeconds(spawnInterval);\n        }\n    }\n\n    void OnAllDead()\n    {\n        waveClearedChannel.Raise();               // UI, audio, quest tự nghe asset này — Spawner không biết họ\n        StartCoroutine(NextWaveAfter(1f));\n    }\n\n    IEnumerator NextWaveAfter(float seconds)\n    {\n        yield return new WaitForSeconds(seconds);\n        yield return SpawnWave();\n    }\n\n    void OnGUI()\n    {\n        GUILayout.BeginArea(new Rect(10, 10, 420, 60), GUI.skin.box);\n        GUILayout.Label($\"Wave {wave}   Sống: {runtimeSet.Count}   Pool active/all: {pool.CountActive}/{pool.CountAll}\");\n        GUILayout.Label($\"OnWaveCleared: raised {waveClearedChannel.RaiseCount} · listeners {waveClearedChannel.ListenerCount}\");\n        GUILayout.EndArea();\n    }\n}\n```\n\n**Chạy thử**\n- Play: HUD `Sống` tăng 0 → 10 trong 2 giây, `Pool active/all` lên `10/10`. Sau 3 giây enemy chết dần, `Sống` về 0, `raised 1`, một giây sau wave 2. Từ wave 2 trở đi `Pool all` đứng ở 10 — không có `Instantiate` nào nữa (Profiler ▸ CPU không còn `Instantiate`).\n- Đổi `Lifetime` của prefab thành 1 và `Spawn Interval` 0.05: `Pool all` vẫn không vượt 10 vì object chết trước khi wave spawn xong — đó là pool đang tái dụng. Đặt `Lifetime` 30 và `Enemies Per Wave` 150: `Pool all` chạm 100 rồi enemy thứ 101 vẫn spawn nhưng khi Release bị Destroy thay vì vào pool (`maxSize`).\n- Hierarchy lúc Play: 10 `P_Enemy(Clone)` active và phần còn lại tối màu dưới `EnemySpawner`. Chọn `LivingEnemies.asset` ở Inspector chế độ Debug: **không** có field `items` — vì `[NonSerialized]`. Xoá attribute đó, Play rồi Stop, Save Project: asset giờ chứa 10 tham chiếu `None (Enemy)` — đúng bẫy thân bài mô tả.\n- Xoá trail: thêm `TrailRenderer` (Time 0.5) vào prefab, comment dòng `trail.Clear()`: mỗi lần spawn thấy vệt kéo từ chỗ enemy chết wave trước sang chỗ mới. Bật lại dòng đó → hết.\n- Edit ▸ Project Settings ▸ Editor ▸ Enter Play Mode Options, tắt Domain Reload, Play → Stop → Play: HUD wave 1 vẫn `raised 0` lúc bắt đầu và `Sống` bắt đầu từ 0 — nhờ `OnDisable` của Enemy gỡ khỏi set khi scene bị huỷ. Gọi `Die()` hai lần trên cùng enemy (bỏ guard `released`): Console đỏ `Trying to release an object that has already been released to the pool` — đó là `collectionCheck` đang làm việc.",
       "interview": "**Câu hay gặp**\n\n| Mức | Câu hỏi |\n|---|---|\n| Junior | Singleton trong Unity viết thế nào cho đúng? Nhược điểm là gì? |\n| Junior | `ScriptableObject` khác `MonoBehaviour` chỗ nào? Dùng khi nào? |\n| Mid | `event Action<T>` của C# và `UnityEvent<T>` — chọn cái nào, vì sao? |\n| Mid | 500 script cùng có `Update()` rỗng thì tốn gì? |\n| Senior | Team 5 người, 12 tháng: Service Locator hay DI framework (VContainer/Zenject)? |\n| Senior | Kể một chỗ anh cố tình **không** dùng pattern vì nó thừa. |\n\n**Khung trả lời 60 giây** — \"Anh dùng ScriptableObject vào những việc gì?\"\n\n> Ba vai. Một là config bất biến — `WeaponData`, `EnemyData`, chỉ đọc lúc chạy, designer sửa không cần build. Hai là **event channel**: một asset `OnPlayerDied` mà UI, audio, quest cùng tham chiếu qua Inspector — đây là cách duy nhất để hai scene additive nói chuyện với nhau mà không cần tìm nhau bằng `Find`. Ba là **runtime set**: một SO giữ `List<Enemy>` đang sống, enemy tự `Add` trong `OnEnable` và `Remove` trong `OnDisable`, nên spawner và UI đếm quái đọc chung một danh sách thay vì `FindObjectsByType` mỗi frame.\n>\n> Bẫy đi kèm vai 2 và 3 thì phải nói ngay: trong Editor, SO **sống xuyên các lần Play**. Field runtime không có `[NonSerialized]` sẽ bị ghi vào asset — lần Play sau `currentHp` bắt đầu từ 37, danh sách enemy đầy tham chiếu tới object đã destroy. Trên build thì asset chỉ đọc nên reset sạch mỗi lần mở game. Hai hành vi khác nhau nghĩa là bug chỉ lộ ở một nơi.\n\n**Họ sẽ đào tiếp**\n\n- *\"Vì sao `UnityEvent` lại tệ hơn?\"* → Không hẳn tệ, mà **khác mục đích**. UnityEvent nối được trong Inspector nên designer dùng được; đổi lại nó gọi qua reflection (chậm hơn nhiều lần, có thể cấp phát khi Invoke) và khi bạn **đổi tên hàm thì kết nối mất âm thầm** — Inspector chỉ hiện \"Missing\", không có lỗi biên dịch. Luật của tôi: logic giữa code dùng `event Action`, chỗ designer cần nối tay thì UnityEvent hoặc SO event channel.\n- *\"500 `Update()` rỗng tốn bao nhiêu?\"* → Mỗi lần gọi là một chuyến native→managed khoảng 0.5µs kể cả khi thân hàm rỗng: ~0.25ms mỗi frame khi chưa làm gì. Chữa bằng một manager tick `List<ITickable>`, và **xoá hẳn** `Update` khỏi script không cần (để trống vẫn bị gọi).\n- *\"Khi nào mới cần DI framework?\"* → Khi cần **scope** (per-match, per-scene) và khi cần test có mock. Dưới 15 hệ thống và một người làm thì 1–2 singleton + SO event channel là đủ; thêm container lúc đó chỉ là chi phí. VContainer hơn Zenject ở chỗ ít reflection và có source generator cho IL2CPP.\n- *\"Object pool thì tự viết hay dùng có sẵn?\"* → Dùng `UnityEngine.Pool.ObjectPool<T>` có sẵn. Cái khó không nằm ở pool mà ở **reset cho đủ**: trail, particle, rigidbody velocity, coroutine đang chạy, animator state — quên một cái là viên đạn thứ hai bay ra với vệt khói của viên trước.\n\n**Cờ đỏ**\n\n- Nói \"singleton là anti-pattern\" như một câu thần chú mà không nói được *nó hỏng ở đâu trong Unity cụ thể* (thứ tự init, bản trùng, không test được).\n- Khai `public List<Enemy> Items` trong runtime set SO **không** `[NonSerialized]`.\n- `FindObjectOfType` / `GetComponent` trong `Update`.\n- Kể tên 8 pattern nhưng không có ví dụ nào từ dự án thật; hoặc ngược lại, nhét Command + Visitor vào một game 2 tuần.\n- Không biết Domain Reload tắt thì `static` **không** tự reset giữa các lần Play.\n\n**Số / ví dụ nên thuộc**\n\n- ~0.5µs cho một lần gọi `Update` rỗng; 500 script ≈ 0.25ms/frame.\n- `[NonSerialized]` + gỡ đăng ký trong `OnDisable` là hai luật sống còn của SO event channel.\n- `[RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]` để reset `static` khi tắt Domain Reload.",
       "hasAiHowto": false,
+      "i18n": {},
+      "color": "#4dd4e0"
+    },
+    {
+      "id": "unity-dots-jobs",
+      "title": "Job System, Burst và DOTS",
+      "summary": "Ba tầng tách biệt — Job System, Burst, ECS — và lý do hầu hết dự án chỉ nên leo hai tầng đầu. Tư duy data-oriented, luật an toàn của job, và khi nào ECS đáng giá thật.",
+      "icon": "⚙️",
+      "parent": "unity",
+      "children": [],
+      "depth": 2,
+      "branch": "unity",
+      "tags": [
+        "unity",
+        "dots",
+        "jobs",
+        "burst",
+        "performance",
+        "ecs"
+      ],
+      "related": [
+        "unity-optimization",
+        "unity-csharp-memory",
+        "performance",
+        "unity-physics"
+      ],
+      "status": "deep",
+      "read": 745,
+      "readIndex": 81,
+      "level": "advanced",
+      "refs": [],
+      "order": 145,
+      "collapsed": false,
+      "path": "09-unity/unity-dots-jobs.md",
+      "words": 2687,
+      "body": "\"DOTS\" trong tin tuyển dụng thường gộp ba thứ rất khác nhau, và người phỏng vấn giỏi sẽ tách chúng ra để xem bạn có hiểu không:\n\n| Tầng | Là gì | Chi phí đưa vào dự án | Ai nên dùng |\n|---|---|---|---|\n| **Job System** | Chạy code trên worker thread, có kiểm tra race ở Editor | Thấp — dùng ngay trong dự án MonoBehaviour | Gần như mọi dự án có vòng lặp nặng |\n| **Burst** | Compiler dịch một tập con C# sang mã máy SIMD | Thấp — thêm `[BurstCompile]` | Đi kèm Job System, gần như luôn |\n| **ECS (Entities)** | Kiến trúc khác hẳn: entity + component dữ liệu + system | **Rất cao** — viết lại cách nghĩ, tooling và ecosystem khác | Dự án có hàng nghìn–triệu thực thể cùng loại |\n\nLuật thực dụng: **hai tầng đầu trả lãi ngay và không đòi hỏi đổi kiến trúc**; tầng ba là quyết định của cả dự án, không phải của một người. Câu trả lời \"tôi dùng Job + Burst cho các vòng lặp nặng, còn ECS thì chưa đáng với quy mô dự án hiện tại\" là câu trả lời trưởng thành, không phải câu trả lời né tránh.\n\n## Vì sao data-oriented lại nhanh\n\nCPU đọc bộ nhớ theo **cache line 64 byte**. Một `List<Enemy>` với `Enemy` là class nghĩa là 1000 tham chiếu trỏ tới 1000 chỗ rải rác trên heap: mỗi lần duyệt là một lần cache miss, và một cache miss tốn cỡ 100–300 chu kỳ — nhiều hơn cả phép tính bạn định làm.\n\nData-oriented đảo lại: **gom dữ liệu cùng loại nằm liền nhau**, và chỉ mang theo trường thật sự cần. Duyệt một `NativeArray<float3>` gồm 1000 vị trí là đọc tuần tự, phần cứng đoán trước được, và Burst có thể xử lý 4–8 phần tử mỗi lệnh bằng SIMD. Đó mới là nguồn của \"nhanh gấp 10 lần\", không phải chuyện chạy nhiều thread.\n\nHệ quả cần nhớ khi trả lời phỏng vấn: **nhanh không đến từ đa luồng, mà từ bố cục bộ nhớ**. Đa luồng chỉ nhân thêm lên.\n\n## Job System: bốn luật an toàn\n\nJob chạy trên worker thread, nên Unity chặn cứng mọi thứ không an toàn:\n\n1. **Không đụng managed object** trong job — không `class`, không `string`, không `List<T>`, không `GameObject`. Chỉ struct và `NativeArray`/`NativeList`/`NativeHashMap`.\n2. **Không gọi API Unity** trong job (trừ số học và `TransformAccess` qua `IJobParallelForTransform`).\n3. **Mỗi native container chỉ được một job ghi tại một thời điểm.** Đánh dấu `[ReadOnly]` cho cái chỉ đọc — đây vừa là an toàn vừa là hiệu năng, vì nhiều job đọc song song được.\n4. **Phải `Complete()` trước khi đọc kết quả trên main thread**, và mọi container phải `Dispose`.\n\nBa loại job hay dùng: `IJob` (một việc trên một thread), `IJobParallelFor` (chia N phần tử cho nhiều thread, `Execute(int index)`), `IJobParallelForTransform` (ghi thẳng vào Transform — cách duy nhất chạm Transform từ job).\n\n**Cái bẫy số một** là `Schedule()` rồi `Complete()` ngay dòng sau: main thread đứng đợi, bạn mất toàn bộ lợi ích song song và chỉ còn lại chi phí lập lịch. Cách đúng: `Schedule()` trong `Update`, `Complete()` ở `LateUpdate` — job chạy song song với phần còn lại của frame. Cái bẫy số hai là job quá nhỏ: chia 50 phần tử cho 8 thread thì chi phí lập lịch lớn hơn công việc; ngưỡng thực tế thường là **vài nghìn phần tử** mới đáng.\n\n## Burst: nhanh, nhưng chỉ trên một tập con C#\n\n`[BurstCompile]` dịch job sang mã máy tối ưu với SIMD. Đổi lại, trong job chỉ được dùng:\n\n- Struct, kiểu số nguyên thuỷ, `Unity.Mathematics` (`float3`, `math.length`, `quaternion`) — **không** `Vector3`/`Mathf` nếu muốn kết quả tốt nhất, vì `Unity.Mathematics` được thiết kế để vector hoá.\n- Không exception (Burst bỏ qua `try/catch` ở bản build), không managed, không `foreach` trên interface.\n\nHai thứ hay bị hiểu nhầm:\n\n- **Burst không tự làm code song song.** Nó tối ưu *một* luồng thực thi. Song song là việc của Job System — hai thứ độc lập, chỉ hay đi cùng nhau.\n- **Editor mặc định chạy Burst đã bật**, nhưng lần đầu vào Play có độ trễ compile; và `Jobs > Burst > Enable Compilation` tắt đi để debug thì code chạy chậm hơn hàng chục lần — nhiều người đo nhầm ở trạng thái này.\n\nMức tăng tốc thực tế trải rộng: vòng lặp toán học thuần trên dữ liệu liền nhau thường nhanh **cỡ 5–20 lần** so với code C# thường; vòng lặp phụ thuộc nhiều vào truy cập bộ nhớ rải rác thì gần như không đổi. Luôn đo, đừng trích con số của người khác — demo cuối node cho bạn cái để đo.\n\n## Khi nào ECS đáng, khi nào không\n\n**Đáng** khi bài toán là *hàng nghìn tới hàng triệu thực thể cùng loại, cập nhật cùng một cách*: RTS quy mô lớn, bullet hell, mô phỏng đám đông, game sinh tồn thế giới mở. Cũng đáng khi cần determinism cho netcode kiểu ghost prediction (Netcode for Entities).\n\n**Không đáng** khi: dự án dưới vài trăm thực thể; đội chưa ai từng viết ECS; game phụ thuộc nặng vào Animator, UI, physics character, Timeline — những mảng mà GameObject vẫn là con đường chính. Và **hybrid** (GameObject cho gameplay, ECS cho một mảng cụ thể) nghe hợp lý trên giấy nhưng phải trả giá bằng hai mô hình dữ liệu song song cùng một lúc.\n\nCâu hỏi tự kiểm trước khi chọn ECS: *bài toán của tôi có đủ số lượng không, và tôi có sẵn sàng mất 2–4 tuần cho cả đội làm quen không?* Nếu câu trả lời là \"không chắc\", thì Job + Burst cho đúng vòng lặp nóng sẽ lấy được 80% lợi ích với 5% chi phí.\n\n## Bẫy lộ ra khi build\n\n- Quên `Dispose` native container: Editor chỉ hiện leak warning lúc thoát Play, bản build rò rỉ thật và im lặng.\n- `Allocator.TempJob` dùng cho job kéo dài quá 4 frame → cảnh báo rồi rò rỉ. `Persistent` cho thứ sống lâu, và nó chậm hơn khi cấp phát.\n- Safety check chỉ bật trong Editor: race condition có thể chỉ lộ trên build, dưới dạng số liệu sai chứ không phải crash.\n- Burst compile lần đầu trên thiết bị làm cú khựng ở màn đầu tiên — bật *Burst AOT Settings* đúng target khi build.\n\n## Kiểm tra nhanh\n\n- [ ] `Schedule()` và `Complete()` **không** nằm cạnh nhau\n- [ ] Mọi container chỉ đọc đều có `[ReadOnly]`\n- [ ] Mọi `NativeArray` có `Allocator` đúng vòng đời và có `Dispose`\n- [ ] Đo với Burst **bật** (kiểm tra `Jobs > Burst > Enable Compilation`)\n- [ ] Số phần tử đủ lớn để bù chi phí lập lịch (thường vài nghìn trở lên)",
+      "aiPrompt": "**Dùng AI thế nào cho code job/Burst**\n\nĐây là mảng AI viết được phần **khung** rất nhanh (struct job, `IJobParallelFor`, khai báo container, `Schedule`/`Complete`) nhưng sai đúng những chỗ đắt: vòng đời `Allocator`, `[ReadOnly]`, và chỗ đặt `Complete()`. Giao cho nó phần cơ học, giữ lại cho mình ba quyết định: **dữ liệu nào chuyển sang struct**, **job chạy giữa hai điểm nào trong frame**, và **container sống bao lâu**.\n\nCách làm hiệu quả nhất là hai bước: bước một yêu cầu AI viết phiên bản **tuần tự, không job**, đã chuyển dữ liệu sang mảng struct phẳng và đo được; bước hai mới nhờ nó bọc thành job. Làm một bước thì bạn không biết phần tăng tốc đến từ bố cục dữ liệu hay từ đa luồng — và thường phần lớn đến từ bố cục.\n\n**Phải nêu rõ** (thiếu là AI tự bịa):\n- Số phần tử thật (200 hay 200 nghìn — quyết định job có đáng không).\n- Job chạy ở đâu trong frame và kết quả cần sẵn sàng lúc nào (`LateUpdate`? frame sau?).\n- Container nào chỉ đọc, container nào ghi — AI không tự biết và sẽ bỏ `[ReadOnly]`.\n- Có được dùng `Unity.Mathematics` và `Collections` package không.\n- Có cần kết quả **xác định** (deterministic) không — ảnh hưởng tới `FloatMode` của Burst.\n\n**Mẫu prompt**\n\n```\nUnity 6, dự án MonoBehaviour thường (KHÔNG dùng ECS). Có 8000 boid, mỗi frame\ntính vận tốc theo 3 quy tắc (separation/alignment/cohesion) rồi ghi vào Transform.\n\nBước 1: viết phiên bản tuần tự dùng NativeArray<float3> + Unity.Mathematics,\nKHÔNG job, KHÔNG Burst. Kèm cách đo thời gian bằng ProfilerMarker.\nBước 2 (chờ tôi xác nhận số đo): bọc thành IJobParallelFor + [BurstCompile],\nSchedule ở Update và Complete ở LateUpdate.\n\nRàng buộc: chỉ đọc mảng vị trí (đánh [ReadOnly]); ghi vào mảng vận tốc riêng.\nNói rõ Allocator của từng container và nơi Dispose.\n```\n\n**Bẫy thường gặp:** AI viết `handle.Complete()` ngay dòng sau `Schedule()` vì như vậy \"code đúng và dễ đọc\" — nó đúng thật, nhưng main thread đứng đợi nên bạn mất toàn bộ lợi ích song song và chỉ còn chi phí lập lịch; kết quả là bản \"tối ưu\" chạy **chậm hơn** bản cũ, và không có cảnh báo nào. Bắt AI nói rõ `Schedule` ở đâu, `Complete` ở đâu, và giữa hai điểm đó main thread làm gì.",
+      "unity": "",
+      "code": "Demo chạy cùng một bài toán — 8000 hạt chuyển động theo trường nhiễu — theo hai đường: vòng lặp `Transform` thường trên main thread, và `IJobParallelForTransform` + `[BurstCompile]`. Overlay hiện mili giây của từng đường, bấm Space để đổi. Đây là cái để **tự đo** thay vì tin con số của người khác.\n\n**Setup**\n\n<figure class=\"fig\">\n<svg viewBox=\"0 0 660 300\" role=\"img\" aria-label=\"Hierarchy có JobLab với script Job Lab và Canvas chứa Label, Inspector hiện Count, Mode, Prefab và bảng kết quả tham khảo\">\n  <rect x=\"10\" y=\"10\" width=\"200\" height=\"280\" rx=\"8\" class=\"fig-box\"/>\n  <text x=\"22\" y=\"32\" class=\"fig-label\" font-size=\"13\" font-weight=\"600\">Hierarchy</text>\n  <line x1=\"10\" y1=\"42\" x2=\"210\" y2=\"42\" class=\"fig-line\"/>\n  <rect x=\"16\" y=\"52\" width=\"188\" height=\"20\" rx=\"4\" fill=\"#6ea8fe\" opacity=\"0.18\"/>\n  <text x=\"22\" y=\"67\" class=\"fig-label\" font-size=\"12\" font-weight=\"600\">JobLab  (JobLab.cs)</text>\n  <text x=\"22\" y=\"88\" class=\"fig-muted\" font-size=\"12\">▾ Canvas  (Screen Space Overlay)</text>\n  <text x=\"38\" y=\"106\" class=\"fig-muted\" font-size=\"11\">Label  (TextMeshProUGUI)</text>\n  <text x=\"22\" y=\"126\" class=\"fig-muted\" font-size=\"12\">(8000 hạt sinh lúc chạy)</text>\n  <line x1=\"10\" y1=\"142\" x2=\"210\" y2=\"142\" class=\"fig-line\"/>\n  <text x=\"22\" y=\"162\" class=\"fig-label\" font-size=\"12\" font-weight=\"600\">Package cần có</text>\n  <text x=\"22\" y=\"182\" class=\"fig-muted\" font-size=\"11\">com.unity.burst</text>\n  <text x=\"22\" y=\"198\" class=\"fig-muted\" font-size=\"11\">com.unity.collections</text>\n  <text x=\"22\" y=\"214\" class=\"fig-muted\" font-size=\"11\">com.unity.mathematics</text>\n  <line x1=\"10\" y1=\"230\" x2=\"210\" y2=\"230\" class=\"fig-line\"/>\n  <text x=\"22\" y=\"250\" class=\"fig-muted\" font-size=\"10\">Đo với Burst BẬT. Kiểm tra ở</text>\n  <text x=\"22\" y=\"264\" class=\"fig-muted\" font-size=\"10\">Jobs ▸ Burst ▸ Enable Compilation</text>\n  <text x=\"22\" y=\"278\" class=\"fig-muted\" font-size=\"10\">— tắt thì số đo vô nghĩa.</text>\n  <rect x=\"226\" y=\"10\" width=\"424\" height=\"280\" rx=\"8\" class=\"fig-box\"/>\n  <text x=\"238\" y=\"32\" class=\"fig-label\" font-size=\"13\" font-weight=\"600\">Inspector</text>\n  <line x1=\"226\" y1=\"42\" x2=\"650\" y2=\"42\" class=\"fig-line\"/>\n  <rect x=\"234\" y=\"50\" width=\"408\" height=\"18\" rx=\"3\" fill=\"#6ea8fe\" opacity=\"0.22\"/>\n  <text x=\"242\" y=\"63\" class=\"fig-label\" font-size=\"12\" font-weight=\"600\">Job Lab (Script)  (JobLab)</text>\n  <text x=\"250\" y=\"82\" class=\"fig-muted\" font-size=\"11\">Label</text><text x=\"440\" y=\"82\" class=\"fig-label\" font-size=\"11\">Label (TextMeshProUGUI)</text>\n  <text x=\"250\" y=\"98\" class=\"fig-muted\" font-size=\"11\">Prefab</text><text x=\"440\" y=\"98\" class=\"fig-label\" font-size=\"11\">Quad hoặc Sprite nhỏ</text>\n  <text x=\"250\" y=\"114\" class=\"fig-muted\" font-size=\"11\">Count</text><text x=\"440\" y=\"114\" class=\"fig-label\" font-size=\"11\">8000</text>\n  <text x=\"250\" y=\"130\" class=\"fig-muted\" font-size=\"11\">Mode</text><text x=\"440\" y=\"130\" class=\"fig-label\" font-size=\"11\">MainThread ▾ / Jobified</text>\n  <rect x=\"234\" y=\"144\" width=\"408\" height=\"18\" rx=\"3\" fill=\"#51cf9b\" opacity=\"0.22\"/>\n  <text x=\"242\" y=\"157\" class=\"fig-label\" font-size=\"12\" font-weight=\"600\">Kết quả tham khảo (máy mỗi người mỗi khác)</text>\n  <text x=\"250\" y=\"176\" class=\"fig-muted\" font-size=\"11\">MainThread</text><text x=\"440\" y=\"176\" class=\"fig-label\" font-size=\"11\">ms lớn, nằm trên main thread</text>\n  <text x=\"250\" y=\"192\" class=\"fig-muted\" font-size=\"11\">Jobified + Burst</text><text x=\"440\" y=\"192\" class=\"fig-label\" font-size=\"11\">ms nhỏ hơn nhiều lần</text>\n  <text x=\"250\" y=\"208\" class=\"fig-muted\" font-size=\"11\">Cách đọc</text><text x=\"440\" y=\"208\" class=\"fig-label\" font-size=\"11\">so TỈ LỆ, đừng so số tuyệt đối</text>\n  <rect x=\"234\" y=\"222\" width=\"408\" height=\"18\" rx=\"3\" fill=\"#ffd43b\" opacity=\"0.22\"/>\n  <text x=\"242\" y=\"235\" class=\"fig-label\" font-size=\"12\" font-weight=\"600\">Điểm cần nhìn trong Profiler</text>\n  <text x=\"250\" y=\"254\" class=\"fig-muted\" font-size=\"11\">Timeline ▸ Worker thread</text><text x=\"440\" y=\"254\" class=\"fig-label\" font-size=\"11\">job chạy song song với main</text>\n  <text x=\"250\" y=\"270\" class=\"fig-muted\" font-size=\"11\">Nếu main thread đứng đợi</text><text x=\"440\" y=\"270\" class=\"fig-label\" font-size=\"11\">Complete() bị gọi quá sớm</text>\n</svg>\n<figcaption>Schedule trong Update, Complete trong LateUpdate — khoảng giữa là lúc job chạy song song. Đặt hai lời gọi cạnh nhau là mất sạch lợi ích.</figcaption>\n</figure>\n\n**Script**\n\n```csharp\n// JobLab.cs — Unity 6 (6000.x). Packages: com.unity.burst, com.unity.collections, com.unity.mathematics.\n// Gắn lên GameObject \"JobLab\", kéo một prefab nhỏ (Quad/Sprite) vào Prefab và một TextMeshProUGUI vào Label.\n// Space đổi giữa hai đường. Con số là THỜI GIAN MAIN THREAD phải bỏ ra, không phải tổng công việc.\nusing TMPro;\nusing Unity.Burst;\nusing Unity.Collections;\nusing Unity.Collections.LowLevel.Unsafe;\nusing Unity.Jobs;\nusing Unity.Mathematics;\nusing UnityEngine;\nusing UnityEngine.InputSystem;\nusing UnityEngine.Jobs;\n\npublic class JobLab : MonoBehaviour\n{\n    public enum Mode { MainThread, Jobified }\n\n    [SerializeField] TextMeshProUGUI label;\n    [SerializeField] Transform prefab;\n    [SerializeField] int count = 8000;\n    [SerializeField] Mode mode = Mode.Jobified;\n\n    Transform[] transforms;\n    TransformAccessArray access;\n    NativeArray<float3> velocity;\n    JobHandle handle;\n\n    readonly System.Diagnostics.Stopwatch sw = new();\n    double msThisFrame;\n\n    // Lực chung cho cả hai đường: cùng phép toán, chỉ khác nơi chạy.\n    static float3 Force(float3 p, float t) => new float3(\n        math.sin(p.y * 0.3f + t),\n        math.cos(p.z * 0.3f + t),\n        math.sin(p.x * 0.3f - t));\n\n    void Start()\n    {\n        transforms = new Transform[count];\n        for (int i = 0; i < count; i++)\n            transforms[i] = Instantiate(prefab, Random.insideUnitSphere * 20f, Quaternion.identity, transform);\n\n        access = new TransformAccessArray(transforms);\n        velocity = new NativeArray<float3>(count, Allocator.Persistent);   // sống cả phiên -> Persistent\n        for (int i = 0; i < count; i++) velocity[i] = Random.insideUnitSphere;\n    }\n\n    void OnDestroy()\n    {\n        handle.Complete();                                   // không Dispose khi job còn chạy\n        if (access.isCreated) access.Dispose();\n        if (velocity.IsCreated) velocity.Dispose();\n    }\n\n    void Update()\n    {\n        var kb = Keyboard.current;\n        if (kb != null && kb.spaceKey.wasPressedThisFrame)\n            mode = mode == Mode.Jobified ? Mode.MainThread : Mode.Jobified;\n\n        float dt = Time.deltaTime, t = Time.time;\n        sw.Restart();\n\n        if (mode == Mode.MainThread)\n        {\n            // Truy cập Transform từng cái một: mỗi lần đọc/ghi position là một lần gọi native.\n            for (int i = 0; i < transforms.Length; i++)\n            {\n                float3 p = transforms[i].position;\n                float3 v = (velocity[i] + Force(p, t) * dt) * 0.99f;\n                velocity[i] = v;\n                transforms[i].position = p + v * dt;\n            }\n        }\n        else\n        {\n            handle = new MoveJob { dt = dt, time = t, velocity = velocity }.Schedule(access);\n            // KHÔNG Complete() ở đây — để job chạy song song với phần còn lại của frame.\n        }\n\n        sw.Stop();\n        msThisFrame = sw.Elapsed.TotalMilliseconds;\n    }\n\n    void LateUpdate()\n    {\n        if (mode != Mode.Jobified) { Show(); return; }\n\n        sw.Restart();\n        handle.Complete();          // phần main thread thật sự phải đợi\n        sw.Stop();\n        msThisFrame += sw.Elapsed.TotalMilliseconds;\n        Show();\n    }\n\n    void Show()\n    {\n        if (label != null)\n            label.SetText(\"{0} | {1} hat | main thread: {2:0.00} ms/frame\",\n                          mode == Mode.Jobified ? 1 : 0, count, msThisFrame);\n    }\n\n    [BurstCompile]\n    struct MoveJob : IJobParallelForTransform\n    {\n        public float dt;\n        public float time;\n\n        // Mỗi index chỉ do đúng một phần tử chạm, nên ghi song song là an toàn.\n        // Bỏ attribute này ra thì safety system của Editor sẽ chặn, vì nó không suy được điều đó.\n        [NativeDisableParallelForRestriction] public NativeArray<float3> velocity;\n\n        public void Execute(int i, TransformAccess t)\n        {\n            float3 p = t.position;\n            float3 v = (velocity[i] + Force(p, time) * dt) * 0.99f;\n            velocity[i] = v;\n            t.position = p + v * dt;\n        }\n    }\n}\n```\n\n**Chạy thử**\n- Play ở `Mode = MainThread`, đọc `main thread: … ms/frame`. Nhấn Space sang `Jobified` và đọc lại: con số phải **nhỏ hơn hẳn** vì main thread chỉ còn lập lịch và đợi phần đuôi.\n- Mở Profiler → Timeline: ở chế độ Jobified thấy job nằm trên các **Worker Thread** chạy song song với main thread. Nếu main thread có một khối đợi dài ngay sau `Schedule`, nghĩa là `Complete()` đang bị gọi quá sớm.\n- Thử `Jobs > Burst > Enable Compilation` → tắt, chạy lại: con số ở chế độ Jobified xấu đi nhiều lần. Đó là phần **Burst** đóng góp, tách khỏi phần đa luồng.",
+      "interview": "**Câu hay gặp**\n\n| Mức | Câu hỏi |\n|---|---|\n| Junior | Job System dùng để làm gì? Trong job được đụng những kiểu dữ liệu nào? |\n| Mid | Burst làm code nhanh lên bằng cách nào? Nó có tự đa luồng không? |\n| Mid | Vì sao gom dữ liệu vào mảng struct lại nhanh hơn duyệt danh sách class? |\n| Senior | Anh đã dùng ECS chưa? Nếu chưa thì vì sao? |\n| Senior | Code \"đã jobify\" mà chạy chậm hơn bản cũ. Nguyên nhân? |\n\n**Khung trả lời 60 giây** — \"Anh có kinh nghiệm DOTS không?\"\n\n> Tôi tách ba tầng, vì chúng có chi phí rất khác nhau. **Job System** và **Burst** dùng được ngay trong dự án MonoBehaviour bình thường, chi phí thấp, và tôi dùng cho các vòng lặp nặng — mô phỏng, tìm đường hàng loạt, cập nhật hàng nghìn thực thể. **ECS** là đổi cả kiến trúc và cách nghĩ của đội, nên nó là quyết định của dự án chứ không phải của một người.\n>\n> Điểm tôi thấy nhiều người hiểu nhầm: phần tăng tốc lớn nhất **không đến từ đa luồng mà từ bố cục bộ nhớ**. CPU đọc theo cache line 64 byte; duyệt `List<EnemyClass>` là nhảy 1000 chỗ rải rác trên heap, mỗi cache miss cỡ 100–300 chu kỳ. Đổi sang `NativeArray<float3>` liền nhau là đọc tuần tự và Burst xử lý được nhiều phần tử một lệnh bằng SIMD. Đa luồng chỉ nhân thêm lên phần đó.\n>\n> Nên trong dự án hiện tại, tôi lấy 80% lợi ích bằng 5% chi phí: chuyển đúng vòng lặp nóng sang mảng struct + job + Burst, và giữ nguyên phần còn lại là GameObject.\n\n**Họ sẽ đào tiếp**\n\n- *\"Trong job được dùng gì?\"* → Chỉ struct và native container. Không class, không `string`, không `List<T>`, không API Unity — trừ `TransformAccess` qua `IJobParallelForTransform`. Container chỉ đọc phải đánh `[ReadOnly]`, vừa để an toàn vừa để nhiều job đọc song song được.\n- *\"Jobify rồi mà chậm hơn?\"* → Hai lý do quen thuộc. Một: `Complete()` gọi ngay sau `Schedule()` — main thread đứng đợi, mất hết song song, chỉ còn chi phí lập lịch. Hai: khối lượng quá nhỏ — vài trăm phần tử thì chi phí chia việc lớn hơn công việc; ngưỡng thực tế thường là vài nghìn.\n- *\"Burst có tự song song không?\"* → **Không.** Burst tối ưu một luồng thực thi (SIMD, bỏ bound check, inline). Song song là việc của Job System. Hai thứ độc lập, hay đi cùng nhau nên bị gộp làm một.\n- *\"Đo thế nào cho đúng?\"* → Kiểm tra Burst đang **bật** trước khi đo (tắt để debug rồi quên bật lại là chuyện thường), so **tỉ lệ** chứ đừng so số tuyệt đối giữa hai máy, và nhìn Profiler Timeline để xác nhận job thật sự nằm trên worker thread.\n- *\"Khi nào ECS mới đáng?\"* → Hàng nghìn tới hàng triệu thực thể cùng loại cập nhật cùng cách: RTS lớn, bullet hell, mô phỏng đám đông; hoặc cần determinism cho netcode ghost prediction. Không đáng khi game dựa nặng vào Animator, UI, physics nhân vật — những mảng GameObject vẫn là đường chính.\n\n**Cờ đỏ**\n\n- Nói \"DOTS nhanh hơn\" mà không tách được Job / Burst / ECS.\n- Quên `Dispose` native container, hoặc không biết `Allocator` khác nhau ở chỗ nào.\n- Cho rằng Burst = đa luồng.\n- Đề xuất viết lại cả dự án sang ECS để \"tối ưu\", khi chưa có số đo nào.\n- Đo hiệu năng trong Editor với Burst đang tắt.\n\n**Số / ví dụ nên thuộc**\n\n- Cache line **64 byte**; một cache miss cỡ **100–300 chu kỳ**.\n- Vòng lặp toán học trên dữ liệu liền nhau: thường nhanh **5–20 lần** với Burst — nhưng phải tự đo.\n- `Allocator.Temp` (một frame) · `TempJob` (≤ 4 frame) · `Persistent` (lâu dài).\n- `Schedule()` ở `Update`, `Complete()` ở `LateUpdate`.",
+      "hasAiHowto": true,
       "i18n": {},
       "color": "#4dd4e0"
     },
@@ -3942,7 +4241,7 @@
       ],
       "status": "deep",
       "read": 770,
-      "readIndex": 81,
+      "readIndex": 85,
       "level": "intermediate",
       "refs": [],
       "order": 170,
@@ -3981,7 +4280,7 @@
       ],
       "status": "deep",
       "read": 610,
-      "readIndex": 65,
+      "readIndex": 66,
       "level": "basic",
       "refs": [],
       "order": 10,
@@ -4019,7 +4318,7 @@
       ],
       "status": "deep",
       "read": 660,
-      "readIndex": 70,
+      "readIndex": 72,
       "level": "basic",
       "refs": [],
       "order": 70,
@@ -4058,7 +4357,7 @@
       ],
       "status": "deep",
       "read": 720,
-      "readIndex": 76,
+      "readIndex": 78,
       "level": "intermediate",
       "refs": [],
       "order": 130,
@@ -4096,7 +4395,7 @@
       ],
       "status": "deep",
       "read": 760,
-      "readIndex": 80,
+      "readIndex": 84,
       "level": "advanced",
       "refs": [],
       "order": 160,
@@ -4134,7 +4433,7 @@
       ],
       "status": "deep",
       "read": 740,
-      "readIndex": 78,
+      "readIndex": 80,
       "level": "advanced",
       "refs": [],
       "order": 140,
@@ -4173,7 +4472,7 @@
       ],
       "status": "deep",
       "read": 640,
-      "readIndex": 68,
+      "readIndex": 70,
       "level": "intermediate",
       "refs": [],
       "order": 50,
@@ -4212,7 +4511,7 @@
       ],
       "status": "deep",
       "read": 620,
-      "readIndex": 66,
+      "readIndex": 67,
       "level": "intermediate",
       "refs": [],
       "order": 20,
@@ -4251,7 +4550,7 @@
       ],
       "status": "deep",
       "read": 730,
-      "readIndex": 77,
+      "readIndex": 79,
       "level": "intermediate",
       "refs": [],
       "order": 40,
@@ -4290,7 +4589,7 @@
       ],
       "status": "deep",
       "read": 710,
-      "readIndex": 75,
+      "readIndex": 77,
       "level": "advanced",
       "refs": [],
       "order": 120,
@@ -4329,7 +4628,7 @@
       ],
       "status": "deep",
       "read": 680,
-      "readIndex": 72,
+      "readIndex": 74,
       "level": "intermediate",
       "refs": [],
       "order": 90,
@@ -4367,7 +4666,7 @@
       ],
       "status": "deep",
       "read": 700,
-      "readIndex": 74,
+      "readIndex": 76,
       "level": "intermediate",
       "refs": [],
       "order": 110,
@@ -4983,6 +5282,26 @@
       "type": "related"
     },
     {
+      "source": "game-server-go",
+      "target": "unity-multiplayer",
+      "type": "related"
+    },
+    {
+      "source": "game-server-go",
+      "target": "architecture-patterns",
+      "type": "related"
+    },
+    {
+      "source": "game-server-go",
+      "target": "unity-save-data",
+      "type": "related"
+    },
+    {
+      "source": "game-server-go",
+      "target": "economy-design",
+      "type": "related"
+    },
+    {
       "source": "performance",
       "target": "pathfinding",
       "type": "related"
@@ -5213,6 +5532,26 @@
       "type": "related"
     },
     {
+      "source": "unity-addressables",
+      "target": "unity-build-platform",
+      "type": "related"
+    },
+    {
+      "source": "unity-addressables",
+      "target": "unity-optimization",
+      "type": "related"
+    },
+    {
+      "source": "unity-addressables",
+      "target": "unity-project-structure",
+      "type": "related"
+    },
+    {
+      "source": "unity-addressables",
+      "target": "unity-csharp-memory",
+      "type": "related"
+    },
+    {
       "source": "unity-animation",
       "target": "animation-game",
       "type": "related"
@@ -5293,6 +5632,31 @@
       "type": "related"
     },
     {
+      "source": "unity-csharp-memory",
+      "target": "unity-optimization",
+      "type": "related"
+    },
+    {
+      "source": "unity-csharp-memory",
+      "target": "unity-game-loop",
+      "type": "related"
+    },
+    {
+      "source": "unity-csharp-memory",
+      "target": "unity-design-patterns",
+      "type": "related"
+    },
+    {
+      "source": "unity-csharp-memory",
+      "target": "performance",
+      "type": "related"
+    },
+    {
+      "source": "unity-csharp-memory",
+      "target": "unity-build-platform",
+      "type": "related"
+    },
+    {
       "source": "unity-design-patterns",
       "target": "architecture-patterns",
       "type": "related"
@@ -5310,6 +5674,26 @@
     {
       "source": "unity-design-patterns",
       "target": "agent-guardrails",
+      "type": "related"
+    },
+    {
+      "source": "unity-dots-jobs",
+      "target": "unity-optimization",
+      "type": "related"
+    },
+    {
+      "source": "unity-dots-jobs",
+      "target": "unity-csharp-memory",
+      "type": "related"
+    },
+    {
+      "source": "unity-dots-jobs",
+      "target": "performance",
+      "type": "related"
+    },
+    {
+      "source": "unity-dots-jobs",
+      "target": "unity-physics",
       "type": "related"
     },
     {
@@ -5968,6 +6352,16 @@
       "type": "mention"
     },
     {
+      "source": "game-server-go",
+      "target": "playtesting-metrics",
+      "type": "mention"
+    },
+    {
+      "source": "game-server-go",
+      "target": "randomness",
+      "type": "mention"
+    },
+    {
       "source": "production",
       "target": "architecture-patterns",
       "type": "mention"
@@ -5990,6 +6384,11 @@
     {
       "source": "production",
       "target": "performance",
+      "type": "mention"
+    },
+    {
+      "source": "production",
+      "target": "game-server-go",
       "type": "mention"
     },
     {
