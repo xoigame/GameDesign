@@ -4,7 +4,7 @@
 > Đây là mục lục phẳng của toàn bộ kho kiến thức, dành cho AI agent (Codex / Claude Code)
 > đọc nhanh trước khi mở từng file `content/**/*.md` chi tiết.
 
-Cập nhật: `2026-09-12T14:47:01.515Z` · 85 node · 72 deep · 13 stub · 124429 từ
+Cập nhật: `2026-09-12T14:49:37.095Z` · 85 node · 72 deep · 13 stub · 126229 từ
 
 Mức độ: **29 cơ bản** · 37 trung cấp · 19 chuyên sâu
 
@@ -183,7 +183,7 @@ thức cơ bản (ai cũng nên đọc), trung cấp (cần nền), hay chuyên 
     - ○ `#80` **Tối ưu hoá Unity** `#unity-optimization` 🤖 💻 🎤 — Đo trên máy đích với build thật, xác định CPU hay GPU trước khi chạm code — và nhận ra rằng import settings quyết định hiệu năng nhiều hơn mọi thuật toán bạn viết. → `content/09-unity/unity-optimization.md`
     - ○ `#81` **Job System, Burst và DOTS** `#unity-dots-jobs` 🤖 💻 🎤 — Ba tầng tách biệt — Job System, Burst, ECS — và lý do hầu hết dự án chỉ nên leo hai tầng đầu. Tư duy data-oriented, luật an toàn của job, và khi nào ECS đáng giá thật. → `content/09-unity/unity-dots-jobs.md`
     - ○ `#82` **Build & nền tảng** `#unity-build-platform` 🤖 💻 🎤 — Build ra máy thật từ tuần đầu và build hàng đêm trên CI — vì IL2CPP, stripping, bộ nhớ và driver GPU là những lỗi chỉ tồn tại ngoài Editor, và chúng tích luỹ âm thầm. → `content/09-unity/unity-build-platform.md`
-    - ○ `#83` **Addressables và bộ nhớ asset** `#unity-addressables` — Ba cách tham chiếu asset và hậu quả bộ nhớ của từng cách, đếm tham chiếu của Addressables, asset bị nhân bản trong nhiều bundle, và quy trình cập nhật nội dung từ xa mà không phải nộp lại store. → `content/09-unity/unity-addressables.md`
+    - ○ `#83` **Addressables và bộ nhớ asset** `#unity-addressables` 🤖 💻 🎤 — Ba cách tham chiếu asset và hậu quả bộ nhớ của từng cách, đếm tham chiếu của Addressables, asset bị nhân bản trong nhiều bundle, và quy trình cập nhật nội dung từ xa mà không phải nộp lại store. → `content/09-unity/unity-addressables.md`
     - ○ `#84` **Multiplayer & Netcode** `#unity-multiplayer` 🤖 💻 🎤 — Multiplayer làm từ ngày đầu hoặc không bao giờ — retrofit gần như là viết lại. Chọn stack theo thể loại và ngân sách, không tin client, và test với lag giả từ tuần đầu. → `content/09-unity/unity-multiplayer.md`
     - ◐ `#85` **Editor Tools tự viết** `#unity-editor-tools` 🤖 💻 🎤 — Một giờ viết tool tiết kiệm mười giờ của team; tool là thứ để designer không phải gọi lập trình viên — và là việc AI agent làm tốt nhất trong toàn bộ dự án Unity. → `content/09-unity/unity-editor-tools.md`
   - ● `#19` **Blueprints** `#blueprints` 🤖 🎮 🇬🇧 — Nơi chứa GDD của game thật bạn đang làm — lớp mà AI agent trực tiếp thực thi. → `content/07-blueprints/index.md`
