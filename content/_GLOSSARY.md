@@ -409,15 +409,15 @@ see: game-server-go
 
 ## idempotency | idempotent
 Tính chất "gọi lại lần thứ hai không làm đổi kết quả". Với lệnh ghi đi qua mạng di động, đây là điều kiện tối thiểu để retry không nhân đôi vật phẩm — làm bằng một request_id do client sinh và ràng buộc UNIQUE ở database.
-see: game-server-go
+see: game-database
 
 ## sổ cái | ledger | append-only
 Bảng chỉ thêm, không sửa không xoá, mỗi thay đổi tài nguyên một dòng. Cho phép dựng lại số dư khi nghi ngờ, hoàn đồ có bằng chứng, và đo faucet/drain thật mà không cần dựng thêm hệ thống đo nào.
-see: game-server-go
+see: game-database
 
 ## ZSET | sorted set
 Kiểu dữ liệu Redis giữ tập phần tử kèm điểm và luôn ở trạng thái đã sắp xếp. Là cách đúng để làm bảng xếp hạng: lấy hạng của một người là O(log N), thay vì ORDER BY trên cả triệu dòng ở mỗi request.
-see: game-server-go
+see: game-database
 
 ## authoritative | server authoritative
 Server quyết kết quả, client chỉ gửi ý định. Endpoint nào nhận nguyên trạng thái (vàng, inventory) từ client là endpoint tự nhân bản vật phẩm — và nó trông hoàn toàn bình thường lúc review code.
@@ -429,7 +429,7 @@ see: game-server-go
 
 ## CCU | concurrent users
 Số người chơi online cùng lúc — đơn vị để tính chi phí server và để chọn kiến trúc. Khác hẳn DAU: 100.000 DAU có thể chỉ tương ứng 3.000 CCU.
-see: game-server-go
+see: backend-go
 
 ## p99
 Ngưỡng mà 99% request nằm dưới. Số trung bình luôn đẹp và luôn che mất chỗ đau; p99 mới là cái người chơi kể lại trên store.

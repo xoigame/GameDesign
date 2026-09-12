@@ -86,7 +86,7 @@ mọi metadata khác chỉ tồn tại ở file gốc. Quy tắc đầy đủ �
 
 Cú pháp `[[node-id]]` trong nội dung là liên kết tới node khác. Ví dụ `[[behavior-tree]]` → `content/04-game-ai/behavior-tree.md`.
 
-## Bản đồ nhanh 9 nhánh
+## Bản đồ nhanh 10 nhánh
 
 | Id nhánh | Nội dung | Mở khi cần |
 |---|---|---|
@@ -98,6 +98,7 @@ Cú pháp `[[node-id]]` trong nội dung là liên kết tới node khác. Ví d
 | `ai-assisted-dev` | Quy trình làm game với AI, GDD cho AI, prompt pattern, guardrails | **Đọc khi làm việc trong kho này** |
 | `production` | Kiến trúc, data-driven, playtest metrics, hiệu năng | Viết code, tổ chức dự án |
 | `unity` | Kinh nghiệm thực chiến Unity: vòng đời game, pattern, vật lý, animation, input, camera, UI, audio, VFX, shader, ánh sáng, tối ưu, build, multiplayer, editor tools | **Viết code Unity** — đọc node tương ứng trước khi sinh code |
+| `backend-go` | Backend Go & database: API stateless, room server, Postgres/Redis, dữ liệu kinh tế, idempotency | **Làm phần chạy trên máy chủ** — tài khoản, IAP, bảng xếp hạng, phòng chơi chung |
 | `blueprints` | GDD dự án thật + template | **Thực thi yêu cầu của người dùng** |
 
 **Lưu ý phân biệt:** `game-ai` là AI *trong* game (NPC thông minh). `ai-assisted-dev` là dùng AI để *làm ra* game. Đừng lẫn hai nhánh này.
@@ -117,7 +118,7 @@ npm run check
 ```
 Báo lỗi trùng id, `parent`/`related` trỏ sai, `[[wiki-link]]` gãy, chu trình trong cây.
 
-**Không tự ý:** đổi cấu trúc 9 nhánh, đổi `id` của node đã tồn tại, xoá node — hãy hỏi người dùng trước.
+**Không tự ý:** đổi cấu trúc nhánh, đổi `id` của node đã tồn tại, xoá node — hãy hỏi người dùng trước.
 
 ## Khi được nhờ làm game
 

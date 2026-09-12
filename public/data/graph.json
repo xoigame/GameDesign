@@ -1,25 +1,25 @@
 {
-  "generatedAt": "2026-09-12T15:22:03.852Z",
+  "generatedAt": "2026-09-12T21:43:33.267Z",
   "root": "root",
   "stats": {
-    "nodes": 91,
-    "branches": 9,
-    "deep": 78,
+    "nodes": 94,
+    "branches": 10,
+    "deep": 81,
     "stub": 13,
-    "relations": 453,
-    "withPrompt": 91,
-    "withUnity": 66,
-    "withAiHowto": 29,
+    "relations": 474,
+    "withPrompt": 94,
+    "withUnity": 67,
+    "withAiHowto": 32,
     "glossaryTerms": 149,
-    "withCode": 22,
-    "withInterview": 27,
+    "withCode": 23,
+    "withInterview": 28,
     "translated": {
       "en": 12
     },
     "basic": 29,
-    "intermediate": 40,
-    "advanced": 22,
-    "words": 142179
+    "intermediate": 41,
+    "advanced": 24,
+    "words": 147407
   },
   "tags": [
     "accessibility",
@@ -111,7 +111,9 @@
     "pillar",
     "planning",
     "platform",
+    "plugin",
     "polish",
+    "postgres",
     "practical",
     "presentation",
     "process",
@@ -122,6 +124,8 @@
     "prompt",
     "psychology",
     "publish",
+    "realtime",
+    "redis",
     "rendering",
     "retention",
     "rng",
@@ -138,6 +142,7 @@
     "template",
     "testing",
     "theory",
+    "third-party",
     "tooling",
     "ui",
     "unity",
@@ -1128,7 +1133,7 @@
           "idempotent"
         ],
         "body": "Tính chất \"gọi lại lần thứ hai không làm đổi kết quả\". Với lệnh ghi đi qua mạng di động, đây là điều kiện tối thiểu để retry không nhân đôi vật phẩm — làm bằng một request_id do client sinh và ràng buộc UNIQUE ở database.",
-        "see": "game-server-go"
+        "see": "game-database"
       },
       "idempotent": {
         "term": "idempotency",
@@ -1136,7 +1141,7 @@
           "idempotent"
         ],
         "body": "Tính chất \"gọi lại lần thứ hai không làm đổi kết quả\". Với lệnh ghi đi qua mạng di động, đây là điều kiện tối thiểu để retry không nhân đôi vật phẩm — làm bằng một request_id do client sinh và ràng buộc UNIQUE ở database.",
-        "see": "game-server-go"
+        "see": "game-database"
       },
       "so cai": {
         "term": "sổ cái",
@@ -1145,7 +1150,7 @@
           "append-only"
         ],
         "body": "Bảng chỉ thêm, không sửa không xoá, mỗi thay đổi tài nguyên một dòng. Cho phép dựng lại số dư khi nghi ngờ, hoàn đồ có bằng chứng, và đo faucet/drain thật mà không cần dựng thêm hệ thống đo nào.",
-        "see": "game-server-go"
+        "see": "game-database"
       },
       "ledger": {
         "term": "sổ cái",
@@ -1154,7 +1159,7 @@
           "append-only"
         ],
         "body": "Bảng chỉ thêm, không sửa không xoá, mỗi thay đổi tài nguyên một dòng. Cho phép dựng lại số dư khi nghi ngờ, hoàn đồ có bằng chứng, và đo faucet/drain thật mà không cần dựng thêm hệ thống đo nào.",
-        "see": "game-server-go"
+        "see": "game-database"
       },
       "append-only": {
         "term": "sổ cái",
@@ -1163,7 +1168,7 @@
           "append-only"
         ],
         "body": "Bảng chỉ thêm, không sửa không xoá, mỗi thay đổi tài nguyên một dòng. Cho phép dựng lại số dư khi nghi ngờ, hoàn đồ có bằng chứng, và đo faucet/drain thật mà không cần dựng thêm hệ thống đo nào.",
-        "see": "game-server-go"
+        "see": "game-database"
       },
       "zset": {
         "term": "ZSET",
@@ -1171,7 +1176,7 @@
           "sorted set"
         ],
         "body": "Kiểu dữ liệu Redis giữ tập phần tử kèm điểm và luôn ở trạng thái đã sắp xếp. Là cách đúng để làm bảng xếp hạng: lấy hạng của một người là O(log N), thay vì ORDER BY trên cả triệu dòng ở mỗi request.",
-        "see": "game-server-go"
+        "see": "game-database"
       },
       "sorted set": {
         "term": "ZSET",
@@ -1179,7 +1184,7 @@
           "sorted set"
         ],
         "body": "Kiểu dữ liệu Redis giữ tập phần tử kèm điểm và luôn ở trạng thái đã sắp xếp. Là cách đúng để làm bảng xếp hạng: lấy hạng của một người là O(log N), thay vì ORDER BY trên cả triệu dòng ở mỗi request.",
-        "see": "game-server-go"
+        "see": "game-database"
       },
       "authoritative": {
         "term": "authoritative",
@@ -1209,7 +1214,7 @@
           "concurrent users"
         ],
         "body": "Số người chơi online cùng lúc — đơn vị để tính chi phí server và để chọn kiến trúc. Khác hẳn DAU: 100.000 DAU có thể chỉ tương ứng 3.000 CCU.",
-        "see": "game-server-go"
+        "see": "backend-go"
       },
       "concurrent users": {
         "term": "CCU",
@@ -1217,7 +1222,7 @@
           "concurrent users"
         ],
         "body": "Số người chơi online cùng lúc — đơn vị để tính chi phí server và để chọn kiến trúc. Khác hẳn DAU: 100.000 DAU có thể chỉ tương ứng 3.000 CCU.",
-        "see": "game-server-go"
+        "see": "backend-go"
       },
       "p99": {
         "term": "p99",
@@ -1310,7 +1315,9 @@
     "liveops",
     "tech-stack",
     "performance",
+    "backend-go",
     "game-server-go",
+    "game-database",
     "asset-generation",
     "unity",
     "unity-game-loop",
@@ -1332,6 +1339,7 @@
     "unity-build-platform",
     "unity-addressables",
     "unity-multiplayer",
+    "unity-third-party",
     "unity-editor-tools",
     "unity-testing-ci",
     "unity-debug-crash"
@@ -3015,7 +3023,7 @@
       ],
       "status": "stub",
       "read": 590,
-      "readIndex": 68,
+      "readIndex": 70,
       "level": "advanced",
       "refs": [],
       "order": 50,
@@ -3284,47 +3292,6 @@
       "color": "#f783ac"
     },
     {
-      "id": "game-server-go",
-      "title": "Server Go cho game",
-      "summary": "Backend Go cho game Unity — tách API trạng thái khỏi phòng realtime, để Postgres giữ chân lý và Redis giữ thứ hỏng được, và không bao giờ tin con số client gửi lên.",
-      "icon": "🐹",
-      "parent": "production",
-      "children": [],
-      "depth": 2,
-      "branch": "production",
-      "tags": [
-        "production",
-        "backend",
-        "server",
-        "database",
-        "go",
-        "live-ops"
-      ],
-      "related": [
-        "unity-multiplayer",
-        "architecture-patterns",
-        "unity-save-data",
-        "economy-design"
-      ],
-      "status": "deep",
-      "read": 585,
-      "readIndex": 67,
-      "level": "advanced",
-      "refs": [],
-      "order": 60,
-      "collapsed": false,
-      "path": "06-production/game-server-go.md",
-      "words": 4423,
-      "body": "Game online có hai thứ cùng tên \"server\" và người ta hay gộp làm một: **server netcode** giữ trận đấu đồng bộ từng tick, và **backend** giữ tài khoản, đồ đạc, tiền, bảng xếp hạng. Node này nói về cái thứ hai, viết bằng Go, cho client Unity. Phần netcode nằm ở [[unity-multiplayer]].\n\n## Hai cái \"server\", hai bài toán\n\n| | Server netcode (trận đấu) | Backend (tài khoản, kinh tế) |\n|---|---|---|\n| Trạng thái | Trong RAM, sống theo trận | Trong database, sống mãi |\n| Mất một process | Mất một trận | Mất tiền của người chơi |\n| Nhịp | 20–60 tick mỗi giây | Vài request mỗi phút mỗi người |\n| Giao thức | UDP hoặc WebSocket nhị phân | HTTPS + JSON |\n| Scale | Theo số phòng, phòng dính vào một máy | Theo CCU, nhân bản vô tư |\n| Deploy | Phải drain, không kill giữa trận | Rolling restart bất cứ lúc nào |\n| Hỏng thì | Giật, rớt trận | Nhân đôi vật phẩm, lạm phát, mất save |\n\nKhác nhau ở **mọi dòng**, nên đừng nhét chung một process. Hai lỗi kinh điển của việc gộp: giữ inventory trong RAM của phòng cho \"nhanh\" rồi phòng crash là đồ bay; hoặc phòng ghi thẳng vào Postgres mỗi tick — 30 write mỗi giây mỗi phòng, database chết ở phòng thứ năm mươi.\n\n<figure class=\"fig\">\n<svg viewBox=\"0 0 660 300\" role=\"img\" aria-label=\"Client Unity nối tới API Go stateless và Room server Go stateful; API dùng PostgreSQL và Redis; worker chạy job định kỳ\">\n  <defs>\n    <marker id=\"gsg-a\" viewBox=\"0 0 10 10\" refX=\"9\" refY=\"5\" markerWidth=\"7\" markerHeight=\"7\" orient=\"auto\">\n      <path d=\"M0 0 L10 5 L0 10 z\" fill=\"#6ea8fe\"/>\n    </marker>\n  </defs>\n  <g class=\"fig-box-g\">\n    <rect x=\"8\"   y=\"108\" width=\"118\" height=\"66\" rx=\"9\" class=\"fig-box\"/>\n    <rect x=\"196\" y=\"28\"  width=\"184\" height=\"62\" rx=\"9\" class=\"fig-box\"/>\n    <rect x=\"196\" y=\"122\" width=\"184\" height=\"62\" rx=\"9\" class=\"fig-box\"/>\n    <rect x=\"196\" y=\"218\" width=\"184\" height=\"56\" rx=\"9\" class=\"fig-box\"/>\n    <rect x=\"450\" y=\"28\"  width=\"196\" height=\"62\" rx=\"9\" class=\"fig-box\"/>\n    <rect x=\"450\" y=\"122\" width=\"196\" height=\"62\" rx=\"9\" class=\"fig-box\"/>\n    <rect x=\"450\" y=\"218\" width=\"196\" height=\"56\" rx=\"9\" class=\"fig-box\"/>\n  </g>\n  <text x=\"67\"  y=\"136\" text-anchor=\"middle\" class=\"fig-label\" font-size=\"13\">Unity client</text>\n  <text x=\"67\"  y=\"155\" text-anchor=\"middle\" class=\"fig-muted\" font-size=\"11\">chỉ gửi ý định</text>\n  <text x=\"288\" y=\"54\"  text-anchor=\"middle\" class=\"fig-label\" font-size=\"13\">API Go — stateless</text>\n  <text x=\"288\" y=\"74\"  text-anchor=\"middle\" class=\"fig-muted\" font-size=\"11\">REST/JSON · JWT · N bản</text>\n  <text x=\"288\" y=\"148\" text-anchor=\"middle\" class=\"fig-label\" font-size=\"13\">Room server Go — stateful</text>\n  <text x=\"288\" y=\"168\" text-anchor=\"middle\" class=\"fig-muted\" font-size=\"11\">WebSocket · tick 20Hz · RAM</text>\n  <text x=\"288\" y=\"242\" text-anchor=\"middle\" class=\"fig-label\" font-size=\"13\">Worker / cron</text>\n  <text x=\"288\" y=\"261\" text-anchor=\"middle\" class=\"fig-muted\" font-size=\"11\">reset mùa · đối soát IAP</text>\n  <text x=\"548\" y=\"54\"  text-anchor=\"middle\" class=\"fig-label\" font-size=\"13\">PostgreSQL</text>\n  <text x=\"548\" y=\"74\"  text-anchor=\"middle\" class=\"fig-muted\" font-size=\"11\">nguồn chân lý · transaction</text>\n  <text x=\"548\" y=\"148\" text-anchor=\"middle\" class=\"fig-label\" font-size=\"13\">Redis</text>\n  <text x=\"548\" y=\"168\" text-anchor=\"middle\" class=\"fig-muted\" font-size=\"11\">phiên · ZSET · matchmaking</text>\n  <text x=\"548\" y=\"242\" text-anchor=\"middle\" class=\"fig-label\" font-size=\"13\">ClickHouse / S3</text>\n  <text x=\"548\" y=\"261\" text-anchor=\"middle\" class=\"fig-muted\" font-size=\"11\">event, replay</text>\n  <g stroke=\"#6ea8fe\" stroke-width=\"2\" marker-end=\"url(#gsg-a)\" fill=\"none\">\n    <path d=\"M126 128 Q170 128 170 60 H192\"/>\n    <path d=\"M126 154 Q170 154 170 153 H192\"/>\n    <path d=\"M380 50 H446\"/>\n    <path d=\"M380 74 Q416 74 416 140 H446\"/>\n    <path d=\"M380 160 H446\"/>\n    <path d=\"M380 246 Q416 246 416 180 H446\"/>\n    <path d=\"M288 122 V96\"/>\n  </g>\n  <text x=\"168\" y=\"108\" text-anchor=\"middle\" class=\"fig-muted\" font-size=\"10\">HTTPS</text>\n  <text x=\"163\" y=\"176\" text-anchor=\"middle\" class=\"fig-muted\" font-size=\"10\">WebSocket</text>\n  <text x=\"330\" y=\"112\" text-anchor=\"start\" class=\"fig-muted\" font-size=\"10\">kết quả trận</text>\n</svg>\n<figcaption>Ba loại process, ba vòng đời khác nhau. Chỉ API và worker được phép ghi vào nguồn chân lý; room server gửi kết quả trận qua API thay vì tự ghi.</figcaption>\n</figure>\n\n## Vì sao Go — và cái giá của nó\n\n- **Goroutine rẻ.** Mỗi kết nối hai goroutine (một đọc, một ghi), stack khởi điểm 8 KB và tự lớn. Mười nghìn kết nối WebSocket trên một VM 2 vCPU là chuyện bình thường, không cần kiến trúc sự kiện vòng vèo như Node.\n- **GC dừng dưới 1ms.** Đủ cho backend và cho phòng tick 20–30Hz. **Không** đủ để thay C++/Rust ở simulation xác định 120Hz có rollback — ở đó mỗi allocation trong vòng lặp nóng mới là kẻ thù, và Go không cho bạn kiểm soát bố cục bộ nhớ.\n- **Một file binary tĩnh.** `GOOS=linux go build` rồi scp một file, hoặc image `FROM gcr.io/distroless/static` khoảng 15 MB. Không runtime cài kèm, không lệch phiên bản .NET giữa máy dev và máy chủ.\n- **Hệ sinh thái đúng nghề.** Agones (điều phối game server trên k8s), Open Match (matchmaking), Nakama (backend trọn gói), pgx, go-redis — đều viết bằng Go, nên khi bí thì đọc được mã nguồn của chính thứ mình đang dùng.\n\n**Cái giá phải trả: không dùng chung code với Unity.** Backend C# (ASP.NET Core) cho phép share nguyên file `DamageCalculator.cs` giữa client và server — với Go bạn định nghĩa struct hai lần, và **hai bản sẽ lệch nhau** vào một ngày không ai nhớ. Hai cách sống chung:\n\n1. Định nghĩa message **một lần** bằng protobuf hoặc FlatBuffers, sinh ra cả `.go` lẫn `.cs` trong CI. Lệch schema thành lỗi biên dịch thay vì lỗi runtime.\n2. Chia ranh giới theo loại logic: Go làm tài khoản, kinh tế, matchmaking, bảng xếp hạng (chỗ không cần mô phỏng gameplay); còn nếu cần server mô phỏng chiến đấu authoritative thì để Unity headless chạy chính code đó — xem [[unity-multiplayer]].\n\nChọn Go vì **vận hành rẻ và chịu tải tốt**, đừng chọn vì \"nhanh hơn C#\". Ở tải của một game indie thì cả hai đều thừa sức; thứ giết bạn là một query thiếu index, không phải ngôn ngữ.\n\n## Ba loại process, tách ngay từ đầu\n\n| Process | Giữ gì trong RAM | Restart giữa chừng |\n|---|---|---|\n| **API stateless** | Không gì cả | Vô hại — cứ rolling restart |\n| **Room server** | Toàn bộ trận đang chạy | Mất trận → phải drain trước khi thoát |\n| **Worker / cron** | Không gì cả | Vô hại, nhưng job phải chạy lại được từ đầu |\n\nLuật một câu: **state trong RAM chỉ được phép là thứ mất đi cũng không sao.** Không được phép mất thì nó phải nằm trong Postgres **trước khi** server trả về 200.\n\nĐừng nhét job nặng vào process API. Một job \"quét toàn bộ tài khoản để reset mùa\" chạy chung sẽ ăn hết pool kết nối database và request của người chơi bắt đầu timeout — hiện tượng quan sát được là \"game lag mỗi đầu giờ\", nguyên nhân lại nằm ở cron.\n\n## Một goroutine sở hữu một phòng\n\nCách viết room server sai nhất là một `map[string]*Room` dùng chung cộng với `sync.Mutex` rải khắp nơi: nó chạy đúng khi bạn test một mình và hỏng khi có hai mươi người. Cách đúng trong Go là **actor**: mỗi phòng một goroutine, goroutine đó là **chủ sở hữu duy nhất** của state, mọi thứ khác đi vào qua channel. Không mutex, nên không có deadlock và không có race để mà đi tìm.\n\n```go\n// Một phòng = một goroutine. Trường players CHỈ goroutine Run() được đụng tới.\ntype Room struct {\n    id      string\n    inbox   chan Msg          // có buffer: đầy thì ngắt client, không bao giờ block vòng lặp\n    join    chan *Player\n    leave   chan *Player\n    players map[string]*Player\n}\n\nfunc (r *Room) Run(ctx context.Context) {\n    const tickRate = 20\n    ticker := time.NewTicker(time.Second / tickRate)\n    defer ticker.Stop()\n    emptySince := time.Now()\n\n    for {\n        select {\n        case <-ctx.Done():                       // deploy: báo cho client rồi thoát sạch\n            r.broadcast(Msg{Type: \"server_shutdown\"})\n            return\n        case p := <-r.join:\n            r.players[p.ID] = p\n        case p := <-r.leave:\n            delete(r.players, p.ID)\n            if len(r.players) == 0 {\n                emptySince = time.Now()\n            }\n        case m := <-r.inbox:\n            r.apply(m)                           // ý định của client, đã validate\n        case now := <-ticker.C:\n            r.step(1.0 / tickRate)\n            r.broadcast(r.snapshot())\n            if len(r.players) == 0 && now.Sub(emptySince) > 30*time.Second {\n                return                           // phòng rỗng 30 giây thì tự dọn\n            }\n        }\n    }\n}\n\n// Gọi từ goroutine đọc socket. KHÔNG được block vòng lặp phòng vì một client mạng chậm.\nfunc (r *Room) Send(m Msg) bool {\n    select {\n    case r.inbox <- m:\n        return true\n    default:\n        return false      // hàng đợi đầy: client spam hoặc đã treo → ngắt kết nối nó\n    }\n}\n```\n\nBa lỗi đồng thời hay gặp, theo thứ tự mức độ phổ biến:\n\n- **Goroutine rò.** Client ngắt kết nối nhưng goroutine ghi vẫn chờ trên channel mãi mãi. Mọi goroutine phải có đường thoát bằng `ctx.Done()`, và `close` channel ở đúng một phía. Triệu chứng: số goroutine trong `/debug/pprof/goroutine` chỉ đi lên, không bao giờ xuống.\n- **Channel không buffer trong vòng lặp phòng.** `make(chan Msg)` bắt người gửi chờ người nhận; một client mạng 3G đủ để treo cả phòng. Có buffer thì phải có chính sách khi đầy — **drop hoặc kick**, không phải chờ.\n- **Ticker trôi.** Nếu một tick xử lý lâu hơn 50ms, `time.Ticker` bỏ nhịp chứ không dồn lại. Muốn mô phỏng đúng thời gian thì cộng dồn delta thật và chạy bù, đừng giả định mỗi tick đúng 50ms.\n\n`go build` không bắt được data race. Chạy `go test -race ./...` trong CI, và ít nhất một lần chạy server thật với `-race` dưới tải giả lập.\n\n## Giao thức: chọn theo loại dữ liệu\n\n| Giao thức | Độ trễ thực tế | Phía Unity | Dùng cho |\n|---|---|---|---|\n| REST + JSON | 50–200ms | `UnityWebRequest` có sẵn | Mọi thứ meta: login, shop, inventory, quest |\n| WebSocket + JSON | 30–80ms | cần thư viện (NativeWebSocket) | Chat, phòng chờ, turn-based, thông báo đẩy |\n| WebSocket + nhị phân | 20–60ms | thêm codegen protobuf | Realtime 10–30Hz, nhiều người một phòng |\n| UDP / KCP / QUIC | 10–40ms | thư viện riêng, WebGL không chạy | Action realtime, FPS |\n| gRPC | thấp | khó với IL2CPP và WebGL | **Giữa các service backend**, không nói chuyện thẳng với client |\n\nMặc định đúng cho phần lớn game mobile và indie: **REST cho meta, WebSocket cho realtime nhẹ.** Đừng mở màn bằng gRPC tới client — bạn đánh đổi khả năng debug bằng `curl` và khả năng đọc log proxy để lấy vài mili giây không ai cảm nhận được.\n\n## Database: mỗi loại dữ liệu về đúng chỗ\n\n| Dữ liệu | Chỗ của nó | Vì sao |\n|---|---|---|\n| Tài khoản, inventory, tiền, tiến trình | PostgreSQL | Cần transaction, không được phép mất |\n| Phiên đăng nhập, token thu hồi | Redis | Tự hết hạn; mất thì đăng nhập lại, không ai chết |\n| Bảng xếp hạng | Redis ZSET, cuối mùa chốt xuống Postgres | `ZREVRANK` là O(log N); `ORDER BY` trên một triệu dòng mỗi request thì không |\n| Hàng đợi matchmaking, presence | Redis | Sống vài giây, tốc độ quan trọng hơn độ bền |\n| Save state đơn, client tự sở hữu | Cột `jsonb` trong Postgres | Không cần quan hệ, chỉ cần lưu và trả nguyên khối |\n| Event analytics | ClickHouse / BigQuery / file | Postgres sẽ phình và chậm dần. Xem [[playtesting-metrics]] |\n| Replay, ảnh người chơi tạo | Object storage (S3/R2) | Đừng nhét binary lớn vào database |\n\nChưa biết chọn gì thì: **Postgres một mình đủ cho vài nghìn CCU đầu tiên.** Nó làm được cả `jsonb`, cả hàng đợi (`SELECT … FOR UPDATE SKIP LOCKED`), cả khoá phân tán (advisory lock). Thêm Redis khi đo được điểm nghẽn thật, không phải vì sơ đồ kiến trúc trông chuyên nghiệp hơn.\n\n### Sáu luật cho dữ liệu kinh tế\n\n1. **Tiền là số nguyên.** `bigint`, không bao giờ `float`. Vàng, gem, EXP, điểm — tất cả số nguyên; muốn chia nhỏ thì đổi đơn vị (lưu 1 vàng = 100 đơn vị) chứ đừng dùng dấu phẩy động.\n2. **Ràng buộc đặt ở database, không chỉ trong code.** `CHECK (gold >= 0)`, `UNIQUE (request_id)`, khoá ngoại. Code sẽ có bug; database là lưới an toàn cuối cùng và nó không bao giờ quên.\n3. **Sổ cái append-only.** Mỗi thay đổi tài nguyên là một dòng, không sửa, không xoá. Nó cho bạn ba thứ: dựng lại số dư khi nghi ngờ, hoàn đồ cho người chơi có bằng chứng, và đo faucet/drain thật của [[economy-design]] mà không cần dựng thêm hệ thống đo nào.\n4. **Mọi lệnh ghi đều idempotent.** Client sinh `request_id`, database `UNIQUE` nó. Mạng rớt giữa chừng là chuyện hàng ngày trên 4G; không có idempotency thì mỗi lần rớt là một lần nhân đôi hoặc mất trắng.\n5. **Một transaction cho một quyết định.** Trừ tiền và cộng đồ không được là hai request khác nhau — hai request là hai cơ hội để chỉ một nửa xảy ra.\n6. **Thời gian là của server.** Dùng `now()` của Postgres cho mọi mốc. Đọc timestamp client gửi lên nghĩa là mời người chơi chỉnh đồng hồ máy để tua idle game.\n\n```sql\n-- Số dư: giá trị hiện tại, có ràng buộc không âm ngay ở tầng database.\nCREATE TABLE wallet (\n  user_id    uuid PRIMARY KEY,\n  gold       bigint NOT NULL DEFAULT 0 CHECK (gold >= 0),\n  updated_at timestamptz NOT NULL DEFAULT now()\n);\n\n-- Sổ cái: mỗi thay đổi một dòng. request_id UNIQUE chính là cái chặn nhân đôi.\nCREATE TABLE wallet_tx (\n  id            bigserial PRIMARY KEY,\n  request_id    text UNIQUE NOT NULL,\n  user_id       uuid NOT NULL REFERENCES wallet(user_id),\n  delta         bigint NOT NULL,\n  balance_after bigint NOT NULL,\n  reason        text NOT NULL,          -- 'quest:12', 'buy:sword', 'iap:gems_500'\n  created_at    timestamptz NOT NULL DEFAULT now()\n);\nCREATE INDEX ON wallet_tx (user_id, created_at DESC);\n\nCREATE TABLE inventory (\n  user_id uuid NOT NULL,\n  item_id text NOT NULL,\n  qty     int  NOT NULL CHECK (qty >= 0),\n  PRIMARY KEY (user_id, item_id)\n);\n```\n\n<figure class=\"fig\">\n<svg viewBox=\"0 0 660 250\" role=\"img\" aria-label=\"Client gửi lệnh mua kèm requestId, server ghi vào database rồi mạng rớt; client gửi lại cùng requestId và server trả kết quả cũ mà không trừ tiền lần hai\">\n  <defs>\n    <marker id=\"gsg-b\" viewBox=\"0 0 10 10\" refX=\"9\" refY=\"5\" markerWidth=\"7\" markerHeight=\"7\" orient=\"auto\">\n      <path d=\"M0 0 L10 5 L0 10 z\" fill=\"#6ea8fe\"/>\n    </marker>\n    <marker id=\"gsg-c\" viewBox=\"0 0 10 10\" refX=\"9\" refY=\"5\" markerWidth=\"7\" markerHeight=\"7\" orient=\"auto\">\n      <path d=\"M0 0 L10 5 L0 10 z\" fill=\"#51cf9b\"/>\n    </marker>\n  </defs>\n  <g class=\"fig-box-g\">\n    <rect x=\"14\"  y=\"8\" width=\"120\" height=\"30\" rx=\"7\" class=\"fig-box\"/>\n    <rect x=\"250\" y=\"8\" width=\"150\" height=\"30\" rx=\"7\" class=\"fig-box\"/>\n    <rect x=\"510\" y=\"8\" width=\"136\" height=\"30\" rx=\"7\" class=\"fig-box\"/>\n  </g>\n  <text x=\"74\"  y=\"28\" text-anchor=\"middle\" class=\"fig-label\" font-size=\"12\">Unity client</text>\n  <text x=\"325\" y=\"28\" text-anchor=\"middle\" class=\"fig-label\" font-size=\"12\">API Go</text>\n  <text x=\"578\" y=\"28\" text-anchor=\"middle\" class=\"fig-label\" font-size=\"12\">PostgreSQL</text>\n  <g class=\"fig-line\" stroke-dasharray=\"4 5\" stroke-width=\"1\" fill=\"none\">\n    <path d=\"M74 42 V240\"/>\n    <path d=\"M325 42 V240\"/>\n    <path d=\"M578 42 V240\"/>\n  </g>\n  <g stroke=\"#6ea8fe\" stroke-width=\"2\" marker-end=\"url(#gsg-b)\" fill=\"none\">\n    <path d=\"M74 72 H321\"/>\n    <path d=\"M325 104 H574\"/>\n    <path d=\"M578 134 H329\"/>\n    <path d=\"M325 164 H78\"/>\n  </g>\n  <text x=\"197\" y=\"66\"  text-anchor=\"middle\" class=\"fig-label\" font-size=\"11\">POST /buy · requestId = 7f3a</text>\n  <text x=\"450\" y=\"98\"  text-anchor=\"middle\" class=\"fig-muted\" font-size=\"10\">BEGIN · trừ vàng · ghi sổ cái 7f3a · COMMIT</text>\n  <text x=\"452\" y=\"128\" text-anchor=\"middle\" class=\"fig-muted\" font-size=\"10\">gold = 250</text>\n  <text x=\"200\" y=\"158\" text-anchor=\"middle\" class=\"fig-muted\" font-size=\"10\">200 gold=250</text>\n  <text x=\"200\" y=\"184\" text-anchor=\"middle\" font-size=\"11\" fill=\"#ff8787\">✕ mạng rớt — client không nhận được gì</text>\n  <g stroke=\"#6ea8fe\" stroke-width=\"2\" marker-end=\"url(#gsg-b)\" fill=\"none\">\n    <path d=\"M74 208 H321\"/>\n  </g>\n  <text x=\"197\" y=\"202\" text-anchor=\"middle\" class=\"fig-label\" font-size=\"11\">gửi lại — CÙNG requestId = 7f3a</text>\n  <g stroke=\"#51cf9b\" stroke-width=\"2\" marker-end=\"url(#gsg-c)\" fill=\"none\">\n    <path d=\"M325 234 H78\"/>\n  </g>\n  <text x=\"332\" y=\"228\" text-anchor=\"start\" font-size=\"11\" fill=\"#51cf9b\">đã có 7f3a → trả lại 250, KHÔNG trừ lần hai</text>\n</svg>\n<figcaption>Idempotency không phải tính năng cao cấp — nó là điều kiện tối thiểu để một lệnh ghi đi qua mạng di động mà không nhân đôi hoặc mất trắng.</figcaption>\n</figure>\n\n```go\n// Mua vật phẩm: trừ tiền và cộng đồ trong CÙNG một transaction,\n// gọi hai lần với cùng requestID vẫn ra đúng một kết quả.\nfunc (s *Store) BuyItem(ctx context.Context, userID, itemID, requestID string, price int64) (int64, error) {\n    tx, err := s.pool.Begin(ctx)\n    if err != nil {\n        return 0, err\n    }\n    defer tx.Rollback(ctx)       // không làm gì nếu đã Commit\n\n    // 1. Chốt chặn idempotency: request này xử lý rồi thì trả lại kết quả cũ.\n    var balance int64\n    err = tx.QueryRow(ctx,\n        \"SELECT balance_after FROM wallet_tx WHERE request_id = $1\", requestID).Scan(&balance)\n    if err == nil {\n        return balance, nil\n    }\n    if !errors.Is(err, pgx.ErrNoRows) {\n        return 0, err\n    }\n\n    // 2. FOR UPDATE: hai request song song xếp hàng, thay vì cùng đọc 300 rồi cùng ghi 200.\n    if err = tx.QueryRow(ctx,\n        \"SELECT gold FROM wallet WHERE user_id = $1 FOR UPDATE\", userID).Scan(&balance); err != nil {\n        return 0, err\n    }\n    if balance < price {\n        return balance, ErrNotEnoughGold\n    }\n    balance -= price\n\n    if _, err = tx.Exec(ctx,\n        \"UPDATE wallet SET gold = $1, updated_at = now() WHERE user_id = $2\",\n        balance, userID); err != nil {\n        return 0, err\n    }\n    if _, err = tx.Exec(ctx,\n        `INSERT INTO inventory (user_id, item_id, qty) VALUES ($1, $2, 1)\n         ON CONFLICT (user_id, item_id) DO UPDATE SET qty = inventory.qty + 1`,\n        userID, itemID); err != nil {\n        return 0, err\n    }\n    // 3. Ghi sổ cái. UNIQUE(request_id) là thứ làm cho bước 1 có tác dụng.\n    if _, err = tx.Exec(ctx,\n        `INSERT INTO wallet_tx (request_id, user_id, delta, balance_after, reason)\n         VALUES ($1, $2, $3, $4, 'buy:' || $5)`,\n        requestID, userID, -price, balance, itemID); err != nil {\n        return 0, err\n    }\n    return balance, tx.Commit(ctx)\n}\n```\n\nKiểm chứng đoạn trên bằng đúng một test: 50 goroutine cùng mua một lúc, 50 `requestID` khác nhau, ví có đúng 10 lần giá tiền. Kết quả phải là 10 giao dịch thành công, 40 lỗi `ErrNotEnoughGold`, `gold = 0`, và `wallet_tx` có đúng 10 dòng. Test đó bắt được cả race lẫn transaction viết sai; thiếu nó thì code trên \"trông đúng\" mà vẫn sai.\n\n### Kết nối, khoá và migration\n\n- **Pool nhỏ hơn bạn tưởng.** `pgxpool` 10–25 kết nối mỗi instance là đủ; Postgres mặc định chỉ nhận 100 kết nối, mà mỗi kết nối là một process thật. Tám instance × 25 đã vượt — nhiều instance thì đặt PgBouncer ở giữa (transaction pooling), đừng nâng `max_connections`.\n- **Mọi query có `context` timeout** 2–3 giây. Không có nó, một query kẹt giữ kết nối, pool cạn dần, và toàn bộ API trả 503 vì một bảng thiếu index.\n- **Khoá theo thứ tự cố định.** Giao dịch chạm nhiều dòng (trade giữa hai người chơi) phải khoá theo `user_id` tăng dần. Hai transaction khoá ngược chiều nhau là deadlock, và nó chỉ xuất hiện khi có người chơi thật.\n- **Migration là một bước deploy riêng** (`goose`, `golang-migrate`), không phải auto-migrate lúc khởi động — ba instance khởi động cùng lúc cùng migrate là bảng nửa vời. Buộc phải chạy lúc start thì bọc bằng `pg_advisory_lock`.\n- **Đo bằng `pg_stat_statements`**, thêm index theo query thật. Trên máy dev với 1.000 dòng thì mọi query đều nhanh; index thiếu chỉ lộ ra ở dữ liệu thật.\n\n### Bảng xếp hạng: ZSET và cái bẫy của nó\n\n```go\n// ZADD GT: chỉ ghi khi điểm mới CAO HƠN. Dùng ZAdd thường thì một ván chơi tệ\n// sẽ ghi đè điểm cao nhất của chính người chơi đó — bug kinh điển của leaderboard.\nrdb.ZAddGT(ctx, \"lb:season12\", redis.Z{Score: float64(score), Member: userID})\n\ntop, _ := rdb.ZRevRangeWithScores(ctx, \"lb:season12\", 0, 99).Result()   // top 100\nrank, _ := rdb.ZRevRank(ctx, \"lb:season12\", userID).Result()            // hạng của riêng mình\n```\n\nScore trong ZSET là `float64`, nên số nguyên vượt 2^53 mất chính xác — cẩn thận nếu bạn gói tie-break (thời điểm đạt điểm) vào phần thập phân. Và **Redis không phải nguồn chân lý**: một lần evict hoặc restart không bật persistence là mất bảng xếp hạng cả mùa. Ghi điểm xuống Postgres trong cùng luồng, coi ZSET là chỉ mục đọc nhanh dựng lại được.\n\n## Server có thẩm quyền, kể cả khi game không có multiplayer\n\nGame một người mà có bảng xếp hạng hoặc có IAP thì vẫn cần đủ những điều này:\n\n- **Client gửi ý định, không gửi kết quả.** `POST /craft {\"recipe\":\"iron_sword\"}` chứ không phải `POST /inventory {…}`. Endpoint nào nhận nguyên inventory từ client là endpoint nhân bản vật phẩm — và nó trông hoàn toàn bình thường lúc review.\n- **Validate đủ năm thứ** cho mỗi hành động: có sở hữu không, đủ nguyên liệu không, đủ cấp không, hết cooldown chưa, trạng thái có hợp lệ không. Mỗi thứ một dòng `return`.\n- **Random do server quay**, seed ghi lại. Loot và gacha mà client quay thì người ta sẽ reroll tới khi ra đồ tốt. Xem [[randomness]].\n- **IAP verify phía server** với Apple/Google, lưu transaction id `UNIQUE`. Cùng một receipt gửi lại lần hai không được cộng gems lần hai.\n- **JWT ngắn hạn** (15 phút) + refresh token lưu trong database để thu hồi được. Đừng nhét `gold` hay `level` vào claim: nó cũ ngay lập tức và nó mời người ta thử sửa.\n- **Rate limit theo user và theo IP** (token bucket trong Redis). Kinh tế của bạn thường chết vì bot farm trước khi có đủ người chơi thật.\n- **Log mọi thay đổi tài nguyên kèm `reason`.** Không có nó thì không điều tra được khiếu nại và không hoàn đồ đúng người được.\n\n## Vận hành: bốn thứ làm ngay tuần đầu\n\n1. **Graceful shutdown.** `signal.NotifyContext` → ngừng nhận phòng mới → chờ trận đang chạy kết thúc (tối đa 2 phút) → `srv.Shutdown(ctx)`. Không có nó thì mỗi lần deploy là một lần người chơi mất trận, và bạn sẽ sợ deploy.\n2. **`/healthz` tách khỏi `/readyz`.** Cái đầu nói process còn sống, cái sau nói ping được database. Gộp làm một thì database chậm một giây là load balancer rút sạch instance.\n3. **Log có cấu trúc + metrics.** `log/slog` với request id truyền qua `context`; Prometheus đo p50/p95/**p99** theo từng endpoint — số trung bình luôn đẹp và luôn vô dụng. Mở `pprof` ở cổng nội bộ.\n4. **Backup và thử restore.** Backup chưa restore thử lần nào là backup chưa tồn tại. Mất save là thứ người chơi không tha thứ, khác hẳn một bug gameplay.\n\nTrước khi mở cửa: load test bằng `k6` hoặc `vegeta` ở 3–5 lần CCU dự kiến, nhìn p99 và số kết nối database đang mở. \"Chạy ổn trên máy tôi\" không phải số liệu.\n\n## Bẫy thường gặp\n\n| Bẫy | Lộ ra lúc nào |\n|---|---|\n| Gửi id `int64` qua JSON | Client JavaScript (web, dashboard, tool nội bộ) đọc thành float và sai ở id lớn — gửi id dạng **string** |\n| Decode JSON vào `interface{}` | Số trong Go thành `float64`, tiền lệch một đơn vị mà không ai biết vì sao |\n| `ZAdd` thay cho `ZAddGT` | Người chơi chơi tệ hơn tự hạ điểm cao nhất của chính mình |\n| Coi Redis là nguồn chân lý | Một lần evict là mất bảng xếp hạng cả mùa |\n| WebSocket không đặt read deadline và pong | Kết nối zombie tích lại, RAM lên đều rồi OOM sau ba ngày |\n| Channel không buffer trong vòng lặp phòng | Một client mạng chậm treo cả phòng |\n| Auto-migrate lúc khởi động | Hai instance migrate cùng lúc, bảng nửa vời, không rollback được |\n| Query không timeout | Một query kẹt làm cạn pool, toàn bộ API trả 503 |\n| Lấy thời gian từ client | Idle game bị tua bằng cách chỉnh đồng hồ máy |\n| Ghi state phòng xuống database mỗi tick | Database chết ở phòng thứ năm mươi — chỉ ghi ở mốc quan trọng và khi kết thúc trận |",
-      "aiPrompt": "**Dùng AI thế nào cho backend game**\n\nAI viết backend Go rất tốt ở phần *khung* và rất dở ở phần *ranh giới*. Chia việc theo đúng ranh giới đó:\n\n| Giao được | Đừng giao |\n|---|---|\n| Schema SQL, migration, query, index từ mô tả bảng | Quyết định cái gì là nguồn chân lý, cái gì được phép mất |\n| Handler CRUD, middleware auth / rate limit / log | Mô hình đồng thời của room server — ai sở hữu state |\n| Test đồng thời, load test k6, Dockerfile, CI | Quy tắc kinh tế: giá, trần, faucet/drain |\n| Sinh struct Go ↔ C# từ protobuf, viết client Unity | Câu \"đã an toàn rồi\" — phải chứng minh bằng test, không phải bằng lời |\n\nQuy trình bốn bước, dừng lại duyệt sau mỗi bước:\n\n1. **Bạn viết bất biến trước.** Vàng không âm, một `request_id` chỉ trừ tiền một lần, server quyết random, thời gian lấy từ server. AI không suy ra được những điều này từ đầu bài, và nó sẽ không tự hỏi.\n2. **Bắt nó sinh schema + migration + ràng buộc database trước**, trước khi viết một dòng handler. Ràng buộc sai thì mọi thứ phía trên vô nghĩa; và `CHECK (gold >= 0)` là thứ nó hay bỏ quên nhất vì code \"đã kiểm tra rồi\".\n3. **Handler kèm test cho đường hỏng**, không phải đường thành công: hết tiền, gọi hai lần cùng `request_id`, 50 goroutine mua cùng lúc, database timeout giữa transaction.\n4. **Bắt nó chạy `go test -race ./...` và dán output thật.** Code đồng thời không có race detector thì \"trông đúng\" là vô nghĩa — và AI rất sẵn lòng khẳng định là đã chạy.\n\nVới client Unity thì giao ngược lại: AI viết lớp gọi API, retry, parse JSON rất nhanh và ít sai; cái bạn phải tự quyết là **cái gì client được phép tự tính** (hiển thị, dự đoán) và cái gì phải chờ server xác nhận.\n\n**Phải nêu rõ** (thiếu là AI tự bịa):\n\n- **Nhịp ghi của game:** turn-based/idle (vài request mỗi phút) hay action realtime (20Hz). Quyết định toàn bộ kiến trúc, và AI mặc định coi mọi thứ là CRUD web.\n- **CCU mục tiêu và p99 chấp nhận được** — ví dụ 5.000 CCU, p99 dưới 200ms. Không có số thì nó sẽ đẻ ra kiến trúc microservice cho game 200 người chơi.\n- **Phiên bản và thư viện được phép:** Go 1.22+, PostgreSQL 16, Redis 7, Unity 6; `pgx` hay `database/sql`; `gorilla/websocket` hay `coder/websocket`.\n- **Cái gì authoritative:** server quyết tiền, loot, thời gian; client chỉ gửi ý định.\n- **Đơn vị tiền tệ là số nguyên, có trần, không âm** — nói thẳng, vì mặc định của JSON là số thực.\n- **Idempotency key do ai sinh** (client) và sống ở đâu (cột `UNIQUE` trong sổ cái).\n- **Triển khai ở đâu:** một VPS hay k8s + Agones. Khác nhau ở graceful shutdown, service discovery và cách scale phòng.\n- **Có build WebGL không** — WebGL nghĩa là không UDP và server phải trả CORS header.\n\n**Mẫu prompt**\n\n```\nViết service Go 1.22 làm backend cho game mobile idle RPG, client Unity 6.\nPostgreSQL 16 + Redis 7, một VPS, mục tiêu 5.000 CCU, p99 < 200ms.\n\nBẤT BIẾN — không được vi phạm dòng nào:\n- gold là bigint, CHECK (gold >= 0). KHÔNG dùng float cho bất kỳ tài nguyên nào.\n- Mọi endpoint ghi nhận request_id do client sinh. Gọi lại cùng request_id phải\n  trả đúng kết quả cũ và KHÔNG ghi lần hai — chặn bằng UNIQUE ở database,\n  không chỉ bằng if trong code.\n- Mọi thay đổi tài nguyên ghi một dòng vào bảng wallet_tx (append-only, có reason).\n- Thời gian lấy từ now() của Postgres. KHÔNG đọc timestamp client gửi lên.\n- Client chỉ gửi Ý ĐỊNH. KHÔNG có endpoint nào nhận gold/inventory từ client.\n\nEndpoint: POST /v1/claim-idle, POST /v1/buy, GET /v1/profile.\n\nGiao theo thứ tự, DỪNG LẠI chờ tôi duyệt sau mỗi bước:\n1. Migration SQL (goose) + toàn bộ ràng buộc database.\n2. Tầng store dùng pgx: mỗi quyết định một transaction, mọi query có context timeout 3s.\n3. Test: hết tiền; gọi 2 lần cùng request_id; 50 goroutine mua cùng lúc trên ví\n   chỉ đủ 10 lần. Chạy `go test -race ./...` và dán output THẬT, không tóm tắt.\n\nKHÔNG dùng ORM. KHÔNG auto-migrate lúc khởi động. KHÔNG biến toàn cục có thể ghi.\n```\n\n**Bẫy thường gặp:** AI sinh endpoint nhận nguyên trạng thái từ client (`POST /save {\"gold\": 99999}`) vì đó là cách viết CRUD phổ biến nhất trong dữ liệu huấn luyện — và nó trông hoàn toàn bình thường lúc review, chỉ sai về mặt *ai được quyền quyết*. Ba cái hay gặp nữa: dùng `float64` cho tiền vì JSON mặc định thế; dùng ORM với auto-migrate làm biến mất mọi `CHECK` và `UNIQUE` bạn đã yêu cầu; và viết room server bằng một `map` dùng chung với `sync.Mutex` rải rác thay vì một goroutine sở hữu state — bản mutex chạy đúng trong test một người và hỏng khi có hai mươi người vào cùng lúc.",
-      "unity": "Phía client chỉ có ba việc, nhưng làm sai cả ba thì backend viết tốt tới đâu cũng vô ích: gọi API đúng cách, **không tin dữ liệu local**, và sống sót khi mạng rớt giữa một lệnh ghi.\n\n**Component & nơi đặt**\n\n- `GameApi.cs` — đặt ở `Assets/Scripts/Net/`, trên một GameObject `DontDestroyOnLoad`.\n- `PendingRequest` — `requestId` của lệnh ghi **chưa được xác nhận**, ghi xuống đĩa *trước khi* gửi. Mở app lại thì gửi lại đúng id đó.\n- `JsonUtility` đủ cho DTO phẳng như dưới đây. Cần `Dictionary`, mảng ở cấp cao nhất, hay phân biệt \"field vắng mặt\" với \"field bằng 0\" thì thêm `com.unity.nuget.newtonsoft-json` qua Package Manager — và nhớ `link.xml` để IL2CPP không strip mất kiểu dùng qua reflection.\n\n**Code**\n\n```csharp\nusing System;\nusing System.Collections;\nusing System.Text;\nusing UnityEngine;\nusing UnityEngine.Networking;\n\n// Gọi backend Go: JWT ở header, requestId cho mọi lệnh GHI, retry có backoff + jitter.\npublic class GameApi : MonoBehaviour\n{\n    [SerializeField] string baseUrl = \"https://api.example.com\";\n    [SerializeField] int timeoutSeconds = 10;    // UnityWebRequest KHÔNG có timeout mặc định\n    [SerializeField] int maxRetry = 3;\n\n    string accessToken;\n    bool buyInFlight;                            // bấm 5 lần vẫn chỉ gửi 1 request\n\n    [Serializable] class BuyReq { public string requestId; public string itemId; }\n    [Serializable] public class BuyResp { public long gold; public string itemId; }\n\n    public IEnumerator Buy(string itemId, Action<BuyResp> onDone, Action<string> onFail)\n    {\n        if (buyInFlight) { onFail?.Invoke(\"đang xử lý\"); yield break; }\n        buyInFlight = true;\n\n        // requestId sinh MỘT LẦN và giữ nguyên qua mọi lần retry — đó là toàn bộ điểm của idempotency.\n        var body = JsonUtility.ToJson(new BuyReq {\n            requestId = Guid.NewGuid().ToString(\"N\"),\n            itemId = itemId,\n        });\n        yield return Post(baseUrl + \"/v1/buy\", body, onDone, onFail);\n        buyInFlight = false;\n    }\n\n    IEnumerator Post<T>(string url, string json, Action<T> onDone, Action<string> onFail)\n    {\n        float delay = 0.5f;\n        for (int attempt = 1; attempt <= maxRetry; attempt++)\n        {\n            using (var www = new UnityWebRequest(url, UnityWebRequest.kHttpVerbPOST))\n            {\n                www.uploadHandler = new UploadHandlerRaw(Encoding.UTF8.GetBytes(json));\n                www.downloadHandler = new DownloadHandlerBuffer();\n                www.SetRequestHeader(\"Content-Type\", \"application/json\");\n                if (!string.IsNullOrEmpty(accessToken))\n                    www.SetRequestHeader(\"Authorization\", \"Bearer \" + accessToken);\n                www.timeout = timeoutSeconds;\n\n                yield return www.SendWebRequest();\n\n                if (www.result == UnityWebRequest.Result.Success)\n                {\n                    onDone?.Invoke(JsonUtility.FromJson<T>(www.downloadHandler.text));\n                    yield break;\n                }\n\n                // 4xx là lỗi của chính mình: gửi lại vẫn sai. Chỉ thử lại lỗi mạng và 5xx.\n                bool retryable = www.result == UnityWebRequest.Result.ConnectionError\n                              || www.responseCode >= 500;\n                if (!retryable || attempt == maxRetry)\n                {\n                    onFail?.Invoke(www.responseCode + \" \" + www.error);\n                    yield break;\n                }\n            }\n            // Realtime, không phải WaitForSeconds: mở popup rồi đặt timeScale = 0\n            // thì retry sẽ đứng im vĩnh viễn.\n            yield return new WaitForSecondsRealtime(delay + UnityEngine.Random.Range(0f, 0.3f));\n            delay *= 2f;\n        }\n    }\n}\n```\n\n**Bẫy Unity cụ thể**\n\n- **`UnityWebRequest` không có timeout mặc định.** Mạng kiểu \"có sóng nhưng không đi đâu\" (wifi cổng captive, 4G chập chờn) làm coroutine chờ vô hạn, người chơi nhìn vòng xoay mãi. Luôn đặt `www.timeout`.\n- **`WaitForSeconds` chạy theo `timeScale`.** Popup nào đặt `timeScale = 0` là backoff của bạn chết. Dùng `WaitForSecondsRealtime` cho mọi thứ liên quan tới mạng.\n- **`JsonUtility` nuốt lỗi.** Server đổi tên field thì nó trả `0`/`null` chứ không báo gì — client hiện 0 vàng, không log, không ai biết vì sao. Có phiên bản hoá API (`/v1/`) và test hợp đồng giữa hai bên.\n- **Id `int64`:** Unity đọc `long` bình thường, nhưng nếu bạn còn có dashboard web hoặc đi qua một dịch vụ trung gian chạy JavaScript thì id vượt 2^53 sẽ sai **lặng lẽ**. Gửi id dạng string là an toàn nhất.\n- **`PlayerPrefs` không mã hoá** (registry trên Windows, XML trong `shared_prefs` trên Android). Refresh token nằm đó là đọc được trên máy đã root — chấp nhận được **nếu** server thu hồi được token, không chấp nhận được nếu token sống một năm.\n- **Tắt app giữa một lệnh ghi.** Request đã tới server, client chưa nhận phản hồi. Không lưu `requestId` xuống đĩa trước khi gửi thì người chơi \"mua rồi mà không có đồ\" — và họ đúng, tiền đã bị trừ thật.\n- **`Application.internetReachability` chỉ nói có mạng hay không**, không nói server còn sống. Đừng dùng nó thay cho retry thật.\n- **WebGL:** không UDP, và server Go phải trả `Access-Control-Allow-Origin`. Thiếu CORS thì trong Editor chạy ngon, bản WebGL im lặng hỏng — lỗi chỉ hiện trong console của trình duyệt.\n- **`OnApplicationPause(false)`** sau khi máy ngủ: token có thể đã hết hạn và state trong RAM đã cũ. Refresh token rồi đồng bộ lại từ server, đừng tin cái đang có.\n\n**Kiểm tra nhanh**\n\n- Bấm nút mua 5 lần thật nhanh: log server có **đúng một** dòng `buy:`, và `wallet_tx` thêm đúng một dòng.\n- Bật Airplane Mode ngay sau khi bấm mua rồi tắt app, mở lại: vật phẩm về **một** cái, vàng bị trừ **một** lần.\n- Chỉnh đồng hồ máy tiến một ngày: phần thưởng offline không đổi (server tính bằng `now()` của nó).\n- Dùng proxy (Charles/Proxyman) sửa response `gold` thành 999999: lần đồng bộ kế tiếp giá trị về đúng con số của server.\n- Tắt wifi trong Editor: sau `maxRetry` lần, UI hiện lỗi tử tế trong khoảng 10 giây, không treo vô hạn.",
-      "code": "",
-      "interview": "",
-      "hasAiHowto": true,
-      "i18n": {},
-      "color": "#f783ac"
-    },
-    {
       "id": "production",
       "title": "Production & Tech",
       "summary": "Biến prototype thành sản phẩm — kiến trúc, data-driven, đo đạc, hiệu năng.",
@@ -3336,8 +3303,7 @@
         "playtesting-metrics",
         "liveops",
         "tech-stack",
-        "performance",
-        "game-server-go"
+        "performance"
       ],
       "depth": 1,
       "branch": "production",
@@ -3357,8 +3323,8 @@
       "order": 60,
       "collapsed": false,
       "path": "06-production/index.md",
-      "words": 701,
-      "body": "Nhánh này về **cách xây** chứ không về **xây cái gì**.\n\n## Các node\n\n- **[[architecture-patterns]]** — ECS, component, event bus, state machine ở tầng ứng dụng.\n- **[[data-driven-design]]** — tách dữ liệu khỏi code. Điều kiện tiên quyết để cân bằng và để AI hỗ trợ hiệu quả.\n- **[[playtesting-metrics]]** — đo cái gì, đo thế nào, và cách đọc kết quả.\n- **[[liveops]]** — vận hành sau phát hành: remote config, feature flag, sự kiện theo lịch, A/B test làm cho đúng.\n- **[[tech-stack]]** — chọn engine và công cụ.\n- **[[performance]]** — ngân sách và tối ưu.\n- **[[game-server-go]]** — backend Go cho game Unity: API, phòng realtime, Postgres và Redis.\n\n## Nguyên tắc\n\n**Kiến trúc phục vụ tốc độ lặp.** Ở giai đoạn tìm tòi, thứ quan trọng nhất là *sửa và thử nhanh*. Kiến trúc đẹp mà mỗi lần đổi số phải build lại 3 phút là kiến trúc sai cho giai đoạn đó.\n\n**Đừng tối ưu sớm, nhưng hãy đo sớm.** Đặt profiler vào từ đầu. Bạn không cần tối ưu ngay, nhưng cần biết khi nào mọi thứ bắt đầu xấu đi — và phát hiện sớm thì rẻ hơn nhiều.\n\n**Dữ liệu tách khỏi code là quyết định kiến trúc quan trọng nhất.** Nó quyết định bạn cân bằng game được nhanh tới đâu, và quyết định AI agent sửa số được an toàn tới đâu. Xem [[data-driven-design]].",
+      "words": 709,
+      "body": "Nhánh này về **cách xây** chứ không về **xây cái gì**.\n\n## Các node\n\n- **[[architecture-patterns]]** — ECS, component, event bus, state machine ở tầng ứng dụng.\n- **[[data-driven-design]]** — tách dữ liệu khỏi code. Điều kiện tiên quyết để cân bằng và để AI hỗ trợ hiệu quả.\n- **[[playtesting-metrics]]** — đo cái gì, đo thế nào, và cách đọc kết quả.\n- **[[liveops]]** — vận hành sau phát hành: remote config, feature flag, sự kiện theo lịch, A/B test làm cho đúng.\n- **[[tech-stack]]** — chọn engine và công cụ.\n- **[[performance]]** — ngân sách và tối ưu.\n\nPhần chạy trên máy chủ — Go cho API và phòng realtime, Postgres/Redis cho dữ liệu — tách thành nhánh riêng: **[[backend-go]]**.\n\n## Nguyên tắc\n\n**Kiến trúc phục vụ tốc độ lặp.** Ở giai đoạn tìm tòi, thứ quan trọng nhất là *sửa và thử nhanh*. Kiến trúc đẹp mà mỗi lần đổi số phải build lại 3 phút là kiến trúc sai cho giai đoạn đó.\n\n**Đừng tối ưu sớm, nhưng hãy đo sớm.** Đặt profiler vào từ đầu. Bạn không cần tối ưu ngay, nhưng cần biết khi nào mọi thứ bắt đầu xấu đi — và phát hiện sớm thì rẻ hơn nhiều.\n\n**Dữ liệu tách khỏi code là quyết định kiến trúc quan trọng nhất.** Nó quyết định bạn cân bằng game được nhanh tới đâu, và quyết định AI agent sửa số được an toàn tới đâu. Xem [[data-driven-design]].",
       "aiPrompt": "**Dùng AI thế nào ở nhánh này**\n\nNhánh này AI làm được gần hết, vì nó thuần kỹ thuật và kiểm chứng được. Ba việc có ROI cao nhất — đều là việc lập trình viên hay làm sơ sài vì nhàm:\n\n1. **Editor tool và validator** — không đụng gameplay nên rủi ro thấp, mà tiết kiệm thời gian thật mỗi ngày.\n2. **Unit test cho logic thuần** — nó viết test tốt hơn nhiều người, và test là thứ cho phép nó tự kiểm chứng về sau.\n3. **CI, build script** — thuần script, chạy được là biết đúng.\n\nViệc **không** nhờ: quyết định kiến trúc mà chưa có số liệu. Hỏi \"kiến trúc nào tốt hơn\" mà không nêu số thực thể và ngân sách frame sẽ nhận về ECS cho một game 40 thực thể.\n\nKiến trúc tốt khiến AI agent hiệu quả hơn rõ rệt:\n\n- **Ranh giới rõ ràng** → agent sửa một hệ thống mà không phá hệ thống khác.\n- **Có test** → agent tự kiểm chứng được thay đổi của mình.\n- **Dữ liệu ngoài code** → chỉnh cân bằng không cần đụng tới logic.\n- **Quy ước nhất quán** → code sinh ra khớp với phần còn lại của dự án.\n\nNgược lại, một codebase rối sẽ khiến agent tạo ra nhiều lỗi hơn — nó không thấy được toàn cảnh và sẽ đoán.",
       "unity": "Toàn bộ nhánh này có bản Unity chi tiết ở [[unity]]: [[unity-project-structure]], [[unity-design-patterns]], [[unity-optimization]], [[unity-build-platform]].\n\n**Ba thứ dựng trong tuần đầu, không để sau**\n\n1. **Assembly Definition** — `Game.Core` với `noEngineReferences: true`. Nó cho bạn test EditMode nhanh và mô phỏng ngoài Unity; thêm sau nghĩa là sửa hàng trăm `using`.\n2. **`.gitignore` đúng cho Unity** — `Library/`, `Temp/`, `Logs/`, `obj/`, `*.csproj`, `*.sln`. Commit `Library/` một lần là repo phình lên hàng GB.\n3. **Build ra máy đích** — không phải cuối dự án, mà tuần đầu. IL2CPP, stripping, và giới hạn bộ nhớ chỉ lộ ra ở build thật. Xem [[unity-build-platform]].\n\n**Git cho Unity — ba thứ bắt buộc**\n\n```\n# .gitattributes — KHÔNG có dòng này thì scene/prefab merge sẽ hỏng im lặng\n*.unity   binary\n*.prefab  binary\n*.asset   binary\n```\n\nĐánh dấu binary làm git **từ chối** merge thay vì merge sai. Bạn sẽ phải chọn một bên — mệt, nhưng tốt hơn một scene hỏng không ai biết.\n\nVà bật **Force Text** cho serialization (`Project Settings > Editor > Asset Serialization > Force Text`) để diff đọc được, dù vẫn treat as binary khi merge.\n\n**Meta file phải commit**\n\n`.meta` giữ GUID. Không commit `.meta` nghĩa là mọi tham chiếu vỡ trên máy người khác. Đây là lỗi phổ biến nhất khi người mới setup Unity repo.\n\n**Kiểm tra nhanh**\n- `git check-attr merge Assets/Scenes/Main.unity` → binary?\n- `.meta` có được commit không?\n- `Library/` có trong `.gitignore` không?\n- Đã build ra máy đích ít nhất một lần chưa?",
       "code": "",
@@ -3563,7 +3529,7 @@
       "interview": "",
       "hasAiHowto": false,
       "i18n": {},
-      "color": "#a9e34b"
+      "color": "#e599f7"
     },
     {
       "id": "blueprints",
@@ -3612,7 +3578,7 @@
           "path": "07-blueprints/index.en.md"
         }
       },
-      "color": "#a9e34b"
+      "color": "#e599f7"
     },
     {
       "id": "accessibility",
@@ -4044,6 +4010,7 @@
         "unity-build-platform",
         "unity-addressables",
         "unity-multiplayer",
+        "unity-third-party",
         "unity-editor-tools",
         "unity-testing-ci",
         "unity-debug-crash"
@@ -4063,7 +4030,7 @@
       ],
       "status": "deep",
       "read": 600,
-      "readIndex": 69,
+      "readIndex": 71,
       "level": "basic",
       "refs": [],
       "order": 65,
@@ -4114,7 +4081,7 @@
       ],
       "status": "deep",
       "read": 755,
-      "readIndex": 87,
+      "readIndex": 89,
       "level": "advanced",
       "refs": [],
       "order": 155,
@@ -4152,7 +4119,7 @@
       ],
       "status": "deep",
       "read": 650,
-      "readIndex": 75,
+      "readIndex": 77,
       "level": "intermediate",
       "refs": [],
       "order": 60,
@@ -4189,7 +4156,7 @@
       ],
       "status": "deep",
       "read": 690,
-      "readIndex": 79,
+      "readIndex": 81,
       "level": "intermediate",
       "refs": [],
       "order": 100,
@@ -4228,7 +4195,7 @@
       ],
       "status": "deep",
       "read": 750,
-      "readIndex": 86,
+      "readIndex": 88,
       "level": "advanced",
       "refs": [],
       "order": 150,
@@ -4266,7 +4233,7 @@
       ],
       "status": "deep",
       "read": 670,
-      "readIndex": 77,
+      "readIndex": 79,
       "level": "intermediate",
       "refs": [],
       "order": 80,
@@ -4307,7 +4274,7 @@
       ],
       "status": "deep",
       "read": 635,
-      "readIndex": 73,
+      "readIndex": 75,
       "level": "intermediate",
       "refs": [],
       "order": 35,
@@ -4347,7 +4314,7 @@
       ],
       "status": "deep",
       "read": 780,
-      "readIndex": 91,
+      "readIndex": 94,
       "level": "advanced",
       "refs": [],
       "order": 180,
@@ -4386,7 +4353,7 @@
       ],
       "status": "deep",
       "read": 630,
-      "readIndex": 72,
+      "readIndex": 74,
       "level": "intermediate",
       "refs": [],
       "order": 30,
@@ -4427,7 +4394,7 @@
       ],
       "status": "deep",
       "read": 745,
-      "readIndex": 85,
+      "readIndex": 87,
       "level": "advanced",
       "refs": [],
       "order": 145,
@@ -4466,7 +4433,7 @@
       ],
       "status": "deep",
       "read": 770,
-      "readIndex": 89,
+      "readIndex": 92,
       "level": "intermediate",
       "refs": [],
       "order": 170,
@@ -4505,7 +4472,7 @@
       ],
       "status": "deep",
       "read": 610,
-      "readIndex": 70,
+      "readIndex": 72,
       "level": "basic",
       "refs": [],
       "order": 10,
@@ -4543,7 +4510,7 @@
       ],
       "status": "deep",
       "read": 660,
-      "readIndex": 76,
+      "readIndex": 78,
       "level": "basic",
       "refs": [],
       "order": 70,
@@ -4582,7 +4549,7 @@
       ],
       "status": "deep",
       "read": 720,
-      "readIndex": 82,
+      "readIndex": 84,
       "level": "intermediate",
       "refs": [],
       "order": 130,
@@ -4620,7 +4587,7 @@
       ],
       "status": "deep",
       "read": 760,
-      "readIndex": 88,
+      "readIndex": 90,
       "level": "advanced",
       "refs": [],
       "order": 160,
@@ -4658,7 +4625,7 @@
       ],
       "status": "deep",
       "read": 740,
-      "readIndex": 84,
+      "readIndex": 86,
       "level": "advanced",
       "refs": [],
       "order": 140,
@@ -4697,7 +4664,7 @@
       ],
       "status": "deep",
       "read": 640,
-      "readIndex": 74,
+      "readIndex": 76,
       "level": "intermediate",
       "refs": [],
       "order": 50,
@@ -4736,7 +4703,7 @@
       ],
       "status": "deep",
       "read": 620,
-      "readIndex": 71,
+      "readIndex": 73,
       "level": "intermediate",
       "refs": [],
       "order": 20,
@@ -4775,7 +4742,7 @@
       ],
       "status": "deep",
       "read": 730,
-      "readIndex": 83,
+      "readIndex": 85,
       "level": "intermediate",
       "refs": [],
       "order": 40,
@@ -4814,7 +4781,7 @@
       ],
       "status": "deep",
       "read": 710,
-      "readIndex": 81,
+      "readIndex": 83,
       "level": "advanced",
       "refs": [],
       "order": 120,
@@ -4854,7 +4821,7 @@
       ],
       "status": "deep",
       "read": 775,
-      "readIndex": 90,
+      "readIndex": 93,
       "level": "intermediate",
       "refs": [],
       "order": 175,
@@ -4866,6 +4833,47 @@
       "unity": "",
       "code": "Demo gồm hai file test chạy được ngay: một bộ test cho công thức sát thương thuần (EditMode, không `using UnityEngine`), và một test **validate asset** duyệt mọi `EnemyData` trong project để bắt lỗi dữ liệu trước khi QA gặp. Kèm sơ đồ thư mục và cửa sổ Test Runner cho đúng thiết lập asmdef.\n\n**Setup**\n\n<figure class=\"fig\">\n<svg viewBox=\"0 0 660 300\" role=\"img\" aria-label=\"Sơ đồ thư mục Tests với asmdef và cửa sổ Test Runner hiện hai nhóm test EditMode\">\n  <rect x=\"10\" y=\"10\" width=\"250\" height=\"280\" rx=\"8\" class=\"fig-box\"/>\n  <text x=\"22\" y=\"32\" class=\"fig-label\" font-size=\"13\" font-weight=\"600\">Project</text>\n  <line x1=\"10\" y1=\"42\" x2=\"260\" y2=\"42\" class=\"fig-line\"/>\n  <text x=\"22\" y=\"64\" class=\"fig-muted\" font-size=\"12\">▾ _Project/Combat/</text>\n  <text x=\"38\" y=\"82\" class=\"fig-muted\" font-size=\"11\">DamageCalculator.cs</text>\n  <text x=\"38\" y=\"98\" class=\"fig-muted\" font-size=\"11\">Game.Combat.asmdef</text>\n  <rect x=\"16\" y=\"108\" width=\"238\" height=\"20\" rx=\"4\" fill=\"#51cf9b\" opacity=\"0.18\"/>\n  <text x=\"22\" y=\"123\" class=\"fig-label\" font-size=\"12\" font-weight=\"600\">▾ Tests/EditMode/</text>\n  <text x=\"38\" y=\"142\" class=\"fig-muted\" font-size=\"11\">DamageCalculatorTests.cs</text>\n  <text x=\"38\" y=\"158\" class=\"fig-muted\" font-size=\"11\">EnemyDataValidationTests.cs</text>\n  <text x=\"38\" y=\"174\" class=\"fig-label\" font-size=\"11\">Game.Tests.EditMode.asmdef</text>\n  <line x1=\"10\" y1=\"188\" x2=\"260\" y2=\"188\" class=\"fig-line\"/>\n  <text x=\"22\" y=\"208\" class=\"fig-label\" font-size=\"12\" font-weight=\"600\">asmdef của Tests</text>\n  <text x=\"22\" y=\"226\" class=\"fig-muted\" font-size=\"11\">☑ Test Assemblies (Editor only)</text>\n  <text x=\"22\" y=\"242\" class=\"fig-muted\" font-size=\"11\">Refs: Game.Combat, UnityEngine.</text>\n  <text x=\"32\" y=\"256\" class=\"fig-muted\" font-size=\"11\">TestRunner, UnityEditor.TestRunner</text>\n  <text x=\"22\" y=\"276\" class=\"fig-muted\" font-size=\"10\">Không tick thì code test lọt vào build.</text>\n  <rect x=\"276\" y=\"10\" width=\"374\" height=\"280\" rx=\"8\" class=\"fig-box\"/>\n  <text x=\"288\" y=\"32\" class=\"fig-label\" font-size=\"13\" font-weight=\"600\">Test Runner  (Window ▸ General ▸ Test Runner)</text>\n  <line x1=\"276\" y1=\"42\" x2=\"650\" y2=\"42\" class=\"fig-line\"/>\n  <rect x=\"284\" y=\"50\" width=\"358\" height=\"18\" rx=\"3\" fill=\"#51cf9b\" opacity=\"0.22\"/>\n  <text x=\"292\" y=\"63\" class=\"fig-label\" font-size=\"12\" font-weight=\"600\">EditMode</text>\n  <text x=\"300\" y=\"84\" class=\"fig-muted\" font-size=\"11\">▾ DamageCalculatorTests</text>\n  <text x=\"316\" y=\"102\" class=\"fig-muted\" font-size=\"11\">✔ Compute_ArmorHigherThanDamage_ReturnsOne</text>\n  <text x=\"316\" y=\"118\" class=\"fig-muted\" font-size=\"11\">✔ Compute_CritDoublesDamage</text>\n  <text x=\"316\" y=\"134\" class=\"fig-muted\" font-size=\"11\">✔ Compute_NegativeArmor_ClampedToZero</text>\n  <text x=\"300\" y=\"156\" class=\"fig-muted\" font-size=\"11\">▾ EnemyDataValidationTests</text>\n  <text x=\"316\" y=\"174\" class=\"fig-muted\" font-size=\"11\">✔ AllEnemyData_HavePrefab</text>\n  <text x=\"316\" y=\"190\" class=\"fig-muted\" font-size=\"11\">✔ AllEnemyData_HaveUniqueId</text>\n  <rect x=\"284\" y=\"204\" width=\"358\" height=\"18\" rx=\"3\" fill=\"#ffd43b\" opacity=\"0.22\"/>\n  <text x=\"292\" y=\"217\" class=\"fig-label\" font-size=\"12\" font-weight=\"600\">Chạy không cần Editor</text>\n  <text x=\"300\" y=\"238\" class=\"fig-muted\" font-size=\"11\">-batchmode -runTests -testPlatform EditMode</text>\n  <text x=\"300\" y=\"254\" class=\"fig-muted\" font-size=\"11\">-testResults results.xml -logFile -</text>\n  <text x=\"300\" y=\"274\" class=\"fig-muted\" font-size=\"10\">Mã thoát khác 0 = có test đỏ → CI đỏ theo.</text>\n</svg>\n<figcaption>Test nằm trong asmdef riêng có tick Test Assemblies. Test logic không tham chiếu UnityEngine; test validate asset thì có, vì nó phải đọc AssetDatabase.</figcaption>\n</figure>\n\n**Script**\n\n```csharp\n// DamageCalculatorTests.cs — EditMode. Đặt trong Tests/EditMode/.\n// Không using UnityEngine: logic thuần thì test cũng thuần, chạy trong mili giây.\nusing NUnit.Framework;\n\npublic class DamageCalculatorTests\n{\n    // Hàm đang test (thuộc Game.Combat) — ở đây để tiện đọc:\n    // public static int Compute(int damage, int armor, bool crit) {\n    //     armor = armor < 0 ? 0 : armor;\n    //     int raw = crit ? damage * 2 : damage;\n    //     int result = raw - armor;\n    //     return result < 1 ? 1 : result;          // luôn ăn tối thiểu 1\n    // }\n\n    [Test]\n    public void Compute_ArmorHigherThanDamage_ReturnsOne()\n    {\n        Assert.AreEqual(1, DamageCalculator.Compute(damage: 10, armor: 99, crit: false));\n    }\n\n    [Test]\n    public void Compute_CritDoublesDamage()\n    {\n        Assert.AreEqual(20, DamageCalculator.Compute(damage: 10, armor: 0, crit: true));\n    }\n\n    [Test]\n    public void Compute_NegativeArmor_ClampedToZero()\n    {\n        // Ca biên đến từ một bug thật: buff \"giáp âm\" làm sát thương nhân lên.\n        Assert.AreEqual(10, DamageCalculator.Compute(damage: 10, armor: -50, crit: false));\n    }\n\n    [TestCase(0, 0, false, 1)]      // sát thương 0 vẫn ăn 1\n    [TestCase(int.MaxValue, 10, false, int.MaxValue - 10)]\n    public void Compute_EdgeCases(int damage, int armor, bool crit, int expected)\n    {\n        Assert.AreEqual(expected, DamageCalculator.Compute(damage, armor, crit));\n    }\n}\n```\n\n```csharp\n// EnemyDataValidationTests.cs — EditMode. Duyệt asset thật trong project.\n// Đây là loại test trả lãi cao nhất ở dự án game: bắt lỗi DỮ LIỆU, không bắt lỗi code.\nusing System.Collections.Generic;\nusing System.Linq;\nusing NUnit.Framework;\nusing UnityEditor;\nusing UnityEngine;\n\npublic class EnemyDataValidationTests\n{\n    static IEnumerable<EnemyData> AllEnemyData() =>\n        AssetDatabase.FindAssets(\"t:EnemyData\")\n                     .Select(AssetDatabase.GUIDToAssetPath)\n                     .Select(AssetDatabase.LoadAssetAtPath<EnemyData>)\n                     .Where(a => a != null);\n\n    [Test]\n    public void AllEnemyData_HavePrefab()\n    {\n        var missing = AllEnemyData().Where(e => e.prefab == null)\n                                    .Select(e => e.name).ToArray();\n        Assert.IsEmpty(missing, \"EnemyData thiếu prefab: \" + string.Join(\", \", missing));\n    }\n\n    [Test]\n    public void AllEnemyData_HaveUniqueId()\n    {\n        var dup = AllEnemyData().GroupBy(e => e.id)\n                                .Where(g => g.Count() > 1)\n                                .Select(g => g.Key).ToArray();\n        Assert.IsEmpty(dup, \"Trùng id: \" + string.Join(\", \", dup));\n    }\n\n    [Test]\n    public void AllEnemyData_DamageRangeIsValid()\n    {\n        foreach (var e in AllEnemyData())\n            Assert.LessOrEqual(e.minDamage, e.maxDamage, $\"{e.name}: minDamage > maxDamage\");\n    }\n}\n```\n\n**Chạy thử**\n- `Window > General > Test Runner` → tab **EditMode** → *Run All*: cả hai nhóm phải xanh trong dưới một giây.\n- Cố tình xoá prefab khỏi một `EnemyData` rồi chạy lại: test đỏ và **nói đúng tên asset** — đó là điểm khác biệt giữa test hữu ích và test cho có.\n- Chạy không cần Editor: `Unity -batchmode -projectPath . -runTests -testPlatform EditMode -testResults results.xml -logFile -`. Mã thoát khác 0 nghĩa là có test đỏ; cắm thẳng vào bước CI.",
       "interview": "**Câu hay gặp**\n\n| Mức | Câu hỏi |\n|---|---|\n| Junior | EditMode test và PlayMode test khác nhau thế nào? |\n| Junior | Test của anh để ở đâu trong project để nó không lọt vào build? |\n| Mid | Trong một game, cái gì đáng viết unit test và cái gì không? |\n| Mid | Làm sao test được code đang nằm trong MonoBehaviour? |\n| Senior | Pipeline build/CI ở dự án gần nhất của anh tự động tới đâu? |\n| Senior | Bộ test xanh nhưng bản build vẫn hỏng trên máy thật. Thiếu tầng nào? |\n\n**Khung trả lời 60 giây** — \"Trong game thì test cái gì?\"\n\n> Tôi test thứ mà **một lỗi âm thầm sẽ đắt hơn công viết test**, và trong game thì đó gần như luôn là C# thuần: công thức sát thương và kinh tế, máy trạng thái quest, điều kiện mở khoá, và **migration save**. Cái cuối là bắt buộc với tôi — save hỏng là mất tiến trình người chơi, và không sửa được sau khi phát hành, nên tôi giữ file save thật của từng bản đã ship trong repo và có test nạp lại từng cái.\n>\n> Thứ tôi **không** test tự động: cảm giác điều khiển, bố cục UI, \"màn chơi có vui không\" — đó là việc của playtest.\n>\n> Kéo theo là một quan sát về kiến trúc: mọi thứ ở danh sách trên đều test được vì chúng không phụ thuộc `MonoBehaviour`. Nên \"làm sao test được\" và \"làm sao kiến trúc sạch\" là cùng một câu hỏi. Dấu hiệu tôi đang đi đúng là file test logic không có dòng `using UnityEngine` nào.\n\n**Họ sẽ đào tiếp**\n\n- *\"Test code trong MonoBehaviour?\"* → Không test trực tiếp, mà **kéo logic ra ngoài**: hàm tĩnh thuần cho công thức, interface cho thời gian và ngẫu nhiên (`IClock`, `IRandom`), còn MonoBehaviour chỉ đọc input, gọi logic, đẩy lên hiển thị. Phần vỏ đó không cần unit test — nó cần người chơi thử.\n- *\"Loại test nào trả lãi cao nhất ở game?\"* → **Validate asset**: một EditMode test duyệt mọi ScriptableObject và prefab để bắt enemy thiếu prefab, id trùng, `minDamage > maxDamage`, clip âm thanh đã xoá. Loại lỗi này làm QA mất cả buổi mà máy tìm ra trong một giây, và nó là lỗi *dữ liệu* nên không compiler nào bắt được.\n- *\"Test xanh mà build vẫn hỏng?\"* → Vì CI thường chỉ chạy EditMode test. Tầng thiếu là **smoke test trên bản build**: nạp Boot, qua menu, vào màn 1, chạy 30 giây, chỉ kiểm không có exception. Rẻ, và bắt được phần lớn sự cố \"build không mở được\".\n- *\"CI Unity tốn ở đâu?\"* → Ba chỗ hay bị bỏ quên: kích hoạt license trên máy CI (hỏng nhiều nhất khi dựng lần đầu), **cache `Library/`** (không cache là 40 phút thay vì 6), và iOS bắt buộc runner macOS. Cache `Library` phải xoá khi nâng phiên bản Unity.\n- *\"Test lung lay thì sao?\"* → Coi như bug ưu tiên cao, sửa hoặc xoá ngay. Một bộ test đỏ ngẫu nhiên sẽ dạy cả đội thói quen bấm chạy lại cho tới khi xanh, và lúc đó nó tệ hơn là không có test.\n\n**Cờ đỏ**\n\n- Nói về độ phủ (coverage) như mục tiêu: game có rất nhiều code chỉ để hiển thị, ép phủ nó là lãng phí.\n- `yield return new WaitForSeconds(2f)` trong PlayMode test để \"đợi cho chắc\".\n- Test dùng chung `static` nên phụ thuộc thứ tự chạy.\n- Không biết code test lọt vào build được nếu asmdef không tick Test Assemblies.\n- \"Dự án game không test được\" — nói vậy là chưa từng tách logic khỏi engine.\n\n**Số / ví dụ nên thuộc**\n\n- `Unity -batchmode -projectPath . -runTests -testPlatform EditMode -testResults results.xml -logFile -` (không kèm `-quit`).\n- Cache `Library/`: khác biệt cỡ 40 phút so với 6 phút mỗi lần chạy.\n- Bộ test nên chạy **dưới 5 phút**, nếu không sẽ không ai chờ.\n- Thang CI: script build một lệnh → test trên PR → **build đêm cho QA** → smoke test → farm thiết bị.",
+      "hasAiHowto": true,
+      "i18n": {},
+      "color": "#4dd4e0"
+    },
+    {
+      "id": "unity-third-party",
+      "title": "Thư viện ngoài — chọn, cách ly, tích hợp",
+      "summary": "Bản đồ built-in trước / thư viện ngoài sau, bảy tiêu chí chọn, luật bọc sau interface của mình, và bẫy tích hợp thật — asmdef, EDM4U, Gradle, stripping, DOTween.",
+      "icon": "🧩",
+      "parent": "unity",
+      "children": [],
+      "depth": 2,
+      "branch": "unity",
+      "tags": [
+        "unity",
+        "third-party",
+        "plugin",
+        "tooling",
+        "build"
+      ],
+      "related": [
+        "unity-project-structure",
+        "unity-build-platform",
+        "unity-design-patterns",
+        "unity-monetization-sdk",
+        "tech-stack"
+      ],
+      "status": "deep",
+      "read": 765,
+      "readIndex": 91,
+      "level": "intermediate",
+      "refs": [],
+      "order": 165,
+      "collapsed": false,
+      "path": "09-unity/unity-third-party.md",
+      "words": 3439,
+      "body": "Mỗi thư viện đưa vào dự án là một món nợ có lãi: lãi trả bằng thời gian nâng phiên bản Unity, thời gian gỡ xung đột Gradle, và thời gian viết lại khi tác giả ngừng bảo trì. Nó vẫn thường đáng — nhưng chỉ khi bạn trả lời được một câu trước: **thứ này thay cho bao nhiêu ngày công của mình?** Dưới hai ngày thì tự viết gần như luôn rẻ hơn.\n\n## Built-in trước, ngoài sau\n\nRất nhiều thư viện phổ biến ra đời khi Unity chưa có thứ tương đương. Bảng này là trạng thái hiện tại (Unity 6 + URP):\n\n| Việc | Có sẵn trong Unity | Thư viện ngoài hay dùng | Ra ngoài khi nào |\n|---|---|---|---|\n| Tween / animation bằng code | Không có tween chính thức; `Awaitable` + `Mathf.Lerp` đủ cho việc đơn giản | **DOTween** (miễn phí + Pro), PrimeTween, LitMotion | Cần sequence, callback, ease đầy đủ, hàng trăm tween cùng lúc |\n| Bất đồng bộ | **`Awaitable`** (Unity 6) | UniTask | Cần chạy trên Unity cũ, hoặc cần bộ toán tử phong phú |\n| JSON | `JsonUtility` | **`com.unity.nuget.newtonsoft-json`** (bản chính thức) | Cần Dictionary, đa hình, đọc JSON tuỳ ý — xem [[unity-save-data]] |\n| Inspector / công cụ | Attribute built-in, UI Toolkit | Odin Inspector (per-seat), NaughtyAttributes (MIT) | Nhiều ScriptableObject phức tạp — xem [[unity-editor-tools]] |\n| Tìm đường | NavMesh (`AI Navigation`) | A* Pathfinding Project | Lưới 2D, hàng trăm agent, cần điều khiển thuật toán |\n| Input | **Input System** | Rewired | Console đời cũ, ma trận thiết bị phức tạp |\n| Multiplayer | Netcode for GameObjects | Mirror, **Photon Fusion** | Xem [[unity-multiplayer]] — đừng chọn theo tên, chọn theo mô hình authority |\n| Audio | AudioMixer + snapshot | FMOD, Wwise | Có sound designer làm song song — xem [[unity-audio]] |\n| Camera | **Cinemachine** | (hiếm khi cần) | Xem [[unity-camera]] |\n| DI | (không có) | VContainer, Zenject | Xem [[unity-design-patterns]] |\n| Bản địa hoá | `com.unity.localization` | I2 Localization | Cần workflow dịch có sẵn, nhiều định dạng nhập/xuất |\n| Game feel | (không có) | Feel (More Mountains) | Muốn thư viện hiệu ứng dựng sẵn thay vì tự ghép |\n\nNhìn bảng này, quy tắc hiện ra: **thư viện đáng nhất là thứ Unity không định làm** (tween, DI, middleware audio), còn thứ Unity đã làm thì dùng bản của Unity để đỡ một nguồn xung đột.\n\n## Bảy tiêu chí chọn\n\nXếp theo mức độ hay bị bỏ qua, không theo mức quan trọng:\n\n1. **Có đụng native không** (`.aar`, `.jar`, CocoaPods, `.so`). Thư viện C# thuần thì tệ nhất là lỗi biên dịch; thư viện có native kéo theo Gradle, EDM4U, và những buổi chiều không code được dòng nào.\n2. **Lần cập nhật gần nhất và ai đang bảo trì.** Một người duy nhất, im lặng 18 tháng, trong khi Unity ra bản mới mỗi năm — đó là rủi ro bạn sẽ gánh, không phải họ.\n3. **Có source hay chỉ có DLL.** Có source thì fork được, sửa được, debug bước vào được. Chỉ có DLL nghĩa là khi nó hỏng trên bản Unity mới, bạn chỉ còn cách chờ.\n4. **An toàn với IL2CPP + stripping.** Thư viện dựa nhiều vào reflection cần `link.xml`; nếu tác giả không nhắc gì tới AOT, coi như bạn sẽ là người phát hiện — trên build release, xem [[unity-build-platform]].\n5. **License và cách tính tiền.** MIT/Apache là rẻ nhất về lâu dài. Per-seat thì nhân với số người sẽ dùng (kể cả người mới vào). Tính theo CCU hoặc doanh thu thì đó là chi phí **vận hành**, không phải chi phí mua.\n6. **Có asmdef riêng không.** Không có thì code của bạn trong asmdef **không tham chiếu tới nó được** — chi tiết ở phần dưới.\n7. **Kích cỡ build và ảnh hưởng tới thời gian biên dịch.** Một thư viện editor to làm chậm mọi lần recompile của cả đội, kể cả người không dùng nó.\n\n## Luật cách ly: bọc sau interface của mình\n\nĐây là luật đáng giá nhất trong node này. Gọi API của thư viện rải rác trong 300 file nghĩa là **đổi hoặc bỏ nó là viết lại dự án**. Một lớp bọc mỏng thì rẻ:\n\n```csharp\npublic interface ITweenService {\n    ITweenHandle MoveTo(Transform t, Vector3 target, float seconds);\n    void KillAllOn(GameObject owner);\n}\n```\n\nGameplay chỉ biết `ITweenService`. Bên trong nó là DOTween, PrimeTween, hay coroutine tự viết là chuyện của một file. Lợi ích thấy ngay, không phải lợi ích giả định:\n\n- Đổi thư viện là sửa một adapter, không phải 300 chỗ.\n- Test logic không cần thư viện thật — tiêm bản giả, xem [[unity-testing-ci]].\n- Chỗ nào cũng phải đi qua adapter nên **dễ áp luật chung** (ví dụ: mọi tween đều tự huỷ khi owner bị destroy).\n\nNgoại lệ hợp lý: thư viện đã trở thành *ngôn ngữ* của dự án và gần như không thể thay (Cinemachine, Input System, engine networking). Bọc chúng lại chỉ tạo thêm một tầng vô ích.\n\n## Đặt ở đâu trong project\n\n| Cách | Ưu | Nhược |\n|---|---|---|\n| `Packages/` qua UPM (git URL hoặc registry) | Nâng cấp bằng một dòng trong `manifest.json`; không lẫn vào `Assets/` | Chỉ dùng được nếu tác giả có hỗ trợ UPM |\n| `Assets/Plugins/<Tên>/` | Cách phổ biến của Asset Store | Lẫn vào cây asset; **code trong `Plugins/` biên dịch vào assembly tiền định nghĩa** |\n| `Assets/_Project/ThirdParty/` (tự chép vào) | Kiểm soát hoàn toàn, sửa được | Nâng cấp = merge tay, dễ mất sửa đổi |\n\nCái bẫy ở dòng thứ hai đáng nói kỹ: code rời trong `Plugins/` đi vào assembly tiền định nghĩa, mà **assembly có asmdef không tham chiếu ngược được vào đó**. Dự án nào đã chia asmdef theo feature ([[unity-project-structure]]) sẽ gặp lỗi \"type or namespace not found\" mà mọi thứ nhìn vẫn đúng. Cách chữa: thư viện phải có asmdef riêng (DOTween sinh được qua Utility Panel), hoặc bạn tự thêm một asmdef vào thư mục của nó.\n\n## DOTween — những thứ chỉ lộ ra khi làm thật\n\nThư viện được dùng nhiều nhất, và cũng là thư viện bị dùng sai nhiều nhất:\n\n- **Chạy Utility Panel sau khi import** (`Tools > Demigiant > DOTween Utility Panel > Setup`). Nó bật các module (UI, TextMeshPro, Physics) và sinh asmdef. Bỏ qua bước này thì `DOText`, `DOFade` trên UI đơn giản là **không tồn tại**, và lỗi trông như bạn gõ sai tên hàm.\n- **Tween không tự chết theo object.** Object bị `Destroy` giữa chừng mà tween còn chạy là `MissingReferenceException` ở một frame ngẫu nhiên sau đó. Chữa bằng `.SetLink(gameObject)` cho mọi tween, hoặc `DOTween.Kill(transform)` trong `OnDestroy` — và ép luật đó ở adapter thay vì trông chờ mọi người nhớ.\n- **`timeScale = 0`**: tween dừng theo. UI trong menu pause phải `.SetUpdate(true)` — cùng họ với bẫy ở [[unity-game-loop]].\n- **Safe Mode** bắt lỗi tween trỏ vào object đã chết rồi im lặng huỷ. Rất tiện lúc phát triển; nhưng nó cũng **giấu đi** chính cái lỗi bạn cần biết, nên đừng coi việc không thấy lỗi là bằng chứng code đúng.\n- **Capacity**: `DOTween.SetTweensCapacity(500, 100)` lúc khởi động. Vượt ngưỡng mặc định thì DOTween cấp phát lại mảng nội bộ ngay giữa gameplay — một cú GC không ai ngờ tới, xem [[unity-csharp-memory]].\n- **`SetAutoKill(false)` + `Restart()`** cho tween dùng lại nhiều lần (thanh máu, nút bấm): tránh tạo tween mới mỗi lần. Đổi lại bạn phải tự `Kill()` khi xong đời object.\n- **`DOText` cấp phát chuỗi mỗi frame.** Với HUD đổi liên tục, dùng cách khác.\n\n## Bẫy tích hợp lộ ra khi build\n\n- **Trùng Newtonsoft.** Nhiều SDK đóng gói sẵn `Newtonsoft.Json.dll` riêng; cộng với package chính thức là hai bản trong build → lỗi \"duplicate assembly\". Chọn một: xoá DLL của SDK, hoặc bỏ package.\n- **EDM4U** (External Dependency Manager) do nhiều SDK cùng mang theo, mỗi cái một phiên bản. Giữ **bản mới nhất**, xoá phần còn lại, rồi *Force Resolve* — chi tiết ở [[unity-monetization-sdk]].\n- **Template Gradle tự sửa** (`mainTemplate.gradle`, `gradleTemplate.properties`) không tự cập nhật khi nâng Unity. Sau mỗi lần nâng bản, so lại template của mình với template mặc định mới.\n- **Thư viện native cũ** chưa build lại cho yêu cầu page size 16KB của Android hiện đại sẽ rớt ở khâu cài đặt, không phải khâu biên dịch.\n- **Stripping** xoá phần bị gọi qua reflection: thư viện chạy trong Editor, chết trên bản Release. `link.xml` hoặc `[Preserve]`.\n- **Thư mục `Editor/`**: thư viện trộn code editor vào assembly runtime sẽ làm **build hỏng** với lỗi `UnityEditor` không tồn tại. Đây là dấu hiệu chất lượng đáng để loại từ vòng đánh giá.\n\n## Nâng cấp và gỡ bỏ\n\nNâng thư viện là một nhiệm vụ riêng, làm trên **nhánh riêng**, không nhét kèm tính năng: đọc changelog, nâng, build **cả Android lẫn iOS**, chạy qua một lượt gameplay. Nhiều thư viện Asset Store không hỗ trợ nâng đè — phải xoá thư mục cũ rồi import lại, và mọi sửa đổi tay của bạn trong đó sẽ bay. Đó là lý do thứ hai (sau khả năng thay thế) để **không sửa thẳng vào code thư viện**: cần sửa thì ghi lại thành patch và ghi chú trong `_Project/ThirdParty/README.md`.\n\n## Kiểm tra nhanh\n\n- [ ] Mỗi thư viện ngoài có một dòng ghi: vì sao chọn, thay cho bao nhiêu ngày công, ai bảo trì\n- [ ] Thư viện quan trọng nằm sau interface của mình, không gọi thẳng khắp nơi\n- [ ] Thư viện có asmdef riêng, hoặc bạn đã tự thêm\n- [ ] Đã build **release trên thiết bị thật** sau mỗi lần thêm/nâng thư viện\n- [ ] Không có hai bản Newtonsoft / EDM4U trong project\n- [ ] Sửa đổi tay trong code thư viện được ghi lại ở một chỗ\n- [ ] License được kiểm trước khi phát hành (per-seat đủ ghế, revenue share đã tính vào)",
+      "aiPrompt": "**Dùng AI thế nào với thư viện ngoài**\n\nĐây là vùng AI sai nhiều nhất trong Unity, và sai theo kiểu khó phát hiện: **nó bịa API rất giống thật**. `DOTween.SetLink`, `SetRecyclable`, các overload của `DOMove` — mỗi bản có khác biệt nhỏ, và model trộn lẫn nhiều bản trong dữ liệu huấn luyện. Code sinh ra nhìn hợp lý, biên dịch mới biết.\n\nNên chia việc theo mức độ kiểm chứng được:\n\n| Giao được ngay | Phải tự kiểm |\n|---|---|\n| Viết **adapter** bọc thư viện sau interface của bạn (chỉ cần biết interface) | Tên và chữ ký API của thư viện |\n| Chuyển code từ thư viện A sang B khi bạn dán API của cả hai | Phiên bản nào có tính năng nào |\n| So sánh hai thư viện theo **tiêu chí bạn đưa ra** | Giá, license, tình trạng bảo trì (dữ liệu cũ) |\n| Viết `link.xml`, asmdef, checklist nâng cấp | Hành vi thật khi build release |\n\nMẹo hiệu quả nhất: **dán đoạn tài liệu hoặc file API thật vào prompt** rồi bắt AI chỉ dùng những gì có trong đó. Và luôn yêu cầu nó đánh dấu chỗ nó không chắc — một danh sách \"tôi không chắc ba hàm này có trong bản 1.2\" tiết kiệm hơn nhiều so với một câu trả lời tự tin đều.\n\n**Phải nêu rõ** (thiếu là AI tự bịa):\n- **Tên và số hiệu phiên bản** thư viện, cộng phiên bản Unity. Đây là thông tin bắt buộc, không phải chi tiết phụ.\n- Thư viện đặt ở đâu (`Packages/`, `Plugins/`) và code của bạn có nằm trong asmdef không.\n- Có được phép sửa code thư viện không (mặc định: không).\n- Nền tảng đích — quyết định phần native và stripping.\n- Bạn muốn adapter hay dùng thẳng; nếu adapter thì interface do bạn định nghĩa ra sao.\n\n**Mẫu prompt**\n\n```\nUnity 6 (6000.0), DOTween 1.2.765 (bản miễn phí), code gameplay nằm trong\nasmdef Game.Gameplay. Viết adapter TweenService:\n- Cài đặt interface ITweenService tôi đưa dưới đây: <dán>\n- Mọi tween PHẢI tự huỷ khi owner GameObject bị destroy\n- Mọi tween UI phải chạy được khi Time.timeScale = 0\n- Gọi SetTweensCapacity một lần lúc khởi tạo\n\nRàng buộc: CHỈ dùng API có trong bản 1.2.765; nếu không chắc một hàm có tồn tại\ntrong bản đó thì nói ra thay vì dùng. KHÔNG sửa code trong thư mục DOTween.\nCuối câu trả lời liệt kê những API bạn đã dùng và bạn chắc chắn tới đâu về từng cái.\n```\n\n**Bẫy thường gặp:** AI viết code dùng tính năng của **bản Pro** (hoặc bản mới hơn bản bạn đang cài) mà không nói gì — lỗi hiện ra là \"method not found\", và người ta mất nửa buổi tưởng mình cài sai. Cùng họ với bẫy đó: nó đề xuất một thư viện đã ngừng bảo trì ba năm bằng giọng rất chắc chắn, vì trong dữ liệu huấn luyện thư viện đó còn sống. **Luôn tự mở trang chủ/repo xem lần commit gần nhất** trước khi tin một lời giới thiệu thư viện — đó là việc của bạn, không phải của nó.",
+      "unity": "",
+      "code": "Demo dựng đúng luật cách ly: một `ITweenService` do bạn định nghĩa, một bản cài đặt **chạy được ngay không cần cài gì** (coroutine), và một bản DOTween nằm sau define symbol. Đổi thư viện là đổi một dòng đăng ký. Mọi tween tự chết theo owner — luật ép ở adapter, không trông chờ người gọi nhớ.\n\n**Setup**\n\n<figure class=\"fig\">\n<svg viewBox=\"0 0 660 300\" role=\"img\" aria-label=\"Sơ đồ thư mục với Plugins DOTween có asmdef, thư mục Tween của dự án, và Inspector của TweenBootstrap kèm bảng define symbol\">\n  <rect x=\"10\" y=\"10\" width=\"250\" height=\"280\" rx=\"8\" class=\"fig-box\"/>\n  <text x=\"22\" y=\"32\" class=\"fig-label\" font-size=\"13\" font-weight=\"600\">Project</text>\n  <line x1=\"10\" y1=\"42\" x2=\"260\" y2=\"42\" class=\"fig-line\"/>\n  <text x=\"22\" y=\"64\" class=\"fig-muted\" font-size=\"12\">▾ Assets/Plugins/</text>\n  <text x=\"38\" y=\"82\" class=\"fig-muted\" font-size=\"11\">▾ Demigiant/DOTween/</text>\n  <text x=\"54\" y=\"98\" class=\"fig-label\" font-size=\"11\">DOTween.dll</text>\n  <text x=\"54\" y=\"114\" class=\"fig-label\" font-size=\"11\">DOTween.Modules.asmdef</text>\n  <text x=\"54\" y=\"130\" class=\"fig-muted\" font-size=\"10\">(Utility Panel sinh ra — thiếu</text>\n  <text x=\"54\" y=\"144\" class=\"fig-muted\" font-size=\"10\">nó thì asmdef của bạn không</text>\n  <text x=\"54\" y=\"158\" class=\"fig-muted\" font-size=\"10\">tham chiếu tới DOTween được)</text>\n  <rect x=\"16\" y=\"168\" width=\"238\" height=\"20\" rx=\"4\" fill=\"#51cf9b\" opacity=\"0.18\"/>\n  <text x=\"22\" y=\"183\" class=\"fig-label\" font-size=\"12\" font-weight=\"600\">▾ _Project/Core/Tween/</text>\n  <text x=\"38\" y=\"202\" class=\"fig-muted\" font-size=\"11\">ITweenService.cs</text>\n  <text x=\"38\" y=\"218\" class=\"fig-muted\" font-size=\"11\">CoroutineTweenService.cs</text>\n  <text x=\"38\" y=\"234\" class=\"fig-muted\" font-size=\"11\">DoTweenService.cs</text>\n  <text x=\"38\" y=\"250\" class=\"fig-muted\" font-size=\"11\">TweenBootstrap.cs</text>\n  <text x=\"38\" y=\"266\" class=\"fig-label\" font-size=\"11\">Game.Core.asmdef</text>\n  <text x=\"22\" y=\"284\" class=\"fig-muted\" font-size=\"10\">Gameplay chỉ biết ITweenService.</text>\n  <rect x=\"276\" y=\"10\" width=\"374\" height=\"280\" rx=\"8\" class=\"fig-box\"/>\n  <text x=\"288\" y=\"32\" class=\"fig-label\" font-size=\"13\" font-weight=\"600\">Inspector / Project Settings</text>\n  <line x1=\"276\" y1=\"42\" x2=\"650\" y2=\"42\" class=\"fig-line\"/>\n  <rect x=\"284\" y=\"50\" width=\"358\" height=\"18\" rx=\"3\" fill=\"#51cf9b\" opacity=\"0.22\"/>\n  <text x=\"292\" y=\"63\" class=\"fig-label\" font-size=\"12\" font-weight=\"600\">Tween Bootstrap (Script)  — ở scene Boot</text>\n  <text x=\"300\" y=\"82\" class=\"fig-muted\" font-size=\"11\">Tweener Capacity</text><text x=\"500\" y=\"82\" class=\"fig-label\" font-size=\"11\">500</text>\n  <text x=\"300\" y=\"98\" class=\"fig-muted\" font-size=\"11\">Sequence Capacity</text><text x=\"500\" y=\"98\" class=\"fig-label\" font-size=\"11\">100</text>\n  <text x=\"300\" y=\"114\" class=\"fig-muted\" font-size=\"11\">Log Implementation</text><text x=\"500\" y=\"114\" class=\"fig-label\" font-size=\"11\">☑ (in ra bản đang dùng)</text>\n  <rect x=\"284\" y=\"128\" width=\"358\" height=\"18\" rx=\"3\" fill=\"#ffd43b\" opacity=\"0.22\"/>\n  <text x=\"292\" y=\"141\" class=\"fig-label\" font-size=\"12\" font-weight=\"600\">Player Settings ▸ Scripting Define Symbols</text>\n  <text x=\"300\" y=\"160\" class=\"fig-muted\" font-size=\"11\">Chưa cài DOTween</text><text x=\"500\" y=\"160\" class=\"fig-label\" font-size=\"11\">(để trống)</text>\n  <text x=\"300\" y=\"176\" class=\"fig-muted\" font-size=\"11\">Đã cài DOTween</text><text x=\"500\" y=\"176\" class=\"fig-label\" font-size=\"11\">USE_DOTWEEN</text>\n  <text x=\"292\" y=\"198\" class=\"fig-muted\" font-size=\"10\">Define đặt cho TỪNG nền tảng — nhớ đặt cả Android lẫn iOS.</text>\n  <rect x=\"284\" y=\"210\" width=\"358\" height=\"18\" rx=\"3\" fill=\"#6ea8fe\" opacity=\"0.22\"/>\n  <text x=\"292\" y=\"223\" class=\"fig-label\" font-size=\"12\" font-weight=\"600\">Đổi thư viện = đổi một dòng</text>\n  <text x=\"300\" y=\"242\" class=\"fig-muted\" font-size=\"11\">TweenBootstrap.Create()</text>\n  <text x=\"300\" y=\"258\" class=\"fig-muted\" font-size=\"11\">Gameplay không đổi một dòng nào</text>\n  <text x=\"300\" y=\"276\" class=\"fig-muted\" font-size=\"11\">Test tiêm bản giả cũng qua đây</text>\n</svg>\n<figcaption>Thư viện nằm ở Plugins với asmdef riêng; adapter nằm trong asmdef của dự án; gameplay chỉ thấy interface.</figcaption>\n</figure>\n\n**Script**\n\n```csharp\n// ITweenService.cs — Unity 6. Interface của BẠN, không phải của thư viện.\n// Gameplay chỉ include file này; không file gameplay nào được \"using DG.Tweening\".\nusing System;\nusing UnityEngine;\n\npublic interface ITweenHandle\n{\n    bool IsActive { get; }\n    void Kill(bool complete = false);\n}\n\npublic interface ITweenService\n{\n    ITweenHandle MoveTo(Transform target, Vector3 to, float seconds, Action onDone = null, bool unscaled = false);\n    ITweenHandle FadeCanvas(CanvasGroup group, float to, float seconds, Action onDone = null, bool unscaled = true);\n\n    /// Huỷ mọi tween thuộc về owner. Adapter tự gắn owner cho từng tween, nên\n    /// người gọi không phải nhớ — và không ai quên.\n    void KillAllOn(GameObject owner);\n}\n```\n\n```csharp\n// CoroutineTweenService.cs — bản cài đặt KHÔNG cần thư viện nào, chạy được ngay.\n// Đủ cho dự án nhỏ, và là lưới an toàn khi còn đang cân nhắc chọn thư viện.\nusing System;\nusing System.Collections;\nusing System.Collections.Generic;\nusing UnityEngine;\n\npublic sealed class CoroutineTweenService : MonoBehaviour, ITweenService\n{\n    sealed class Handle : ITweenHandle\n    {\n        public bool IsActive { get; private set; } = true;\n        public bool CompleteOnKill;\n        public void Kill(bool complete = false) { CompleteOnKill = complete; IsActive = false; }\n        public void Finish() => IsActive = false;\n    }\n\n    readonly Dictionary<int, List<Handle>> byOwner = new();   // instanceID của owner -> tween đang chạy\n\n    public ITweenHandle MoveTo(Transform target, Vector3 to, float seconds, Action onDone = null, bool unscaled = false)\n    {\n        Vector3 from = target.position;\n        return Run(target.gameObject, seconds, unscaled, onDone,\n                   k => { if (target) target.position = Vector3.LerpUnclamped(from, to, Ease(k)); });\n    }\n\n    public ITweenHandle FadeCanvas(CanvasGroup group, float to, float seconds, Action onDone = null, bool unscaled = true)\n    {\n        float from = group.alpha;\n        return Run(group.gameObject, seconds, unscaled, onDone,\n                   k => { if (group) group.alpha = Mathf.LerpUnclamped(from, to, Ease(k)); });\n    }\n\n    public void KillAllOn(GameObject owner)\n    {\n        if (!owner || !byOwner.TryGetValue(owner.GetInstanceID(), out var list)) return;\n        for (int i = list.Count - 1; i >= 0; i--) list[i].Kill();\n        list.Clear();\n    }\n\n    static float Ease(float k) { float inv = 1f - k; return 1f - inv * inv * inv; }   // ease-out cubic\n\n    ITweenHandle Run(GameObject owner, float seconds, bool unscaled, Action onDone, Action<float> apply)\n    {\n        var h = new Handle();\n        int key = owner.GetInstanceID();\n        if (!byOwner.TryGetValue(key, out var list)) byOwner[key] = list = new List<Handle>();\n        list.Add(h);\n        StartCoroutine(Play(owner, h, list, seconds, unscaled, onDone, apply));\n        return h;\n    }\n\n    IEnumerator Play(GameObject owner, Handle h, List<Handle> list,\n                     float seconds, bool unscaled, Action onDone, Action<float> apply)\n    {\n        float k = 0f;\n        while (k < 1f && h.IsActive)\n        {\n            if (!owner) break;                     // owner đã destroy: dừng im lặng, không ném\n            k += (unscaled ? Time.unscaledDeltaTime : Time.deltaTime) / Mathf.Max(0.0001f, seconds);\n            apply(Mathf.Clamp01(k));\n            yield return null;\n        }\n        if (owner && (h.IsActive || h.CompleteOnKill)) { apply(1f); onDone?.Invoke(); }\n        h.Finish();\n        list.Remove(h);\n    }\n}\n```\n\n```csharp\n// DoTweenService.cs — bản cài đặt bằng DOTween. Chỉ biên dịch khi có define USE_DOTWEEN,\n// nên file này nằm trong repo được kể cả khi máy khác chưa import DOTween.\n#if USE_DOTWEEN\nusing System;\nusing DG.Tweening;\nusing UnityEngine;\n\npublic sealed class DoTweenService : ITweenService\n{\n    sealed class DoHandle : ITweenHandle\n    {\n        readonly Tween tween;\n        public DoHandle(Tween t) { tween = t; }\n        public bool IsActive => tween != null && tween.IsActive();\n        public void Kill(bool complete = false) { if (IsActive) tween.Kill(complete); }\n    }\n\n    public DoTweenService(int tweeners, int sequences)\n    {\n        DOTween.Init(recycleAllByDefault: false, useSafeMode: true, logBehaviour: LogBehaviour.ErrorsOnly);\n        // Vượt capacity là DOTween cấp phát lại mảng nội bộ GIỮA gameplay -> một cú GC.\n        DOTween.SetTweensCapacity(tweeners, sequences);\n    }\n\n    public ITweenHandle MoveTo(Transform target, Vector3 to, float seconds, Action onDone = null, bool unscaled = false)\n    {\n        var t = target.DOMove(to, seconds)\n                      .SetUpdate(unscaled)              // true = không theo Time.timeScale\n                      .SetLink(target.gameObject)       // tự huỷ khi object bị destroy (DOTween 1.2+)\n                      .SetId(target.gameObject.GetInstanceID())\n                      .OnComplete(() => onDone?.Invoke());\n        return new DoHandle(t);\n    }\n\n    public ITweenHandle FadeCanvas(CanvasGroup group, float to, float seconds, Action onDone = null, bool unscaled = true)\n    {\n        var t = group.DOFade(to, seconds)\n                     .SetUpdate(unscaled)\n                     .SetLink(group.gameObject)\n                     .SetId(group.gameObject.GetInstanceID())\n                     .OnComplete(() => onDone?.Invoke());\n        return new DoHandle(t);\n    }\n\n    // Nhờ SetId ở trên, huỷ theo owner là một lời gọi — không cần tự giữ danh sách.\n    public void KillAllOn(GameObject owner) => DOTween.Kill(owner.GetInstanceID());\n}\n#endif\n```\n\n```csharp\n// TweenBootstrap.cs — đặt trên GameObject \"Systems\" ở scene Boot (xem node Vòng đời game).\n// ĐỔI THƯ VIỆN = ĐỔI FILE NÀY. Không file gameplay nào phải sửa.\nusing UnityEngine;\n\n[DefaultExecutionOrder(-500)]\npublic class TweenBootstrap : MonoBehaviour\n{\n    public static ITweenService Tween { get; private set; }\n\n    [SerializeField] int tweenerCapacity = 500;\n    [SerializeField] int sequenceCapacity = 100;\n    [SerializeField] bool logImplementation = true;\n\n    bool isOwner;\n\n    void Awake()\n    {\n        if (Tween != null) { Destroy(gameObject); return; }   // huỷ bản MỚI, giữ bản cũ\n        isOwner = true;\n        DontDestroyOnLoad(gameObject);\n#if USE_DOTWEEN\n        Tween = new DoTweenService(tweenerCapacity, sequenceCapacity);\n#else\n        Tween = gameObject.AddComponent<CoroutineTweenService>();\n#endif\n        if (logImplementation) Debug.Log(\"[Tween] đang dùng \" + Tween.GetType().Name);\n    }\n\n    void OnDestroy() { if (isOwner) Tween = null; }   // bản trùng đã tự destroy ở Awake\n}\n```\n\n**Chạy thử**\n- Chưa cài DOTween: Play từ scene Boot, Console in `[Tween] đang dùng CoroutineTweenService`. Gọi `TweenBootstrap.Tween.MoveTo(transform, target, 0.5f)` — object chạy tới đích với ease-out.\n- **Kiểm chứng luật tự huỷ**: gọi `MoveTo` với thời gian 5 giây rồi `Destroy` object đang tween giữa chừng. Không có `MissingReferenceException` nào — đây chính là lỗi mà một dự án dùng thẳng DOTween rải rác sẽ gặp ở frame ngẫu nhiên.\n- Cài DOTween, chạy Utility Panel, thêm define `USE_DOTWEEN` cho **từng nền tảng** trong Player Settings: Console đổi sang `DoTweenService`, gameplay **không sửa một dòng nào**. Đó là toàn bộ giá trị của lớp adapter, đo được trong hai phút.\n- Đặt `Time.timeScale = 0` rồi gọi `FadeCanvas`: vẫn chạy, vì mặc định của nó là `unscaled: true`.",
+      "interview": "**Câu hay gặp**\n\n| Mức | Câu hỏi |\n|---|---|\n| Junior | Anh hay dùng thư viện ngoài nào? Dùng để làm gì? |\n| Junior | DOTween: tween đang chạy mà object bị destroy thì sao? |\n| Mid | Anh quyết định dùng thư viện ngoài hay tự viết dựa trên gì? |\n| Mid | Thêm một SDK vào là build Android hỏng. Anh tìm nguyên nhân ở đâu? |\n| Senior | Làm sao để sau này đổi hoặc bỏ một thư viện mà không viết lại dự án? |\n| Senior | Anh từng phải gỡ bỏ thư viện nào chưa? Vì sao và tốn bao lâu? |\n\n**Khung trả lời 60 giây** — \"Chọn thư viện ngoài hay tự viết?\"\n\n> Tôi hỏi ba câu theo thứ tự. **Unity đã có chưa?** Rất nhiều thư viện phổ biến ra đời khi engine còn thiếu — giờ `Awaitable`, Input System, Cinemachine, Localization đã có sẵn, dùng bản của Unity là bớt một nguồn xung đột. **Nó thay cho bao nhiêu ngày công của mình?** Dưới hai ngày thì tự viết gần như luôn rẻ hơn, vì mỗi thư viện là một món nợ phải trả lãi mỗi lần nâng Unity. **Nó có đụng native không?** Thư viện C# thuần thì tệ nhất là lỗi biên dịch; thư viện có `.aar` hay CocoaPods kéo theo Gradle, EDM4U, và những buổi chiều không viết được dòng code nào.\n>\n> Rồi mới tới các tiêu chí thường lệ: lần cập nhật gần nhất, có source hay chỉ có DLL, an toàn với IL2CPP và stripping, license tính theo ghế hay theo doanh thu.\n>\n> Và dù chọn gì, tôi **bọc nó sau interface của mình**. Gameplay gọi `ITweenService`, không gọi `DG.Tweening`. Nhờ vậy đổi thư viện là sửa một adapter thay vì ba trăm chỗ, và test chạy được mà không cần thư viện thật.\n\n**Họ sẽ đào tiếp**\n\n- *\"DOTween với object bị destroy?\"* → Tween vẫn chạy và ném `MissingReferenceException` ở một frame ngẫu nhiên **sau đó**, nên chỗ báo lỗi không phải chỗ gây lỗi. Chữa bằng `.SetLink(gameObject)` trên mọi tween hoặc `DOTween.Kill` trong `OnDestroy` — và tôi ép luật đó trong adapter, vì trông chờ cả đội nhớ là cách chắc chắn để có ngày quên.\n- *\"Còn bẫy DOTween nào?\"* → `timeScale = 0` làm tween dừng, nên UI menu pause phải `SetUpdate(true)`. Safe Mode nuốt lỗi — tiện khi phát triển nhưng đừng coi \"không thấy lỗi\" là bằng chứng code đúng. Và `SetTweensCapacity` lúc khởi động, vì vượt ngưỡng mặc định là DOTween cấp phát lại mảng nội bộ ngay giữa gameplay.\n- *\"Build Android hỏng sau khi thêm SDK?\"* → Nghi theo thứ tự: **trùng thư viện** (hai bản Newtonsoft, hai bản EDM4U — giữ bản mới nhất rồi Force Resolve), template Gradle tự sửa đã cũ so với bản Unity hiện tại, `minSdk` bị SDK đẩy lên, và thư viện native chưa hỗ trợ yêu cầu page size 16KB của Android mới — cái này rớt lúc **cài đặt**, không rớt lúc biên dịch.\n- *\"Vì sao phải bọc sau interface?\"* → Ba lợi ích đo được: đổi thư viện sửa một file; test logic không cần thư viện thật; và có **một chỗ duy nhất** để áp luật chung. Ngoại lệ là thứ đã thành ngôn ngữ của dự án như Cinemachine hay Input System — bọc lại chỉ thêm một tầng vô ích.\n- *\"Đặt thư viện ở đâu?\"* → Ưu tiên `Packages/` qua UPM vì nâng cấp bằng một dòng trong `manifest.json`. Nếu ở `Assets/Plugins/` thì nhớ: code rời trong `Plugins/` đi vào assembly tiền định nghĩa, mà **asmdef của bạn không tham chiếu ngược vào đó được** — dự án chia asmdef sẽ gặp lỗi \"type not found\" mà mọi thứ nhìn vẫn đúng.\n\n**Cờ đỏ**\n\n- Kể tên thư viện mà không nói được nó thay cho việc gì.\n- Sửa thẳng vào code thư viện, rồi bản nâng cấp xoá sạch.\n- Gọi API thư viện rải rác khắp dự án, không có lớp cách ly nào.\n- Không biết license: per-seat thiếu ghế, hoặc revenue share chưa tính vào giá thành.\n- \"Import về thấy chạy là được\" — chưa từng build release trên thiết bị sau khi thêm.\n\n**Số / ví dụ nên thuộc**\n\n- Ngưỡng thực dụng: thư viện thay dưới **2 ngày công** thì tự viết.\n- DOTween: `.SetLink()` · `.SetUpdate(true)` cho timeScale 0 · `SetTweensCapacity(500, 100)`.\n- Hai thứ hay trùng nhất trong build Android: **Newtonsoft.Json** và **EDM4U**.\n- Code trong `Assets/Plugins/` nằm ở assembly tiền định nghĩa — asmdef không tham chiếu vào được.",
       "hasAiHowto": true,
       "i18n": {},
       "color": "#4dd4e0"
@@ -4893,7 +4901,7 @@
       ],
       "status": "deep",
       "read": 680,
-      "readIndex": 78,
+      "readIndex": 80,
       "level": "intermediate",
       "refs": [],
       "order": 90,
@@ -4931,7 +4939,7 @@
       ],
       "status": "deep",
       "read": 700,
-      "readIndex": 80,
+      "readIndex": 82,
       "level": "intermediate",
       "refs": [],
       "order": 110,
@@ -4948,6 +4956,126 @@
       "color": "#4dd4e0"
     },
     {
+      "id": "game-database",
+      "title": "Database cho game",
+      "summary": "Dữ liệu nào về chỗ nào, sáu luật cho dữ liệu kinh tế, và cách viết một lệnh ghi tiền chạy hai lần vẫn chỉ trừ một lần.",
+      "icon": "🗄️",
+      "parent": "backend-go",
+      "children": [],
+      "depth": 2,
+      "branch": "backend-go",
+      "tags": [
+        "backend",
+        "database",
+        "postgres",
+        "redis",
+        "economy"
+      ],
+      "related": [
+        "game-server-go",
+        "economy-design",
+        "unity-save-data",
+        "playtesting-metrics"
+      ],
+      "status": "deep",
+      "read": 587,
+      "readIndex": 69,
+      "level": "advanced",
+      "refs": [],
+      "order": 20,
+      "collapsed": false,
+      "path": "10-backend-go/game-database.md",
+      "words": 2240,
+      "body": "Phần lớn thiệt hại thật của một game online không đến từ hack netcode mà đến từ **dữ liệu**: nhân đôi vật phẩm vì một lần retry, lạm phát vì không ai đo được tài nguyên phát ra, mất save vì backup chưa bao giờ được restore thử. Node này về chỗ để dữ liệu và luật viết vào nó. Phần process phục vụ nó ở [[game-server-go]].\n\n## Database: mỗi loại dữ liệu về đúng chỗ\n\n| Dữ liệu | Chỗ của nó | Vì sao |\n|---|---|---|\n| Tài khoản, inventory, tiền, tiến trình | PostgreSQL | Cần transaction, không được phép mất |\n| Phiên đăng nhập, token thu hồi | Redis | Tự hết hạn; mất thì đăng nhập lại, không ai chết |\n| Bảng xếp hạng | Redis ZSET, cuối mùa chốt xuống Postgres | `ZREVRANK` là O(log N); `ORDER BY` trên một triệu dòng mỗi request thì không |\n| Hàng đợi matchmaking, presence | Redis | Sống vài giây, tốc độ quan trọng hơn độ bền |\n| Save state đơn, client tự sở hữu | Cột `jsonb` trong Postgres | Không cần quan hệ, chỉ cần lưu và trả nguyên khối |\n| Event analytics | ClickHouse / BigQuery / file | Postgres sẽ phình và chậm dần. Xem [[playtesting-metrics]] |\n| Replay, ảnh người chơi tạo | Object storage (S3/R2) | Đừng nhét binary lớn vào database |\n\nChưa biết chọn gì thì: **Postgres một mình đủ cho vài nghìn CCU đầu tiên.** Nó làm được cả `jsonb`, cả hàng đợi (`SELECT … FOR UPDATE SKIP LOCKED`), cả khoá phân tán (advisory lock). Thêm Redis khi đo được điểm nghẽn thật, không phải vì sơ đồ kiến trúc trông chuyên nghiệp hơn.\n\n### Sáu luật cho dữ liệu kinh tế\n\n1. **Tiền là số nguyên.** `bigint`, không bao giờ `float`. Vàng, gem, EXP, điểm — tất cả số nguyên; muốn chia nhỏ thì đổi đơn vị (lưu 1 vàng = 100 đơn vị) chứ đừng dùng dấu phẩy động.\n2. **Ràng buộc đặt ở database, không chỉ trong code.** `CHECK (gold >= 0)`, `UNIQUE (request_id)`, khoá ngoại. Code sẽ có bug; database là lưới an toàn cuối cùng và nó không bao giờ quên.\n3. **Sổ cái append-only.** Mỗi thay đổi tài nguyên là một dòng, không sửa, không xoá. Nó cho bạn ba thứ: dựng lại số dư khi nghi ngờ, hoàn đồ cho người chơi có bằng chứng, và đo faucet/drain thật của [[economy-design]] mà không cần dựng thêm hệ thống đo nào.\n4. **Mọi lệnh ghi đều idempotent.** Client sinh `request_id`, database `UNIQUE` nó. Mạng rớt giữa chừng là chuyện hàng ngày trên 4G; không có idempotency thì mỗi lần rớt là một lần nhân đôi hoặc mất trắng.\n5. **Một transaction cho một quyết định.** Trừ tiền và cộng đồ không được là hai request khác nhau — hai request là hai cơ hội để chỉ một nửa xảy ra.\n6. **Thời gian là của server.** Dùng `now()` của Postgres cho mọi mốc. Đọc timestamp client gửi lên nghĩa là mời người chơi chỉnh đồng hồ máy để tua idle game.\n\n```sql\n-- Số dư: giá trị hiện tại, có ràng buộc không âm ngay ở tầng database.\nCREATE TABLE wallet (\n  user_id    uuid PRIMARY KEY,\n  gold       bigint NOT NULL DEFAULT 0 CHECK (gold >= 0),\n  updated_at timestamptz NOT NULL DEFAULT now()\n);\n\n-- Sổ cái: mỗi thay đổi một dòng. request_id UNIQUE chính là cái chặn nhân đôi.\nCREATE TABLE wallet_tx (\n  id            bigserial PRIMARY KEY,\n  request_id    text UNIQUE NOT NULL,\n  user_id       uuid NOT NULL REFERENCES wallet(user_id),\n  delta         bigint NOT NULL,\n  balance_after bigint NOT NULL,\n  reason        text NOT NULL,          -- 'quest:12', 'buy:sword', 'iap:gems_500'\n  created_at    timestamptz NOT NULL DEFAULT now()\n);\nCREATE INDEX ON wallet_tx (user_id, created_at DESC);\n\nCREATE TABLE inventory (\n  user_id uuid NOT NULL,\n  item_id text NOT NULL,\n  qty     int  NOT NULL CHECK (qty >= 0),\n  PRIMARY KEY (user_id, item_id)\n);\n```\n\n<figure class=\"fig\">\n<svg viewBox=\"0 0 660 250\" role=\"img\" aria-label=\"Client gửi lệnh mua kèm requestId, server ghi vào database rồi mạng rớt; client gửi lại cùng requestId và server trả kết quả cũ mà không trừ tiền lần hai\">\n  <defs>\n    <marker id=\"gsg-b\" viewBox=\"0 0 10 10\" refX=\"9\" refY=\"5\" markerWidth=\"7\" markerHeight=\"7\" orient=\"auto\">\n      <path d=\"M0 0 L10 5 L0 10 z\" fill=\"#6ea8fe\"/>\n    </marker>\n    <marker id=\"gsg-c\" viewBox=\"0 0 10 10\" refX=\"9\" refY=\"5\" markerWidth=\"7\" markerHeight=\"7\" orient=\"auto\">\n      <path d=\"M0 0 L10 5 L0 10 z\" fill=\"#51cf9b\"/>\n    </marker>\n  </defs>\n  <g class=\"fig-box-g\">\n    <rect x=\"14\"  y=\"8\" width=\"120\" height=\"30\" rx=\"7\" class=\"fig-box\"/>\n    <rect x=\"250\" y=\"8\" width=\"150\" height=\"30\" rx=\"7\" class=\"fig-box\"/>\n    <rect x=\"510\" y=\"8\" width=\"136\" height=\"30\" rx=\"7\" class=\"fig-box\"/>\n  </g>\n  <text x=\"74\"  y=\"28\" text-anchor=\"middle\" class=\"fig-label\" font-size=\"12\">Unity client</text>\n  <text x=\"325\" y=\"28\" text-anchor=\"middle\" class=\"fig-label\" font-size=\"12\">API Go</text>\n  <text x=\"578\" y=\"28\" text-anchor=\"middle\" class=\"fig-label\" font-size=\"12\">PostgreSQL</text>\n  <g class=\"fig-line\" stroke-dasharray=\"4 5\" stroke-width=\"1\" fill=\"none\">\n    <path d=\"M74 42 V240\"/>\n    <path d=\"M325 42 V240\"/>\n    <path d=\"M578 42 V240\"/>\n  </g>\n  <g stroke=\"#6ea8fe\" stroke-width=\"2\" marker-end=\"url(#gsg-b)\" fill=\"none\">\n    <path d=\"M74 72 H321\"/>\n    <path d=\"M325 104 H574\"/>\n    <path d=\"M578 134 H329\"/>\n    <path d=\"M325 164 H78\"/>\n  </g>\n  <text x=\"197\" y=\"66\"  text-anchor=\"middle\" class=\"fig-label\" font-size=\"11\">POST /buy · requestId = 7f3a</text>\n  <text x=\"450\" y=\"98\"  text-anchor=\"middle\" class=\"fig-muted\" font-size=\"10\">BEGIN · trừ vàng · ghi sổ cái 7f3a · COMMIT</text>\n  <text x=\"452\" y=\"128\" text-anchor=\"middle\" class=\"fig-muted\" font-size=\"10\">gold = 250</text>\n  <text x=\"200\" y=\"158\" text-anchor=\"middle\" class=\"fig-muted\" font-size=\"10\">200 gold=250</text>\n  <text x=\"200\" y=\"184\" text-anchor=\"middle\" font-size=\"11\" fill=\"#ff8787\">✕ mạng rớt — client không nhận được gì</text>\n  <g stroke=\"#6ea8fe\" stroke-width=\"2\" marker-end=\"url(#gsg-b)\" fill=\"none\">\n    <path d=\"M74 208 H321\"/>\n  </g>\n  <text x=\"197\" y=\"202\" text-anchor=\"middle\" class=\"fig-label\" font-size=\"11\">gửi lại — CÙNG requestId = 7f3a</text>\n  <g stroke=\"#51cf9b\" stroke-width=\"2\" marker-end=\"url(#gsg-c)\" fill=\"none\">\n    <path d=\"M325 234 H78\"/>\n  </g>\n  <text x=\"332\" y=\"228\" text-anchor=\"start\" font-size=\"11\" fill=\"#51cf9b\">đã có 7f3a → trả lại 250, KHÔNG trừ lần hai</text>\n</svg>\n<figcaption>Idempotency không phải tính năng cao cấp — nó là điều kiện tối thiểu để một lệnh ghi đi qua mạng di động mà không nhân đôi hoặc mất trắng.</figcaption>\n</figure>\n\n```go\n// Mua vật phẩm: trừ tiền và cộng đồ trong CÙNG một transaction,\n// gọi hai lần với cùng requestID vẫn ra đúng một kết quả.\nfunc (s *Store) BuyItem(ctx context.Context, userID, itemID, requestID string, price int64) (int64, error) {\n    tx, err := s.pool.Begin(ctx)\n    if err != nil {\n        return 0, err\n    }\n    defer tx.Rollback(ctx)       // không làm gì nếu đã Commit\n\n    // 1. Chốt chặn idempotency: request này xử lý rồi thì trả lại kết quả cũ.\n    var balance int64\n    err = tx.QueryRow(ctx,\n        \"SELECT balance_after FROM wallet_tx WHERE request_id = $1\", requestID).Scan(&balance)\n    if err == nil {\n        return balance, nil\n    }\n    if !errors.Is(err, pgx.ErrNoRows) {\n        return 0, err\n    }\n\n    // 2. FOR UPDATE: hai request song song xếp hàng, thay vì cùng đọc 300 rồi cùng ghi 200.\n    if err = tx.QueryRow(ctx,\n        \"SELECT gold FROM wallet WHERE user_id = $1 FOR UPDATE\", userID).Scan(&balance); err != nil {\n        return 0, err\n    }\n    if balance < price {\n        return balance, ErrNotEnoughGold\n    }\n    balance -= price\n\n    if _, err = tx.Exec(ctx,\n        \"UPDATE wallet SET gold = $1, updated_at = now() WHERE user_id = $2\",\n        balance, userID); err != nil {\n        return 0, err\n    }\n    if _, err = tx.Exec(ctx,\n        `INSERT INTO inventory (user_id, item_id, qty) VALUES ($1, $2, 1)\n         ON CONFLICT (user_id, item_id) DO UPDATE SET qty = inventory.qty + 1`,\n        userID, itemID); err != nil {\n        return 0, err\n    }\n    // 3. Ghi sổ cái. UNIQUE(request_id) là thứ làm cho bước 1 có tác dụng.\n    if _, err = tx.Exec(ctx,\n        `INSERT INTO wallet_tx (request_id, user_id, delta, balance_after, reason)\n         VALUES ($1, $2, $3, $4, 'buy:' || $5)`,\n        requestID, userID, -price, balance, itemID); err != nil {\n        return 0, err\n    }\n    return balance, tx.Commit(ctx)\n}\n```\n\nKiểm chứng đoạn trên bằng đúng một test: 50 goroutine cùng mua một lúc, 50 `requestID` khác nhau, ví có đúng 10 lần giá tiền. Kết quả phải là 10 giao dịch thành công, 40 lỗi `ErrNotEnoughGold`, `gold = 0`, và `wallet_tx` có đúng 10 dòng. Test đó bắt được cả race lẫn transaction viết sai; thiếu nó thì code trên \"trông đúng\" mà vẫn sai.\n\n### Kết nối, khoá và migration\n\n- **Pool nhỏ hơn bạn tưởng.** `pgxpool` 10–25 kết nối mỗi instance là đủ; Postgres mặc định chỉ nhận 100 kết nối, mà mỗi kết nối là một process thật. Tám instance × 25 đã vượt — nhiều instance thì đặt PgBouncer ở giữa (transaction pooling), đừng nâng `max_connections`.\n- **Mọi query có `context` timeout** 2–3 giây. Không có nó, một query kẹt giữ kết nối, pool cạn dần, và toàn bộ API trả 503 vì một bảng thiếu index.\n- **Khoá theo thứ tự cố định.** Giao dịch chạm nhiều dòng (trade giữa hai người chơi) phải khoá theo `user_id` tăng dần. Hai transaction khoá ngược chiều nhau là deadlock, và nó chỉ xuất hiện khi có người chơi thật.\n- **Migration là một bước deploy riêng** (`goose`, `golang-migrate`), không phải auto-migrate lúc khởi động — ba instance khởi động cùng lúc cùng migrate là bảng nửa vời. Buộc phải chạy lúc start thì bọc bằng `pg_advisory_lock`.\n- **Đo bằng `pg_stat_statements`**, thêm index theo query thật. Trên máy dev với 1.000 dòng thì mọi query đều nhanh; index thiếu chỉ lộ ra ở dữ liệu thật.\n\n### Bảng xếp hạng: ZSET và cái bẫy của nó\n\n```go\n// ZADD GT: chỉ ghi khi điểm mới CAO HƠN. Dùng ZAdd thường thì một ván chơi tệ\n// sẽ ghi đè điểm cao nhất của chính người chơi đó — bug kinh điển của leaderboard.\nrdb.ZAddGT(ctx, \"lb:season12\", redis.Z{Score: float64(score), Member: userID})\n\ntop, _ := rdb.ZRevRangeWithScores(ctx, \"lb:season12\", 0, 99).Result()   // top 100\nrank, _ := rdb.ZRevRank(ctx, \"lb:season12\", userID).Result()            // hạng của riêng mình\n```\n\nScore trong ZSET là `float64`, nên số nguyên vượt 2^53 mất chính xác — cẩn thận nếu bạn gói tie-break (thời điểm đạt điểm) vào phần thập phân. Và **Redis không phải nguồn chân lý**: một lần evict hoặc restart không bật persistence là mất bảng xếp hạng cả mùa. Ghi điểm xuống Postgres trong cùng luồng, coi ZSET là chỉ mục đọc nhanh dựng lại được.\n\n## Bẫy thường gặp\n\n| Bẫy | Lộ ra lúc nào |\n|---|---|\n| Dùng `float` cho tài nguyên | Số dư lệch dần, không lần được từ giao dịch nào |\n| `ZAdd` thay cho `ZAddGT` | Người chơi chơi tệ hơn tự hạ điểm cao nhất của chính mình |\n| Coi Redis là nguồn chân lý | Một lần evict hoặc restart là mất bảng xếp hạng cả mùa |\n| Không có sổ cái | Khiếu nại \"tôi mất đồ\" không điều tra được, và không hoàn đồ đúng người được |\n| Auto-migrate lúc khởi động | Hai instance migrate cùng lúc, bảng nửa vời, không rollback được |\n| Query không có `context` timeout | Một query kẹt làm cạn pool, toàn bộ API trả 503 |\n| Pool đặt to \"cho chắc\" | 8 instance × 50 kết nối vượt `max_connections`, Postgres từ chối kết nối mới |\n| Khoá nhiều dòng không theo thứ tự cố định | Deadlock, chỉ xuất hiện khi có trade giữa người chơi thật |\n| Index thiếu | Máy dev 1.000 dòng nhanh như chớp; production chậm dần rồi sập ở giờ cao điểm |\n| Event analytics đổ chung vào Postgres | Bảng phình vài chục triệu dòng, mọi query khác chậm theo |",
+      "aiPrompt": "**Dùng AI thế nào cho tầng dữ liệu**\n\nĐây là chỗ **đáng giao cho AI nhất** trong cả nhánh — schema, migration, query, index là việc máy làm tốt và kiểm chứng được — nhưng cũng là chỗ sai thì đắt nhất, vì dữ liệu hỏng không revert bằng `git`. Nguyên tắc: bắt nó viết **ràng buộc trước, code sau**.\n\n| Giao được | Đừng giao |\n|---|---|\n| Schema, migration, index, query, `EXPLAIN` và đọc plan | Quyết định dữ liệu nào là nguồn chân lý, dữ liệu nào được phép mất |\n| Test đồng thời: mua song song, retry cùng `request_id`, hết tiền | Quy tắc kinh tế: giá, trần, tốc độ phát tài nguyên — xem [[economy-design]] |\n| Script backup/restore, seed dữ liệu giả để load test | Xoá hoặc sửa dữ liệu production |\n\nBa bước theo đúng thứ tự này:\n\n1. **Bạn liệt kê bất biến bằng tiếng Việt**, mỗi dòng một câu: \"vàng không bao giờ âm\", \"một `request_id` chỉ trừ tiền một lần\", \"mọi thay đổi tài nguyên có một dòng sổ cái\".\n2. **Bắt AI dịch từng bất biến thành một ràng buộc database** (`CHECK`, `UNIQUE`, khoá ngoại) *và* một test chứng minh ràng buộc đó chặn thật. Bất biến nào không dịch được thành ràng buộc thì nói rõ vì sao — đó là chỗ bạn phải tự canh trong code.\n3. **Rồi mới tới query và index**, kèm `EXPLAIN (ANALYZE, BUFFERS)` trên dữ liệu giả đúng cỡ thật. Index do AI \"đoán là cần\" mà không có plan là index vô dụng chiếm chỗ ghi.\n\n**Phải nêu rõ** (thiếu là AI tự bịa):\n\n- **Đơn vị và trần của từng tài nguyên:** vàng `bigint` không âm, gem trần bao nhiêu, có cho phép nợ không.\n- **Ai sinh `request_id`** (client) và nó sống ở đâu (cột `UNIQUE` trong sổ cái).\n- **Cỡ dữ liệu dự kiến:** 10.000 hay 10 triệu người chơi, mỗi người bao nhiêu dòng inventory, giữ analytics bao lâu. Không có số thì index và kiểu dữ liệu đều là đoán.\n- **Phiên bản:** PostgreSQL 16, Redis 7 — cú pháp `ZADD GT`, `MERGE`, `SKIP LOCKED` khác nhau theo phiên bản.\n- **Luật xử lý xung đột save** khi hai thiết bị cùng ghi: server thắng, client thắng, hay hỏi người chơi.\n\n**Mẫu prompt**\n\n```\nThiết kế tầng dữ liệu PostgreSQL 16 + Redis 7 cho game <thể loại>, 200.000 tài khoản,\nmỗi tài khoản ~80 dòng inventory, giữ log tài nguyên 180 ngày.\n\nBẤT BIẾN — dịch TỪNG dòng thành ràng buộc ở database, không phải if trong code:\n1. gold là bigint, không bao giờ âm.\n2. Một request_id chỉ được ghi một lần (retry mạng phải vô hại).\n3. Mỗi thay đổi tài nguyên có đúng một dòng sổ cái, có reason, không sửa không xoá.\n4. qty trong inventory không âm; không có dòng qty = 0 tồn đọng.\n5. Thời gian ghi lấy từ now() của database.\n\nGiao theo thứ tự, DỪNG chờ tôi duyệt sau mỗi bước:\n1. Migration goose: bảng + CHECK + UNIQUE + khoá ngoại + index, kèm một dòng\n   nói bất biến nào ứng với ràng buộc nào. Bất biến nào KHÔNG ràng buộc được thì nói rõ.\n2. Hàm mua vật phẩm bằng pgx: một transaction, idempotent theo request_id,\n   khoá ví bằng FOR UPDATE, ghi sổ cái.\n3. Test: 50 goroutine mua song song trên ví chỉ đủ 10 lần → đúng 10 thành công,\n   gold = 0, sổ cái đúng 10 dòng. Gọi lại cùng request_id → không ghi thêm.\n   Chạy `go test -race ./...`, dán output THẬT.\n\nKHÔNG dùng ORM. KHÔNG auto-migrate lúc khởi động. KHÔNG float cho bất kỳ tài nguyên nào.\n```\n\n**Bẫy thường gặp:** AI mặc định dùng ORM có `AutoMigrate` (GORM) vì đó là cách phổ biến nhất trong dữ liệu huấn luyện — và `AutoMigrate` **âm thầm bỏ qua** mọi `CHECK` và `UNIQUE` bạn vừa yêu cầu, nên schema chạy được mà không còn một ràng buộc nào. Ba cái nữa: đọc số dư rồi `UPDATE` ở hai câu lệnh riêng không khoá (hai người mua cùng lúc, một người mua không mất tiền); `float8` cho tiền vì JSON mặc định thế; và bịa index cho mọi cột \"cho chắc\" thay vì đọc `EXPLAIN`.",
+      "unity": "Phía client, tầng dữ liệu lộ ra thành đúng một câu hỏi: **khi hai thiết bị cùng ghi save thì ai thắng, và người chơi có được biết không.**\n\n**Component & nơi đặt**\n\n- `SaveSync.cs` — đặt ở `Assets/Scripts/Net/`, trên GameObject `DontDestroyOnLoad`.\n- Save local vẫn giữ nguyên như [[unity-save-data]] mô tả; server là **bản sao có thẩm quyền**, không phải chỗ thay thế file local.\n- Mỗi bản save mang một `version` do server cấp. Client ghi lên kèm version đang giữ; server thấy version cũ hơn thì từ chối bằng `409` và trả kèm bản mới.\n\n**Code**\n\n```csharp\nusing System;\nusing System.Collections;\nusing System.Text;\nusing UnityEngine;\nusing UnityEngine.Networking;\n\n// Đồng bộ save có chống ghi đè: gửi kèm version đang giữ, server trả 409 nếu đã cũ.\npublic class SaveSync : MonoBehaviour\n{\n    [SerializeField] string url = \"https://api.example.com/v1/save\";\n    [SerializeField] float minIntervalSeconds = 30f;   // không ghi mỗi hành động, cũng không ghi mỗi frame\n\n    [Serializable] public class SaveDto { public long version; public int gold; public string data; }\n\n    SaveDto local = new SaveDto();\n    float lastPush = -999f;\n    bool dirty, pushing;\n\n    public void MarkDirty() => dirty = true;\n\n    void Update()\n    {\n        if (dirty && !pushing && Time.unscaledTime - lastPush >= minIntervalSeconds)\n            StartCoroutine(Push());\n    }\n\n    // Trên mobile đây là chỗ chắc chắn chạy trước khi app bị hệ điều hành kill.\n    void OnApplicationPause(bool paused)\n    {\n        if (paused && dirty && !pushing) StartCoroutine(Push());\n    }\n\n    IEnumerator Push()\n    {\n        pushing = true;\n        dirty = false;\n        lastPush = Time.unscaledTime;\n\n        using (var www = new UnityWebRequest(url, UnityWebRequest.kHttpVerbPUT))\n        {\n            www.uploadHandler = new UploadHandlerRaw(Encoding.UTF8.GetBytes(JsonUtility.ToJson(local)));\n            www.downloadHandler = new DownloadHandlerBuffer();\n            www.SetRequestHeader(\"Content-Type\", \"application/json\");\n            www.timeout = 10;\n\n            yield return www.SendWebRequest();\n\n            if (www.responseCode == 409)                 // thiết bị khác đã ghi trước mình\n            {\n                Resolve(JsonUtility.FromJson<SaveDto>(www.downloadHandler.text));\n            }\n            else if (www.result == UnityWebRequest.Result.Success)\n            {\n                local.version = JsonUtility.FromJson<SaveDto>(www.downloadHandler.text).version;\n            }\n            else\n            {\n                dirty = true;                            // hỏng thì giữ cờ, lần sau ghi lại\n            }\n        }\n        pushing = false;\n    }\n\n    // Luật phải giải thích được cho người chơi. Ở đây: giữ bản tiến xa hơn, và NÓI ra.\n    void Resolve(SaveDto server)\n    {\n        bool serverWins = server.gold >= local.gold;\n        Debug.Log($\"Xung đột save — local {local.gold} vàng, server {server.gold} vàng → giữ bản {(serverWins ? \"server\" : \"local\")}\");\n        if (serverWins) local = server;                  // nhận bản server, bỏ thay đổi local\n        else { local.version = server.version; dirty = true; }   // giữ bản local, ghi lại với version mới\n    }\n}\n```\n\n**Bẫy Unity cụ thể**\n\n- **Ghi mỗi lần người chơi làm gì đó.** Một request mỗi lần nhặt đồ là cách nhanh nhất để tự DDoS chính mình. Gom theo mốc (đổi màn, mở shop, `OnApplicationPause`) cộng một khoảng tối thiểu.\n- **`OnApplicationQuit` không chạy trên mobile** khi hệ điều hành kill app. `OnApplicationPause(true)` mới là chỗ đáng tin — và coroutine ở đó có thể không kịp xong, nên save local phải đã ghi xuống đĩa trước đó.\n- **Im lặng ghi đè khi xung đột.** Người chơi chơi trên điện thoại rồi mở máy tính bảng, bản cũ đè bản mới, và họ mất một buổi tối tiến trình. Luật nào cũng được, nhưng phải **nói ra** bằng UI, đừng quyết thầm.\n- **Tin `version` do client tự tăng.** Version phải do server cấp; client tự tăng thì hai thiết bị sẽ cùng nghĩ mình mới nhất.\n- **Nhét cả save vào `PlayerPrefs`.** Nó không mã hoá, có giới hạn kích thước trên WebGL, và sửa bằng tay được — xem [[unity-save-data]].\n\n**Kiểm tra nhanh**\n\n- Đăng nhập cùng tài khoản trên hai thiết bị (hoặc hai bản build), tiêu tiền ở cả hai: thiết bị ghi sau **không** im lặng đè, và người chơi thấy thông báo.\n- Sửa `local.gold` bằng debugger rồi đẩy lên: lần đồng bộ kế tiếp server trả về con số của nó, không phải của bạn.\n- Bấm Home ngay sau khi mua đồ rồi mở lại app: vật phẩm còn đó, vàng bị trừ đúng một lần.\n- Ngắt mạng 5 phút rồi bật lại: đúng **một** request save được gửi, không phải 10 request dồn.",
+      "code": "",
+      "interview": "",
+      "hasAiHowto": true,
+      "i18n": {},
+      "color": "#a9e34b"
+    },
+    {
+      "id": "game-server-go",
+      "title": "Server Go cho game",
+      "summary": "Viết process Go phục vụ game Unity — một goroutine sở hữu một phòng, chọn giao thức theo loại dữ liệu, và không tin con số nào client gửi lên.",
+      "icon": "🖧",
+      "parent": "backend-go",
+      "children": [],
+      "depth": 2,
+      "branch": "backend-go",
+      "tags": [
+        "backend",
+        "server",
+        "go",
+        "realtime",
+        "live-ops"
+      ],
+      "related": [
+        "game-database",
+        "unity-multiplayer",
+        "architecture-patterns",
+        "unity-save-data"
+      ],
+      "status": "deep",
+      "read": 585,
+      "readIndex": 68,
+      "level": "advanced",
+      "refs": [],
+      "order": 10,
+      "collapsed": false,
+      "path": "10-backend-go/game-server-go.md",
+      "words": 2124,
+      "body": "Node này về **process Go**: viết nó thế nào cho đúng, nói chuyện với client Unity bằng gì, và giữ quyền quyết định ở phía nào. Phần dữ liệu — bảng nào, transaction ra sao — nằm ở [[game-database]]; bức tranh chung của cả nhánh (netcode khác backend ra sao, vì sao chọn Go, ba loại process) ở [[backend-go]].\n\n## Một goroutine sở hữu một phòng\n\nCách viết room server sai nhất là một `map[string]*Room` dùng chung cộng với `sync.Mutex` rải khắp nơi: nó chạy đúng khi bạn test một mình và hỏng khi có hai mươi người. Cách đúng trong Go là **actor**: mỗi phòng một goroutine, goroutine đó là **chủ sở hữu duy nhất** của state, mọi thứ khác đi vào qua channel. Không mutex, nên không có deadlock và không có race để mà đi tìm.\n\n```go\n// Một phòng = một goroutine. Trường players CHỈ goroutine Run() được đụng tới.\ntype Room struct {\n    id      string\n    inbox   chan Msg          // có buffer: đầy thì ngắt client, không bao giờ block vòng lặp\n    join    chan *Player\n    leave   chan *Player\n    players map[string]*Player\n}\n\nfunc (r *Room) Run(ctx context.Context) {\n    const tickRate = 20\n    ticker := time.NewTicker(time.Second / tickRate)\n    defer ticker.Stop()\n    emptySince := time.Now()\n\n    for {\n        select {\n        case <-ctx.Done():                       // deploy: báo cho client rồi thoát sạch\n            r.broadcast(Msg{Type: \"server_shutdown\"})\n            return\n        case p := <-r.join:\n            r.players[p.ID] = p\n        case p := <-r.leave:\n            delete(r.players, p.ID)\n            if len(r.players) == 0 {\n                emptySince = time.Now()\n            }\n        case m := <-r.inbox:\n            r.apply(m)                           // ý định của client, đã validate\n        case now := <-ticker.C:\n            r.step(1.0 / tickRate)\n            r.broadcast(r.snapshot())\n            if len(r.players) == 0 && now.Sub(emptySince) > 30*time.Second {\n                return                           // phòng rỗng 30 giây thì tự dọn\n            }\n        }\n    }\n}\n\n// Gọi từ goroutine đọc socket. KHÔNG được block vòng lặp phòng vì một client mạng chậm.\nfunc (r *Room) Send(m Msg) bool {\n    select {\n    case r.inbox <- m:\n        return true\n    default:\n        return false      // hàng đợi đầy: client spam hoặc đã treo → ngắt kết nối nó\n    }\n}\n```\n\nBa lỗi đồng thời hay gặp, theo thứ tự mức độ phổ biến:\n\n- **Goroutine rò.** Client ngắt kết nối nhưng goroutine ghi vẫn chờ trên channel mãi mãi. Mọi goroutine phải có đường thoát bằng `ctx.Done()`, và `close` channel ở đúng một phía. Triệu chứng: số goroutine trong `/debug/pprof/goroutine` chỉ đi lên, không bao giờ xuống.\n- **Channel không buffer trong vòng lặp phòng.** `make(chan Msg)` bắt người gửi chờ người nhận; một client mạng 3G đủ để treo cả phòng. Có buffer thì phải có chính sách khi đầy — **drop hoặc kick**, không phải chờ.\n- **Ticker trôi.** Nếu một tick xử lý lâu hơn 50ms, `time.Ticker` bỏ nhịp chứ không dồn lại. Muốn mô phỏng đúng thời gian thì cộng dồn delta thật và chạy bù, đừng giả định mỗi tick đúng 50ms.\n\n`go build` không bắt được data race. Chạy `go test -race ./...` trong CI, và ít nhất một lần chạy server thật với `-race` dưới tải giả lập.\n\n## Giao thức: chọn theo loại dữ liệu\n\n| Giao thức | Độ trễ thực tế | Phía Unity | Dùng cho |\n|---|---|---|---|\n| REST + JSON | 50–200ms | `UnityWebRequest` có sẵn | Mọi thứ meta: login, shop, inventory, quest |\n| WebSocket + JSON | 30–80ms | cần thư viện (NativeWebSocket) | Chat, phòng chờ, turn-based, thông báo đẩy |\n| WebSocket + nhị phân | 20–60ms | thêm codegen protobuf | Realtime 10–30Hz, nhiều người một phòng |\n| UDP / KCP / QUIC | 10–40ms | thư viện riêng, WebGL không chạy | Action realtime, FPS |\n| gRPC | thấp | khó với IL2CPP và WebGL | **Giữa các service backend**, không nói chuyện thẳng với client |\n\nMặc định đúng cho phần lớn game mobile và indie: **REST cho meta, WebSocket cho realtime nhẹ.** Đừng mở màn bằng gRPC tới client — bạn đánh đổi khả năng debug bằng `curl` và khả năng đọc log proxy để lấy vài mili giây không ai cảm nhận được.\n\n## Server có thẩm quyền, kể cả khi game không có multiplayer\n\nGame một người mà có bảng xếp hạng hoặc có IAP thì vẫn cần đủ những điều này:\n\n- **Client gửi ý định, không gửi kết quả.** `POST /craft {\"recipe\":\"iron_sword\"}` chứ không phải `POST /inventory {…}`. Endpoint nào nhận nguyên inventory từ client là endpoint nhân bản vật phẩm — và nó trông hoàn toàn bình thường lúc review.\n- **Validate đủ năm thứ** cho mỗi hành động: có sở hữu không, đủ nguyên liệu không, đủ cấp không, hết cooldown chưa, trạng thái có hợp lệ không. Mỗi thứ một dòng `return`.\n- **Random do server quay**, seed ghi lại. Loot và gacha mà client quay thì người ta sẽ reroll tới khi ra đồ tốt. Xem [[randomness]].\n- **IAP verify phía server** với Apple/Google, lưu transaction id `UNIQUE`. Cùng một receipt gửi lại lần hai không được cộng gems lần hai.\n- **JWT ngắn hạn** (15 phút) + refresh token lưu trong database để thu hồi được. Đừng nhét `gold` hay `level` vào claim: nó cũ ngay lập tức và nó mời người ta thử sửa.\n- **Rate limit theo user và theo IP** (token bucket trong Redis). Kinh tế của bạn thường chết vì bot farm trước khi có đủ người chơi thật.\n- **Log mọi thay đổi tài nguyên kèm `reason`.** Không có nó thì không điều tra được khiếu nại và không hoàn đồ đúng người được — chi tiết ở [[game-database]].\n\n## Vận hành: bốn thứ làm ngay tuần đầu\n\n1. **Graceful shutdown.** `signal.NotifyContext` → ngừng nhận phòng mới → chờ trận đang chạy kết thúc (tối đa 2 phút) → `srv.Shutdown(ctx)`. Không có nó thì mỗi lần deploy là một lần người chơi mất trận, và bạn sẽ sợ deploy.\n2. **`/healthz` tách khỏi `/readyz`.** Cái đầu nói process còn sống, cái sau nói ping được database. Gộp làm một thì database chậm một giây là load balancer rút sạch instance.\n3. **Log có cấu trúc + metrics.** `log/slog` với request id truyền qua `context`; Prometheus đo p50/p95/**p99** theo từng endpoint — số trung bình luôn đẹp và luôn vô dụng. Mở `pprof` ở cổng nội bộ.\n4. **Backup và thử restore.** Backup chưa restore thử lần nào là backup chưa tồn tại. Mất save là thứ người chơi không tha thứ, khác hẳn một bug gameplay.\n\nTrước khi mở cửa: load test bằng `k6` hoặc `vegeta` ở 3–5 lần CCU dự kiến, nhìn p99 và số kết nối database đang mở. \"Chạy ổn trên máy tôi\" không phải số liệu.\n\n## Bẫy thường gặp\n\n| Bẫy | Lộ ra lúc nào |\n|---|---|\n| Channel không buffer trong vòng lặp phòng | Một client mạng chậm treo cả phòng |\n| WebSocket không đặt read deadline và pong | Kết nối zombie tích lại, RAM lên đều rồi OOM sau ba ngày |\n| Goroutine không có đường thoát theo `ctx` | Số goroutine chỉ đi lên; process phình rồi chết sau vài ngày chạy |\n| Ghi state phòng xuống database mỗi tick | Database chết ở phòng thứ năm mươi — chỉ ghi ở mốc quan trọng và khi kết thúc trận |\n| Lấy thời gian từ client | Idle game bị tua bằng cách chỉnh đồng hồ máy |\n| Gửi id `int64` qua JSON | Client JavaScript (dashboard, tool nội bộ) đọc thành float và sai ở id lớn — gửi id dạng **string** |\n| Decode JSON vào `interface{}` | Số trong Go thành `float64`, tiền lệch một đơn vị mà không ai biết vì sao |\n| Quên `targetFrameRate`/nhịp tick ở process phòng | Vòng lặp chạy hết tốc lực, một nhân CPU cho mỗi phòng, hoá đơn gấp ba |",
+      "aiPrompt": "**Dùng AI thế nào cho code server**\n\nAI viết Go rất tốt ở phần *khung* và rất dở ở phần *ranh giới*. Chia việc theo đúng ranh giới đó:\n\n| Giao được | Đừng giao |\n|---|---|\n| Handler, middleware auth / rate limit / log, parse và validate | Mô hình đồng thời: ai sở hữu state của phòng |\n| Test đường hỏng, load test k6, Dockerfile, CI, graceful shutdown | Quyết định client được phép tự tính cái gì |\n| Lớp client Unity: retry, backoff, hàng đợi offline | Câu \"đã an toàn rồi\" — phải chứng minh bằng test, không phải bằng lời |\n\nBốn bước, dừng lại duyệt sau mỗi bước:\n\n1. **Bạn viết bất biến trước.** Server quyết tài nguyên; client chỉ gửi ý định; thời gian của server. AI không suy ra được và nó sẽ không tự hỏi.\n2. **Chốt mô hình đồng thời trước khi viết handler.** Nói thẳng \"một goroutine sở hữu một phòng, giao tiếp qua channel, KHÔNG dùng mutex trên state phòng\" — nếu không nó sẽ mặc định `map` + `sync.Mutex`.\n3. **Handler kèm test cho đường hỏng**, không phải đường thành công: client gửi giá trị vô lý, gửi hai lần, ngắt kết nối giữa chừng, 50 client vào một phòng cùng lúc.\n4. **Bắt nó chạy `go test -race ./...` và dán output thật.** Code đồng thời không có race detector thì \"trông đúng\" là vô nghĩa — và AI rất sẵn lòng khẳng định là đã chạy.\n\n**Phải nêu rõ** (thiếu là AI tự bịa):\n\n- **Nhịp:** turn-based/idle (vài request mỗi phút) hay realtime (tick 20Hz). Quyết định toàn bộ hình dạng code.\n- **Giao thức:** REST, WebSocket JSON, hay WebSocket nhị phân — và **có build WebGL không** (WebGL nghĩa là không UDP và server phải trả CORS header).\n- **Phiên bản và thư viện:** Go 1.22+, `gorilla/websocket` hay `coder/websocket`, `pgx` hay `database/sql`.\n- **CCU mục tiêu, p99 chấp nhận được, số người tối đa mỗi phòng.**\n- **Cái gì authoritative** và client được phép dự đoán cái gì.\n- **Triển khai ở đâu** — một VPS hay k8s + Agones, vì nó đổi cách viết graceful shutdown và cách tìm phòng.\n\n**Mẫu prompt**\n\n```\nViết room server Go 1.22 cho game <thể loại>, client Unity 6, WebSocket + JSON.\nTối đa 8 người một phòng, tick 20Hz, mục tiêu 200 phòng đồng thời trên 2 vCPU.\n\nRÀNG BUỘC:\n- MỘT goroutine sở hữu state của MỘT phòng. Giao tiếp bằng channel có buffer.\n  KHÔNG sync.Mutex trên state phòng, KHÔNG map dùng chung giữa các phòng.\n- Channel đầy thì NGẮT client đó, KHÔNG block vòng lặp phòng.\n- Mọi goroutine thoát được bằng context. Phòng rỗng 30 giây thì tự dọn.\n- Server validate mọi message: quyền, khoảng cách, cooldown. Client chỉ gửi Ý ĐỊNH.\n- Kết thúc trận: gọi API ghi kết quả MỘT lần, có request_id. KHÔNG ghi DB mỗi tick.\n\nGiao theo thứ tự, dừng chờ tôi duyệt:\n1. Struct Room + vòng lặp Run(ctx) + cách client vào/ra.\n2. Đọc/ghi WebSocket: read deadline, pong handler, một goroutine ghi duy nhất.\n3. Test: 50 client vào cùng lúc, 1 client treo giữa chừng, shutdown giữa trận.\n   Chạy `go test -race ./...` và dán output THẬT, không tóm tắt.\n\nKHÔNG thêm thư viện ngoài stdlib + gorilla/websocket. KHÔNG biến toàn cục ghi được.\n```\n\n**Bẫy thường gặp:** AI sinh endpoint nhận nguyên trạng thái từ client (`POST /save {\"gold\": 99999}`) vì đó là cách viết CRUD phổ biến nhất trong dữ liệu huấn luyện — nó trông hoàn toàn bình thường lúc review, chỉ sai về *ai được quyền quyết*. Hai cái nữa hay gặp: room server viết bằng `map` dùng chung + `sync.Mutex` rải rác (chạy đúng khi test một mình, hỏng khi có hai mươi người), và goroutine đọc socket không có `ctx.Done()` nên rò mỗi lần có người thoát — cả hai chỉ lộ ra sau vài ngày chạy thật.",
+      "unity": "Phía client chỉ có ba việc, nhưng làm sai cả ba thì backend viết tốt tới đâu cũng vô ích: gọi API đúng cách, **không tin dữ liệu local**, và sống sót khi mạng rớt giữa một lệnh ghi.\n\n**Component & nơi đặt**\n\n- `GameApi.cs` — đặt ở `Assets/Scripts/Net/`, trên một GameObject `DontDestroyOnLoad`.\n- `PendingRequest` — `requestId` của lệnh ghi **chưa được xác nhận**, ghi xuống đĩa *trước khi* gửi. Mở app lại thì gửi lại đúng id đó.\n- `JsonUtility` đủ cho DTO phẳng như dưới đây. Cần `Dictionary`, mảng ở cấp cao nhất, hay phân biệt \"field vắng mặt\" với \"field bằng 0\" thì thêm `com.unity.nuget.newtonsoft-json` qua Package Manager — và nhớ `link.xml` để IL2CPP không strip mất kiểu dùng qua reflection.\n\n**Code**\n\n```csharp\nusing System;\nusing System.Collections;\nusing System.Text;\nusing UnityEngine;\nusing UnityEngine.Networking;\n\n// Gọi backend Go: JWT ở header, requestId cho mọi lệnh GHI, retry có backoff + jitter.\npublic class GameApi : MonoBehaviour\n{\n    [SerializeField] string baseUrl = \"https://api.example.com\";\n    [SerializeField] int timeoutSeconds = 10;    // UnityWebRequest KHÔNG có timeout mặc định\n    [SerializeField] int maxRetry = 3;\n\n    string accessToken;\n    bool buyInFlight;                            // bấm 5 lần vẫn chỉ gửi 1 request\n\n    [Serializable] class BuyReq { public string requestId; public string itemId; }\n    [Serializable] public class BuyResp { public long gold; public string itemId; }\n\n    public IEnumerator Buy(string itemId, Action<BuyResp> onDone, Action<string> onFail)\n    {\n        if (buyInFlight) { onFail?.Invoke(\"đang xử lý\"); yield break; }\n        buyInFlight = true;\n\n        // requestId sinh MỘT LẦN và giữ nguyên qua mọi lần retry — đó là toàn bộ điểm của idempotency.\n        var body = JsonUtility.ToJson(new BuyReq {\n            requestId = Guid.NewGuid().ToString(\"N\"),\n            itemId = itemId,\n        });\n        yield return Post(baseUrl + \"/v1/buy\", body, onDone, onFail);\n        buyInFlight = false;\n    }\n\n    IEnumerator Post<T>(string url, string json, Action<T> onDone, Action<string> onFail)\n    {\n        float delay = 0.5f;\n        for (int attempt = 1; attempt <= maxRetry; attempt++)\n        {\n            using (var www = new UnityWebRequest(url, UnityWebRequest.kHttpVerbPOST))\n            {\n                www.uploadHandler = new UploadHandlerRaw(Encoding.UTF8.GetBytes(json));\n                www.downloadHandler = new DownloadHandlerBuffer();\n                www.SetRequestHeader(\"Content-Type\", \"application/json\");\n                if (!string.IsNullOrEmpty(accessToken))\n                    www.SetRequestHeader(\"Authorization\", \"Bearer \" + accessToken);\n                www.timeout = timeoutSeconds;\n\n                yield return www.SendWebRequest();\n\n                if (www.result == UnityWebRequest.Result.Success)\n                {\n                    onDone?.Invoke(JsonUtility.FromJson<T>(www.downloadHandler.text));\n                    yield break;\n                }\n\n                // 4xx là lỗi của chính mình: gửi lại vẫn sai. Chỉ thử lại lỗi mạng và 5xx.\n                bool retryable = www.result == UnityWebRequest.Result.ConnectionError\n                              || www.responseCode >= 500;\n                if (!retryable || attempt == maxRetry)\n                {\n                    onFail?.Invoke(www.responseCode + \" \" + www.error);\n                    yield break;\n                }\n            }\n            // Realtime, không phải WaitForSeconds: mở popup rồi đặt timeScale = 0\n            // thì retry sẽ đứng im vĩnh viễn.\n            yield return new WaitForSecondsRealtime(delay + UnityEngine.Random.Range(0f, 0.3f));\n            delay *= 2f;\n        }\n    }\n}\n```\n\n**Bẫy Unity cụ thể**\n\n- **`UnityWebRequest` không có timeout mặc định.** Mạng kiểu \"có sóng nhưng không đi đâu\" (wifi cổng captive, 4G chập chờn) làm coroutine chờ vô hạn, người chơi nhìn vòng xoay mãi. Luôn đặt `www.timeout`.\n- **`WaitForSeconds` chạy theo `timeScale`.** Popup nào đặt `timeScale = 0` là backoff của bạn chết. Dùng `WaitForSecondsRealtime` cho mọi thứ liên quan tới mạng.\n- **`JsonUtility` nuốt lỗi.** Server đổi tên field thì nó trả `0`/`null` chứ không báo gì — client hiện 0 vàng, không log, không ai biết vì sao. Có phiên bản hoá API (`/v1/`) và test hợp đồng giữa hai bên.\n- **Id `int64`:** Unity đọc `long` bình thường, nhưng nếu bạn còn có dashboard web hoặc đi qua một dịch vụ trung gian chạy JavaScript thì id vượt 2^53 sẽ sai **lặng lẽ**. Gửi id dạng string là an toàn nhất.\n- **`PlayerPrefs` không mã hoá** (registry trên Windows, XML trong `shared_prefs` trên Android). Refresh token nằm đó là đọc được trên máy đã root — chấp nhận được **nếu** server thu hồi được token, không chấp nhận được nếu token sống một năm.\n- **Tắt app giữa một lệnh ghi.** Request đã tới server, client chưa nhận phản hồi. Không lưu `requestId` xuống đĩa trước khi gửi thì người chơi \"mua rồi mà không có đồ\" — và họ đúng, tiền đã bị trừ thật.\n- **`Application.internetReachability` chỉ nói có mạng hay không**, không nói server còn sống. Đừng dùng nó thay cho retry thật.\n- **WebGL:** không UDP, và server Go phải trả `Access-Control-Allow-Origin`. Thiếu CORS thì trong Editor chạy ngon, bản WebGL im lặng hỏng — lỗi chỉ hiện trong console của trình duyệt.\n- **`OnApplicationPause(false)`** sau khi máy ngủ: token có thể đã hết hạn và state trong RAM đã cũ. Refresh token rồi đồng bộ lại từ server, đừng tin cái đang có.\n\n**Kiểm tra nhanh**\n\n- Bấm nút mua 5 lần thật nhanh: log server có **đúng một** dòng `buy:`, và `wallet_tx` thêm đúng một dòng.\n- Bật Airplane Mode ngay sau khi bấm mua rồi tắt app, mở lại: vật phẩm về **một** cái, vàng bị trừ **một** lần.\n- Chỉnh đồng hồ máy tiến một ngày: phần thưởng offline không đổi (server tính bằng `now()` của nó).\n- Dùng proxy (Charles/Proxyman) sửa response `gold` thành 999999: lần đồng bộ kế tiếp giá trị về đúng con số của server.\n- Tắt wifi trong Editor: sau `maxRetry` lần, UI hiện lỗi tử tế trong khoảng 10 giây, không treo vô hạn.",
+      "code": "",
+      "interview": "",
+      "hasAiHowto": true,
+      "i18n": {},
+      "color": "#a9e34b"
+    },
+    {
+      "id": "backend-go",
+      "title": "Backend Go & Database",
+      "summary": "Phần game chạy trên máy chủ — Go cho API và phòng realtime, Postgres/Redis cho dữ liệu, và ranh giới giữa thứ client được quyết và thứ chỉ server mới được quyết.",
+      "icon": "🐹",
+      "parent": "root",
+      "children": [
+        "game-server-go",
+        "game-database"
+      ],
+      "depth": 1,
+      "branch": "backend-go",
+      "tags": [
+        "backend",
+        "server",
+        "database",
+        "go"
+      ],
+      "related": [
+        "production",
+        "unity"
+      ],
+      "status": "deep",
+      "read": 582,
+      "readIndex": 67,
+      "level": "advanced",
+      "refs": [],
+      "order": 67,
+      "collapsed": false,
+      "path": "10-backend-go/index.md",
+      "words": 1815,
+      "body": "Nhánh này về **phần chạy trên máy chủ**: tài khoản, tiền, đồ đạc, bảng xếp hạng, phòng chơi chung — và cái ranh giới quyết định mọi thứ còn lại: cái gì client được phép tự quyết, cái gì chỉ server mới được quyết.\n\nGame của bạn có cần nhánh này không? Một câu hỏi là đủ: **có thứ gì mà người chơi nói dối về nó thì bạn mất tiền hoặc mất công bằng không?** Không có (game offline, không IAP, không bảng xếp hạng) thì đừng dựng backend — [[unity-save-data]] là đủ và rẻ hơn nhiều. Có, dù chỉ một bảng xếp hạng, thì mọi thứ trong nhánh này bắt đầu áp dụng.\n\n## Các node\n\n- **[[game-server-go]]** — viết process Go: một goroutine sở hữu một phòng, chọn giao thức theo loại dữ liệu, server có thẩm quyền, vận hành. Kèm lớp client Unity gọi API có retry.\n- **[[game-database]]** — dữ liệu: Postgres/Redis cho đúng loại, sáu luật cho dữ liệu kinh tế, transaction idempotent và sổ cái append-only.\n\nPhần netcode *trong trận* (tick, prediction, lag compensation) **không** nằm ở đây mà ở [[unity-multiplayer]]. Bảng ngay dưới nói vì sao hai thứ đó phải tách nhau.\n\n## Hai cái \"server\", hai bài toán\n\n| | Server netcode (trận đấu) | Backend (tài khoản, kinh tế) |\n|---|---|---|\n| Trạng thái | Trong RAM, sống theo trận | Trong database, sống mãi |\n| Mất một process | Mất một trận | Mất tiền của người chơi |\n| Nhịp | 20–60 tick mỗi giây | Vài request mỗi phút mỗi người |\n| Giao thức | UDP hoặc WebSocket nhị phân | HTTPS + JSON |\n| Scale | Theo số phòng, phòng dính vào một máy | Theo CCU, nhân bản vô tư |\n| Deploy | Phải drain, không kill giữa trận | Rolling restart bất cứ lúc nào |\n| Hỏng thì | Giật, rớt trận | Nhân đôi vật phẩm, lạm phát, mất save |\n\nKhác nhau ở **mọi dòng**, nên đừng nhét chung một process. Hai lỗi kinh điển của việc gộp: giữ inventory trong RAM của phòng cho \"nhanh\" rồi phòng crash là đồ bay; hoặc phòng ghi thẳng vào Postgres mỗi tick — 30 write mỗi giây mỗi phòng, database chết ở phòng thứ năm mươi.\n\n<figure class=\"fig\">\n<svg viewBox=\"0 0 660 300\" role=\"img\" aria-label=\"Client Unity nối tới API Go stateless và Room server Go stateful; API dùng PostgreSQL và Redis; worker chạy job định kỳ\">\n  <defs>\n    <marker id=\"gsg-a\" viewBox=\"0 0 10 10\" refX=\"9\" refY=\"5\" markerWidth=\"7\" markerHeight=\"7\" orient=\"auto\">\n      <path d=\"M0 0 L10 5 L0 10 z\" fill=\"#6ea8fe\"/>\n    </marker>\n  </defs>\n  <g class=\"fig-box-g\">\n    <rect x=\"8\"   y=\"108\" width=\"118\" height=\"66\" rx=\"9\" class=\"fig-box\"/>\n    <rect x=\"196\" y=\"28\"  width=\"184\" height=\"62\" rx=\"9\" class=\"fig-box\"/>\n    <rect x=\"196\" y=\"122\" width=\"184\" height=\"62\" rx=\"9\" class=\"fig-box\"/>\n    <rect x=\"196\" y=\"218\" width=\"184\" height=\"56\" rx=\"9\" class=\"fig-box\"/>\n    <rect x=\"450\" y=\"28\"  width=\"196\" height=\"62\" rx=\"9\" class=\"fig-box\"/>\n    <rect x=\"450\" y=\"122\" width=\"196\" height=\"62\" rx=\"9\" class=\"fig-box\"/>\n    <rect x=\"450\" y=\"218\" width=\"196\" height=\"56\" rx=\"9\" class=\"fig-box\"/>\n  </g>\n  <text x=\"67\"  y=\"136\" text-anchor=\"middle\" class=\"fig-label\" font-size=\"13\">Unity client</text>\n  <text x=\"67\"  y=\"155\" text-anchor=\"middle\" class=\"fig-muted\" font-size=\"11\">chỉ gửi ý định</text>\n  <text x=\"288\" y=\"54\"  text-anchor=\"middle\" class=\"fig-label\" font-size=\"13\">API Go — stateless</text>\n  <text x=\"288\" y=\"74\"  text-anchor=\"middle\" class=\"fig-muted\" font-size=\"11\">REST/JSON · JWT · N bản</text>\n  <text x=\"288\" y=\"148\" text-anchor=\"middle\" class=\"fig-label\" font-size=\"13\">Room server Go — stateful</text>\n  <text x=\"288\" y=\"168\" text-anchor=\"middle\" class=\"fig-muted\" font-size=\"11\">WebSocket · tick 20Hz · RAM</text>\n  <text x=\"288\" y=\"242\" text-anchor=\"middle\" class=\"fig-label\" font-size=\"13\">Worker / cron</text>\n  <text x=\"288\" y=\"261\" text-anchor=\"middle\" class=\"fig-muted\" font-size=\"11\">reset mùa · đối soát IAP</text>\n  <text x=\"548\" y=\"54\"  text-anchor=\"middle\" class=\"fig-label\" font-size=\"13\">PostgreSQL</text>\n  <text x=\"548\" y=\"74\"  text-anchor=\"middle\" class=\"fig-muted\" font-size=\"11\">nguồn chân lý · transaction</text>\n  <text x=\"548\" y=\"148\" text-anchor=\"middle\" class=\"fig-label\" font-size=\"13\">Redis</text>\n  <text x=\"548\" y=\"168\" text-anchor=\"middle\" class=\"fig-muted\" font-size=\"11\">phiên · ZSET · matchmaking</text>\n  <text x=\"548\" y=\"242\" text-anchor=\"middle\" class=\"fig-label\" font-size=\"13\">ClickHouse / S3</text>\n  <text x=\"548\" y=\"261\" text-anchor=\"middle\" class=\"fig-muted\" font-size=\"11\">event, replay</text>\n  <g stroke=\"#6ea8fe\" stroke-width=\"2\" marker-end=\"url(#gsg-a)\" fill=\"none\">\n    <path d=\"M126 128 Q170 128 170 60 H192\"/>\n    <path d=\"M126 154 Q170 154 170 153 H192\"/>\n    <path d=\"M380 50 H446\"/>\n    <path d=\"M380 74 Q416 74 416 140 H446\"/>\n    <path d=\"M380 160 H446\"/>\n    <path d=\"M380 246 Q416 246 416 180 H446\"/>\n    <path d=\"M288 122 V96\"/>\n  </g>\n  <text x=\"168\" y=\"108\" text-anchor=\"middle\" class=\"fig-muted\" font-size=\"10\">HTTPS</text>\n  <text x=\"163\" y=\"176\" text-anchor=\"middle\" class=\"fig-muted\" font-size=\"10\">WebSocket</text>\n  <text x=\"330\" y=\"112\" text-anchor=\"start\" class=\"fig-muted\" font-size=\"10\">kết quả trận</text>\n</svg>\n<figcaption>Ba loại process, ba vòng đời khác nhau. Chỉ API và worker được phép ghi vào nguồn chân lý; room server gửi kết quả trận qua API thay vì tự ghi.</figcaption>\n</figure>\n\n## Vì sao Go — và cái giá của nó\n\n- **Goroutine rẻ.** Mỗi kết nối hai goroutine (một đọc, một ghi), stack khởi điểm 8 KB và tự lớn. Mười nghìn kết nối WebSocket trên một VM 2 vCPU là chuyện bình thường, không cần kiến trúc sự kiện vòng vèo như Node.\n- **GC dừng dưới 1ms.** Đủ cho backend và cho phòng tick 20–30Hz. **Không** đủ để thay C++/Rust ở simulation xác định 120Hz có rollback — ở đó mỗi allocation trong vòng lặp nóng mới là kẻ thù, và Go không cho bạn kiểm soát bố cục bộ nhớ.\n- **Một file binary tĩnh.** `GOOS=linux go build` rồi scp một file, hoặc image `FROM gcr.io/distroless/static` khoảng 15 MB. Không runtime cài kèm, không lệch phiên bản .NET giữa máy dev và máy chủ.\n- **Hệ sinh thái đúng nghề.** Agones (điều phối game server trên k8s), Open Match (matchmaking), Nakama (backend trọn gói), pgx, go-redis — đều viết bằng Go, nên khi bí thì đọc được mã nguồn của chính thứ mình đang dùng.\n\n**Cái giá phải trả: không dùng chung code với Unity.** Backend C# (ASP.NET Core) cho phép share nguyên file `DamageCalculator.cs` giữa client và server — với Go bạn định nghĩa struct hai lần, và **hai bản sẽ lệch nhau** vào một ngày không ai nhớ. Hai cách sống chung:\n\n1. Định nghĩa message **một lần** bằng protobuf hoặc FlatBuffers, sinh ra cả `.go` lẫn `.cs` trong CI. Lệch schema thành lỗi biên dịch thay vì lỗi runtime.\n2. Chia ranh giới theo loại logic: Go làm tài khoản, kinh tế, matchmaking, bảng xếp hạng (chỗ không cần mô phỏng gameplay); còn nếu cần server mô phỏng chiến đấu authoritative thì để Unity headless chạy chính code đó — xem [[unity-multiplayer]].\n\nChọn Go vì **vận hành rẻ và chịu tải tốt**, đừng chọn vì \"nhanh hơn C#\". Ở tải của một game indie thì cả hai đều thừa sức; thứ giết bạn là một query thiếu index, không phải ngôn ngữ.\n\n## Ba loại process, tách ngay từ đầu\n\n| Process | Giữ gì trong RAM | Restart giữa chừng |\n|---|---|---|\n| **API stateless** | Không gì cả | Vô hại — cứ rolling restart |\n| **Room server** | Toàn bộ trận đang chạy | Mất trận → phải drain trước khi thoát |\n| **Worker / cron** | Không gì cả | Vô hại, nhưng job phải chạy lại được từ đầu |\n\nLuật một câu: **state trong RAM chỉ được phép là thứ mất đi cũng không sao.** Không được phép mất thì nó phải nằm trong Postgres **trước khi** server trả về 200.\n\nĐừng nhét job nặng vào process API. Một job \"quét toàn bộ tài khoản để reset mùa\" chạy chung sẽ ăn hết pool kết nối database và request của người chơi bắt đầu timeout — hiện tượng quan sát được là \"game lag mỗi đầu giờ\", nguyên nhân lại nằm ở cron.\n\n## Nguyên tắc\n\n**Client gửi ý định, server trả sự thật.** Đây không phải lời khuyên bảo mật chung chung mà là một quy tắc kiểm được: mở danh sách endpoint ra, endpoint nào nhận *trạng thái* (vàng, inventory, điểm, thời gian) thay vì nhận *hành động* thì endpoint đó là lỗ hổng, kể cả khi game chưa có ai chơi.\n\n**State trong RAM chỉ được là thứ mất đi cũng không sao.** Không được phép mất thì nó phải nằm trong database **trước khi** server trả về 200. Mọi kiến trúc rối rắm về sau đều bắt đầu từ việc vi phạm câu này để \"cho nhanh\".\n\n**Thêm hạ tầng khi đo được, không phải khi vẽ sơ đồ.** Một Postgres và một binary Go chạy được vài nghìn CCU. Redis, message queue, k8s, microservice — mỗi thứ thêm vào là một thứ nữa có thể hỏng lúc 2 giờ sáng. Xem [[performance]] về thói quen đo trước khi sửa.\n\n**Kho này chọn Go, nhưng mọi luật ở đây không phụ thuộc ngôn ngữ.** Sáu luật dữ liệu kinh tế, idempotency, server authoritative đúng y như vậy với C#, Node hay Elixir. Chỉ phần goroutine và thư viện là riêng của Go.",
+      "aiPrompt": "**Dùng AI thế nào ở nhánh này**\n\nBackend là mảng AI làm tốt nhất trong cả kho, vì gần như mọi thứ đều **kiểm chứng được bằng máy**: test chạy được hoặc không, race detector kêu hoặc im, load test ra số p99 cụ thể. Nhưng nó tốt ở phần *thực thi* và dở ở phần *ranh giới* — và ranh giới mới là chỗ mất tiền.\n\n| Giao cho AI | Bạn phải tự quyết |\n|---|---|\n| Schema, migration, query, index, handler, middleware | Cái gì là nguồn chân lý, cái gì được phép mất |\n| Test đường hỏng, load test, Dockerfile, CI, script vận hành | Client được phép tự quyết cái gì |\n| Chuyển struct Go ↔ C#, sinh protobuf, viết lớp client Unity | Quy tắc kinh tế: giá, trần, tốc độ phát tài nguyên |\n\nThứ tự giao việc cho một phiên backend — **đừng đảo**, vì bước sau vô nghĩa nếu bước trước sai:\n\n1. Bất biến (bạn viết, không hỏi AI) → 2. Schema + ràng buộc database ([[game-database]]) → 3. Handler và process ([[game-server-go]]) → 4. Test đường hỏng + `go test -race` → 5. Load test, rồi mới tới vận hành.\n\n**Phải nêu rõ** (thiếu là AI tự bịa):\n\n- **Nhịp ghi của game:** turn-based/idle vài request mỗi phút, hay realtime 20Hz. AI mặc định coi mọi thứ là CRUD web và sẽ dựng sai kiến trúc từ dòng đầu.\n- **CCU mục tiêu và p99 chấp nhận được.** Không có số thì nó đẻ ra microservice cho game 200 người.\n- **Cái gì authoritative** — server quyết tiền, loot, thời gian; client chỉ gửi ý định.\n- **Phiên bản và thư viện được phép:** Go 1.22+, PostgreSQL 16, Redis 7, Unity 6, `pgx`, thư viện websocket nào.\n- **Triển khai ở đâu:** một VPS hay k8s. Khác nhau ở graceful shutdown, service discovery, cách scale phòng.\n\n**Mẫu prompt**\n\n```\nKhối định vị cho phiên làm backend — dán vào đầu mọi phiên:\n\nKho kiến thức: đọc content/10-backend-go/index.md, game-server-go.md,\ngame-database.md trước khi viết dòng code đầu tiên.\n\nGame: <thể loại>, client Unity 6, <CCU> CCU mục tiêu, p99 < <số> ms.\nStack: Go 1.22, PostgreSQL 16, Redis 7, một VPS.\n\nBẤT BIẾN (không được vi phạm, vi phạm thì dừng và hỏi tôi):\n- Server quyết mọi tài nguyên. KHÔNG endpoint nào nhận gold/inventory từ client.\n- Tài nguyên là số nguyên, có CHECK không âm ở database.\n- Mọi lệnh ghi có request_id do client sinh, UNIQUE ở database.\n- Thời gian lấy từ now() của database, KHÔNG từ client.\n\nLàm theo thứ tự, DỪNG chờ tôi duyệt sau mỗi bước:\n1. Schema + migration + ràng buộc.  2. Handler + process.\n3. Test đường hỏng + `go test -race ./...`, dán output THẬT.\n```\n\n**Bẫy thường gặp:** hỏi AI \"thiết kế backend cho game của tôi\" mà không nêu nhịp ghi và CCU — nó sẽ trả về sơ đồ microservice + Kafka + k8s trông rất chuyên nghiệp cho một game 500 người chơi, và bạn sẽ mất ba tuần dựng hạ tầng thay vì làm game. Bẫy thứ hai: để AI quyết luôn *cái gì authoritative* — nó chọn theo cái dễ code nhất, tức là tin client.",
+      "unity": "",
+      "code": "",
+      "interview": "",
+      "hasAiHowto": true,
+      "i18n": {},
+      "color": "#a9e34b"
+    },
+    {
       "id": "root",
       "title": "GameDesign Brain",
       "summary": "Kho kiến thức mindmap về Game Design và AI trong game — đồng thời là bộ não thiết kế cho AI agent đọc trước khi sinh code.",
@@ -4962,6 +5090,7 @@
         "ai-assisted-dev",
         "production",
         "unity",
+        "backend-go",
         "blueprints"
       ],
       "depth": 0,
@@ -4978,8 +5107,8 @@
       "order": 0,
       "collapsed": false,
       "path": "index.md",
-      "words": 1036,
-      "body": "Đây là **bộ não trung tâm**: một nơi vừa để con người học và tra cứu, vừa để AI agent (Codex, Claude Code, Cursor…) đọc rồi dựng game thật.\n\n## Kho này giải quyết chuyện gì\n\nKhi nhờ AI viết game, vấn đề lớn nhất không phải là AI code kém — mà là **AI không biết bạn muốn gì**. Prompt kiểu \"làm cho tôi game bắn súng\" cho ra thứ generic, vì mọi quyết định thiết kế đều bị AI bịa ra.\n\nKho này lấp đúng khoảng trống đó theo hai lớp:\n\n1. **Lớp kiến thức** (nhánh 1–6, 8, 9) — nguyên lý game design và AI in game. Đây là vốn hiểu biết chung: AI đọc để có chung ngôn ngữ và chuẩn mực với bạn.\n2. **Lớp bản thiết kế** ([[blueprints]]) — GDD của game cụ thể bạn đang làm. Đây mới là thứ AI thực thi.\n\nThiếu lớp 1, AI làm ra game \"đúng yêu cầu nhưng chán\". Thiếu lớp 2, AI không có gì để làm.\n\n## Chín nhánh\n\n| Nhánh | Nội dung | Dùng khi |\n|---|---|---|\n| [[foundations]] | Nền tảng thiết kế: core loop, động lực người chơi, MDA, game feel | Bắt đầu một ý tưởng game mới |\n| [[systems]] | Systems design: kinh tế, tiến trình, combat, cân bằng số | Thiết kế các hệ thống chạy trong game |\n| [[content-design]] | Level, màn chơi, procedural, narrative | Đổ nội dung vào bộ khung hệ thống |\n| [[presentation]] | Nghe nhìn & UX: art direction, animation, UI, HUD, âm thanh, trợ năng | Biến hệ thống thành thứ người chơi cảm nhận được |\n| [[game-ai]] | AI điều khiển NPC/gameplay: FSM, Behavior Tree, GOAP, Utility AI, pathfinding | Làm cho enemy/NPC thông minh |\n| [[ai-assisted-dev]] | Dùng AI (Codex/Claude) để **làm** game | Muốn AI code hộ mà kết quả dùng được |\n| [[production]] | Kiến trúc, data-driven, đo đạc, hiệu năng | Biến prototype thành sản phẩm |\n| [[unity]] | Unity thực chiến: vật lý, animation, pattern, UI, audio, VFX, shader, ánh sáng, tối ưu, build, multiplayer | Hiện thực hoá trong Unity mà không dính bẫy |\n| [[blueprints]] | GDD của game thật + template | Bắt tay vào một dự án cụ thể |\n\nPhân biệt quan trọng: **[[game-ai]] là AI *trong* game** (con quái biết né đạn). **[[ai-assisted-dev]] là AI *làm ra* game** (Claude viết script cho con quái đó). Hai thứ hoàn toàn khác nhau, đừng lẫn.\n\n## Cách dùng\n\n**Đọc/duyệt:** `npm run dev` rồi lang thang trên mindmap. Click node để đọc, `/` để tìm kiếm.\n\n**Mở rộng:** tạo file `.md` mới trong `content/<nhánh>/`, khai frontmatter, lưu lại. Mindmap tự cập nhật — không cần khai báo node ở đâu khác. Xem quy ước ở `content/_SCHEMA.md`.\n\n**Cho AI đọc:** nói với agent *\"đọc `AI_CONTEXT.md` trước\"*. File đó chỉ đường tới `KNOWLEDGE_INDEX.md` (mục lục tự sinh) và các file chi tiết. Hoặc bấm **Copy cho AI** ở panel bên phải để lấy đúng một nhánh mà dán vào chat.\n\n## Nguyên tắc bất di bất dịch\n\n> **Markdown trong `content/` là nguồn chân lý duy nhất.**\n> `public/data/graph.json` và `KNOWLEDGE_INDEX.md` đều do máy sinh ra. Sửa tay vào chúng sẽ mất sạch ở lần build kế tiếp.\n\nTrạng thái node: `deep` = đã viết đủ dùng · `stub` = mới có khung, cần bồi đắp. Node stub hiện viền đứt trên mindmap — đó là danh sách việc cần làm của chính kho này.",
+      "words": 1061,
+      "body": "Đây là **bộ não trung tâm**: một nơi vừa để con người học và tra cứu, vừa để AI agent (Codex, Claude Code, Cursor…) đọc rồi dựng game thật.\n\n## Kho này giải quyết chuyện gì\n\nKhi nhờ AI viết game, vấn đề lớn nhất không phải là AI code kém — mà là **AI không biết bạn muốn gì**. Prompt kiểu \"làm cho tôi game bắn súng\" cho ra thứ generic, vì mọi quyết định thiết kế đều bị AI bịa ra.\n\nKho này lấp đúng khoảng trống đó theo hai lớp:\n\n1. **Lớp kiến thức** (nhánh 1–6, 8–10) — nguyên lý game design và AI in game. Đây là vốn hiểu biết chung: AI đọc để có chung ngôn ngữ và chuẩn mực với bạn.\n2. **Lớp bản thiết kế** ([[blueprints]]) — GDD của game cụ thể bạn đang làm. Đây mới là thứ AI thực thi.\n\nThiếu lớp 1, AI làm ra game \"đúng yêu cầu nhưng chán\". Thiếu lớp 2, AI không có gì để làm.\n\n## Mười nhánh\n\n| Nhánh | Nội dung | Dùng khi |\n|---|---|---|\n| [[foundations]] | Nền tảng thiết kế: core loop, động lực người chơi, MDA, game feel | Bắt đầu một ý tưởng game mới |\n| [[systems]] | Systems design: kinh tế, tiến trình, combat, cân bằng số | Thiết kế các hệ thống chạy trong game |\n| [[content-design]] | Level, màn chơi, procedural, narrative | Đổ nội dung vào bộ khung hệ thống |\n| [[presentation]] | Nghe nhìn & UX: art direction, animation, UI, HUD, âm thanh, trợ năng | Biến hệ thống thành thứ người chơi cảm nhận được |\n| [[game-ai]] | AI điều khiển NPC/gameplay: FSM, Behavior Tree, GOAP, Utility AI, pathfinding | Làm cho enemy/NPC thông minh |\n| [[ai-assisted-dev]] | Dùng AI (Codex/Claude) để **làm** game | Muốn AI code hộ mà kết quả dùng được |\n| [[production]] | Kiến trúc, data-driven, đo đạc, hiệu năng | Biến prototype thành sản phẩm |\n| [[unity]] | Unity thực chiến: vật lý, animation, pattern, UI, audio, VFX, shader, ánh sáng, tối ưu, build, multiplayer | Hiện thực hoá trong Unity mà không dính bẫy |\n| [[backend-go]] | Backend Go & database: API, phòng realtime, Postgres/Redis, dữ liệu kinh tế | Game có tài khoản, IAP hay bảng xếp hạng |\n| [[blueprints]] | GDD của game thật + template | Bắt tay vào một dự án cụ thể |\n\nPhân biệt quan trọng: **[[game-ai]] là AI *trong* game** (con quái biết né đạn). **[[ai-assisted-dev]] là AI *làm ra* game** (Claude viết script cho con quái đó). Hai thứ hoàn toàn khác nhau, đừng lẫn.\n\n## Cách dùng\n\n**Đọc/duyệt:** `npm run dev` rồi lang thang trên mindmap. Click node để đọc, `/` để tìm kiếm.\n\n**Mở rộng:** tạo file `.md` mới trong `content/<nhánh>/`, khai frontmatter, lưu lại. Mindmap tự cập nhật — không cần khai báo node ở đâu khác. Xem quy ước ở `content/_SCHEMA.md`.\n\n**Cho AI đọc:** nói với agent *\"đọc `AI_CONTEXT.md` trước\"*. File đó chỉ đường tới `KNOWLEDGE_INDEX.md` (mục lục tự sinh) và các file chi tiết. Hoặc bấm **Copy cho AI** ở panel bên phải để lấy đúng một nhánh mà dán vào chat.\n\n## Nguyên tắc bất di bất dịch\n\n> **Markdown trong `content/` là nguồn chân lý duy nhất.**\n> `public/data/graph.json` và `KNOWLEDGE_INDEX.md` đều do máy sinh ra. Sửa tay vào chúng sẽ mất sạch ở lần build kế tiếp.\n\nTrạng thái node: `deep` = đã viết đủ dùng · `stub` = mới có khung, cần bồi đắp. Node stub hiện viền đứt trên mindmap — đó là danh sách việc cần làm của chính kho này.",
       "aiPrompt": "**Dùng AI thế nào với kho này**\n\nBa cách, chi phí và độ chính xác khác nhau rõ:\n\n| Cách | Khi nào | Lưu ý |\n|---|---|---|\n| Agent **đọc file** trong repo | Mặc định. Agent có filesystem. | Rẻ nhất, luôn đúng hiện trạng |\n| **Copy mục này** / **Copy cả nhánh** | Giao đúng một việc | ~1k / ~13k token |\n| **Xuất playbook prompt** | AI không đọc được ổ đĩa | ~15k token |\n\nXem [[ai-tooling]] về tiêu chí chọn công cụ, và [[ai-limits]] về chỗ không nên nhờ.\n\nNode gốc không phải chỗ để viết prompt cụ thể. Nhưng mọi prompt gửi AI về dự án game đều nên mở đầu bằng **một khối định vị** như dưới đây — nó ngăn AI mặc định về \"game trung bình của ngành\".\n\n**Mẫu mở đầu cho mọi phiên làm việc**\n\n```\nKho kiến thức thiết kế: E:/XoiGame/GameDesign\nĐọc AI_CONTEXT.md trước, rồi KNOWLEDGE_INDEX.md để biết có những node nào.\n\nGDD của dự án: content/07-blueprints/<ten-game>.md\nBa mục sau là RÀNG BUỘC CỨNG, vi phạm thì phải dừng và hỏi tôi:\n  - Design Pillars\n  - Bất biến (INV-xx)\n  - Không thuộc phạm vi\n\nTrước khi chọn kỹ thuật cho <việc cần làm>, đọc node liên quan trong kho\nvà nói cho tôi biết bạn chọn cái nào, vì sao.\n```\n\n**Bẫy lớn nhất:** dán cả 22.000 từ kiến thức vào chat. Vừa tốn token vừa làm loãng tín hiệu. Hãy để agent **đọc file theo nhu cầu** — chỉ dán khi agent không truy cập được ổ đĩa.",
       "unity": "Toàn bộ kinh nghiệm Unity nằm ở nhánh [[unity]] — 17 node về vật lý, animation, pattern, UI, audio, VFX, shader, lighting, tối ưu, build, multiplayer.\n\nMục 🎮 ở các nhánh thiết kế **không lặp lại** nội dung đó. Nó chỉ trả lời: *quyết định thiết kế này sống ở đâu trong Unity project?*\n\n**Đọc theo thứ tự nào nếu bạn đang làm Unity**\n\n| Bạn đang ở đâu | Đọc gì |\n|---|---|\n| Chưa mở Unity, còn đang nghĩ ý tưởng | Nhánh [[foundations]] (#2–8) |\n| Đã có ý tưởng, muốn giao việc cho AI | Nhánh [[ai-assisted-dev]] (#9–15) |\n| Vừa `New Project`, chưa viết gì | [[unity-project-structure]], [[unity-game-loop]] |\n| Đang dựng gameplay | [[unity-physics]], [[unity-input]], [[unity-camera]] |\n| Game chạy được, cần \"đã tay\" | [[game-feel]] rồi [[unity-vfx]], [[unity-audio]] |\n| Chuẩn bị phát hành | [[unity-optimization]], [[unity-build-platform]] |\n\n**Ba quyết định Unity không sửa được về sau**\n\nChốt trong tuần đầu, vì đổi nghĩa là làm lại asset hoặc code diện rộng:\n\n1. **Color space = Linear** (`Project Settings > Player`) — xem [[unity-lighting]]\n2. **Input System mới**, không Input Manager cũ — xem [[unity-input]]\n3. **Fixed Timestep = 1/60** nếu game có frame data — xem [[combat-systems]]\n\nVà một quyết định kiến trúc: **`Assets/Scripts/Core/` không `using UnityEngine`**. Nó cho bạn test EditMode chạy trong mili giây và mô phỏng cân bằng ngoài Unity — xem [[unity-project-structure]].\n\n**Kiểm tra nhanh**\n- `Project Settings > Player > Color Space` = Linear?\n- `Time > Fixed Timestep` = 0.01667?\n- `grep -r \"using UnityEngine\" Assets/Scripts/Core/` → rỗng?",
       "code": "",
@@ -4989,7 +5118,7 @@
         "en": {
           "title": "GameDesign Brain",
           "summary": "A mindmap knowledge base on game design and AI in games — and a design brain for AI agents to read before they generate a single line of game code.",
-          "body": "This is the **central brain**: a place for a person to learn and look things up, and for an AI agent (Codex, Claude Code, Cursor…) to read before building an actual game.\n\n## The gap this fills\n\nWhen you ask an AI to write a game, the hard part is not that the AI codes badly — it is that **the AI does not know what you want**. A prompt like \"make me a shooter\" produces something generic, because every design decision gets invented on your behalf.\n\nThis vault closes that gap in two layers:\n\n1. **Knowledge layer** (branches 1–6, 8, 9) — principles of game design and game AI. This is shared vocabulary: the AI reads it so you both mean the same thing by the same words.\n2. **Blueprint layer** ([[blueprints]]) — the GDD of the specific game you are building. This is the part the AI actually executes.\n\nWithout layer 1, the AI ships a game that is \"technically what you asked for, and dull\". Without layer 2, it has nothing to build.\n\n## The nine branches\n\n| Branch | Covers | Reach for it when |\n|---|---|---|\n| [[foundations]] | Core loop, player motivation, MDA, game feel, design pillars | Starting a new game idea |\n| [[systems]] | Economy, progression, combat, balance math | Designing the systems that run the game |\n| [[content-design]] | Levels, procedural generation, pacing, narrative | Filling the system skeleton with content |\n| [[presentation]] | Art direction, animation, UI, HUD, audio, accessibility | Turning systems into something a player can feel |\n| [[game-ai]] | FSM, Behavior Tree, GOAP, Utility AI, pathfinding | Making enemies and NPCs feel smart |\n| [[ai-assisted-dev]] | Using AI (Codex/Claude) **to build** the game | You want the AI to write code you can actually ship |\n| [[production]] | Architecture, data-driven design, metrics, performance | Turning a prototype into a product |\n| [[unity]] | Unity in practice: physics, animation, patterns, UI, audio, VFX, shaders, lighting, optimization, builds, multiplayer | Implementing in Unity without the usual traps |\n| [[blueprints]] | A real GDD plus a template | Starting a specific project |\n\nAn important distinction: **[[game-ai]] is AI *inside* the game** (a monster that dodges). **[[ai-assisted-dev]] is AI that *makes* the game** (Claude writing the script for that monster). They are different disciplines; do not conflate them.\n\n## How to use it\n\n**Read and browse:** `npm run dev`, then wander the mindmap. Click a node to read, press `/` to search.\n\n**Extend:** drop a new `.md` file into `content/<branch>/` with frontmatter. The mindmap updates itself — nothing else to register. Conventions live in `content/_SCHEMA.md`.\n\n**Feed it to an AI:** tell the agent *\"read `AI_CONTEXT.md` first\"*. That file points at `KNOWLEDGE_INDEX.md` (auto-generated table of contents) and the detail files. Or hit **Copy for AI** in the detail panel to grab one branch and paste it into a chat.\n\n## The one rule\n\n> **Markdown under `content/` is the single source of truth.**\n> `public/data/graph.json` and `KNOWLEDGE_INDEX.md` are generated. Editing them by hand loses your work on the next build.\n\nNode status: `deep` = written and usable · `stub` = skeleton only, needs filling in. Stub nodes show a dashed border on the mindmap — that is this vault's own to-do list.",
+          "body": "This is the **central brain**: a place for a person to learn and look things up, and for an AI agent (Codex, Claude Code, Cursor…) to read before building an actual game.\n\n## The gap this fills\n\nWhen you ask an AI to write a game, the hard part is not that the AI codes badly — it is that **the AI does not know what you want**. A prompt like \"make me a shooter\" produces something generic, because every design decision gets invented on your behalf.\n\nThis vault closes that gap in two layers:\n\n1. **Knowledge layer** (branches 1–6, 8–10) — principles of game design and game AI. This is shared vocabulary: the AI reads it so you both mean the same thing by the same words.\n2. **Blueprint layer** ([[blueprints]]) — the GDD of the specific game you are building. This is the part the AI actually executes.\n\nWithout layer 1, the AI ships a game that is \"technically what you asked for, and dull\". Without layer 2, it has nothing to build.\n\n## The ten branches\n\n| Branch | Covers | Reach for it when |\n|---|---|---|\n| [[foundations]] | Core loop, player motivation, MDA, game feel, design pillars | Starting a new game idea |\n| [[systems]] | Economy, progression, combat, balance math | Designing the systems that run the game |\n| [[content-design]] | Levels, procedural generation, pacing, narrative | Filling the system skeleton with content |\n| [[presentation]] | Art direction, animation, UI, HUD, audio, accessibility | Turning systems into something a player can feel |\n| [[game-ai]] | FSM, Behavior Tree, GOAP, Utility AI, pathfinding | Making enemies and NPCs feel smart |\n| [[ai-assisted-dev]] | Using AI (Codex/Claude) **to build** the game | You want the AI to write code you can actually ship |\n| [[production]] | Architecture, data-driven design, metrics, performance | Turning a prototype into a product |\n| [[unity]] | Unity in practice: physics, animation, patterns, UI, audio, VFX, shaders, lighting, optimization, builds, multiplayer | Implementing in Unity without the usual traps |\n| [[backend-go]] | Go backend and databases: API, realtime rooms, Postgres/Redis, economy data | The game has accounts, IAP or a leaderboard |\n| [[blueprints]] | A real GDD plus a template | Starting a specific project |\n\nAn important distinction: **[[game-ai]] is AI *inside* the game** (a monster that dodges). **[[ai-assisted-dev]] is AI that *makes* the game** (Claude writing the script for that monster). They are different disciplines; do not conflate them.\n\n## How to use it\n\n**Read and browse:** `npm run dev`, then wander the mindmap. Click a node to read, press `/` to search.\n\n**Extend:** drop a new `.md` file into `content/<branch>/` with frontmatter. The mindmap updates itself — nothing else to register. Conventions live in `content/_SCHEMA.md`.\n\n**Feed it to an AI:** tell the agent *\"read `AI_CONTEXT.md` first\"*. That file points at `KNOWLEDGE_INDEX.md` (auto-generated table of contents) and the detail files. Or hit **Copy for AI** in the detail panel to grab one branch and paste it into a chat.\n\n## The one rule\n\n> **Markdown under `content/` is the single source of truth.**\n> `public/data/graph.json` and `KNOWLEDGE_INDEX.md` are generated. Editing them by hand loses your work on the next build.\n\nNode status: `deep` = written and usable · `stub` = skeleton only, needs filling in. Stub nodes show a dashed border on the mindmap — that is this vault's own to-do list.",
           "aiPrompt": "**How to use AI with this vault**\n\nThree ways, with real differences in cost and accuracy:\n\n| Way | When | Note |\n|---|---|---|\n| Agent **reads the files** in the repo | Default, if it has filesystem access | Cheapest, always current |\n| **Copy this section** / **Copy branch** | Delegating one specific task | ~1k / ~13k tokens |\n| **Export prompt playbook** | AI cannot read your disk | ~15k tokens |\n\nSee [[ai-tooling]] for tool-selection criteria, and [[ai-limits]] for what not to delegate.\n\nThe root node is not the place for a topic-specific prompt. But every request you send an AI about the project should open with a **positioning block** like the one below — it stops the model from defaulting to \"the average game in its training data\".\n\n**Session opener template**\n\n```\nDesign knowledge base: E:/XoiGame/GameDesign\nRead AI_CONTEXT.md first, then KNOWLEDGE_INDEX.md to see what nodes exist.\n\nProject GDD: content/07-blueprints/<game>.md\nThese three sections are HARD CONSTRAINTS — violating one means stop and ask me:\n  - Design Pillars\n  - Invariants (INV-xx)\n  - Out of scope\n\nBefore choosing a technique for <the task>, read the relevant node in the vault\nand tell me which one you picked and why.\n```\n\n**The biggest trap:** pasting all 36,000 words into the chat. It burns tokens and drowns the signal. Let the agent **read files on demand** — only paste when it has no filesystem access.",
           "unity": "",
           "code": "",
@@ -5609,26 +5738,6 @@
     {
       "source": "data-driven-design",
       "target": "agent-guardrails",
-      "type": "related"
-    },
-    {
-      "source": "game-server-go",
-      "target": "unity-multiplayer",
-      "type": "related"
-    },
-    {
-      "source": "game-server-go",
-      "target": "architecture-patterns",
-      "type": "related"
-    },
-    {
-      "source": "game-server-go",
-      "target": "unity-save-data",
-      "type": "related"
-    },
-    {
-      "source": "game-server-go",
-      "target": "economy-design",
       "type": "related"
     },
     {
@@ -6257,6 +6366,26 @@
       "type": "related"
     },
     {
+      "source": "unity-third-party",
+      "target": "unity-project-structure",
+      "type": "related"
+    },
+    {
+      "source": "unity-third-party",
+      "target": "unity-build-platform",
+      "type": "related"
+    },
+    {
+      "source": "unity-third-party",
+      "target": "unity-design-patterns",
+      "type": "related"
+    },
+    {
+      "source": "unity-third-party",
+      "target": "tech-stack",
+      "type": "related"
+    },
+    {
       "source": "unity-ui",
       "target": "ui-design",
       "type": "related"
@@ -6289,6 +6418,51 @@
     {
       "source": "unity-vfx",
       "target": "unity-optimization",
+      "type": "related"
+    },
+    {
+      "source": "game-database",
+      "target": "game-server-go",
+      "type": "related"
+    },
+    {
+      "source": "game-database",
+      "target": "economy-design",
+      "type": "related"
+    },
+    {
+      "source": "game-database",
+      "target": "unity-save-data",
+      "type": "related"
+    },
+    {
+      "source": "game-database",
+      "target": "playtesting-metrics",
+      "type": "related"
+    },
+    {
+      "source": "game-server-go",
+      "target": "unity-multiplayer",
+      "type": "related"
+    },
+    {
+      "source": "game-server-go",
+      "target": "architecture-patterns",
+      "type": "related"
+    },
+    {
+      "source": "game-server-go",
+      "target": "unity-save-data",
+      "type": "related"
+    },
+    {
+      "source": "backend-go",
+      "target": "production",
+      "type": "related"
+    },
+    {
+      "source": "backend-go",
+      "target": "unity",
       "type": "related"
     },
     {
@@ -6772,16 +6946,6 @@
       "type": "mention"
     },
     {
-      "source": "game-server-go",
-      "target": "playtesting-metrics",
-      "type": "mention"
-    },
-    {
-      "source": "game-server-go",
-      "target": "randomness",
-      "type": "mention"
-    },
-    {
       "source": "production",
       "target": "architecture-patterns",
       "type": "mention"
@@ -6809,11 +6973,6 @@
     {
       "source": "production",
       "target": "performance",
-      "type": "mention"
-    },
-    {
-      "source": "production",
-      "target": "game-server-go",
       "type": "mention"
     },
     {
@@ -7187,6 +7346,46 @@
       "type": "mention"
     },
     {
+      "source": "unity-third-party",
+      "target": "unity-save-data",
+      "type": "mention"
+    },
+    {
+      "source": "unity-third-party",
+      "target": "unity-editor-tools",
+      "type": "mention"
+    },
+    {
+      "source": "unity-third-party",
+      "target": "unity-multiplayer",
+      "type": "mention"
+    },
+    {
+      "source": "unity-third-party",
+      "target": "unity-audio",
+      "type": "mention"
+    },
+    {
+      "source": "unity-third-party",
+      "target": "unity-camera",
+      "type": "mention"
+    },
+    {
+      "source": "unity-third-party",
+      "target": "unity-testing-ci",
+      "type": "mention"
+    },
+    {
+      "source": "unity-third-party",
+      "target": "unity-game-loop",
+      "type": "mention"
+    },
+    {
+      "source": "unity-third-party",
+      "target": "unity-csharp-memory",
+      "type": "mention"
+    },
+    {
       "source": "unity-ui",
       "target": "unity-editor-tools",
       "type": "mention"
@@ -7209,6 +7408,36 @@
     {
       "source": "unity-vfx",
       "target": "data-driven-design",
+      "type": "mention"
+    },
+    {
+      "source": "game-server-go",
+      "target": "backend-go",
+      "type": "mention"
+    },
+    {
+      "source": "game-server-go",
+      "target": "randomness",
+      "type": "mention"
+    },
+    {
+      "source": "backend-go",
+      "target": "unity-save-data",
+      "type": "mention"
+    },
+    {
+      "source": "backend-go",
+      "target": "game-database",
+      "type": "mention"
+    },
+    {
+      "source": "backend-go",
+      "target": "unity-multiplayer",
+      "type": "mention"
+    },
+    {
+      "source": "backend-go",
+      "target": "performance",
       "type": "mention"
     },
     {
@@ -7254,6 +7483,11 @@
     {
       "source": "root",
       "target": "unity",
+      "type": "mention"
+    },
+    {
+      "source": "root",
+      "target": "backend-go",
       "type": "mention"
     },
     {

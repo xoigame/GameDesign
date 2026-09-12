@@ -20,7 +20,8 @@ Nhánh này về **cách xây** chứ không về **xây cái gì**.
 - **[[liveops]]** — vận hành sau phát hành: remote config, feature flag, sự kiện theo lịch, A/B test làm cho đúng.
 - **[[tech-stack]]** — chọn engine và công cụ.
 - **[[performance]]** — ngân sách và tối ưu.
-- **[[game-server-go]]** — backend Go cho game Unity: API, phòng realtime, Postgres và Redis.
+
+Phần chạy trên máy chủ — Go cho API và phòng realtime, Postgres/Redis cho dữ liệu — tách thành nhánh riêng: **[[backend-go]]**.
 
 ## Nguyên tắc
 
