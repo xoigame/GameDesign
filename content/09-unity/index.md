@@ -23,6 +23,7 @@ Tài liệu chính thức của Unity đã đủ tốt để tra cứu API. Th�
 - **[[unity-project-structure]]** — tổ chức thư mục, Assembly Definition, prefab variant, scene additive, làm việc nhóm với Git.
 - **[[unity-design-patterns]]** — pattern chạy tốt trong MonoBehaviour: ScriptableObject làm dữ liệu và kênh sự kiện, service locator có kỷ luật, state machine, command, pool.
 - **[[unity-save-data]]** — lưu game: JSON có version, ghi atomic, migration, và cái bẫy ScriptableObject giữ dữ liệu runtime.
+- **[[unity-csharp-memory]]** — GC không nén của Unity, cái gì cấp phát mà nhìn code không ra, struct vs class, và chọn giữa Coroutine / async / UniTask / Awaitable.
 
 **Gameplay**
 - **[[unity-physics]]** — Rigidbody vs kinematic vs tự viết, FixedUpdate và interpolation, collision matrix, raycast không cấp phát, vật lý cho platformer.
@@ -42,6 +43,10 @@ Tài liệu chính thức của Unity đã đủ tốt để tra cứu API. Th�
 - **[[unity-build-platform]]** — IL2CPP, stripping, kích thước build, Android/iOS/WebGL, Addressables, crash report.
 - **[[unity-multiplayer]]** — chọn giữa Netcode for GameObjects / Mirror / Photon Fusion, mô hình authority, prediction, tick rate, test nhiều client.
 - **[[unity-editor-tools]]** — công cụ tự viết: custom inspector, gizmo, cheat console, validator asset. Thứ giúp team đi nhanh hơn mọi framework.
+- **[[unity-dots-jobs]]** — ba tầng Job System / Burst / ECS, vì sao bố cục bộ nhớ mới là nguồn tăng tốc, và khi nào ECS thật sự đáng.
+- **[[unity-addressables]]** — ba cách tham chiếu asset, đếm tham chiếu và ba kiểu rò rỉ, asset nhân bản giữa bundle, cập nhật nội dung từ xa.
+- **[[unity-testing-ci]]** — cái gì trong game đáng test, tách logic khỏi MonoBehaviour, validate asset, và thang CI năm bậc.
+- **[[unity-debug-crash]]** — bug ở máy người chơi: phân biệt crash / ANR / hết RAM, symbolicate, breadcrumb và cách tìm mẫu chung.
 
 ## Bốn bài học đắt nhất
 

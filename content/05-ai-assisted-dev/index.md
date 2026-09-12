@@ -40,6 +40,11 @@ Toàn bộ kho kiến thức này tồn tại để bạn viết được đặc
 - **[[ai-limits]]** — chỗ AI thất bại đáng tin cậy, và cách phát hiện khi mình nhờ sai việc.
 - **[[asset-generation]]** — sinh sprite, âm thanh, nhạc.
 
+**Tự xây trợ lý cho team**
+- **[[ai-assistant-architecture]]** — bốn lớp của một trợ lý dùng được: ngữ cảnh, công cụ, vòng lặp tự sửa, cổng người. Kèm cầu nối Editor chạy được.
+- **[[knowledge-base-for-agents]]** — kho kiến thức máy đọc được làm ngữ cảnh dùng chung. Case study chính kho này, kèm hai lỗi im lặng đã xảy ra thật.
+- **[[ai-eval]]** — đo xem trợ lý có thật sự tốt lên không: golden task lấy từ lịch sử repo, bốn nhóm chỉ số, cách so sánh không tự lừa mình.
+
 ## Ba khâu, ba cách dùng khác nhau
 
 Điểm dễ nhầm nhất: **cùng một công cụ nhưng vai của nó đổi hoàn toàn giữa ba khâu.**

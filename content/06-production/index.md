@@ -17,6 +17,7 @@ Nhánh này về **cách xây** chứ không về **xây cái gì**.
 - **[[architecture-patterns]]** — ECS, component, event bus, state machine ở tầng ứng dụng.
 - **[[data-driven-design]]** — tách dữ liệu khỏi code. Điều kiện tiên quyết để cân bằng và để AI hỗ trợ hiệu quả.
 - **[[playtesting-metrics]]** — đo cái gì, đo thế nào, và cách đọc kết quả.
+- **[[liveops]]** — vận hành sau phát hành: remote config, feature flag, sự kiện theo lịch, A/B test làm cho đúng.
 - **[[tech-stack]]** — chọn engine và công cụ.
 - **[[performance]]** — ngân sách và tối ưu.
 - **[[game-server-go]]** — backend Go cho game Unity: API, phòng realtime, Postgres và Redis.
