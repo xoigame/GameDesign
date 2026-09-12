@@ -4,9 +4,9 @@
 > Đây là mục lục phẳng của toàn bộ kho kiến thức, dành cho AI agent (Codex / Claude Code)
 > đọc nhanh trước khi mở từng file `content/**/*.md` chi tiết.
 
-Cập nhật: `2026-09-12T21:43:33.267Z` · 94 node · 81 deep · 13 stub · 147407 từ
+Cập nhật: `2026-09-12T21:49:58.225Z` · 95 node · 83 deep · 12 stub · 153665 từ
 
-Mức độ: **29 cơ bản** · 41 trung cấp · 24 chuyên sâu
+Mức độ: **29 cơ bản** · 42 trung cấp · 24 chuyên sâu
 
 ## Lộ trình đọc
 
@@ -21,7 +21,7 @@ thức cơ bản (ai cũng nên đọc), trung cấp (cần nền), hay chuyên 
 | 4 | **Core Loop** `#core-loop` | Cơ bản | deep | `content/01-foundations/core-loop.md` |
 | 5 | **Động lực người chơi** `#player-motivation` | Cơ bản | deep | `content/01-foundations/player-motivation.md` |
 | 6 | **Game Feel & Juice** `#game-feel` | Cơ bản | deep | `content/01-foundations/game-feel.md` |
-| 7 | **Quy ước thể loại** `#genre-conventions` | Cơ bản | stub | `content/01-foundations/genre-conventions.md` |
+| 7 | **Quy ước thể loại** `#genre-conventions` | Cơ bản | deep | `content/01-foundations/genre-conventions.md` |
 | 8 | **Prototyping** `#prototyping` | Cơ bản | stub | `content/01-foundations/prototyping.md` |
 | 9 | **Làm game với AI** `#ai-assisted-dev` | Cơ bản | deep | `content/05-ai-assisted-dev/index.md` |
 | 10 | **Bản đồ công cụ AI** `#ai-tooling` | Cơ bản | deep | `content/05-ai-assisted-dev/ai-tooling.md` |
@@ -109,6 +109,7 @@ thức cơ bản (ai cũng nên đọc), trung cấp (cần nền), hay chuyên 
 | 92 | **Editor Tools tự viết** `#unity-editor-tools` | Trung cấp | deep | `content/09-unity/unity-editor-tools.md` |
 | 93 | **Test và CI/CD cho Unity** `#unity-testing-ci` | Trung cấp | deep | `content/09-unity/unity-testing-ci.md` |
 | 94 | **Debug hiện trường — crash, ANR, log** `#unity-debug-crash` | Chuyên sâu | deep | `content/09-unity/unity-debug-crash.md` |
+| 95 | **SDK kiếm tiền — quảng cáo, IAP, đo lường** `#unity-monetization-sdk` | Trung cấp | deep | `content/09-unity/unity-monetization-sdk.md` |
 
 ## Cây kiến thức
 
@@ -119,7 +120,7 @@ thức cơ bản (ai cũng nên đọc), trung cấp (cần nền), hay chuyên 
     - ● `#5` **Động lực người chơi** `#player-motivation` 🤖 🎮 — Vì sao người ta chơi tiếp — Self-Determination Theory, Bartle, Quantic Foundry và cách chuyển thành hệ thống cụ thể. → `content/01-foundations/player-motivation.md`
     - ● `#6` **Game Feel & Juice** `#game-feel` 🤖 🎮 — Lớp phản hồi cảm giác biến một prototype đúng chức năng thành một game đã tay — kèm số liệu cụ thể để đưa cho AI. → `content/01-foundations/game-feel.md`
     - ◐ `#31` **MDA Framework** `#mda-framework` 🤖 🎮 — Mechanics → Dynamics → Aesthetics — ngôn ngữ chung để truy ngược từ cảm xúc mong muốn về luật chơi cụ thể. → `content/01-foundations/mda-framework.md`
-    - ● `#7` **Quy ước thể loại** `#genre-conventions` _(stub — cần viết thêm)_ 🤖 🎮 — Kỳ vọng mặc định người chơi mang theo khi bước vào một thể loại — biết để dùng, và để cố ý phá. → `content/01-foundations/genre-conventions.md`
+    - ● `#7` **Quy ước thể loại** `#genre-conventions` 🤖 🎮 🎤 — Kỳ vọng mặc định người chơi mang theo khi bước vào một thể loại — biết để dùng, và để cố ý phá. → `content/01-foundations/genre-conventions.md`
     - ● `#8` **Prototyping** `#prototyping` _(stub — cần viết thêm)_ 🤖 🎮 — Kiểm chứng câu hỏi rủi ro nhất bằng công sức nhỏ nhất — và vì sao AI làm khâu này rẻ đi mười lần. → `content/01-foundations/prototyping.md`
   - ● `#24` **Systems Design** `#systems` 🤖 🎮 🇬🇧 — Thiết kế các hệ thống chạy ngầm — kinh tế, tiến trình, chiến đấu, cân bằng số — sao cho chúng sinh ra hành vi thú vị. → `content/02-systems/index.md`
     - ◐ `#26` **Economy Design** `#economy-design` 🤖 🎮 — Source, sink, faucet-drain — thiết kế dòng chảy tài nguyên để game không lạm phát và không bế tắc. → `content/02-systems/economy-design.md`
@@ -201,6 +202,7 @@ thức cơ bản (ai cũng nên đọc), trung cấp (cần nền), hay chuyên 
     - ◐ `#92` **Editor Tools tự viết** `#unity-editor-tools` 🤖 💻 🎤 — Một giờ viết tool tiết kiệm mười giờ của team; tool là thứ để designer không phải gọi lập trình viên — và là việc AI agent làm tốt nhất trong toàn bộ dự án Unity. → `content/09-unity/unity-editor-tools.md`
     - ◐ `#93` **Test và CI/CD cho Unity** `#unity-testing-ci` 🤖 💻 🎤 — Cái gì trong game đáng viết test và cái gì không, cách tách logic khỏi MonoBehaviour để test được, và thang CI năm bậc — từ build đêm cho QA tới farm thiết bị. → `content/09-unity/unity-testing-ci.md`
     - ○ `#94` **Debug hiện trường — crash, ANR, log** `#unity-debug-crash` 🤖 💻 🎤 — Bug ở máy người chơi mà bạn không cầm được máy: phân biệt crash / ANR / bị kill vì hết RAM, symbolicate stack native, và breadcrumb — thứ rẻ nhất biến "không tái hiện được" thành "sửa được". → `content/09-unity/unity-debug-crash.md`
+    - ◐ `#95` **SDK kiếm tiền — quảng cáo, IAP, đo lường** `#unity-monetization-sdk` 🤖 💻 🎤 — Mediation, vòng đời một lần hiện rewarded, consent GDPR/ATT, acknowledge hoá đơn trong 3 ngày, và build hell do EDM4U — nhóm SDK mà một lỗi nhỏ làm mất tiền thật hoặc khoá tài khoản. → `content/09-unity/unity-monetization-sdk.md`
   - ○ `#67` **Backend Go & Database** `#backend-go` 🤖 — Phần game chạy trên máy chủ — Go cho API và phòng realtime, Postgres/Redis cho dữ liệu, và ranh giới giữa thứ client được quyết và thứ chỉ server mới được quyết. → `content/10-backend-go/index.md`
     - ○ `#68` **Server Go cho game** `#game-server-go` 🤖 🎮 — Viết process Go phục vụ game Unity — một goroutine sở hữu một phòng, chọn giao thức theo loại dữ liệu, và không tin con số nào client gửi lên. → `content/10-backend-go/game-server-go.md`
     - ○ `#69` **Database cho game** `#game-database` 🤖 🎮 — Dữ liệu nào về chỗ nào, sáu luật cho dữ liệu kinh tế, và cách viết một lệnh ghi tiền chạy hai lần vẫn chỉ trừ một lần. → `content/10-backend-go/game-database.md`
@@ -448,6 +450,11 @@ thức cơ bản (ai cũng nên đọc), trung cấp (cần nền), hay chuyên 
 - `#unity-lighting` ↔ `#unity-shader` (related)
 - `#unity-lighting` ↔ `#unity-optimization` (related)
 - `#unity-lighting` ↔ `#unity-build-platform` (related)
+- `#unity-monetization-sdk` ↔ `#unity-third-party` (related)
+- `#unity-monetization-sdk` ↔ `#unity-build-platform` (related)
+- `#unity-monetization-sdk` ↔ `#liveops` (related)
+- `#unity-monetization-sdk` ↔ `#economy-design` (related)
+- `#unity-monetization-sdk` ↔ `#unity-debug-crash` (related)
 - `#unity-multiplayer` ↔ `#combat-systems` (related)
 - `#unity-multiplayer` ↔ `#architecture-patterns` (related)
 - `#unity-multiplayer` ↔ `#unity-game-loop` (related)
@@ -494,6 +501,8 @@ thức cơ bản (ai cũng nên đọc), trung cấp (cần nền), hay chuyên 
 - `#core-loop` ↔ `#gdd-for-ai` (mention)
 - `#core-loop` ↔ `#prompt-patterns` (mention)
 - `#game-feel` ↔ `#data-driven-design` (mention)
+- `#genre-conventions` ↔ `#onboarding` (mention)
+- `#genre-conventions` ↔ `#randomness` (mention)
 - `#foundations` ↔ `#design-pillars` (mention)
 - `#foundations` ↔ `#core-loop` (mention)
 - `#foundations` ↔ `#player-motivation` (mention)
@@ -640,6 +649,8 @@ thức cơ bản (ai cũng nên đọc), trung cấp (cần nền), hay chuyên 
 - `#unity` ↔ `#unity-addressables` (mention)
 - `#unity` ↔ `#unity-testing-ci` (mention)
 - `#unity` ↔ `#unity-debug-crash` (mention)
+- `#unity` ↔ `#unity-third-party` (mention)
+- `#unity` ↔ `#unity-monetization-sdk` (mention)
 - `#unity` ↔ `#animation-game` (mention)
 - `#unity` ↔ `#audio-implementation` (mention)
 - `#unity` ↔ `#ai-limits` (mention)
@@ -660,6 +671,7 @@ thức cơ bản (ai cũng nên đọc), trung cấp (cần nền), hay chuyên 
 - `#unity-game-loop` ↔ `#unity-build-platform` (mention)
 - `#unity-input` ↔ `#unity-physics` (mention)
 - `#unity-lighting` ↔ `#unity-vfx` (mention)
+- `#unity-monetization-sdk` ↔ `#unity-multiplayer` (mention)
 - `#unity-multiplayer` ↔ `#unity-physics` (mention)
 - `#unity-optimization` ↔ `#unity-editor-tools` (mention)
 - `#unity-project-structure` ↔ `#unity-design-patterns` (mention)
@@ -700,4 +712,4 @@ thức cơ bản (ai cũng nên đọc), trung cấp (cần nền), hay chuyên 
 
 ## Tag
 
-`accessibility` · `addressables` · `advanced` · `agent` · `ai` · `ai-dev` · `algorithm` · `analysis` · `analytics` · `animation` · `architecture` · `art` · `asset` · `audio` · `automation` · `backend` · `blueprint` · `build` · `burst` · `camera` · `ci` · `code` · `combat` · `content` · `core` · `crash` · `csharp` · `data` · `database` · `debug` · `decision-making` · `design` · `design-system` · `difficulty` · `documentation` · `dots` · `economy` · `ecs` · `editor` · `engine` · `eval` · `experimental` · `feel` · `flow` · `foundations` · `fundamentals` · `gameplay` · `gc` · `genre` · `go` · `hud` · `implementation` · `industry-standard` · `input` · `jobs` · `key` · `knowledge-base` · `level` · `lifecycle` · `lighting` · `limits` · `live-ops` · `liveops` · `llm` · `marketing` · `math` · `memory` · `meta` · `metrics` · `ml` · `mobile` · `movement` · `multiplayer` · `music` · `narrative` · `navigation` · `netcode` · `npc` · `onboarding` · `operations` · `optimization` · `pacing` · `pattern` · `performance` · `persistence` · `physics` · `pillar` · `planning` · `platform` · `plugin` · `polish` · `postgres` · `practical` · `presentation` · `process` · `procgen` · `production` · `progression` · `project` · `prompt` · `psychology` · `publish` · `realtime` · `redis` · `rendering` · `retention` · `rng` · `safety` · `save` · `scene` · `server` · `shader` · `simulation` · `spec` · `systems` · `team` · `tech` · `template` · `testing` · `theory` · `third-party` · `tooling` · `ui` · `unity` · `urp` · `ux` · `vfx` · `visual` · `workflow`
+`accessibility` · `addressables` · `ads` · `advanced` · `agent` · `ai` · `ai-dev` · `algorithm` · `analysis` · `analytics` · `animation` · `architecture` · `art` · `asset` · `audio` · `automation` · `backend` · `blueprint` · `build` · `burst` · `camera` · `ci` · `code` · `combat` · `content` · `core` · `crash` · `csharp` · `data` · `database` · `debug` · `decision-making` · `design` · `design-system` · `difficulty` · `documentation` · `dots` · `economy` · `ecs` · `editor` · `engine` · `eval` · `experimental` · `feel` · `flow` · `foundations` · `fundamentals` · `gameplay` · `gc` · `genre` · `go` · `hud` · `iap` · `implementation` · `industry-standard` · `input` · `jobs` · `key` · `knowledge-base` · `level` · `lifecycle` · `lighting` · `limits` · `live-ops` · `liveops` · `llm` · `marketing` · `math` · `memory` · `meta` · `metrics` · `ml` · `mobile` · `monetization` · `movement` · `multiplayer` · `music` · `narrative` · `navigation` · `netcode` · `npc` · `onboarding` · `operations` · `optimization` · `pacing` · `pattern` · `performance` · `persistence` · `physics` · `pillar` · `planning` · `platform` · `plugin` · `polish` · `postgres` · `practical` · `presentation` · `process` · `procgen` · `production` · `progression` · `project` · `prompt` · `psychology` · `publish` · `realtime` · `redis` · `rendering` · `retention` · `rng` · `safety` · `save` · `scene` · `server` · `shader` · `simulation` · `spec` · `systems` · `team` · `tech` · `template` · `testing` · `theory` · `third-party` · `tooling` · `ui` · `unity` · `urp` · `ux` · `vfx` · `visual` · `workflow`

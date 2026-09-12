@@ -438,3 +438,31 @@ see: game-server-go
 ## graceful shutdown
 Tắt process theo trình tự: ngừng nhận việc mới, làm nốt việc đang dở, rồi mới thoát. Thiếu nó thì mỗi lần deploy là một lần người chơi mất trận — và cả đội sẽ sợ deploy.
 see: game-server-go
+
+## mediation
+Một SDK mẹ gọi nhiều mạng quảng cáo con qua adapter, rồi chọn giá tốt nhất cho từng lượt hiển thị. Cần nó vì không mạng nào lấp hết inventory; cái giá là mỗi adapter là một thư viện native, nên mọi vấn đề build nhân lên theo số mạng bật.
+see: unity-monetization-sdk
+
+## eCPM
+Doanh thu ước tính trên mỗi 1000 lượt hiển thị. Đổi theo vùng, theo mùa và theo định dạng quảng cáo — nên so eCPM giữa hai thị trường khác nhau là so hai thứ khác nhau.
+see: unity-monetization-sdk
+
+## fill rate
+Tỉ lệ lượt yêu cầu quảng cáo thật sự có quảng cáo trả về. Fill rate thấp nghĩa là người chơi bấm nút mà không có gì hiện — lý do chính khiến người ta dùng mediation thay vì một mạng duy nhất.
+see: unity-monetization-sdk
+
+## in-app bidding | bidding
+Mọi mạng cùng trả giá theo thời gian thực cho đúng lượt hiển thị đó, giá cao nhất thắng. Thay thế waterfall (xếp sẵn theo giá dự kiến) và cho doanh thu lẫn độ trễ tốt hơn.
+see: unity-monetization-sdk
+
+## EDM4U | External Dependency Manager
+Công cụ giải phụ thuộc native (Android `.aar`, iOS CocoaPods) mà hầu hết SDK của Google và các mạng quảng cáo đều mang theo. Nhiều SDK cùng mang mỗi bản một phiên bản là nguyên nhân lỗi build số một của nhóm này: giữ bản mới nhất, xoá phần còn lại, rồi Force Resolve.
+see: unity-third-party
+
+## tween
+Nội suy một giá trị từ A tới B theo thời gian và theo đường ease — thứ tạo ra phần lớn chuyển động UI. Unity không có tween chính thức nên đây là chỗ thư viện ngoài (DOTween, PrimeTween) hay được dùng nhất.
+see: unity-third-party
+
+## phần thưởng chờ | pending reward
+Phần thưởng đã được xác nhận nhưng chưa ghi vào tài khoản người chơi, lưu xuống đĩa trước khi trao. Không có nó thì app bị kill đúng lúc trao là người chơi xem xong quảng cáo mà mất thưởng.
+see: unity-monetization-sdk

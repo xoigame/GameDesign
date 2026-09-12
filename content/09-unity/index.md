@@ -47,6 +47,8 @@ Tài liệu chính thức của Unity đã đủ tốt để tra cứu API. Th�
 - **[[unity-addressables]]** — ba cách tham chiếu asset, đếm tham chiếu và ba kiểu rò rỉ, asset nhân bản giữa bundle, cập nhật nội dung từ xa.
 - **[[unity-testing-ci]]** — cái gì trong game đáng test, tách logic khỏi MonoBehaviour, validate asset, và thang CI năm bậc.
 - **[[unity-debug-crash]]** — bug ở máy người chơi: phân biệt crash / ANR / hết RAM, symbolicate, breadcrumb và cách tìm mẫu chung.
+- **[[unity-third-party]]** — chọn và cách ly thư viện ngoài: bản đồ built-in trước, bảy tiêu chí chọn, bọc sau interface của mình, bẫy DOTween và Gradle.
+- **[[unity-monetization-sdk]]** — SDK kiếm tiền: mediation, vòng đời rewarded, consent GDPR/ATT, acknowledge hoá đơn, và build hell do EDM4U.
 
 ## Bốn bài học đắt nhất
 
