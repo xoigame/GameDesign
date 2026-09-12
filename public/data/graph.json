@@ -1,25 +1,25 @@
 {
-  "generatedAt": "2026-09-12T14:49:37.095Z",
+  "generatedAt": "2026-09-12T15:01:32.220Z",
   "root": "root",
   "stats": {
-    "nodes": 85,
+    "nodes": 88,
     "branches": 9,
-    "deep": 72,
+    "deep": 75,
     "stub": 13,
-    "relations": 414,
-    "withPrompt": 85,
-    "withUnity": 64,
-    "withAiHowto": 23,
+    "relations": 429,
+    "withPrompt": 88,
+    "withUnity": 65,
+    "withAiHowto": 26,
     "glossaryTerms": 149,
-    "withCode": 20,
-    "withInterview": 21,
+    "withCode": 22,
+    "withInterview": 24,
     "translated": {
       "en": 12
     },
     "basic": 29,
-    "intermediate": 37,
-    "advanced": 19,
-    "words": 126229
+    "intermediate": 39,
+    "advanced": 20,
+    "words": 134629
   },
   "tags": [
     "accessibility",
@@ -29,23 +29,28 @@
     "ai-dev",
     "algorithm",
     "analysis",
+    "analytics",
     "animation",
     "architecture",
     "art",
     "asset",
     "audio",
+    "automation",
     "backend",
     "blueprint",
     "build",
     "burst",
     "camera",
+    "ci",
     "code",
     "combat",
     "content",
     "core",
+    "crash",
     "csharp",
     "data",
     "database",
+    "debug",
     "decision-making",
     "design",
     "design-system",
@@ -76,6 +81,7 @@
     "lighting",
     "limits",
     "live-ops",
+    "liveops",
     "llm",
     "marketing",
     "math",
@@ -91,6 +97,7 @@
     "netcode",
     "npc",
     "onboarding",
+    "operations",
     "optimization",
     "pacing",
     "pattern",
@@ -1293,6 +1300,7 @@
     "data-driven-design",
     "architecture-patterns",
     "playtesting-metrics",
+    "liveops",
     "tech-stack",
     "performance",
     "game-server-go",
@@ -1317,7 +1325,9 @@
     "unity-build-platform",
     "unity-addressables",
     "unity-multiplayer",
-    "unity-editor-tools"
+    "unity-editor-tools",
+    "unity-testing-ci",
+    "unity-debug-crash"
   ],
   "nodes": [
     {
@@ -2917,7 +2927,7 @@
       ],
       "status": "stub",
       "read": 590,
-      "readIndex": 64,
+      "readIndex": 65,
       "level": "advanced",
       "refs": [],
       "order": 50,
@@ -3167,7 +3177,7 @@
       ],
       "status": "deep",
       "read": 585,
-      "readIndex": 63,
+      "readIndex": 64,
       "level": "advanced",
       "refs": [],
       "order": 60,
@@ -3193,6 +3203,7 @@
         "architecture-patterns",
         "data-driven-design",
         "playtesting-metrics",
+        "liveops",
         "tech-stack",
         "performance",
         "game-server-go"
@@ -3237,6 +3248,47 @@
       "color": "#f783ac"
     },
     {
+      "id": "liveops",
+      "title": "LiveOps — vận hành game sau khi phát hành",
+      "summary": "Remote config, feature flag, sự kiện theo lịch và A/B test — bộ máy cho phép sửa số, tắt tính năng hỏng và đổi nội dung mà không chờ store duyệt.",
+      "icon": "📡",
+      "parent": "production",
+      "children": [],
+      "depth": 2,
+      "branch": "production",
+      "tags": [
+        "production",
+        "liveops",
+        "analytics",
+        "mobile",
+        "operations"
+      ],
+      "related": [
+        "playtesting-metrics",
+        "economy-design",
+        "data-driven-design",
+        "progression",
+        "unity-addressables"
+      ],
+      "status": "deep",
+      "read": 565,
+      "readIndex": 61,
+      "level": "intermediate",
+      "refs": [],
+      "order": 35,
+      "collapsed": false,
+      "path": "06-production/liveops.md",
+      "words": 2802,
+      "body": "Với game mobile, ngày phát hành không phải vạch đích mà là **vạch xuất phát**: phần lớn doanh thu và gần như toàn bộ việc giữ chân người chơi diễn ra sau đó. LiveOps là bộ máy để thay đổi game **khi người chơi đang chơi** — và câu hỏi đầu tiên của nó rất cụ thể: *một con số sai được phát hiện lúc 9 giờ sáng thì tới mấy giờ người chơi hết chịu ảnh hưởng?* Có LiveOps thì câu trả lời là 15 phút. Không có thì là ba ngày, tính cả thời gian store duyệt.\n\n## Bốn trụ\n\n| Trụ | Cho phép làm gì | Không có thì |\n|---|---|---|\n| **Remote config** | Đổi số (giá, drop rate, thời lượng sự kiện) không cần build | Mọi cân bằng phải chờ bản mới |\n| **Nội dung tải về** | Thêm màn, skin, sự kiện qua CDN — xem [[unity-addressables]] | Nội dung mới = nộp store lại |\n| **Analytics + funnel** | Biết chỗ người chơi rời đi, biết sự kiện có hiệu quả không | Quyết định bằng cảm giác |\n| **Feature flag / kill switch** | Tắt một tính năng hỏng trong vài phút | Một bug IAP sống ba ngày |\n\nThứ tự dựng cũng nên là thứ tự đó. Đội hay bị cám dỗ làm A/B test trước khi có kill switch — tức là có khả năng thử nghiệm mà chưa có khả năng dừng.\n\n## Feature flag là phanh, không phải tiện ích\n\nMỗi tính năng có rủi ro (IAP, sự kiện, hệ thống mới, SDK quảng cáo) nên nằm sau một cờ bật/tắt từ xa. Ba luật để cờ không trở thành nợ:\n\n1. **Mặc định an toàn.** Không tải được config (mất mạng, server sập) thì game phải chạy theo giá trị mặc định đóng trong build, **không** treo ở màn hình chờ. Đây là lỗi hay gặp nhất và nó biến sự cố nhỏ của server thành game không mở được.\n2. **Cờ có hạn sử dụng.** Tính năng ổn định rồi thì xoá cờ. Một dự án hai năm với 80 cờ còn sống là 2^80 tổ hợp trạng thái mà không ai test nổi.\n3. **Bật dần, không bật hết.** 5% → theo dõi một giờ → 50% → 100%. Chỉ số cần nhìn khi mở dần: crash-free, thời lượng phiên, và chỉ số kinh tế của đúng tính năng đó.\n\n## Chỉ số: ít mà hiểu, hơn nhiều mà không dùng\n\nBộ tối thiểu, và điều quan trọng là **biết mỗi cái trả lời câu hỏi gì**:\n\n| Chỉ số | Trả lời câu hỏi | Bẫy khi đọc |\n|---|---|---|\n| **D1 / D7 / D30 retention** | Người chơi có lý do quay lại không | D1 tốt mà D7 tệ = onboarding ổn nhưng game không có chiều sâu |\n| **Thời lượng và số phiên/ngày** | Game hợp với nhịp sống của họ không | Phiên dài chưa chắc tốt: có thể là grind bắt buộc |\n| **Funnel onboarding theo bước** | Người chơi rớt ở bước nào | Phải chia theo dòng máy — rớt nhiều ở máy yếu thường là hiệu năng, không phải thiết kế |\n| **ARPDAU / conversion** | Kinh tế có chạy không | Tăng do một nhóm nhỏ chi nhiều có thể che việc mất người chơi thường |\n| **Crash-free sessions** | Bản này có ổn định không | Luôn nhìn **trước** mọi chỉ số khác: bản hỏng làm mọi số liệu khác vô nghĩa |\n\nQuy tắc thực dụng: mỗi chỉ số phải có **người chịu trách nhiệm** và **ngưỡng cảnh báo**. Chỉ số không ai nhìn là chi phí không lợi ích.\n\n## A/B test làm cho đúng\n\nSai lầm phổ biến không phải ở công cụ mà ở kỷ luật. Năm điều kiện, thiếu một là kết quả không dùng được:\n\n1. **Một biến mỗi lần.** Đổi cùng lúc giá gói và phần thưởng ngày đầu thì thắng cũng không biết nhờ cái nào.\n2. **Phân nhóm ổn định theo id người chơi**, giữ nguyên suốt thử nghiệm. Phân nhóm theo phiên là cách để cùng một người thấy hai giá khác nhau — vừa sai số liệu vừa mất lòng tin.\n3. **Chạy trọn chu kỳ tuần.** Hành vi cuối tuần khác hẳn ngày thường; một thử nghiệm ba ngày chỉ đo được ba ngày đó.\n4. **Định trước chỉ số quyết định và chỉ số bảo vệ.** Ví dụ: quyết định bằng conversion, bảo vệ bằng D7 retention — tăng doanh thu mà mất người chơi là thua.\n5. **Không nhìn giữa chừng rồi dừng khi thấy có lợi.** Ngó liên tục và dừng đúng lúc đang thắng là cách chắc chắn để tin vào nhiễu.\n\nVới game nhỏ, thành thật mà nói: lượng người chơi thường **không đủ** để A/B test có ý nghĩa thống kê. Lúc đó thứ trung thực hơn là so sánh theo mốc thời gian có ghi chú rõ (\"đổi drop rate ngày 12/3\") và đọc xu hướng, chứ không phải giả vờ có kết quả kiểm định.\n\n## Sự kiện: nhịp và chi phí thật\n\nLịch sự kiện là thứ giữ nhịp cho game live, nhưng nó là **chi phí vận hành lặp lại**, không phải một lần. Trước khi hứa \"sự kiện mỗi tuần\", tính thật: mỗi sự kiện cần nội dung, cân bằng, QA, ảnh quảng bá, và một người trực khi nó chạy. Đội kiệt sức vì lịch sự kiện là cách phổ biến để giết một game đang sống.\n\nQuy trình một sự kiện, rút gọn:\n\n1. Nội dung và số liệu chuẩn bị trước ít nhất một nhịp (đang chạy sự kiện này thì sự kiện sau đã sẵn sàng).\n2. QA trên môi trường staging **với đồng hồ tua tới ngày sự kiện** — lỗi múi giờ và lỗi \"sự kiện không tự kết thúc\" chỉ lộ ra ở đây.\n3. Bật cho 5%, theo dõi một giờ, rồi mở hết.\n4. Có sẵn **đường tắt**: kill switch cho chính sự kiện đó.\n5. Hồi cứu sau sự kiện: số liệu so với dự đoán, ghi lại cho lần sau. Sự kiện không có bước 5 sẽ lặp lại đúng sai lầm cũ.\n\n## Rủi ro riêng của LiveOps\n\n- **Version skew.** Người chơi nằm rải ở nhiều bản app; config mới phải an toàn với **bản cũ nhất còn sống**. Thêm một trường mà bản cũ không hiểu là chấp nhận được; đổi ý nghĩa một trường cũ là tai nạn.\n- **Config sai gây hại nhanh hơn code sai**, vì nó tới tay mọi người trong vài phút và không qua vòng duyệt nào. Phải có schema validate và bản ghi ai đổi gì lúc nào.\n- **Kinh tế trôi.** Mỗi sự kiện phát thêm tài nguyên; không có drain tương ứng thì lạm phát và mọi giá trị cũ mất nghĩa — xem [[economy-design]].\n- **Nợ dữ liệu.** Event analytics đặt tên tuỳ hứng trong sáu tháng sẽ thành một kho không truy vấn nổi. Đặt quy ước tên ngay từ đầu.\n\n## Kiểm tra nhanh\n\n- [ ] Mọi giá trị cân bằng quan trọng đọc được từ remote config, có **giá trị mặc định trong build**\n- [ ] Game chạy bình thường khi **không tải được config**\n- [ ] Mỗi tính năng rủi ro có kill switch, đã thử tắt thật một lần\n- [ ] Bật dần theo phần trăm, không bật 100% ngay\n- [ ] Mỗi chỉ số có người chịu trách nhiệm và ngưỡng cảnh báo\n- [ ] Quy ước đặt tên event analytics viết ra thành tài liệu\n- [ ] Sự kiện được QA với đồng hồ tua tới đúng ngày, và có kiểm tra tự kết thúc",
+      "aiPrompt": "**Dùng AI thế nào cho việc vận hành live**\n\nBa việc giao được ngay, đều là loại \"nhiều chi tiết, dễ kiểm\": **viết schema config** kèm giá trị mặc định và ràng buộc; **viết lớp đọc config** có fallback, cache offline và validate; và **soát danh sách event analytics** cho nhất quán tên, tham số, đơn vị. Việc thứ ba bị đánh giá thấp nhưng trả lãi trong sáu tháng.\n\nViệc **không** giao: quyết định nội dung sự kiện, mức thưởng, và diễn giải số liệu. AI sẵn sàng nói \"tăng drop rate lên 15% sẽ cải thiện retention\" với giọng rất tự tin và **không có dữ liệu nào** — nó đang tạo ra một câu nghe hợp lý, không phải một kết luận. Với số liệu, chỉ dùng nó để kiểm tra cách đọc của mình: *\"những cách giải thích nào khác cho việc D7 tăng cùng lúc tôi đổi hai thứ?\"*\n\nMột chỗ nó giúp thật nhiều: viết **checklist hồi cứu sau sự kiện** và chuẩn bị các câu hỏi phản biện trước khi bạn quyết định — vai trò người soát, không phải người quyết.\n\n**Phải nêu rõ** (thiếu là AI tự bịa):\n- Nền tảng config (Firebase Remote Config, Unity Remote Config, server tự viết) và giới hạn của nó.\n- **Bản app cũ nhất còn sống** — quyết định config được phép đổi gì.\n- Hành vi khi mất mạng: dùng cache cũ hay dùng mặc định trong build.\n- Config được áp lúc nào: ngay lập tức, hay chỉ ở ranh giới màn chơi (rất quan trọng — đổi giá giữa trận là lỗi).\n- Quy mô người chơi thật, nếu định nói tới A/B test.\n\n**Mẫu prompt**\n\n```\nUnity 6, mobile, dùng Firebase Remote Config. Bản app cũ nhất còn sống: 1.2.0.\nViết lớp GameConfig:\n- Đọc ~20 giá trị (giá gói, drop rate, thời lượng sự kiện, cờ tính năng)\n- Mặc định NẰM TRONG BUILD; mất mạng thì dùng cache gần nhất, không có cache\n  thì dùng mặc định — KHÔNG BAO GIỜ treo màn hình chờ\n- Validate: giá trị ngoài khoảng cho phép thì bỏ qua, ghi cảnh báo, dùng mặc định\n- Chỉ áp giá trị mới ở ranh giới màn chơi, không áp giữa trận\n- Có chế độ override tại chỗ cho QA (đọc file JSON local trong bản Development)\nNêu rõ điều gì xảy ra nếu server trả về một trường mà bản 1.2.0 không biết.\n```\n\n**Bẫy thường gặp:** AI viết lớp config `await` lấy giá trị từ server **ngay trong luồng khởi động** và không có nhánh timeout — trong Editor với mạng tốt thì mượt, còn ngoài thực tế, một lần server chậm là toàn bộ người chơi kẹt ở màn hình loading, và bạn không sửa được bằng cách đẩy config mới vì họ có vào nổi đâu mà nhận. Luật phải viết vào prompt: **khởi động không bao giờ phụ thuộc mạng**; config tới muộn thì áp ở ranh giới màn chơi kế tiếp.",
+      "unity": "Điểm mấu chốt trong Unity: **config là dữ liệu bất đồng bộ có thể không bao giờ tới**, nên mọi hệ thống phải đọc nó qua một lớp có giá trị mặc định — và giá trị mới chỉ được áp ở ranh giới màn chơi.\n\n**Component & nơi đặt**\n- `GameConfig.cs` — service trong Boot scene, sống suốt phiên (xem [[unity-game-loop]]).\n- `DefaultConfig` (ScriptableObject) — `Assets/_Project/Settings/DefaultConfig.asset`: **nguồn chân lý khi offline**, và cũng là tài liệu về những khoá đang tồn tại.\n- `ConfigOverride.json` — file local chỉ đọc ở bản Development, để QA ép giá trị mà không cần server.\n\n**Code**\n\n```csharp\n// GameConfig.cs — Unity 6. Mặc định trong build, cache khi offline, áp ở ranh giới màn chơi.\nusing System.Collections.Generic;\nusing UnityEngine;\n\npublic class GameConfig : MonoBehaviour\n{\n    public static GameConfig Instance { get; private set; }\n\n    [SerializeField] DefaultConfig defaults;          // ScriptableObject: giá trị an toàn\n    Dictionary<string, string> active = new();        // đang dùng\n    Dictionary<string, string> pending;               // vừa tải, chờ ranh giới màn chơi\n\n    void Awake()\n    {\n        if (Instance != null && Instance != this) { Destroy(gameObject); return; }\n        Instance = this; DontDestroyOnLoad(gameObject);\n        active = defaults.ToDictionary();             // chạy được NGAY, không đợi mạng\n        FetchAsync();                                 // không await: khởi động không phụ thuộc mạng\n    }\n\n    public float GetFloat(string key, float fallback)\n    {\n        if (active.TryGetValue(key, out var raw) && float.TryParse(raw, out var v)) return v;\n        return fallback;                              // khoá lạ hoặc giá trị hỏng: fallback, không ném\n    }\n\n    public bool IsEnabled(string flag) => GetFloat(flag, 0f) > 0.5f;\n\n    /// Gọi ở màn hình loading / menu — KHÔNG gọi giữa trận.\n    public void ApplyPendingAtBoundary()\n    {\n        if (pending == null) return;\n        active = pending; pending = null;\n        Debug.Log(\"[Config] đã áp cấu hình mới ở ranh giới màn chơi\");\n    }\n\n    async void FetchAsync()\n    {\n        try\n        {\n            var fetched = await RemoteConfigService.FetchAsync(destroyCancellationToken); // SDK thật ở đây\n            pending = Validate(fetched);              // chỉ nhận giá trị hợp lệ\n        }\n        catch (System.Exception e)\n        {\n            Debug.LogWarning(\"[Config] không tải được, dùng mặc định/cache: \" + e.Message);\n        }\n    }\n\n    Dictionary<string, string> Validate(Dictionary<string, string> raw)\n    {\n        var ok = new Dictionary<string, string>(active);\n        foreach (var kv in raw)\n        {\n            if (!defaults.Knows(kv.Key)) continue;                 // khoá bản này không biết: bỏ qua\n            if (!defaults.InRange(kv.Key, kv.Value))               // ngoài khoảng cho phép: giữ cũ\n            { Debug.LogWarning($\"[Config] {kv.Key}={kv.Value} ngoài khoảng, bỏ qua\"); continue; }\n            ok[kv.Key] = kv.Value;\n        }\n        return ok;\n    }\n}\n```\n\n**Bẫy Unity cụ thể**\n- `await` lấy config **trong luồng khởi động**: một lần server chậm là toàn bộ người chơi kẹt ở màn hình loading — và bạn không đẩy config sửa lỗi tới họ được, vì họ chưa vào nổi game.\n- Áp giá trị mới **giữa trận**: giá đổi giữa lúc người chơi đang mở shop, hoặc drop rate đổi giữa màn. Luôn gom vào `pending` rồi áp ở ranh giới.\n- Đọc config trong `Awake` của hệ thống khác mà không đảm bảo `GameConfig` đã `Awake` trước → giá trị mặc định của C# (0) lọt vào gameplay. Dùng `[DefaultExecutionOrder]` hoặc để hệ thống khác đọc ở `Start`.\n- Lưu cache config vào `PlayerPrefs` rồi quên version: bản app mới đọc lại cache của bản cũ. Cache phải kèm phiên bản app.\n- Ép kiểu bằng `float.Parse` không `TryParse`: server gõ nhầm dấu phẩy thập phân là exception ngay lúc khởi động trên đúng những locale nhất định.\n\n**Kiểm tra nhanh**\n- Bật chế độ máy bay rồi mở game từ trạng thái vừa cài: phải vào được tới gameplay bằng giá trị mặc định.\n- Đặt một khoá về giá trị vô lý trên server (giá âm): game phải bỏ qua, ghi cảnh báo, và vẫn chạy.\n- Đổi config trong lúc đang chơi: số liệu **không** được đổi giữa trận; vào lại menu thì đổi.\n- Tắt một feature flag: tính năng biến mất hoàn toàn ở lần vào màn kế, không để lại nút bấm chết.",
+      "code": "",
+      "interview": "**Câu hay gặp**\n\n| Mức | Câu hỏi |\n|---|---|\n| Junior | Remote config dùng để làm gì? Cho ví dụ trong game anh từng làm. |\n| Junior | Feature flag là gì và vì sao cần? |\n| Mid | Phát hiện giá một gói IAP bị sai lúc 9 giờ sáng. Anh làm gì? |\n| Mid | Chỉ số nào anh nhìn hằng ngày cho một game đang live? |\n| Senior | Thiết kế một A/B test cho giá gói khởi đầu — anh làm thế nào? |\n| Senior | Config mới làm game bản cũ crash. Phòng bằng cách nào? |\n\n**Khung trả lời 60 giây** — \"Giá một gói IAP bị sai, phát hiện lúc 9 giờ sáng?\"\n\n> Câu hỏi quyết định là hệ thống có **remote config** hay không. Có thì: sửa giá trị, đẩy cho **5%** trước, xác nhận đúng trên thiết bị thật rồi mở 100% — tổng cộng khoảng 15 phút; song song đó dựng danh sách người chơi đã mua nhầm để bù. Không có thì phải ra bản mới và chờ store duyệt, tức là hai tới ba ngày sống chung với lỗi — lúc đó việc cần làm là **tắt** gói đó bằng kill switch nếu có, hoặc chấp nhận và chuẩn bị kịch bản đền bù.\n>\n> Đó cũng là lý do tôi coi feature flag là **phanh**, không phải tiện ích: mọi thứ có rủi ro tiền bạc hay dữ liệu đều nằm sau một cờ tắt được từ xa, và cờ đó phải được thử tắt thật ít nhất một lần trước khi phát hành.\n>\n> Kèm theo là luật an toàn: mất mạng hoặc server sập thì game chạy bằng **giá trị mặc định đóng trong build**, không bao giờ treo ở màn hình chờ.\n\n**Họ sẽ đào tiếp**\n\n- *\"Config sai còn nguy hơn code sai?\"* → Đúng, vì nó tới tay mọi người trong vài phút và **không qua vòng duyệt nào**. Nên cần schema validate phía client (giá trị ngoài khoảng thì bỏ qua và dùng mặc định), bật dần theo phần trăm, và nhật ký ai đổi gì lúc nào.\n- *\"Version skew?\"* → Người chơi nằm rải ở nhiều bản app, nên config phải an toàn với **bản cũ nhất còn sống**. Thêm trường mới thì bản cũ bỏ qua — không sao. Đổi *ý nghĩa* một trường cũ mới là tai nạn, vì bản cũ vẫn diễn giải theo cách cũ.\n- *\"A/B test cho giá?\"* → Một biến duy nhất; phân nhóm ổn định theo id người chơi (không theo phiên, nếu không cùng một người sẽ thấy hai giá); chạy trọn chu kỳ tuần; định trước chỉ số quyết định (conversion) **và** chỉ số bảo vệ (D7 retention) — tăng doanh thu mà mất người chơi là thua; và không nhìn giữa chừng rồi dừng lúc đang thắng. Nếu lượng người chơi không đủ thì tôi nói thẳng là không đủ mẫu và so theo mốc thời gian có ghi chú, thay vì giả vờ có kiểm định.\n- *\"Chỉ số hằng ngày?\"* → Crash-free sessions trước tiên — bản hỏng làm mọi số khác vô nghĩa. Rồi D1/D7, thời lượng phiên, ARPDAU, và funnel onboarding **chia theo dòng máy**: rớt nhiều ở máy yếu thường là hiệu năng chứ không phải thiết kế.\n- *\"Sự kiện hằng tuần?\"* → Tính chi phí lặp lại trước khi hứa: mỗi sự kiện cần nội dung, cân bằng, QA với **đồng hồ tua tới đúng ngày**, ảnh quảng bá, và người trực. Và mỗi sự kiện phát thêm tài nguyên, nên phải có drain tương ứng nếu không muốn kinh tế lạm phát.\n\n**Cờ đỏ**\n\n- Game treo ở màn hình chờ khi không tải được config.\n- Đẩy config cho 100% người chơi ngay lần đầu.\n- Không phân biệt \"đổi số\" (config) với \"đổi logic\" (phải ra bản mới).\n- Đọc ARPDAU tăng là thành công mà không nhìn retention.\n- 80 feature flag còn sống sau hai năm, không ai dám xoá.\n\n**Số / ví dụ nên thuộc**\n\n- Bật dần: **5% → 50% → 100%**, theo dõi ít nhất một giờ ở mỗi bậc.\n- Crash-free sessions: < 99% là có vấn đề; ≥ 99.5% là ổn định.\n- A/B test: một biến, phân nhóm theo id, trọn chu kỳ tuần, có chỉ số bảo vệ.\n- Không có LiveOps: vòng sửa lỗi là **2–3 ngày** (chờ store duyệt) thay vì 15 phút.",
+      "hasAiHowto": true,
+      "i18n": {},
+      "color": "#f783ac"
+    },
+    {
       "id": "performance",
       "title": "Performance",
       "summary": "Ngân sách frame, profiling, và những nguyên nhân giật lag phổ biến nhất.",
@@ -3256,7 +3308,7 @@
       ],
       "status": "stub",
       "read": 580,
-      "readIndex": 62,
+      "readIndex": 63,
       "level": "advanced",
       "refs": [],
       "order": 50,
@@ -3329,7 +3381,7 @@
       ],
       "status": "stub",
       "read": 570,
-      "readIndex": 61,
+      "readIndex": 62,
       "level": "intermediate",
       "refs": [],
       "order": 40,
@@ -3861,7 +3913,9 @@
         "unity-build-platform",
         "unity-addressables",
         "unity-multiplayer",
-        "unity-editor-tools"
+        "unity-editor-tools",
+        "unity-testing-ci",
+        "unity-debug-crash"
       ],
       "depth": 1,
       "branch": "unity",
@@ -3878,7 +3932,7 @@
       ],
       "status": "deep",
       "read": 600,
-      "readIndex": 65,
+      "readIndex": 66,
       "level": "basic",
       "refs": [],
       "order": 65,
@@ -3929,7 +3983,7 @@
       ],
       "status": "deep",
       "read": 755,
-      "readIndex": 83,
+      "readIndex": 84,
       "level": "advanced",
       "refs": [],
       "order": 155,
@@ -3967,7 +4021,7 @@
       ],
       "status": "deep",
       "read": 650,
-      "readIndex": 71,
+      "readIndex": 72,
       "level": "intermediate",
       "refs": [],
       "order": 60,
@@ -4004,7 +4058,7 @@
       ],
       "status": "deep",
       "read": 690,
-      "readIndex": 75,
+      "readIndex": 76,
       "level": "intermediate",
       "refs": [],
       "order": 100,
@@ -4043,7 +4097,7 @@
       ],
       "status": "deep",
       "read": 750,
-      "readIndex": 82,
+      "readIndex": 83,
       "level": "advanced",
       "refs": [],
       "order": 150,
@@ -4081,7 +4135,7 @@
       ],
       "status": "deep",
       "read": 670,
-      "readIndex": 73,
+      "readIndex": 74,
       "level": "intermediate",
       "refs": [],
       "order": 80,
@@ -4122,7 +4176,7 @@
       ],
       "status": "deep",
       "read": 635,
-      "readIndex": 69,
+      "readIndex": 70,
       "level": "intermediate",
       "refs": [],
       "order": 35,
@@ -4134,6 +4188,46 @@
       "unity": "",
       "code": "Demo dựng một overlay đo **GC Alloc mỗi frame** bằng `ProfilerRecorder`, và một công tắc chạy cùng một việc theo hai đường: đường cấp phát (LINQ + closure + string nội suy) và đường sạch (vòng `for` + buffer dùng lại + `SetText`). Nhấn Space để đổi và nhìn con số nhảy từ vài KB/frame về 0 — kiểm chứng ngay trong Play Mode, không cần mở Profiler.\n\n**Setup**\n\n<figure class=\"fig\">\n<svg viewBox=\"0 0 660 300\" role=\"img\" aria-label=\"Hierarchy có AllocLab với script Alloc Lab và Canvas chứa Label, Inspector hiện các trường Label, Mode, Enemy Count, Toggle Key và bảng kết quả mong đợi\">\n  <rect x=\"10\" y=\"10\" width=\"200\" height=\"280\" rx=\"8\" class=\"fig-box\"/>\n  <text x=\"22\" y=\"32\" class=\"fig-label\" font-size=\"13\" font-weight=\"600\">Hierarchy</text>\n  <line x1=\"10\" y1=\"42\" x2=\"210\" y2=\"42\" class=\"fig-line\"/>\n  <rect x=\"16\" y=\"52\" width=\"188\" height=\"20\" rx=\"4\" fill=\"#b197fc\" opacity=\"0.18\"/>\n  <text x=\"22\" y=\"67\" class=\"fig-label\" font-size=\"12\" font-weight=\"600\">AllocLab  (AllocLab.cs)</text>\n  <text x=\"22\" y=\"88\" class=\"fig-muted\" font-size=\"12\">▾ Canvas  (Screen Space Overlay)</text>\n  <text x=\"38\" y=\"106\" class=\"fig-muted\" font-size=\"11\">Label  (TextMeshProUGUI)</text>\n  <line x1=\"10\" y1=\"122\" x2=\"210\" y2=\"122\" class=\"fig-line\"/>\n  <text x=\"22\" y=\"142\" class=\"fig-label\" font-size=\"12\" font-weight=\"600\">Kết quả mong đợi</text>\n  <text x=\"22\" y=\"162\" class=\"fig-muted\" font-size=\"11\">Mode = Allocating</text>\n  <text x=\"34\" y=\"178\" class=\"fig-label\" font-size=\"11\">≈ 3–6 KB / frame</text>\n  <text x=\"22\" y=\"198\" class=\"fig-muted\" font-size=\"11\">Mode = Clean</text>\n  <text x=\"34\" y=\"214\" class=\"fig-label\" font-size=\"11\">0 B / frame</text>\n  <line x1=\"10\" y1=\"230\" x2=\"210\" y2=\"230\" class=\"fig-line\"/>\n  <text x=\"22\" y=\"250\" class=\"fig-muted\" font-size=\"10\">Số trong Editor chỉ để so hai</text>\n  <text x=\"22\" y=\"264\" class=\"fig-muted\" font-size=\"10\">đường với nhau. Con số thật</text>\n  <text x=\"22\" y=\"278\" class=\"fig-muted\" font-size=\"10\">lấy ở bản build Release.</text>\n  <rect x=\"226\" y=\"10\" width=\"424\" height=\"280\" rx=\"8\" class=\"fig-box\"/>\n  <text x=\"238\" y=\"32\" class=\"fig-label\" font-size=\"13\" font-weight=\"600\">Inspector</text>\n  <line x1=\"226\" y1=\"42\" x2=\"650\" y2=\"42\" class=\"fig-line\"/>\n  <rect x=\"234\" y=\"50\" width=\"408\" height=\"18\" rx=\"3\" fill=\"#b197fc\" opacity=\"0.22\"/>\n  <text x=\"242\" y=\"63\" class=\"fig-label\" font-size=\"12\" font-weight=\"600\">Alloc Lab (Script)  (AllocLab)</text>\n  <text x=\"250\" y=\"82\" class=\"fig-muted\" font-size=\"11\">Label</text><text x=\"440\" y=\"82\" class=\"fig-label\" font-size=\"11\">Label (TextMeshProUGUI)</text>\n  <text x=\"250\" y=\"98\" class=\"fig-muted\" font-size=\"11\">Mode</text><text x=\"440\" y=\"98\" class=\"fig-label\" font-size=\"11\">Allocating ▾</text>\n  <text x=\"250\" y=\"114\" class=\"fig-muted\" font-size=\"11\">Enemy Count</text><text x=\"440\" y=\"114\" class=\"fig-label\" font-size=\"11\">200</text>\n  <text x=\"250\" y=\"130\" class=\"fig-muted\" font-size=\"11\">Toggle Key</text><text x=\"440\" y=\"130\" class=\"fig-label\" font-size=\"11\">Space ▾</text>\n  <rect x=\"234\" y=\"144\" width=\"408\" height=\"18\" rx=\"3\" fill=\"#51cf9b\" opacity=\"0.22\"/>\n  <text x=\"242\" y=\"157\" class=\"fig-label\" font-size=\"12\" font-weight=\"600\">Overlay hiện gì</text>\n  <text x=\"250\" y=\"176\" class=\"fig-muted\" font-size=\"11\">GC Alloc / frame</text><text x=\"440\" y=\"176\" class=\"fig-label\" font-size=\"11\">byte, trung bình 15 frame</text>\n  <text x=\"250\" y=\"192\" class=\"fig-muted\" font-size=\"11\">GC Reserved</text><text x=\"440\" y=\"192\" class=\"fig-label\" font-size=\"11\">MB — heap đã xin, không trả lại</text>\n  <text x=\"250\" y=\"208\" class=\"fig-muted\" font-size=\"11\">Mode hiện tại</text><text x=\"440\" y=\"208\" class=\"fig-label\" font-size=\"11\">Allocating / Clean</text>\n  <rect x=\"234\" y=\"222\" width=\"408\" height=\"18\" rx=\"3\" fill=\"#ffd43b\" opacity=\"0.22\"/>\n  <text x=\"242\" y=\"235\" class=\"fig-label\" font-size=\"12\" font-weight=\"600\">Yêu cầu</text>\n  <text x=\"250\" y=\"254\" class=\"fig-muted\" font-size=\"11\">TextMeshPro</text><text x=\"440\" y=\"254\" class=\"fig-label\" font-size=\"11\">có sẵn trong Unity 6</text>\n  <text x=\"250\" y=\"270\" class=\"fig-muted\" font-size=\"11\">Input</text><text x=\"440\" y=\"270\" class=\"fig-label\" font-size=\"11\">Input System (package mới)</text>\n</svg>\n<figcaption>Một GameObject, một script, một label. Nhấn Space để đổi Mode và nhìn con số đổi theo ngay trong Play Mode.</figcaption>\n</figure>\n\n**Script**\n\n```csharp\n// AllocLab.cs — Unity 6 (6000.x). Gắn lên GameObject \"AllocLab\", kéo một TextMeshProUGUI vào Label.\n// Nhấn Space để đổi giữa đường cấp phát và đường sạch, nhìn GC Alloc/frame đổi theo.\nusing System.Collections;\nusing System.Collections.Generic;\nusing System.Linq;\nusing TMPro;\nusing Unity.Profiling;\nusing UnityEngine;\nusing UnityEngine.InputSystem;\n\npublic class AllocLab : MonoBehaviour\n{\n    public enum Mode { Allocating, Clean }\n\n    [SerializeField] TextMeshProUGUI label;\n    [SerializeField] Mode mode = Mode.Allocating;\n    [SerializeField] int enemyCount = 200;\n    [SerializeField] Key toggleKey = Key.Space;\n\n    ProfilerRecorder allocRecorder;      // byte cấp phát trong frame\n    ProfilerRecorder reservedRecorder;   // heap đã xin của hệ điều hành\n\n    struct Enemy { public int hp; public float distance; }\n\n    readonly List<Enemy> enemies = new();\n    readonly List<Enemy> buffer = new();                    // dùng lại, không cấp phát mỗi frame\n    static readonly WaitForSeconds OneSecond = new(1f);     // cache, không new trong coroutine\n\n    void OnEnable()\n    {\n        allocRecorder = ProfilerRecorder.StartNew(ProfilerCategory.Memory, \"GC Allocated In Frame\", 15);\n        reservedRecorder = ProfilerRecorder.StartNew(ProfilerCategory.Memory, \"GC Reserved Memory\");\n\n        enemies.Clear();\n        for (int i = 0; i < enemyCount; i++)\n            enemies.Add(new Enemy { hp = Random.Range(1, 100), distance = Random.Range(0f, 50f) });\n\n        StartCoroutine(HeartbeatRoutine());\n    }\n\n    void OnDisable()\n    {\n        allocRecorder.Dispose();\n        reservedRecorder.Dispose();\n    }\n\n    void Update()\n    {\n        var kb = Keyboard.current;\n        if (kb != null && kb[toggleKey].wasPressedThisFrame)\n            mode = mode == Mode.Allocating ? Mode.Clean : Mode.Allocating;\n\n        int near = mode == Mode.Allocating ? CountNearAllocating() : CountNearClean();\n        if (label == null) return;\n\n        if (mode == Mode.Allocating)\n            // string nội suy: một string mới mỗi frame — chính dòng này cũng là alloc\n            label.text = $\"Allocating | {AverageAlloc()} B/frame | heap {ReservedMb():0.0} MB | gan: {near}\";\n        else\n            // SetText format thẳng vào buffer nội bộ của TMP: 0 B\n            label.SetText(\"Clean | {0} B/frame | heap {1:0.0} MB | gan: {2}\", AverageAlloc(), ReservedMb(), near);\n    }\n\n    // ---- đường CẤP PHÁT: LINQ + closure + mảng mới mỗi frame ----\n    int CountNearAllocating()\n    {\n        float limit = 10f;                                  // biến cục bộ bị closure bắt\n        var near = enemies.Where(e => e.distance < limit)    // delegate + closure object\n                          .OrderBy(e => e.distance)          // comparer + buffer nội bộ\n                          .ToArray();                        // mảng mới mỗi frame\n        return near.Length;\n    }\n\n    // ---- đường SẠCH: vòng for trên List<T>, buffer dùng lại ----\n    int CountNearClean()\n    {\n        buffer.Clear();                                      // giữ capacity, không cấp phát\n        for (int i = 0; i < enemies.Count; i++)\n        {\n            var e = enemies[i];                              // struct: copy trên stack\n            if (e.distance < 10f) buffer.Add(e);\n        }\n        return buffer.Count;\n    }\n\n    IEnumerator HeartbeatRoutine()\n    {\n        // \"yield return new WaitForSeconds(1f)\" tạo một object mỗi vòng; cache thì không.\n        while (enabled) yield return OneSecond;\n    }\n\n    long AverageAlloc()\n    {\n        if (!allocRecorder.Valid || allocRecorder.Count == 0) return 0;\n        long sum = 0;\n        for (int i = 0; i < allocRecorder.Count; i++) sum += allocRecorder.GetSample(i).Value;\n        return sum / allocRecorder.Count;\n    }\n\n    float ReservedMb() => reservedRecorder.Valid ? reservedRecorder.LastValue / (1024f * 1024f) : 0f;\n}\n```\n\n**Chạy thử**\n- Play với `Mode = Allocating`: overlay hiện khoảng **3–6 KB/frame** (đổi theo `Enemy Count`), và `heap` nhích lên đều.\n- Nhấn Space: con số về **0 B/frame** và đứng yên; `heap` ngừng lớn.\n- Mở Profiler → Hierarchy → sắp xếp theo cột **GC Alloc**: ở Allocating, `AllocLab.Update` nằm đầu bảng; ở Clean nó biến khỏi danh sách.",
       "interview": "**Câu hay gặp**\n\n| Mức | Câu hỏi |\n|---|---|\n| Junior | `struct` và `class` khác nhau thế nào? `Vector3` là cái nào? |\n| Junior | Coroutine dừng khi nào? |\n| Mid | Game khựng đều mỗi vài giây dù fps trung bình vẫn ổn. Nghi gì? |\n| Mid | Kể ba thứ cấp phát mà nhìn code không thấy. |\n| Senior | `async/await` trong MonoBehaviour nguy hiểm ở đâu? |\n| Senior | Vì sao code chạy trong Editor mà nổ trên bản IL2CPP? |\n\n**Khung trả lời 60 giây** — \"Game khựng đều mỗi vài giây, anh làm gì?\"\n\n> Nghi GC trước: khựng **đều đặn theo chu kỳ** là chữ ký của nó, khác hẳn tụt fps liên tục. Mở Profiler, sắp xếp Hierarchy theo cột **GC Alloc** giảm dần — thường 30 giây là ra hàm thủ phạm, và gần như luôn là LINQ, closure trong lambda, hoặc string nối trong `Update`.\n>\n> Phần nên nói thêm là **vì sao nó đau hơn ở Unity**: collector là Boehm — không nén, không phân thế hệ — nên heap chỉ lớn lên chứ không co lại, và thời gian mỗi lần thu gom tỉ lệ với **số object đang sống**, không phải số rác vừa tạo. Incremental GC chia spike ra nhiều frame nhưng không giảm tổng chi phí.\n>\n> Mục tiêu tôi đặt là 0 B/frame ở trạng thái chơi bình thường. Không phải cầu toàn: 200 B/frame ở 60fps là 720KB mỗi phút — một cú khựng đang được hẹn giờ.\n\n**Họ sẽ đào tiếp**\n\n- *\"Ba thứ cấp phát mà nhìn không ra?\"* → Closure bắt biến cục bộ trong lambda; boxing khi struct bị ép sang interface (một `List<ITickable>` chứa struct, tick 500 lần/frame = 500 object rác); và `foreach` trên biến kiểu **interface** `IEnumerable<T>`. Nói được cả chiều ngược lại mới thuyết phục: `foreach` trên `List<T>` **không** alloc vì enumerator là struct.\n- *\"`async/await` nguy ở đâu?\"* → `Task` **không** tự huỷ khi GameObject bị destroy. Người chơi thoát scene giữa lúc đang chờ, continuation quay lại và chạm vào `this` đã chết. Từ Unity 2022 mọi MonoBehaviour có `destroyCancellationToken` — truyền vào mọi chỗ chờ. Và `async void` nuốt exception, chỉ dùng cho event handler bắt buộc.\n- *\"UniTask hay Awaitable?\"* → `Awaitable` của Unity 6 có sẵn, không thêm package, đủ cho phần lớn việc. UniTask hơn về số toán tử và chạy được trên phiên bản Unity cũ. Coroutine chưa chết: ngắn hơn và tự dừng theo vòng đời GameObject.\n- *\"Vì sao IL2CPP nổ mà Editor không?\"* → Editor chạy Mono có JIT, build là AOT: `Reflection.Emit` và `dynamic` không tồn tại; generic virtual trên value type chưa dùng tĩnh thì ném `ExecutionEngineException`; Managed Stripping xoá thứ chỉ gọi qua reflection, làm deserialize ra object rỗng **mà không có exception nào**.\n- *\"`list[i].hp -= 10` với `List<struct>`?\"* → Không biên dịch, vì indexer trả về **bản sao**. Phải lấy ra, sửa, gán lại — hoặc dùng mảng, vì mảng trả về tham chiếu.\n\n**Cờ đỏ**\n\n- \"Tôi gọi `GC.Collect()` cho chắc\" — đẩy nguyên một spike vào đúng frame mình gọi.\n- \"Đừng dùng `foreach` trong Unity\" — đúng với Unity 5, sai từ lâu.\n- Không phân biệt managed heap và native memory: texture, mesh, audio buffer **không** nằm trong GC heap, và chúng thường mới là phần lớn RAM.\n- Đo GC alloc trong Editor rồi kết luận cho bản build.\n- Tối ưu theo cảm giác, không có con số trước/sau.\n\n**Số / ví dụ nên thuộc**\n\n- Ngân sách thực tế: **0 B/frame** khi chơi bình thường; 200 B/frame ≈ 720KB/phút.\n- GC của Unity là Boehm: **non-generational, non-compacting**, heap không trả lại hệ điều hành.\n- `ProfilerRecorder` với `\"GC Allocated In Frame\"` và `\"GC Reserved Memory\"` để đo tại chỗ.\n- `destroyCancellationToken` — có sẵn trong MonoBehaviour từ Unity 2022.",
+      "hasAiHowto": true,
+      "i18n": {},
+      "color": "#4dd4e0"
+    },
+    {
+      "id": "unity-debug-crash",
+      "title": "Debug hiện trường — crash, ANR, log",
+      "summary": "Bug ở máy người chơi mà bạn không cầm được máy: phân biệt crash / ANR / bị kill vì hết RAM, symbolicate stack native, và breadcrumb — thứ rẻ nhất biến \"không tái hiện được\" thành \"sửa được\".",
+      "icon": "🚑",
+      "parent": "unity",
+      "children": [],
+      "depth": 2,
+      "branch": "unity",
+      "tags": [
+        "unity",
+        "debug",
+        "crash",
+        "mobile",
+        "production"
+      ],
+      "related": [
+        "unity-build-platform",
+        "unity-optimization",
+        "unity-testing-ci",
+        "unity-csharp-memory"
+      ],
+      "status": "deep",
+      "read": 780,
+      "readIndex": 88,
+      "level": "advanced",
+      "refs": [],
+      "order": 180,
+      "collapsed": false,
+      "path": "09-unity/unity-debug-crash.md",
+      "words": 2799,
+      "body": "Trên máy bạn thì mọi thứ chạy. Vấn đề là 3.000 người chơi trên 400 dòng máy, và bạn chỉ nhận được một dòng: *\"game bị văng\"*. Node này là quy trình biến dòng đó thành một bug sửa được.\n\nThứ tự không đổi: **thu thập ngữ cảnh → phân loại đúng hiện tượng → tìm mẫu chung → tái hiện → sửa → xác nhận bằng số liệu bản sau**. Bỏ bước phân loại là nguồn của những tuần đi sai hướng, vì ba hiện tượng dưới đây trông giống hệt nhau với người chơi.\n\n## Ba thứ người chơi đều gọi là \"văng\"\n\n| Hiện tượng | Dấu hiệu trong dữ liệu | Nguyên nhân hay gặp |\n|---|---|---|\n| **Crash** | Có stack trace (managed hoặc native), có trong Crashlytics / Play Console | `NullReferenceException` không bắt, lỗi native trong plugin, hỏng bộ nhớ |\n| **ANR / treo** | Play Console báo ANR; iOS là watchdog kill | Main thread bị chặn — I/O đồng bộ, parse JSON to, `Resources.UnloadUnusedAssets()`, chờ thread, SDK quảng cáo |\n| **Bị hệ điều hành kill vì hết RAM** | **Không có stack trace gì cả**; app biến mất \"sạch\" | Texture chưa nén, bundle không release, heap phình — xem [[unity-addressables]] và [[unity-csharp-memory]] |\n\nCái thứ ba là cái hay bị chẩn đoán nhầm nhất: không có stack nên người ta đi tìm lỗi logic, trong khi thứ cần nhìn là biểu đồ bộ nhớ theo thời gian chơi. Dấu hiệu nhận dạng: tỉ lệ \"văng\" tăng theo **thời lượng phiên chơi** và tập trung ở dòng máy RAM thấp.\n\n## Symbolicate: biến hex thành tên hàm\n\nBản IL2CPP crash trong code native, nên stack gửi về là một dãy địa chỉ. Muốn đọc được:\n\n- **Android**: bật *Create symbols.zip* (Build Settings) rồi nộp file đó lên Play Console, hoặc dùng `ndk-stack`/`addr2line` với `libil2cpp.so` **đúng bản build đó**. Sai một bản là mọi tên hàm sai theo mà không báo gì.\n- **iOS**: giữ `.dSYM` của từng bản; Xcode Organizer symbolicate tự động nếu bạn upload khi archive.\n- **Cả hai**: lưu symbol **cùng artifact của bản build**, đánh version rõ ràng. Ba tháng sau không ai nhớ bản 1.4.2 build bằng máy nào.\n\nVới lỗi **managed**, stack có sẵn tên hàm nhưng không có số dòng trừ khi bật *Debug Symbols*/development build. Mẹo rẻ: bọc điểm nghi ngờ bằng `try/catch` rồi `Debug.LogException` kèm ngữ cảnh — bạn mất một chút hiệu năng ở nhánh lỗi và đổi lại được thông tin thật.\n\n## Breadcrumb: thứ rẻ nhất, hiệu quả nhất\n\nStack trace nói **chỗ** hỏng. Breadcrumb nói **hoàn cảnh** hỏng, và đó mới là thứ giúp bạn tái hiện.\n\nGắn vào mỗi báo cáo crash một bộ khoá tuỳ ý — Crashlytics gọi là custom key, dịch vụ nào cũng có tương đương:\n\n| Khoá | Vì sao cần |\n|---|---|\n| `scene`, `level_id`, `game_state` | Thu hẹp từ \"cả game\" xuống một màn |\n| `session_seconds` | Tăng đều theo thời gian chơi ⇒ nghi rò rỉ bộ nhớ |\n| `mem_used_mb`, `device_ram_mb` | Phân biệt hết RAM với lỗi logic |\n| `save_version`, `player_level`, `gold` | Bắt được lỗi chỉ xảy ra với save cũ hoặc số liệu biên |\n| `last_action` (10 hành động gần nhất) | Gần bằng một bản tái hiện thu nhỏ |\n| `network`, `locale` | Bug chỉ xảy ra ở 3G chập chờn, hoặc ở locale có dấu phẩy thập phân |\n\nThêm một **ring buffer log trong RAM**: giữ 200 dòng gần nhất, đính kèm khi crash. Không cần ghi file, không tốn I/O, và khác biệt giữa \"lỗi ở `Inventory.Add`\" với \"lỗi ở `Inventory.Add` ngay sau khi mua gói 3 vật phẩm khi túi đầy\" là khác biệt giữa một tuần và một giờ.\n\n## Tìm mẫu chung trước khi đoán\n\nVới một nhóm crash, ba câu hỏi theo thứ tự:\n\n1. **Tập trung ở đâu?** Một dòng máy (driver Mali cũ), một phiên bản OS, một locale, một vùng (mạng chậm), hay một bản app.\n2. **Bắt đầu từ bản nào?** So với bản trước: nếu tỉ lệ nhảy vọt ở 1.4.2 thì diff của bản đó là danh sách nghi phạm, không cần đoán.\n3. **Tương quan với cái gì?** Thời lượng phiên, số lần vào màn, có mua hàng không. Đây là lúc breadcrumb trả lãi.\n\nSố cần nhìn là **tỉ lệ phiên không lỗi** (crash-free sessions), không phải số vụ crash tuyệt đối — số tuyệt đối tăng khi có nhiều người chơi hơn, và nhìn nhầm nó sẽ hoảng nhầm chỗ. Mốc thực tế cho game mobile: dưới 99% là có vấn đề rõ; 99.5% trở lên là ổn định.\n\n## ANR: main thread bị chặn\n\nAndroid báo ANR khi main thread không phản hồi quá ~5 giây. Trong Unity, thủ phạm quen mặt:\n\n- Đọc/ghi file đồng bộ trong `Update` hoặc lúc chuyển scene (save lớn, `File.ReadAllText` trên đường dẫn chậm).\n- `Resources.UnloadUnusedAssets()` gọi giữa gameplay — nó quét toàn bộ tham chiếu.\n- Parse JSON/XML lớn trên main thread; nén/giải nén; tính toán procedural đồng bộ.\n- Chờ một thread hoặc một callback SDK (quảng cáo, IAP) ngay trong luồng chính.\n- Compile shader variant lần đầu ở máy yếu.\n\nCách chữa chung: đẩy việc sang thread nền (`Awaitable.BackgroundThreadAsync`, job) hoặc **trải ra nhiều frame**; và luôn có màn che khi làm việc nặng để người chơi thấy hệ thống còn sống.\n\n## Repro: cách làm bug chịu xuất hiện\n\n- **Cheat console trong bản Development**: nhảy màn, đặt vàng, ép state — rút thời gian tái hiện từ 20 phút xuống 20 giây. Xem [[unity-editor-tools]].\n- **Nút gửi báo lỗi trong game**: đính save hiện tại + 200 dòng log. Save của người chơi thường là chìa khoá của bug \"không tái hiện được\".\n- **Seed cố định** cho mọi thứ ngẫu nhiên khi ở chế độ debug.\n- **Bắt chước điều kiện xấu**: bật giới hạn mạng, chạy trên máy 2GB RAM, để máy nóng 15 phút trước khi test. Phần lớn bug hiện trường sống ở đúng những điều kiện đó.\n\n## Bẫy lộ ra khi build\n\n- Symbol không được lưu: bản 1.4.2 crash, ba tháng sau không ai dựng lại được symbol tương ứng.\n- `Debug.Log` mỗi frame trong bản Release: vừa tốn, vừa đẩy log thật ra khỏi buffer.\n- Ghi log kèm thông tin cá nhân (email, id thiết bị thô) — vấn đề pháp lý, không chỉ kỹ thuật.\n- Bắt hết mọi exception bằng `try/catch` rỗng để \"game khỏi văng\": lỗi biến mất khỏi báo cáo, dữ liệu hỏng âm thầm, và bạn mất luôn khả năng biết mình đang hỏng.\n- Chỉ test trên máy flagship: cả ba nhóm sự cố ở trên đều tập trung ở máy yếu.\n\n## Kiểm tra nhanh\n\n- [ ] Symbol (`symbols.zip` / `.dSYM`) lưu cùng mọi bản phát hành\n- [ ] Crash report có custom key: scene, session_seconds, mem_used, save_version\n- [ ] Ring buffer 200 dòng log gần nhất được đính kèm khi crash\n- [ ] Theo dõi **crash-free sessions**, không theo dõi số vụ tuyệt đối\n- [ ] Có cheat console và nút gửi báo lỗi trong bản Development\n- [ ] Không có `catch { }` rỗng nào trên đường gameplay chính",
+      "aiPrompt": "**Dùng AI thế nào khi đang đuổi một bug hiện trường**\n\nĐiểm mạnh lớn nhất của AI ở đây không phải sửa code mà là **đọc stack trace và sinh giả thuyết**: dán một stack managed kèm mô tả hoàn cảnh, nó liệt kê được các nguyên nhân khả dĩ nhanh hơn bạn tra tài liệu. Việc thứ hai nó làm tốt: viết **code thu thập ngữ cảnh** (breadcrumb, ring buffer log, wrapper cho crash SDK) — loại code lặp, nhiều lời, dễ kiểm.\n\nViệc nó **không** làm được: biết game của bạn. Nó không biết màn 7 có một cơ chế đặc biệt, không biết tuần trước bạn đổi cách nạp asset. Nên hãy dùng nó như người soát giả thuyết, và luôn bắt nó xếp hạng: *\"nêu 5 giả thuyết, sắp theo xác suất, và với mỗi cái nói tôi phải đo gì để loại trừ\"*. Cái \"đo gì để loại trừ\" mới là phần có giá trị — nó biến một danh sách phỏng đoán thành một kế hoạch.\n\n**Phải nêu rõ** (thiếu là AI đoán bừa):\n- Hiện tượng chính xác: có stack không, app biến mất im lặng hay treo rồi văng.\n- Tập trung ở đâu: dòng máy, phiên bản OS, bản app, vùng, locale.\n- Bắt đầu từ bản nào, và bản đó đổi những gì.\n- Có tương quan với thời lượng phiên chơi không (câu hỏi phân biệt rò rỉ bộ nhớ với lỗi logic).\n- Backend là IL2CPP hay Mono, và stack đã symbolicate chưa.\n\n**Mẫu prompt**\n\n```\nUnity 6, IL2CPP, Android. Hiện tượng: app biến mất, KHÔNG có stack trace\ntrong Crashlytics. Play Console không ghi ANR. Tỉ lệ tăng theo thời lượng\nphiên: dưới 5 phút gần như không có, trên 20 phút là 4%. Tập trung ở máy\nRAM 3GB trở xuống. Bắt đầu từ bản 1.4.0 — bản đó chuyển UI sang Addressables.\n\nNêu 5 giả thuyết, sắp theo xác suất. Với mỗi giả thuyết:\n- đo cái gì để xác nhận hoặc loại trừ (công cụ cụ thể, chỉ số cụ thể)\n- nếu đúng thì sửa theo hướng nào\nKHÔNG đề xuất sửa code trước khi tôi trả lời kết quả đo.\n```\n\n**Bẫy thường gặp:** đưa AI một stack trace **chưa symbolicate** (toàn địa chỉ hex và `libil2cpp.so`) rồi hỏi nguyên nhân — nó sẽ tự tin suy diễn từ tên hàm gần đúng hoặc từ mô tả của bạn, và ra một câu chuyện nghe rất hợp lý về một hàm có thể không nằm trong stack. Symbolicate trước, đưa stack thật sau; nếu không symbolicate được thì nói thẳng điều đó trong prompt để nó không giả vờ đọc được.",
+      "unity": "",
+      "code": "Demo dựng `CrashContext`: một service ở Boot scene giữ **ring buffer 200 dòng log**, gắn **custom key** cho báo cáo crash (scene, thời lượng phiên, bộ nhớ, save version), ghi breadcrumb hành động của người chơi, và tự đóng gói toàn bộ khi có exception. Đây là phần hạ tầng bạn muốn có **trước** khi cần tới nó.\n\n**Setup**\n\n<figure class=\"fig\">\n<svg viewBox=\"0 0 660 290\" role=\"img\" aria-label=\"Hierarchy Boot scene có Systems chứa CrashContext, Inspector hiện Log Capacity, Sample Interval và bảng custom key gửi kèm báo cáo\">\n  <rect x=\"10\" y=\"10\" width=\"210\" height=\"270\" rx=\"8\" class=\"fig-box\"/>\n  <text x=\"22\" y=\"32\" class=\"fig-label\" font-size=\"13\" font-weight=\"600\">Hierarchy  (scene Boot)</text>\n  <line x1=\"10\" y1=\"42\" x2=\"220\" y2=\"42\" class=\"fig-line\"/>\n  <text x=\"22\" y=\"64\" class=\"fig-muted\" font-size=\"12\">▾ Systems</text>\n  <rect x=\"26\" y=\"72\" width=\"188\" height=\"20\" rx=\"4\" fill=\"#ff8787\" opacity=\"0.20\"/>\n  <text x=\"34\" y=\"87\" class=\"fig-label\" font-size=\"12\" font-weight=\"600\">CrashContext</text>\n  <text x=\"34\" y=\"108\" class=\"fig-muted\" font-size=\"11\">AudioService</text>\n  <text x=\"34\" y=\"124\" class=\"fig-muted\" font-size=\"11\">SaveService</text>\n  <line x1=\"10\" y1=\"140\" x2=\"220\" y2=\"140\" class=\"fig-line\"/>\n  <text x=\"22\" y=\"160\" class=\"fig-label\" font-size=\"12\" font-weight=\"600\">Vì sao ở Boot</text>\n  <text x=\"22\" y=\"180\" class=\"fig-muted\" font-size=\"11\">Phải sống trước mọi hệ thống</text>\n  <text x=\"22\" y=\"196\" class=\"fig-muted\" font-size=\"11\">khác để bắt được exception</text>\n  <text x=\"22\" y=\"212\" class=\"fig-muted\" font-size=\"11\">lúc khởi tạo.</text>\n  <text x=\"22\" y=\"236\" class=\"fig-muted\" font-size=\"11\">[DefaultExecutionOrder(-1000)]</text>\n  <text x=\"22\" y=\"258\" class=\"fig-muted\" font-size=\"10\">Xem node Vòng đời game về</text>\n  <text x=\"22\" y=\"272\" class=\"fig-muted\" font-size=\"10\">Boot scene và bản trùng.</text>\n  <rect x=\"236\" y=\"10\" width=\"414\" height=\"270\" rx=\"8\" class=\"fig-box\"/>\n  <text x=\"248\" y=\"32\" class=\"fig-label\" font-size=\"13\" font-weight=\"600\">Inspector</text>\n  <line x1=\"236\" y1=\"42\" x2=\"650\" y2=\"42\" class=\"fig-line\"/>\n  <rect x=\"244\" y=\"50\" width=\"398\" height=\"18\" rx=\"3\" fill=\"#ff8787\" opacity=\"0.22\"/>\n  <text x=\"252\" y=\"63\" class=\"fig-label\" font-size=\"12\" font-weight=\"600\">Crash Context (Script)</text>\n  <text x=\"260\" y=\"82\" class=\"fig-muted\" font-size=\"11\">Log Capacity</text><text x=\"450\" y=\"82\" class=\"fig-label\" font-size=\"11\">200 dòng</text>\n  <text x=\"260\" y=\"98\" class=\"fig-muted\" font-size=\"11\">Sample Interval</text><text x=\"450\" y=\"98\" class=\"fig-label\" font-size=\"11\">5 giây</text>\n  <text x=\"260\" y=\"114\" class=\"fig-muted\" font-size=\"11\">Breadcrumb Capacity</text><text x=\"450\" y=\"114\" class=\"fig-label\" font-size=\"11\">10 hành động</text>\n  <rect x=\"244\" y=\"128\" width=\"398\" height=\"18\" rx=\"3\" fill=\"#6ea8fe\" opacity=\"0.22\"/>\n  <text x=\"252\" y=\"141\" class=\"fig-label\" font-size=\"12\" font-weight=\"600\">Custom key gửi kèm mỗi báo cáo</text>\n  <text x=\"260\" y=\"160\" class=\"fig-muted\" font-size=\"11\">scene / game_state</text><text x=\"450\" y=\"160\" class=\"fig-label\" font-size=\"11\">thu hẹp phạm vi</text>\n  <text x=\"260\" y=\"176\" class=\"fig-muted\" font-size=\"11\">session_seconds</text><text x=\"450\" y=\"176\" class=\"fig-label\" font-size=\"11\">tăng đều ⇒ nghi rò rỉ</text>\n  <text x=\"260\" y=\"192\" class=\"fig-muted\" font-size=\"11\">mem_managed_mb</text><text x=\"450\" y=\"192\" class=\"fig-label\" font-size=\"11\">GC heap</text>\n  <text x=\"260\" y=\"208\" class=\"fig-muted\" font-size=\"11\">device_ram_mb / device</text><text x=\"450\" y=\"208\" class=\"fig-label\" font-size=\"11\">phân biệt hết RAM</text>\n  <text x=\"260\" y=\"224\" class=\"fig-muted\" font-size=\"11\">save_version</text><text x=\"450\" y=\"224\" class=\"fig-label\" font-size=\"11\">bug chỉ có ở save cũ</text>\n  <text x=\"260\" y=\"240\" class=\"fig-muted\" font-size=\"11\">last_actions</text><text x=\"450\" y=\"240\" class=\"fig-label\" font-size=\"11\">10 hành động gần nhất</text>\n  <text x=\"252\" y=\"266\" class=\"fig-muted\" font-size=\"10\">Thay hai hàm Send* bằng SDK thật (Crashlytics / Cloud Diagnostics).</text>\n</svg>\n<figcaption>CrashContext nằm ở Boot scene và chạy trước mọi thứ. Phần gửi đi được cô lập trong hai hàm để cắm SDK nào cũng được.</figcaption>\n</figure>\n\n**Script**\n\n```csharp\n// CrashContext.cs — Unity 6 (6000.x). Đặt trên GameObject \"CrashContext\" trong scene Boot.\n// Không phụ thuộc SDK nào: hai hàm SendKey/SendReport là chỗ cắm Crashlytics hoặc dịch vụ khác.\nusing System.Collections.Generic;\nusing System.Text;\nusing UnityEngine;\nusing UnityEngine.SceneManagement;\n\n[DefaultExecutionOrder(-1000)]          // chạy trước mọi hệ thống khác\npublic class CrashContext : MonoBehaviour\n{\n    public static CrashContext Instance { get; private set; }\n\n    [SerializeField] int logCapacity = 200;\n    [SerializeField] int breadcrumbCapacity = 10;\n    [SerializeField] float sampleInterval = 5f;\n\n    readonly Queue<string> logRing = new();\n    readonly Queue<string> breadcrumbs = new();\n    readonly Dictionary<string, string> keys = new();\n    readonly StringBuilder sb = new(4096);\n    float startTime, nextSample;\n\n    void Awake()\n    {\n        // Huỷ bản MỚI, giữ bản cũ đang có subscriber — xem node Vòng đời game.\n        if (Instance != null && Instance != this) { Destroy(gameObject); return; }\n        Instance = this;\n        DontDestroyOnLoad(gameObject);\n        startTime = Time.realtimeSinceStartup;\n\n        Application.logMessageReceived += OnLog;\n        SceneManager.activeSceneChanged += OnSceneChanged;\n\n        SetKey(\"device\", SystemInfo.deviceModel);\n        SetKey(\"device_ram_mb\", SystemInfo.systemMemorySize.ToString());\n        SetKey(\"gfx\", SystemInfo.graphicsDeviceName);\n        SetKey(\"app_version\", Application.version);\n    }\n\n    void OnDestroy()\n    {\n        if (Instance != this) return;\n        Application.logMessageReceived -= OnLog;\n        SceneManager.activeSceneChanged -= OnSceneChanged;\n        Instance = null;\n    }\n\n    void Update()\n    {\n        if (Time.unscaledTime < nextSample) return;\n        nextSample = Time.unscaledTime + sampleInterval;\n\n        SetKey(\"session_seconds\", Mathf.RoundToInt(Time.realtimeSinceStartup - startTime).ToString());\n        // GC heap: đọc được ở cả bản Release. Bộ nhớ NATIVE (texture, mesh, audio) cần\n        // Profiler.GetTotalAllocatedMemoryLong() và chỉ có số thật ở bản Development.\n        SetKey(\"mem_managed_mb\", (System.GC.GetTotalMemory(false) / (1024 * 1024)).ToString());\n    }\n\n    void OnSceneChanged(Scene from, Scene to) => SetKey(\"scene\", to.name);\n\n    /// Ghi một hành động của người chơi. Gọi ở chỗ có ý nghĩa, không gọi mỗi frame.\n    public void Breadcrumb(string action)\n    {\n        Push(breadcrumbs, breadcrumbCapacity, action);\n        SetKey(\"last_actions\", string.Join(\" > \", breadcrumbs));\n    }\n\n    public void SetKey(string key, string value)\n    {\n        keys[key] = value;\n        SendKey(key, value);                       // -> SDK thật\n    }\n\n    void OnLog(string condition, string stack, LogType type)\n    {\n        if (type == LogType.Log) return;           // chỉ giữ warning/error/exception\n        Push(logRing, logCapacity, type + \": \" + condition);\n        if (type == LogType.Exception) SendReport(condition, stack, Dump());\n    }\n\n    static void Push(Queue<string> q, int cap, string line)\n    {\n        q.Enqueue(line);\n        while (q.Count > cap) q.Dequeue();\n    }\n\n    /// Toàn bộ ngữ cảnh dưới dạng text — đính kèm báo cáo, hoặc gắn vào nút \"gửi lỗi\" trong game.\n    public string Dump()\n    {\n        sb.Clear();\n        foreach (var kv in keys) sb.Append(kv.Key).Append('=').Append(kv.Value).Append('\\n');\n        sb.Append(\"--- log ---\\n\");\n        foreach (var line in logRing) sb.Append(line).Append('\\n');\n        return sb.ToString();\n    }\n\n    // ----- chỗ cắm SDK: thay hai hàm này, phần trên không đổi -----\n    static void SendKey(string key, string value)\n    {\n        // Crashlytics.SetCustomKey(key, value);\n    }\n\n    static void SendReport(string message, string stack, string context)\n    {\n        // Crashlytics.Log(context); Crashlytics.LogException(new System.Exception(message + \"|\" + stack));\n        Debug.Log(\"[CrashContext] báo cáo đã đóng gói, \" + context.Length + \" ký tự\");\n    }\n}\n```\n\n**Chạy thử**\n- Play từ scene Boot, gọi `CrashContext.Instance.Breadcrumb(\"mua_goi_3_vat_pham\")` ở vài chỗ, rồi cố tình ném một exception. Console hiện dòng `[CrashContext] báo cáo đã đóng gói…` — nghĩa là ngữ cảnh đã được gom đúng lúc crash, không phải sau đó.\n- Gọi `CrashContext.Instance.Dump()` từ một nút debug và in ra: phải thấy `session_seconds` tăng, `scene` đổi theo màn, và 10 hành động gần nhất theo đúng thứ tự.\n- Cắm SDK thật vào hai hàm `SendKey`/`SendReport`, build bản Development, ép crash trên thiết bị, rồi kiểm tra báo cáo trên dashboard có đủ custom key không. Làm việc này **trước** khi phát hành, vì lúc cần thì đã muộn.",
+      "interview": "**Câu hay gặp**\n\n| Mức | Câu hỏi |\n|---|---|\n| Junior | Kể một bug khó nhất anh từng sửa. |\n| Junior | Người chơi báo \"game bị văng\" — anh hỏi lại những gì? |\n| Mid | Crash chỉ xảy ra trên bản Release, không xảy ra trong Editor. Anh làm gì? |\n| Mid | ANR là gì? Trong Unity thì thường do đâu? |\n| Senior | App biến mất mà **không có** stack trace nào. Chẩn đoán? |\n| Senior | Anh theo dõi chỉ số ổn định nào, và ngưỡng bao nhiêu? |\n\n**Khung trả lời 60 giây** — \"App văng ở máy người chơi, không tái hiện được. Anh làm gì?\"\n\n> Việc đầu tiên là **phân loại**, vì ba hiện tượng rất khác nhau đều được người chơi gọi là \"văng\": crash có stack trace; **ANR** là main thread bị chặn quá vài giây; và **bị hệ điều hành kill vì hết RAM** thì không có stack gì cả, app biến mất sạch. Đi sai nhánh ở bước này là mất cả tuần.\n>\n> Rồi tìm **mẫu chung**: tập trung ở dòng máy nào, phiên bản OS nào, bắt đầu từ bản app nào, và có tương quan với thời lượng phiên chơi không. Câu cuối là câu phân biệt rò rỉ bộ nhớ với lỗi logic: tỉ lệ tăng theo thời gian chơi và tập trung ở máy RAM thấp thì gần như chắc là bộ nhớ.\n>\n> Thứ làm cả quy trình này khả thi là **breadcrumb** — custom key gắn kèm mỗi báo cáo: scene, thời lượng phiên, bộ nhớ, save version, 10 hành động gần nhất, cộng một ring buffer 200 dòng log trong RAM. Rẻ, và đó là khác biệt giữa \"lỗi ở `Inventory.Add`\" và \"lỗi ở `Inventory.Add` ngay sau khi mua gói 3 món khi túi đầy\".\n\n**Họ sẽ đào tiếp**\n\n- *\"Stack toàn hex thì sao?\"* → Bản IL2CPP crash trong code native nên phải **symbolicate**: `symbols.zip` cho Android (nộp lên Play Console hoặc dùng `ndk-stack`), `.dSYM` cho iOS. Phải là symbol của **đúng bản build đó** — dùng nhầm bản thì tên hàm sai mà không có cảnh báo nào, nên symbol phải được lưu cùng artifact của từng bản phát hành.\n- *\"ANR trong Unity do đâu?\"* → Main thread bị chặn: I/O đồng bộ khi save hoặc chuyển scene, `Resources.UnloadUnusedAssets()` gọi giữa gameplay, parse JSON lớn, chờ callback SDK quảng cáo, compile shader lần đầu trên máy yếu. Chữa bằng cách đẩy sang thread nền hoặc trải ra nhiều frame, và luôn có màn che để người chơi biết hệ thống còn sống.\n- *\"Chỉ số nào?\"* → **Crash-free sessions**, không phải số vụ tuyệt đối — số tuyệt đối tăng theo lượng người chơi và làm bạn hoảng nhầm chỗ. Dưới 99% là có vấn đề rõ, từ 99.5% trở lên là ổn định.\n- *\"Làm sao tái hiện?\"* → Cheat console để nhảy thẳng tới trạng thái; nút gửi báo lỗi trong game đính kèm **save của người chơi** (thường chính nó là chìa khoá); seed cố định ở chế độ debug; và dựng lại điều kiện xấu — máy 2GB, mạng chập chờn, máy đã nóng 15 phút.\n- *\"Bắt hết exception cho game khỏi văng thì sao?\"* → Đó là đổi một lỗi nhìn thấy lấy một lỗi âm thầm: dữ liệu hỏng dần, người chơi mất tiến trình, và bạn mất luôn báo cáo. Bắt exception phải đi kèm ghi nhận và một đường xử lý thật.\n\n**Cờ đỏ**\n\n- Kể bug theo kiểu ly kỳ mà không kể **cách thu hẹp giả thuyết** — người phỏng vấn nghe quy trình, không nghe cốt truyện.\n- Không lưu symbol theo bản.\n- `catch { }` rỗng trên đường gameplay chính.\n- Chỉ test trên máy flagship.\n- Không phân biệt được crash, ANR và bị kill vì hết RAM.\n\n**Số / ví dụ nên thuộc**\n\n- ANR: main thread không phản hồi quá **~5 giây** (Android).\n- Crash-free sessions: **< 99%** là có vấn đề, **≥ 99.5%** là ổn định.\n- Ring buffer **200 dòng** log + **10** breadcrumb hành động gần nhất.\n- Android `symbols.zip`, iOS `.dSYM` — lưu cùng mỗi bản phát hành.",
       "hasAiHowto": true,
       "i18n": {},
       "color": "#4dd4e0"
@@ -4161,7 +4255,7 @@
       ],
       "status": "deep",
       "read": 630,
-      "readIndex": 68,
+      "readIndex": 69,
       "level": "intermediate",
       "refs": [],
       "order": 30,
@@ -4202,7 +4296,7 @@
       ],
       "status": "deep",
       "read": 745,
-      "readIndex": 81,
+      "readIndex": 82,
       "level": "advanced",
       "refs": [],
       "order": 145,
@@ -4241,7 +4335,7 @@
       ],
       "status": "deep",
       "read": 770,
-      "readIndex": 85,
+      "readIndex": 86,
       "level": "intermediate",
       "refs": [],
       "order": 170,
@@ -4280,7 +4374,7 @@
       ],
       "status": "deep",
       "read": 610,
-      "readIndex": 66,
+      "readIndex": 67,
       "level": "basic",
       "refs": [],
       "order": 10,
@@ -4318,7 +4412,7 @@
       ],
       "status": "deep",
       "read": 660,
-      "readIndex": 72,
+      "readIndex": 73,
       "level": "basic",
       "refs": [],
       "order": 70,
@@ -4357,7 +4451,7 @@
       ],
       "status": "deep",
       "read": 720,
-      "readIndex": 78,
+      "readIndex": 79,
       "level": "intermediate",
       "refs": [],
       "order": 130,
@@ -4395,7 +4489,7 @@
       ],
       "status": "deep",
       "read": 760,
-      "readIndex": 84,
+      "readIndex": 85,
       "level": "advanced",
       "refs": [],
       "order": 160,
@@ -4433,7 +4527,7 @@
       ],
       "status": "deep",
       "read": 740,
-      "readIndex": 80,
+      "readIndex": 81,
       "level": "advanced",
       "refs": [],
       "order": 140,
@@ -4472,7 +4566,7 @@
       ],
       "status": "deep",
       "read": 640,
-      "readIndex": 70,
+      "readIndex": 71,
       "level": "intermediate",
       "refs": [],
       "order": 50,
@@ -4511,7 +4605,7 @@
       ],
       "status": "deep",
       "read": 620,
-      "readIndex": 67,
+      "readIndex": 68,
       "level": "intermediate",
       "refs": [],
       "order": 20,
@@ -4550,7 +4644,7 @@
       ],
       "status": "deep",
       "read": 730,
-      "readIndex": 79,
+      "readIndex": 80,
       "level": "intermediate",
       "refs": [],
       "order": 40,
@@ -4589,7 +4683,7 @@
       ],
       "status": "deep",
       "read": 710,
-      "readIndex": 77,
+      "readIndex": 78,
       "level": "advanced",
       "refs": [],
       "order": 120,
@@ -4602,6 +4696,46 @@
       "code": "Demo dựng một shader URP viết tay (unlit, hit flash + dissolve) tương thích SRP Batcher, và một driver dùng `MaterialPropertyBlock` để chỉ **object bị đánh** rời batch trong 0.08s rồi quay lại. Kiểm chứng bằng Frame Debugger: 50 kẻ địch cùng shader = 1 SRP Batch, con đang nhấp nháy tách ra, hết flash gộp lại.\n\n**Setup**\n\n<figure class=\"fig\">\n<svg viewBox=\"0 0 660 360\" role=\"img\" aria-label=\"Hierarchy có ba Enemy dùng chung material M_Enemy, Frame Debugger báo SRP Batch tương thích; Inspector hiện material M_Enemy với shader Custom/HitFlashDissolve và component FlashDissolveDriver\">\n  <rect x=\"10\" y=\"10\" width=\"200\" height=\"340\" rx=\"8\" class=\"fig-box\"/>\n  <text x=\"22\" y=\"32\" class=\"fig-label\" font-size=\"13\" font-weight=\"600\">Hierarchy</text>\n  <line x1=\"10\" y1=\"42\" x2=\"210\" y2=\"42\" class=\"fig-line\"/>\n  <text x=\"22\" y=\"64\" class=\"fig-muted\" font-size=\"12\">Main Camera</text>\n  <text x=\"22\" y=\"82\" class=\"fig-muted\" font-size=\"12\">Directional Light</text>\n  <text x=\"22\" y=\"100\" class=\"fig-muted\" font-size=\"12\">▾ Enemies</text>\n  <rect x=\"16\" y=\"108\" width=\"188\" height=\"20\" rx=\"4\" fill=\"#6ea8fe\" opacity=\"0.18\"/>\n  <text x=\"38\" y=\"123\" class=\"fig-label\" font-size=\"12\" font-weight=\"600\">Enemy_01  (M_Enemy)</text>\n  <text x=\"38\" y=\"143\" class=\"fig-muted\" font-size=\"12\">Enemy_02  (M_Enemy)</text>\n  <text x=\"38\" y=\"161\" class=\"fig-muted\" font-size=\"12\">Enemy_03  (M_Enemy)</text>\n  <text x=\"22\" y=\"196\" class=\"fig-label\" font-size=\"12\" font-weight=\"600\">Project</text>\n  <text x=\"22\" y=\"214\" class=\"fig-muted\" font-size=\"11\">Shaders/HitFlashDissolve.shader</text>\n  <text x=\"22\" y=\"230\" class=\"fig-muted\" font-size=\"11\">Materials/M_Enemy.mat</text>\n  <text x=\"22\" y=\"246\" class=\"fig-muted\" font-size=\"11\">Scripts/FlashDissolveDriver.cs</text>\n  <rect x=\"16\" y=\"260\" width=\"188\" height=\"82\" rx=\"4\" class=\"fig-box\"/>\n  <text x=\"22\" y=\"276\" class=\"fig-label\" font-size=\"11\" font-weight=\"600\">Frame Debugger</text>\n  <text x=\"22\" y=\"292\" class=\"fig-muted\" font-size=\"10\">SRP Batch  ·  3 draws</text>\n  <text x=\"22\" y=\"306\" fill=\"#51cf9b\" font-size=\"10\">SRP Batcher: compatible</text>\n  <text x=\"22\" y=\"322\" class=\"fig-muted\" font-size=\"10\">Enemy_02 (đang flash) tách riêng:</text>\n  <text x=\"22\" y=\"336\" fill=\"#ffd43b\" font-size=\"10\">\"Node has a MaterialPropertyBlock\"</text>\n  <rect x=\"226\" y=\"10\" width=\"424\" height=\"340\" rx=\"8\" class=\"fig-box\"/>\n  <text x=\"238\" y=\"32\" class=\"fig-label\" font-size=\"13\" font-weight=\"600\">Inspector — Enemy_01</text>\n  <line x1=\"226\" y1=\"42\" x2=\"650\" y2=\"42\" class=\"fig-line\"/>\n  <rect x=\"234\" y=\"50\" width=\"408\" height=\"18\" rx=\"3\" fill=\"#b197fc\" opacity=\"0.22\"/>\n  <text x=\"242\" y=\"63\" class=\"fig-label\" font-size=\"12\" font-weight=\"600\">M_Enemy (Material)</text>\n  <text x=\"250\" y=\"82\" class=\"fig-muted\" font-size=\"11\">Shader</text><text x=\"440\" y=\"82\" class=\"fig-label\" font-size=\"11\">Custom/HitFlashDissolve</text>\n  <text x=\"250\" y=\"98\" class=\"fig-muted\" font-size=\"11\">Base Map</text><text x=\"440\" y=\"98\" class=\"fig-label\" font-size=\"11\">T_Enemy_Albedo</text>\n  <text x=\"250\" y=\"114\" class=\"fig-muted\" font-size=\"11\">Noise Tex</text><text x=\"440\" y=\"114\" class=\"fig-label\" font-size=\"11\">T_Noise_Perlin (Wrap: Repeat)</text>\n  <text x=\"250\" y=\"130\" class=\"fig-muted\" font-size=\"11\">Base Color</text><text x=\"440\" y=\"130\" class=\"fig-label\" font-size=\"11\">#FFFFFF</text>\n  <text x=\"250\" y=\"146\" class=\"fig-muted\" font-size=\"11\">Flash Amount / Dissolve</text><text x=\"440\" y=\"146\" class=\"fig-label\" font-size=\"11\">0   /   0   (code ghi đè)</text>\n  <text x=\"250\" y=\"162\" class=\"fig-muted\" font-size=\"11\">Edge Width</text><text x=\"440\" y=\"162\" class=\"fig-label\" font-size=\"11\">0.05</text>\n  <text x=\"250\" y=\"178\" class=\"fig-muted\" font-size=\"11\">Edge Color (HDR)</text><rect x=\"440\" y=\"168\" width=\"12\" height=\"12\" rx=\"2\" fill=\"#ffd43b\"/><text x=\"458\" y=\"178\" class=\"fig-label\" font-size=\"11\">#FFD43B</text>\n  <rect x=\"234\" y=\"188\" width=\"408\" height=\"18\" rx=\"3\" fill=\"#6ea8fe\" opacity=\"0.22\"/>\n  <text x=\"242\" y=\"201\" class=\"fig-label\" font-size=\"12\" font-weight=\"600\">Mesh Renderer</text>\n  <text x=\"250\" y=\"220\" class=\"fig-muted\" font-size=\"11\">Materials [0]</text><text x=\"440\" y=\"220\" class=\"fig-label\" font-size=\"11\">M_Enemy  (shared — KHÔNG instance)</text>\n  <text x=\"250\" y=\"236\" class=\"fig-muted\" font-size=\"11\">Cast Shadows</text><text x=\"440\" y=\"236\" class=\"fig-label\" font-size=\"11\">On</text>\n  <rect x=\"234\" y=\"246\" width=\"408\" height=\"18\" rx=\"3\" fill=\"#ffd43b\" opacity=\"0.22\"/>\n  <text x=\"242\" y=\"259\" class=\"fig-label\" font-size=\"12\" font-weight=\"600\">Flash Dissolve Driver (Script)</text>\n  <text x=\"250\" y=\"278\" class=\"fig-muted\" font-size=\"11\">Flash Duration</text><text x=\"440\" y=\"278\" class=\"fig-label\" font-size=\"11\">0.08</text>\n  <text x=\"250\" y=\"294\" class=\"fig-muted\" font-size=\"11\">Dissolve Duration</text><text x=\"440\" y=\"294\" class=\"fig-label\" font-size=\"11\">0.6</text>\n  <text x=\"250\" y=\"310\" class=\"fig-muted\" font-size=\"11\">Auto Demo</text><text x=\"440\" y=\"310\" class=\"fig-label\" font-size=\"11\">☑  (flash ×2 rồi dissolve, lặp)</text>\n  <text x=\"250\" y=\"326\" class=\"fig-muted\" font-size=\"11\">Destroy When Dissolved</text><text x=\"440\" y=\"326\" class=\"fig-label\" font-size=\"11\">☐</text>\n  <text x=\"250\" y=\"342\" class=\"fig-muted\" font-size=\"10\">Play Mode: chuột phải header component ▸ Flash / Dissolve để kích tay</text>\n</svg>\n<figcaption>Ba Enemy dùng chung một material — không có instance. Driver chỉ gắn property block lên renderer đang flash/dissolve và gỡ (`SetPropertyBlock(null)`) khi xong.</figcaption>\n</figure>\n\n**Script**\n\n```hlsl\n// HitFlashDissolve.shader — Unity 6 (6000.x) + URP 17. Unlit, HLSL tay, tương thích SRP Batcher.\n// Ba pass (Forward, ShadowCaster, DepthOnly) dùng chung MỘT CBUFFER qua HLSLINCLUDE — đây là điều kiện\n// để SRP Batcher nhận; dùng UsePass lấy pass của shader khác sẽ làm CBUFFER lệch và mất tương thích.\nShader \"Custom/HitFlashDissolve\"\n{\n    Properties\n    {\n        _BaseMap(\"Base Map\", 2D) = \"white\" {}\n        _NoiseTex(\"Noise Tex\", 2D) = \"gray\" {}\n        _BaseColor(\"Base Color\", Color) = (1, 1, 1, 1)\n        _FlashAmount(\"Flash Amount\", Range(0, 1)) = 0\n        _Dissolve(\"Dissolve\", Range(0, 1)) = 0\n        _EdgeWidth(\"Edge Width\", Range(0, 0.2)) = 0.05\n        [HDR] _EdgeColor(\"Edge Color\", Color) = (1, 0.83, 0.23, 1)\n    }\n\n    SubShader\n    {\n        Tags { \"RenderType\" = \"Opaque\" \"Queue\" = \"AlphaTest\" \"RenderPipeline\" = \"UniversalPipeline\" }\n\n        HLSLINCLUDE\n        #include \"Packages/com.unity.render-pipelines.universal/ShaderLibrary/Core.hlsl\"\n\n        TEXTURE2D(_BaseMap);  SAMPLER(sampler_BaseMap);\n        TEXTURE2D(_NoiseTex); SAMPLER(sampler_NoiseTex);\n\n        // Mọi property của material nằm trong đúng một CBUFFER này → SRP Batcher gom được.\n        CBUFFER_START(UnityPerMaterial)\n            float4 _BaseMap_ST;\n            float4 _NoiseTex_ST;\n            half4  _BaseColor;\n            half   _FlashAmount;\n            half   _Dissolve;\n            half   _EdgeWidth;\n            half4  _EdgeColor;\n        CBUFFER_END\n\n        struct Attributes\n        {\n            float4 positionOS : POSITION;\n            float3 normalOS   : NORMAL;\n            float2 uv         : TEXCOORD0;\n        };\n\n        struct Varyings\n        {\n            float4 positionHCS : SV_POSITION;\n            float2 uv          : TEXCOORD0;   // half đủ cho UV, nhưng interpolator luôn là float\n            float2 uvNoise     : TEXCOORD1;\n        };\n\n        // Dissolve dùng chung cho cả 3 pass: bóng và depth cũng phải \"thủng\" theo mesh.\n        half SampleNoiseAndClip(float2 uvNoise)\n        {\n            half noise = SAMPLE_TEXTURE2D(_NoiseTex, sampler_NoiseTex, uvNoise).r;\n            clip(noise - _Dissolve);\n            return noise;\n        }\n        ENDHLSL\n\n        Pass\n        {\n            Name \"Unlit\"\n            Tags { \"LightMode\" = \"UniversalForward\" }\n            Cull Back\n            ZWrite On\n\n            HLSLPROGRAM\n            #pragma vertex vert\n            #pragma fragment frag\n\n            Varyings vert(Attributes IN)\n            {\n                Varyings OUT;\n                OUT.positionHCS = TransformObjectToHClip(IN.positionOS.xyz);\n                OUT.uv      = TRANSFORM_TEX(IN.uv, _BaseMap);\n                OUT.uvNoise = TRANSFORM_TEX(IN.uv, _NoiseTex);\n                return OUT;\n            }\n\n            half4 frag(Varyings IN) : SV_Target\n            {\n                half noise = SampleNoiseAndClip(IN.uvNoise);\n                half4 col = SAMPLE_TEXTURE2D(_BaseMap, sampler_BaseMap, IN.uv) * _BaseColor;\n\n                // Dải cạnh dissolve: pixel còn sống nhưng noise nằm trong [_Dissolve, _Dissolve + _EdgeWidth].\n                // step() thay if — không rẽ nhánh trong fragment. Nhân step(0.001, _Dissolve) để không có viền khi chưa dissolve.\n                half edge = step(noise, _Dissolve + _EdgeWidth) * step(0.001h, _Dissolve);\n                col.rgb += _EdgeColor.rgb * edge;              // emission HDR → Bloom bắt được nếu bật\n\n                col.rgb = lerp(col.rgb, half3(1, 1, 1), _FlashAmount);   // hit flash: trộn trắng\n                return col;\n            }\n            ENDHLSL\n        }\n\n        Pass\n        {\n            Name \"ShadowCaster\"\n            Tags { \"LightMode\" = \"ShadowCaster\" }\n            ZWrite On\n            ZTest LEqual\n            ColorMask 0\n\n            HLSLPROGRAM\n            #pragma vertex vertShadow\n            #pragma fragment fragShadow\n            #include \"Packages/com.unity.render-pipelines.universal/ShaderLibrary/Shadows.hlsl\"\n\n            float3 _LightDirection;   // URP set per-pass; không phải property material nên nằm ngoài CBUFFER\n\n            Varyings vertShadow(Attributes IN)\n            {\n                Varyings OUT;\n                float3 positionWS = TransformObjectToWorld(IN.positionOS.xyz);\n                float3 normalWS   = TransformObjectToWorldNormal(IN.normalOS);\n                OUT.positionHCS   = TransformWorldToHClip(ApplyShadowBias(positionWS, normalWS, _LightDirection));\n            #if UNITY_REVERSED_Z\n                OUT.positionHCS.z = min(OUT.positionHCS.z, UNITY_NEAR_CLIP_VALUE);\n            #else\n                OUT.positionHCS.z = max(OUT.positionHCS.z, UNITY_NEAR_CLIP_VALUE);\n            #endif\n                OUT.uv      = IN.uv;\n                OUT.uvNoise = TRANSFORM_TEX(IN.uv, _NoiseTex);\n                return OUT;\n            }\n\n            half4 fragShadow(Varyings IN) : SV_Target\n            {\n                SampleNoiseAndClip(IN.uvNoise);   // bóng cũng thủng theo dissolve\n                return 0;\n            }\n            ENDHLSL\n        }\n\n        Pass\n        {\n            Name \"DepthOnly\"\n            Tags { \"LightMode\" = \"DepthOnly\" }\n            ZWrite On\n            ColorMask R\n\n            HLSLPROGRAM\n            #pragma vertex vertDepth\n            #pragma fragment fragDepth\n\n            Varyings vertDepth(Attributes IN)\n            {\n                Varyings OUT;\n                OUT.positionHCS = TransformObjectToHClip(IN.positionOS.xyz);\n                OUT.uv      = IN.uv;\n                OUT.uvNoise = TRANSFORM_TEX(IN.uv, _NoiseTex);\n                return OUT;\n            }\n\n            half fragDepth(Varyings IN) : SV_Target\n            {\n                SampleNoiseAndClip(IN.uvNoise);\n                return IN.positionHCS.z;\n            }\n            ENDHLSL\n        }\n    }\n}\n```\n\n```csharp\n// FlashDissolveDriver.cs — Unity 6 (6000.x) + URP 17. Gắn lên object có Renderer dùng material shader Custom/HitFlashDissolve.\n// MaterialPropertyBlock làm renderer RỜI SRP Batcher trong lúc block còn gắn → chỉ dùng cho ít object, thời gian ngắn,\n// và gỡ block (SetPropertyBlock(null)) ngay khi hiệu ứng xong. Hàng trăm object cần giá trị riêng lâu dài → vertex color / instancing.\nusing System.Collections;\nusing UnityEngine;\n\n[RequireComponent(typeof(Renderer))]\npublic class FlashDissolveDriver : MonoBehaviour\n{\n    // PropertyToID một lần, theo REFERENCE trong shader (bắt đầu bằng _), không phải Display Name.\n    static readonly int FlashId    = Shader.PropertyToID(\"_FlashAmount\");\n    static readonly int DissolveId = Shader.PropertyToID(\"_Dissolve\");\n\n    [SerializeField] float flashDuration = 0.08f;\n    [SerializeField] float dissolveDuration = 0.6f;\n    [SerializeField] bool autoDemo = true;               // flash ×2 rồi dissolve ra/vào, lặp — để thấy trong Frame Debugger\n    [SerializeField] bool destroyWhenDissolved = false;\n\n    Renderer rend;\n    MaterialPropertyBlock mpb;\n    Coroutine flashRoutine, dissolveRoutine;\n    float flash, dissolve;                                // 0 = không hiệu ứng\n\n    void Awake()\n    {\n        rend = GetComponent<Renderer>();\n        mpb = new MaterialPropertyBlock();                // tạo MỘT lần, tái dùng — không new mỗi frame\n    }\n\n    void Start()\n    {\n        if (autoDemo) StartCoroutine(DemoLoop());\n    }\n\n    [ContextMenu(\"Flash\")]\n    public void Flash()\n    {\n        if (flashRoutine != null) StopCoroutine(flashRoutine);\n        flashRoutine = StartCoroutine(FlashRoutine());\n    }\n\n    [ContextMenu(\"Dissolve\")]\n    public void Dissolve() => Dissolve(reverse: false);\n\n    public void Dissolve(bool reverse)\n    {\n        if (dissolveRoutine != null) StopCoroutine(dissolveRoutine);\n        dissolveRoutine = StartCoroutine(DissolveRoutine(reverse));\n    }\n\n    IEnumerator FlashRoutine()\n    {\n        float t = 0f;\n        while (t < flashDuration)\n        {\n            t += Time.deltaTime;\n            flash = 1f - t / flashDuration;               // 1 → 0: trắng rồi tắt dần\n            Apply();\n            yield return null;\n        }\n        flash = 0f;\n        Apply();                                          // về 0 → có thể gỡ block\n        flashRoutine = null;\n    }\n\n    IEnumerator DissolveRoutine(bool reverse)\n    {\n        float t = 0f;\n        while (t < dissolveDuration)\n        {\n            t += Time.deltaTime;\n            float k = Mathf.Clamp01(t / dissolveDuration);\n            dissolve = reverse ? 1f - k : k;\n            Apply();\n            yield return null;\n        }\n        dissolve = reverse ? 0f : 1f;\n        Apply();\n        dissolveRoutine = null;\n        if (!reverse && destroyWhenDissolved) Destroy(gameObject);\n    }\n\n    IEnumerator DemoLoop()\n    {\n        var pause = new WaitForSeconds(0.7f);\n        while (true)\n        {\n            Flash(); yield return pause;\n            Flash(); yield return pause;\n            Dissolve(reverse: false); yield return new WaitForSeconds(dissolveDuration + 0.4f);\n            Dissolve(reverse: true);  yield return new WaitForSeconds(dissolveDuration + 0.7f);\n        }\n    }\n\n    void Apply()\n    {\n        // Cả hai về 0 → GỠ block: renderer quay lại SRP Batch ngay frame sau. Đây là dòng quan trọng nhất.\n        if (flash <= 0f && dissolve <= 0f)\n        {\n            rend.SetPropertyBlock(null);\n            return;\n        }\n        mpb.SetFloat(FlashId, flash);\n        mpb.SetFloat(DissolveId, dissolve);\n        rend.SetPropertyBlock(mpb);\n    }\n\n    void OnDisable()\n    {\n        flash = dissolve = 0f;\n        if (rend != null) rend.SetPropertyBlock(null);    // object bị pool/tắt giữa hiệu ứng không được giữ block mãi\n    }\n}\n```\n\n**Chạy thử**\n- Tạo material từ shader `Custom/HitFlashDissolve`, gán một noise texture (Wrap Repeat) vào Noise Tex; nếu material **hồng** là project chưa dùng URP hoặc Graphics Settings chưa gán URP Asset.\n- Nhân 3 Enemy dùng chung M_Enemy, không chạm `.material`. `Window ▸ Analysis ▸ Frame Debugger` ▸ Enable: cả ba nằm trong **một** dòng `SRP Batch` (3 draws). Chọn shader trong Inspector: mục *SRP Batcher* phải ghi **compatible** — ghi *not compatible* là có property nằm ngoài CBUFFER.\n- Bật Play: mỗi 0.7s một cú flash 0.08s (≈ 5 frame ở 60 FPS); đúng lúc đó Frame Debugger tách Enemy đang flash thành draw riêng với lý do \"Node has a MaterialPropertyBlock\", frame kế tiếp gộp lại — nếu **không gộp lại** thì `SetPropertyBlock(null)` chưa được gọi.\n- Dissolve 0.6s: mesh thủng theo noise với viền vàng `#FFD43B`; **bóng dưới đất thủng theo** (ShadowCaster pass cũng clip). Bật Bloom trong Volume, viền loé — vì cộng emission HDR thay vì lerp.\n- Đặt `Flash Duration` = 0.5 ngay trong Play: flash dài rõ mà không cần sửa shader — chứng minh giá trị đi qua MPB. Kiểm `Shader.PropertyToID(\"_FlashAmount\")` bằng cách đổi thành `\"Flash Amount\"` (Display Name): không lỗi, không hiệu ứng.",
       "interview": "**Câu hay gặp**\n\n| Mức | Câu hỏi |\n|---|---|\n| Junior | Material hiện màu hồng. Nghĩa là gì? |\n| Junior | Shader Graph hay viết HLSL tay — anh chọn thế nào? |\n| Mid | SRP Batcher hoạt động nhờ đâu, và cái gì phá nó? |\n| Mid | Làm hit flash (nhân vật loé trắng khi trúng đòn) mà không tăng draw call? |\n| Senior | Thời gian build tăng 10 phút sau khi thêm một shader. Vì sao? |\n| Senior | Transparent bị sort sai, vật sau vẽ đè vật trước. Xử lý? |\n\n**Khung trả lời 60 giây** — \"SRP Batcher và cái gì phá nó?\"\n\n> SRP Batcher không gộp mesh như batching cũ — nó giữ **hằng số per-material trên GPU** giữa các frame, nên chỉ cần các object dùng **cùng shader variant** là CPU không phải nạp lại buffer mỗi draw. Nghĩa là nhiều material khác nhau vẫn nhanh, miễn là cùng shader.\n>\n> Thứ phá nó thì rất cụ thể: gọi `renderer.material` (Unity **tạo bản sao material** ngay lúc đó — cũng là rò rỉ bộ nhớ nếu không Destroy), và `MaterialPropertyBlock`. Đây là nghịch lý hay bị hỏi: MaterialPropertyBlock từng là cách đúng ở Built-in để tránh nhân bản material, nhưng ở URP nó lại **loại object khỏi SRP Batcher**. Cách đúng bây giờ là cho giá trị per-instance vào vertex color, UV thừa, hoặc dùng `Graphics.RenderMeshInstanced` với mảng matrix.\n\n**Họ sẽ đào tiếp**\n\n- *\"Material hồng?\"* → Shader không biên dịch được cho pipeline hiện tại — gần như luôn là shader viết cho Built-in (`Standard`, `UnityCG.cginc`) chạy trên URP. Render Pipeline Converter đổi được material dùng shader Unity chuẩn; **shader tự viết của asset Store thì không**, phải viết lại. Nên trước khi mua asset thì đọc xem có ghi URP và phiên bản nào không.\n- *\"Variant nổ ra sao?\"* → Mỗi `multi_compile` nhân đôi số variant; thêm năm keyword \"cho chắc\" là nhân 32. Hậu quả: thời gian build tăng hàng chục phút, kích cỡ build phình, và lần đầu gặp variant lúc chạy là một cú khựng vì **compile shader tại chỗ**. Dùng `shader_feature` (chỉ giữ variant thực sự dùng) thay cho `multi_compile` khi có thể, và dùng **SVC (Shader Variant Collection)** để warm-up trước màn hình loading.\n- *\"Hit flash?\"* → Thêm một property `_FlashAmount` vào shader nhân vật và lerp màu ở fragment — không thêm draw call, không đổi material. Cách sai kinh điển là đổi `renderer.material.color` (nhân bản material, phá batcher) hoặc chồng thêm một mesh trắng (gấp đôi draw call và overdraw).\n- *\"Sorting transparent?\"* → Transparent không ghi depth nên thứ tự vẽ là theo **khoảng cách tới camera của pivot object**, không theo hình học — một mặt phẳng lớn có pivot ở xa sẽ vẽ sai. Chữa bằng `Render Queue`/`Sorting Priority` thủ công, tách mesh, hoặc dùng alpha-test (cutout) khi hình cho phép.\n- *\"Precision trên mobile?\"* → `half` thay `float` ở nơi không cần chính xác (màu, UV local) — trên GPU mobile là khác biệt thật, không phải vi chỉnh. Nhưng world position và thời gian tích luỹ phải để `float`, nếu không sẽ thấy hình giật nhảy khi đi xa gốc toạ độ.\n\n**Cờ đỏ**\n\n- `renderer.material` trong `Update` (nhân bản material mỗi lần gọi + rò rỉ).\n- Không biết phân biệt `material` và `sharedMaterial`.\n- Bật mọi keyword \"cho chắc chắn\".\n- Nói \"shader tốn GPU\" chung chung mà không nói tới **fill rate và overdraw** — thứ thật sự giết GPU mobile.\n- Dùng `Graphics.Blit` kiểu Built-in trong URP 17 mà không biết Render Graph đã đổi cách viết Renderer Feature.\n\n**Số / ví dụ nên thuộc**\n\n- SRP Batcher = cùng **shader variant**, không cần cùng material.\n- Phá batcher: `renderer.material`, `MaterialPropertyBlock`.\n- `shader_feature` vs `multi_compile`: cái đầu strip được variant không dùng.",
       "hasAiHowto": false,
+      "i18n": {},
+      "color": "#4dd4e0"
+    },
+    {
+      "id": "unity-testing-ci",
+      "title": "Test và CI/CD cho Unity",
+      "summary": "Cái gì trong game đáng viết test và cái gì không, cách tách logic khỏi MonoBehaviour để test được, và thang CI năm bậc — từ build đêm cho QA tới farm thiết bị.",
+      "icon": "🧪",
+      "parent": "unity",
+      "children": [],
+      "depth": 2,
+      "branch": "unity",
+      "tags": [
+        "unity",
+        "testing",
+        "ci",
+        "automation",
+        "production"
+      ],
+      "related": [
+        "unity-build-platform",
+        "unity-editor-tools",
+        "unity-save-data",
+        "architecture-patterns"
+      ],
+      "status": "deep",
+      "read": 775,
+      "readIndex": 87,
+      "level": "intermediate",
+      "refs": [],
+      "order": 175,
+      "collapsed": false,
+      "path": "09-unity/unity-testing-ci.md",
+      "words": 2799,
+      "body": "Game khác phần mềm thường ở một điểm quyết định: **thứ quan trọng nhất lại là thứ không test tự động được**. Không ai viết được test cho \"cú nhảy có đã tay không\". Nên câu hỏi đúng không phải \"test bao phủ bao nhiêu phần trăm\" mà là **chỗ nào mà một lỗi âm thầm sẽ đắt hơn công viết test**.\n\n## Cái gì đáng test\n\n| Đáng | Vì sao | Không đáng |\n|---|---|---|\n| Công thức sát thương, chỉ số, kinh tế | Sai một dấu là cả bảng cân bằng sai, và không ai nhìn ra bằng mắt | Cảm giác điều khiển |\n| Migration save qua các phiên bản | Hỏng là **mất tiến trình người chơi** — lỗi không sửa được sau khi phát hành | Bố cục UI |\n| Máy trạng thái (quest, combo, matchmaking) | Số nhánh vượt khả năng test tay rất nhanh | Hiệu ứng hình ảnh |\n| Inventory, crafting, điều kiện mở khoá | Nhiều luật nhỏ đan nhau | \"Màn chơi có vui không\" |\n| Parser dữ liệu, generator procedural (với seed cố định) | Đầu vào–đầu ra rõ ràng | Animation blend |\n\nNhận ra chưa? Cột bên trái đều là **C# thuần**. Đó không phải trùng hợp: thứ test được rẻ nhất là thứ không phụ thuộc `MonoBehaviour`. Nên \"làm sao để test được\" và \"làm sao để kiến trúc sạch\" là cùng một câu hỏi — xem [[architecture-patterns]].\n\n## Tách logic ra khỏi MonoBehaviour\n\nBa bước, theo thứ tự dễ làm:\n\n1. **Công thức thành hàm tĩnh thuần.** `DamageCalculator.Compute(attacker, defender, skill)` nhận struct, trả số. Không đụng `Time`, không đụng `Random`, không đụng scene.\n2. **Phụ thuộc vào thời gian và ngẫu nhiên đi qua interface.** `IClock`, `IRandom` — test tiêm bản giả, game tiêm bản thật. Nếu thấy nặng tay thì tối thiểu: truyền `deltaTime` và `seed` vào làm tham số thay vì đọc trực tiếp.\n3. **MonoBehaviour còn lại chỉ làm ba việc**: đọc input, gọi logic, đẩy kết quả lên hiển thị. Phần đó không cần unit test — nó cần người chơi thử.\n\nDấu hiệu bạn đang đi đúng: file test không `using UnityEngine` dòng nào.\n\n## EditMode và PlayMode\n\n| | EditMode | PlayMode |\n|---|---|---|\n| Chạy trong | Editor, không vào Play | Có vào Play, có vòng đời thật |\n| Tốc độ | Mili giây | Giây — mỗi test tốn thời gian vào/ra Play |\n| Test được | C# thuần, ScriptableObject, tool, validate asset | Coroutine, physics, prefab, scene, timing |\n| Dùng cho | **Phần lớn test** | Thứ chỉ đúng khi engine chạy |\n\nTest nằm trong asmdef riêng có *Test Assemblies* (tham chiếu `UnityEngine.TestRunner` và `UnityEditor.TestRunner`), đặt trong thư mục `Tests/` để không lọt vào build. PlayMode test viết bằng `[UnityTest]` trả `IEnumerator` và `yield return null` để nhường frame.\n\n**Luật chống test lung lay:** đừng bao giờ `yield return new WaitForSeconds(2f)` để \"đợi cho xong\". Test phụ thuộc thời gian thực sẽ đỏ ngẫu nhiên trên máy CI chậm, và một bộ test đỏ ngẫu nhiên sẽ bị cả đội bỏ qua trong hai tuần — lúc đó nó tệ hơn là không có. Hãy đợi **điều kiện** (`while (!done && frames++ < 600) yield return null;`) hoặc tiêm `IClock` để tua thời gian.\n\n## Test mà game thật sự cần\n\nNgoài unit test, ba loại này trả lãi cao hơn nhiều ở dự án game:\n\n**Validate asset.** Một EditMode test duyệt toàn bộ `ScriptableObject` và prefab để bắt lỗi dữ liệu: enemy không có prefab, âm thanh trỏ vào clip đã xoá, `minDamage > maxDamage`, item trùng id, level thiếu điểm spawn. Đây là loại lỗi làm QA mất cả buổi mà máy tìm ra trong một giây. Gắn nó vào CI và nó chặn được cả một lớp bug trước khi ai kịp thấy.\n\n**Golden test cho save.** Giữ một file save thật của **mỗi bản đã phát hành** trong `Tests/Fixtures/`, và một test nạp từng file rồi kiểm trạng thái sau migration. Đây là thứ phân biệt người đã ship game: bạn không thể \"sửa lại\" một save đã hỏng trên máy người chơi. Xem [[unity-save-data]].\n\n**Smoke test tự động.** Một PlayMode test nạp scene Boot, đi qua menu, vào màn 1, chạy 30 giây rồi thoát — không kiểm gameplay, chỉ kiểm **không có exception nào**. Rẻ, và bắt được phần lớn sự cố \"build không mở được\" trước khi nó tới tay QA.\n\n## Thang CI năm bậc\n\nKhông phải dự án nào cũng cần bậc trên cùng. Leo lên khi đau, đừng leo vì nghe nói nên có:\n\n| Bậc | Việc | Chi phí | Khi nào cần |\n|---|---|---|---|\n| 0 | Script build một lệnh (`-batchmode -executeMethod`), version code tự tăng | Vài giờ | Ngay từ đầu, kể cả dự án một người |\n| 1 | EditMode test chạy trên mỗi PR | Vài ngày | Từ người thứ hai |\n| 2 | **Build đêm cho QA**, tự upload lên TestFlight / Play Internal | 1–2 tuần | Có tester không phải lập trình viên |\n| 3 | Smoke test tự động trên bản build | Vài ngày | Khi \"build hỏng\" từng lọt tới QA vài lần |\n| 4 | Farm thiết bị thật, test hiệu năng theo bản | Tốn liên tục | Game live có nhiều dòng máy phải đỡ |\n\nBậc 2 là bậc đổi đời nhiều đội nhất: QA không còn phải chờ ai đó rảnh để bấm Build, và bản build luôn tồn tại cho mỗi ngày.\n\n## Chi phí thật của CI Unity\n\nBa thứ hay bị bỏ quên khi ước lượng:\n\n- **Kích hoạt license.** Unity cần license trên máy CI; Personal cũng phải activate và có giới hạn máy. Đây là bước hỏng nhiều nhất khi dựng lần đầu, và hỏng theo kiểu khó đọc.\n- **Cache `Library/`.** Không cache thì mỗi lần chạy là import lại toàn bộ asset: build 40 phút thay vì 6 phút. Cache đúng `Library/` là tối ưu CI lớn nhất, và nhớ xoá cache khi nâng phiên bản Unity.\n- **iOS cần macOS.** Không có đường vòng: hoặc runner macOS (tự dựng hoặc thuê theo phút, đắt hơn Linux nhiều), hoặc dùng Unity Build Automation / dịch vụ tương đương.\n\nLệnh chạy test headless nên thuộc (đừng thêm -quit: -runTests tự thoát, thêm vào là Unity đóng trước khi test chạy xong):\n\n```bash\nUnity -batchmode -projectPath . -runTests -testPlatform EditMode \\\n      -testResults results.xml -logFile -\n```\n\n## Bẫy lộ ra khi build\n\n- Code test lọt vào build vì không nằm trong asmdef Test Assemblies → build lỗi vì thiếu `nunit.framework`.\n- Test đọc file bằng đường dẫn tuyệt đối của máy bạn: xanh ở nhà, đỏ trên CI.\n- Test phụ thuộc thứ tự chạy (dùng chung `static`): xanh khi chạy cả bộ, đỏ khi chạy một mình, hoặc ngược lại. Nhớ rằng tắt Domain Reload thì `static` **không** reset giữa các lần Play.\n- CI xanh nhưng build không chạy trên máy thật, vì CI chỉ chạy EditMode test — bậc 3 tồn tại chính vì chuyện này.\n- `Library/` không cache: CI chậm tới mức không ai chờ, rồi cả đội tắt CI.\n\n## Kiểm tra nhanh\n\n- [ ] Có script build một lệnh, không cần mở Editor\n- [ ] Test nằm trong asmdef riêng, không lọt vào build\n- [ ] File test logic **không** `using UnityEngine`\n- [ ] Không test nào phụ thuộc `WaitForSeconds` để đồng bộ\n- [ ] Có golden test cho migration save, kèm file save của từng bản đã phát hành\n- [ ] `Library/` được cache trên CI\n- [ ] Bộ test chạy dưới 5 phút — quá đó là sẽ không ai chờ",
+      "aiPrompt": "**Dùng AI thế nào cho test và CI**\n\nĐây là mảng AI làm tốt bất thường, vì test là loại code **có dạng chuẩn** và **kiểm chứng được ngay** (chạy là biết đúng sai). Ba việc nên giao thẳng: viết bộ test cho một hàm thuần khi bạn đã liệt kê ca biên; viết test **validate asset** duyệt `ScriptableObject` theo luật bạn nêu; và viết YAML cho CI (GameCI hoặc tương đương) — thứ cú pháp lặt vặt mà tra tay rất tốn thời gian.\n\nMột việc **không** nên giao: để AI tự quyết *test cái gì*. Nó sẽ viết test cho getter/setter và cho những gì nhìn thấy trong file, tạo cảm giác an toàn giả. Danh sách ca biên phải đến từ bạn — từ bug đã từng xảy ra, từ giá trị 0/âm/tràn, từ nhánh migration.\n\nMẹo dùng: đưa AI **một bug thật đã sửa** và yêu cầu viết test đỏ trước khi sửa (test đó phải đỏ trên code cũ, xanh trên code mới). Đấy là cách duy nhất chắc chắn test có nghĩa, và cũng là thói quen tốt cho chính bạn.\n\n**Phải nêu rõ** (thiếu là AI tự bịa):\n- EditMode hay PlayMode, và vì sao — AI mặc định viết PlayMode cho mọi thứ, chậm gấp nhiều lần.\n- Ca biên cụ thể cần phủ: giá trị 0, âm, tràn, danh sách rỗng, save bản cũ nhất.\n- Có được đổi code sản xuất để test được không (tách hàm, thêm interface), hay chỉ được viết test.\n- Phiên bản Unity, và test chạy trên CI nào.\n- Ràng buộc thời gian: bộ test phải chạy trong bao lâu.\n\n**Mẫu prompt**\n\n```\nUnity 6. Viết EditMode test cho SaveMigrator (file: <dán>).\nCa bắt buộc phủ:\n- save v1 (không có trường \"skills\") -> v3: skills rỗng, không exception\n- save v2 có \"gold\": -50 -> kẹp về 0 và ghi cảnh báo\n- save v3 hiện tại -> không đổi gì (idempotent)\n- file JSON hỏng giữa chừng -> trả về null, KHÔNG ném exception ra ngoài\nRàng buộc: KHÔNG using UnityEngine trong file test; dùng fixture JSON đặt\ntrong Tests/Fixtures/; mỗi test một Assert chính; đặt tên test theo dạng\nMethod_Condition_Expected. Nói rõ test nào sẽ ĐỎ với code hiện tại.\n```\n\n**Bẫy thường gặp:** AI viết PlayMode test rồi đồng bộ bằng `yield return new WaitForSeconds(2f)` — xanh trên máy bạn, đỏ ngẫu nhiên trên CI chậm hơn. Test đỏ ngẫu nhiên còn tệ hơn không có test, vì trong hai tuần cả đội sẽ học được thói quen chạy lại cho tới khi xanh. Ràng buộc phải viết vào prompt: **đợi điều kiện kèm giới hạn số frame, không đợi thời gian**.",
+      "unity": "",
+      "code": "Demo gồm hai file test chạy được ngay: một bộ test cho công thức sát thương thuần (EditMode, không `using UnityEngine`), và một test **validate asset** duyệt mọi `EnemyData` trong project để bắt lỗi dữ liệu trước khi QA gặp. Kèm sơ đồ thư mục và cửa sổ Test Runner cho đúng thiết lập asmdef.\n\n**Setup**\n\n<figure class=\"fig\">\n<svg viewBox=\"0 0 660 300\" role=\"img\" aria-label=\"Sơ đồ thư mục Tests với asmdef và cửa sổ Test Runner hiện hai nhóm test EditMode\">\n  <rect x=\"10\" y=\"10\" width=\"250\" height=\"280\" rx=\"8\" class=\"fig-box\"/>\n  <text x=\"22\" y=\"32\" class=\"fig-label\" font-size=\"13\" font-weight=\"600\">Project</text>\n  <line x1=\"10\" y1=\"42\" x2=\"260\" y2=\"42\" class=\"fig-line\"/>\n  <text x=\"22\" y=\"64\" class=\"fig-muted\" font-size=\"12\">▾ _Project/Combat/</text>\n  <text x=\"38\" y=\"82\" class=\"fig-muted\" font-size=\"11\">DamageCalculator.cs</text>\n  <text x=\"38\" y=\"98\" class=\"fig-muted\" font-size=\"11\">Game.Combat.asmdef</text>\n  <rect x=\"16\" y=\"108\" width=\"238\" height=\"20\" rx=\"4\" fill=\"#51cf9b\" opacity=\"0.18\"/>\n  <text x=\"22\" y=\"123\" class=\"fig-label\" font-size=\"12\" font-weight=\"600\">▾ Tests/EditMode/</text>\n  <text x=\"38\" y=\"142\" class=\"fig-muted\" font-size=\"11\">DamageCalculatorTests.cs</text>\n  <text x=\"38\" y=\"158\" class=\"fig-muted\" font-size=\"11\">EnemyDataValidationTests.cs</text>\n  <text x=\"38\" y=\"174\" class=\"fig-label\" font-size=\"11\">Game.Tests.EditMode.asmdef</text>\n  <line x1=\"10\" y1=\"188\" x2=\"260\" y2=\"188\" class=\"fig-line\"/>\n  <text x=\"22\" y=\"208\" class=\"fig-label\" font-size=\"12\" font-weight=\"600\">asmdef của Tests</text>\n  <text x=\"22\" y=\"226\" class=\"fig-muted\" font-size=\"11\">☑ Test Assemblies (Editor only)</text>\n  <text x=\"22\" y=\"242\" class=\"fig-muted\" font-size=\"11\">Refs: Game.Combat, UnityEngine.</text>\n  <text x=\"32\" y=\"256\" class=\"fig-muted\" font-size=\"11\">TestRunner, UnityEditor.TestRunner</text>\n  <text x=\"22\" y=\"276\" class=\"fig-muted\" font-size=\"10\">Không tick thì code test lọt vào build.</text>\n  <rect x=\"276\" y=\"10\" width=\"374\" height=\"280\" rx=\"8\" class=\"fig-box\"/>\n  <text x=\"288\" y=\"32\" class=\"fig-label\" font-size=\"13\" font-weight=\"600\">Test Runner  (Window ▸ General ▸ Test Runner)</text>\n  <line x1=\"276\" y1=\"42\" x2=\"650\" y2=\"42\" class=\"fig-line\"/>\n  <rect x=\"284\" y=\"50\" width=\"358\" height=\"18\" rx=\"3\" fill=\"#51cf9b\" opacity=\"0.22\"/>\n  <text x=\"292\" y=\"63\" class=\"fig-label\" font-size=\"12\" font-weight=\"600\">EditMode</text>\n  <text x=\"300\" y=\"84\" class=\"fig-muted\" font-size=\"11\">▾ DamageCalculatorTests</text>\n  <text x=\"316\" y=\"102\" class=\"fig-muted\" font-size=\"11\">✔ Compute_ArmorHigherThanDamage_ReturnsOne</text>\n  <text x=\"316\" y=\"118\" class=\"fig-muted\" font-size=\"11\">✔ Compute_CritDoublesDamage</text>\n  <text x=\"316\" y=\"134\" class=\"fig-muted\" font-size=\"11\">✔ Compute_NegativeArmor_ClampedToZero</text>\n  <text x=\"300\" y=\"156\" class=\"fig-muted\" font-size=\"11\">▾ EnemyDataValidationTests</text>\n  <text x=\"316\" y=\"174\" class=\"fig-muted\" font-size=\"11\">✔ AllEnemyData_HavePrefab</text>\n  <text x=\"316\" y=\"190\" class=\"fig-muted\" font-size=\"11\">✔ AllEnemyData_HaveUniqueId</text>\n  <rect x=\"284\" y=\"204\" width=\"358\" height=\"18\" rx=\"3\" fill=\"#ffd43b\" opacity=\"0.22\"/>\n  <text x=\"292\" y=\"217\" class=\"fig-label\" font-size=\"12\" font-weight=\"600\">Chạy không cần Editor</text>\n  <text x=\"300\" y=\"238\" class=\"fig-muted\" font-size=\"11\">-batchmode -runTests -testPlatform EditMode</text>\n  <text x=\"300\" y=\"254\" class=\"fig-muted\" font-size=\"11\">-testResults results.xml -logFile -</text>\n  <text x=\"300\" y=\"274\" class=\"fig-muted\" font-size=\"10\">Mã thoát khác 0 = có test đỏ → CI đỏ theo.</text>\n</svg>\n<figcaption>Test nằm trong asmdef riêng có tick Test Assemblies. Test logic không tham chiếu UnityEngine; test validate asset thì có, vì nó phải đọc AssetDatabase.</figcaption>\n</figure>\n\n**Script**\n\n```csharp\n// DamageCalculatorTests.cs — EditMode. Đặt trong Tests/EditMode/.\n// Không using UnityEngine: logic thuần thì test cũng thuần, chạy trong mili giây.\nusing NUnit.Framework;\n\npublic class DamageCalculatorTests\n{\n    // Hàm đang test (thuộc Game.Combat) — ở đây để tiện đọc:\n    // public static int Compute(int damage, int armor, bool crit) {\n    //     armor = armor < 0 ? 0 : armor;\n    //     int raw = crit ? damage * 2 : damage;\n    //     int result = raw - armor;\n    //     return result < 1 ? 1 : result;          // luôn ăn tối thiểu 1\n    // }\n\n    [Test]\n    public void Compute_ArmorHigherThanDamage_ReturnsOne()\n    {\n        Assert.AreEqual(1, DamageCalculator.Compute(damage: 10, armor: 99, crit: false));\n    }\n\n    [Test]\n    public void Compute_CritDoublesDamage()\n    {\n        Assert.AreEqual(20, DamageCalculator.Compute(damage: 10, armor: 0, crit: true));\n    }\n\n    [Test]\n    public void Compute_NegativeArmor_ClampedToZero()\n    {\n        // Ca biên đến từ một bug thật: buff \"giáp âm\" làm sát thương nhân lên.\n        Assert.AreEqual(10, DamageCalculator.Compute(damage: 10, armor: -50, crit: false));\n    }\n\n    [TestCase(0, 0, false, 1)]      // sát thương 0 vẫn ăn 1\n    [TestCase(int.MaxValue, 10, false, int.MaxValue - 10)]\n    public void Compute_EdgeCases(int damage, int armor, bool crit, int expected)\n    {\n        Assert.AreEqual(expected, DamageCalculator.Compute(damage, armor, crit));\n    }\n}\n```\n\n```csharp\n// EnemyDataValidationTests.cs — EditMode. Duyệt asset thật trong project.\n// Đây là loại test trả lãi cao nhất ở dự án game: bắt lỗi DỮ LIỆU, không bắt lỗi code.\nusing System.Collections.Generic;\nusing System.Linq;\nusing NUnit.Framework;\nusing UnityEditor;\nusing UnityEngine;\n\npublic class EnemyDataValidationTests\n{\n    static IEnumerable<EnemyData> AllEnemyData() =>\n        AssetDatabase.FindAssets(\"t:EnemyData\")\n                     .Select(AssetDatabase.GUIDToAssetPath)\n                     .Select(AssetDatabase.LoadAssetAtPath<EnemyData>)\n                     .Where(a => a != null);\n\n    [Test]\n    public void AllEnemyData_HavePrefab()\n    {\n        var missing = AllEnemyData().Where(e => e.prefab == null)\n                                    .Select(e => e.name).ToArray();\n        Assert.IsEmpty(missing, \"EnemyData thiếu prefab: \" + string.Join(\", \", missing));\n    }\n\n    [Test]\n    public void AllEnemyData_HaveUniqueId()\n    {\n        var dup = AllEnemyData().GroupBy(e => e.id)\n                                .Where(g => g.Count() > 1)\n                                .Select(g => g.Key).ToArray();\n        Assert.IsEmpty(dup, \"Trùng id: \" + string.Join(\", \", dup));\n    }\n\n    [Test]\n    public void AllEnemyData_DamageRangeIsValid()\n    {\n        foreach (var e in AllEnemyData())\n            Assert.LessOrEqual(e.minDamage, e.maxDamage, $\"{e.name}: minDamage > maxDamage\");\n    }\n}\n```\n\n**Chạy thử**\n- `Window > General > Test Runner` → tab **EditMode** → *Run All*: cả hai nhóm phải xanh trong dưới một giây.\n- Cố tình xoá prefab khỏi một `EnemyData` rồi chạy lại: test đỏ và **nói đúng tên asset** — đó là điểm khác biệt giữa test hữu ích và test cho có.\n- Chạy không cần Editor: `Unity -batchmode -projectPath . -runTests -testPlatform EditMode -testResults results.xml -logFile -`. Mã thoát khác 0 nghĩa là có test đỏ; cắm thẳng vào bước CI.",
+      "interview": "**Câu hay gặp**\n\n| Mức | Câu hỏi |\n|---|---|\n| Junior | EditMode test và PlayMode test khác nhau thế nào? |\n| Junior | Test của anh để ở đâu trong project để nó không lọt vào build? |\n| Mid | Trong một game, cái gì đáng viết unit test và cái gì không? |\n| Mid | Làm sao test được code đang nằm trong MonoBehaviour? |\n| Senior | Pipeline build/CI ở dự án gần nhất của anh tự động tới đâu? |\n| Senior | Bộ test xanh nhưng bản build vẫn hỏng trên máy thật. Thiếu tầng nào? |\n\n**Khung trả lời 60 giây** — \"Trong game thì test cái gì?\"\n\n> Tôi test thứ mà **một lỗi âm thầm sẽ đắt hơn công viết test**, và trong game thì đó gần như luôn là C# thuần: công thức sát thương và kinh tế, máy trạng thái quest, điều kiện mở khoá, và **migration save**. Cái cuối là bắt buộc với tôi — save hỏng là mất tiến trình người chơi, và không sửa được sau khi phát hành, nên tôi giữ file save thật của từng bản đã ship trong repo và có test nạp lại từng cái.\n>\n> Thứ tôi **không** test tự động: cảm giác điều khiển, bố cục UI, \"màn chơi có vui không\" — đó là việc của playtest.\n>\n> Kéo theo là một quan sát về kiến trúc: mọi thứ ở danh sách trên đều test được vì chúng không phụ thuộc `MonoBehaviour`. Nên \"làm sao test được\" và \"làm sao kiến trúc sạch\" là cùng một câu hỏi. Dấu hiệu tôi đang đi đúng là file test logic không có dòng `using UnityEngine` nào.\n\n**Họ sẽ đào tiếp**\n\n- *\"Test code trong MonoBehaviour?\"* → Không test trực tiếp, mà **kéo logic ra ngoài**: hàm tĩnh thuần cho công thức, interface cho thời gian và ngẫu nhiên (`IClock`, `IRandom`), còn MonoBehaviour chỉ đọc input, gọi logic, đẩy lên hiển thị. Phần vỏ đó không cần unit test — nó cần người chơi thử.\n- *\"Loại test nào trả lãi cao nhất ở game?\"* → **Validate asset**: một EditMode test duyệt mọi ScriptableObject và prefab để bắt enemy thiếu prefab, id trùng, `minDamage > maxDamage`, clip âm thanh đã xoá. Loại lỗi này làm QA mất cả buổi mà máy tìm ra trong một giây, và nó là lỗi *dữ liệu* nên không compiler nào bắt được.\n- *\"Test xanh mà build vẫn hỏng?\"* → Vì CI thường chỉ chạy EditMode test. Tầng thiếu là **smoke test trên bản build**: nạp Boot, qua menu, vào màn 1, chạy 30 giây, chỉ kiểm không có exception. Rẻ, và bắt được phần lớn sự cố \"build không mở được\".\n- *\"CI Unity tốn ở đâu?\"* → Ba chỗ hay bị bỏ quên: kích hoạt license trên máy CI (hỏng nhiều nhất khi dựng lần đầu), **cache `Library/`** (không cache là 40 phút thay vì 6), và iOS bắt buộc runner macOS. Cache `Library` phải xoá khi nâng phiên bản Unity.\n- *\"Test lung lay thì sao?\"* → Coi như bug ưu tiên cao, sửa hoặc xoá ngay. Một bộ test đỏ ngẫu nhiên sẽ dạy cả đội thói quen bấm chạy lại cho tới khi xanh, và lúc đó nó tệ hơn là không có test.\n\n**Cờ đỏ**\n\n- Nói về độ phủ (coverage) như mục tiêu: game có rất nhiều code chỉ để hiển thị, ép phủ nó là lãng phí.\n- `yield return new WaitForSeconds(2f)` trong PlayMode test để \"đợi cho chắc\".\n- Test dùng chung `static` nên phụ thuộc thứ tự chạy.\n- Không biết code test lọt vào build được nếu asmdef không tick Test Assemblies.\n- \"Dự án game không test được\" — nói vậy là chưa từng tách logic khỏi engine.\n\n**Số / ví dụ nên thuộc**\n\n- `Unity -batchmode -projectPath . -runTests -testPlatform EditMode -testResults results.xml -logFile -` (không kèm `-quit`).\n- Cache `Library/`: khác biệt cỡ 40 phút so với 6 phút mỗi lần chạy.\n- Bộ test nên chạy **dưới 5 phút**, nếu không sẽ không ai chờ.\n- Thang CI: script build một lệnh → test trên PR → **build đêm cho QA** → smoke test → farm thiết bị.",
+      "hasAiHowto": true,
       "i18n": {},
       "color": "#4dd4e0"
     },
@@ -4628,7 +4762,7 @@
       ],
       "status": "deep",
       "read": 680,
-      "readIndex": 74,
+      "readIndex": 75,
       "level": "intermediate",
       "refs": [],
       "order": 90,
@@ -4666,7 +4800,7 @@
       ],
       "status": "deep",
       "read": 700,
-      "readIndex": 76,
+      "readIndex": 77,
       "level": "intermediate",
       "refs": [],
       "order": 110,
@@ -5302,6 +5436,31 @@
       "type": "related"
     },
     {
+      "source": "liveops",
+      "target": "playtesting-metrics",
+      "type": "related"
+    },
+    {
+      "source": "liveops",
+      "target": "economy-design",
+      "type": "related"
+    },
+    {
+      "source": "liveops",
+      "target": "data-driven-design",
+      "type": "related"
+    },
+    {
+      "source": "liveops",
+      "target": "progression",
+      "type": "related"
+    },
+    {
+      "source": "liveops",
+      "target": "unity-addressables",
+      "type": "related"
+    },
+    {
       "source": "performance",
       "target": "pathfinding",
       "type": "related"
@@ -5657,6 +5816,26 @@
       "type": "related"
     },
     {
+      "source": "unity-debug-crash",
+      "target": "unity-build-platform",
+      "type": "related"
+    },
+    {
+      "source": "unity-debug-crash",
+      "target": "unity-optimization",
+      "type": "related"
+    },
+    {
+      "source": "unity-debug-crash",
+      "target": "unity-testing-ci",
+      "type": "related"
+    },
+    {
+      "source": "unity-debug-crash",
+      "target": "unity-csharp-memory",
+      "type": "related"
+    },
+    {
       "source": "unity-design-patterns",
       "target": "architecture-patterns",
       "type": "related"
@@ -5859,6 +6038,26 @@
     {
       "source": "unity-shader",
       "target": "unity-vfx",
+      "type": "related"
+    },
+    {
+      "source": "unity-testing-ci",
+      "target": "unity-build-platform",
+      "type": "related"
+    },
+    {
+      "source": "unity-testing-ci",
+      "target": "unity-editor-tools",
+      "type": "related"
+    },
+    {
+      "source": "unity-testing-ci",
+      "target": "unity-save-data",
+      "type": "related"
+    },
+    {
+      "source": "unity-testing-ci",
+      "target": "architecture-patterns",
       "type": "related"
     },
     {
@@ -6639,6 +6838,16 @@
     {
       "source": "unity-camera",
       "target": "accessibility",
+      "type": "mention"
+    },
+    {
+      "source": "unity-debug-crash",
+      "target": "unity-addressables",
+      "type": "mention"
+    },
+    {
+      "source": "unity-debug-crash",
+      "target": "unity-editor-tools",
       "type": "mention"
     },
     {
