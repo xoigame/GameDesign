@@ -492,3 +492,44 @@ public class HitStopReceiver : MonoBehaviour
 - Enemy_Dummy đứng hình đúng 60 ms (~4 frame @60) trong khi hạt vẫn bay và `Time.timeScale` (Project Settings ▸ Time khi Play) vẫn 1. Click 2 lần cách 30 ms: đứng hình kéo dài tới 90 ms, không reset về 0.
 - Sprite trắng 0.08 s (~5 frame) rồi về bình thường; nếu vẫn thường: material của Sprite chưa có property `_FlashAmount` (Shader Graph) hoặc tên khác chữ hoa/thường.
 - Camera giật theo hướng từ điểm click tới mục tiêu; Impulse Force = 0 → hết rung; gỡ Impulse Listener khỏi CinemachineCamera → source phát mà không rung. Bật Looping trên một child của FX_Hit: 8 lỗi đỏ ngay ở Awake, trước khi pool cạn.
+
+## 🎤 Phỏng vấn
+
+**Câu hay gặp**
+
+| Mức | Câu hỏi |
+|---|---|
+| Junior | Particle System và VFX Graph khác nhau ở đâu? |
+| Junior | Vì sao phải pool ParticleSystem thay vì `Instantiate` mỗi lần? |
+| Mid | Hiệu ứng chỉ 200 hạt mà GPU chết. Nguyên nhân? |
+| Mid | Gameplay cần biết hạt chạm cái gì — dùng hệ nào? |
+| Senior | Mô tả pipeline của một cú đánh trúng, theo mili giây. |
+| Senior | Hitstop bằng `Time.timeScale` hay clock riêng cho từng thực thể? |
+
+**Khung trả lời 60 giây** — "Vì sao 200 hạt lại giết GPU?"
+
+> Vì ngân sách của VFX không phải **số hạt**, mà là **overdraw**. Một hệ 200 hạt alpha mỗi hạt phủ nửa màn hình là 100 lần vẽ toàn màn hình ở 1080p — GPU chết trong khi Frame Debugger chỉ hiện **một draw call**, nên người ta đi tìm nhầm chỗ. Nhìn bằng Rendering Debugger → Overdraw: vùng đỏ đậm là câu trả lời.
+>
+> Cách chữa theo thứ tự: hạt nhỏ hơn và ít lớp chồng hơn; dùng Additive thay cho alpha blend nhiều lớp; cắt `Max Particle Size` để hạt không phình full-screen khi camera lại gần; và với khói/lửa lớn thì dùng ít hạt to có texture tốt hơn là nhiều hạt nhỏ mờ.
+
+**Họ sẽ đào tiếp**
+
+- *"Chọn hệ nào?"* → Particle System chạy trên **CPU** (đã job hoá + Burst), gameplay đọc/ghi được hạt (`GetParticles`, `OnParticleCollision`), va chạm với collider thật, chạy mọi máy. VFX Graph chạy trên **GPU compute**, hàng trăm nghìn hạt, nhưng CPU gần như không đọc lại được, va chạm chỉ qua depth buffer/SDF, và **cần GLES 3.1+/Vulkan/Metal** — Android tầm thấp và driver Mali cũ hỏng hoặc rớt hẳn. Nên: gameplay-facing thì Shuriken; cảnh hoành tráng không tương tác thì VFX Graph.
+- *"Pipeline một cú đánh?"* → 0ms: SFX + flash trắng + hitstop bắt đầu + burst hạt + camera impulse, **tất cả trong cùng một hàm ở frame va chạm**, không đợi animation. 0–70ms: hitstop — hai thực thể đứng hình nhưng hạt vẫn chạy. 70ms: flash tắt, knockback bắt đầu. 70–150ms: knockback giảm, camera hồi. Hạt tan tự do tới ~400ms rồi trả pool trong `OnParticleSystemStopped`.
+- *"Hitstop bằng gì?"* → `Time.timeScale = 0` chỉ 5 dòng nhưng dừng **cả thế giới**: số sát thương bay ngừng, hạt đóng băng, và không dùng được khi có nhiều mục tiêu hoặc multiplayer. Cách đúng cho game hành động là **local time scale**: mỗi thực thể có `Delta` riêng, movement và animator nhân theo nó — đổi lại phải tự nhân velocity vì `FixedUpdate` không biết tới clock riêng của bạn.
+- *"Gắn VFX vào bone?"* → Bẫy scale: bone có scale khác 1 thì hạt bị co/giãn theo, và `Scaling Mode` mặc định là `Local`. Đặt `Hierarchy` hoặc tách hệ hạt ra khỏi nhân vật rồi tự đặt vị trí là hai cách quen thuộc.
+- *"Decal?"* → URP Decal Projector cần thêm Decal Renderer Feature; mỗi decal ≈ một draw call + một lần đọc depth. 30–50 decal đồng thời ổn trên mobile với Screen Space; giới hạn bằng ring buffer, xoá cái cũ nhất — không giới hạn thì sàn đầy vết đạn sau 5 phút và fps đi xuống dần, rất khó quy tội.
+
+**Cờ đỏ**
+
+- `Instantiate` prefab hiệu ứng mỗi lần bắn rồi `Destroy` sau 2 giây.
+- Đánh giá chi phí VFX bằng số hạt.
+- Dùng VFX Graph cho game mobile phổ thông mà không kiểm tra thiết bị hỗ trợ compute.
+- Quên `Stop Action = Callback`/`Disable` nên hệ hạt trong pool tự bật lại.
+- Hiệu ứng 2D không đặt `Sorting Layer` + `Order in Layer` rồi ngạc nhiên vì hạt nằm sau nhân vật.
+
+**Số / ví dụ nên thuộc**
+
+- Nhịp một cú đánh: 0 / 70 / 150ms, hạt tan tới ~400ms.
+- Ngân sách = overdraw, đo bằng Rendering Debugger → Overdraw.
+- Decal mobile: 30–50 đồng thời, ring buffer.

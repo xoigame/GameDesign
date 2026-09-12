@@ -505,3 +505,43 @@ public sealed class EnemySpawner : MonoBehaviour
 - Hierarchy lúc Play: 10 `P_Enemy(Clone)` active và phần còn lại tối màu dưới `EnemySpawner`. Chọn `LivingEnemies.asset` ở Inspector chế độ Debug: **không** có field `items` — vì `[NonSerialized]`. Xoá attribute đó, Play rồi Stop, Save Project: asset giờ chứa 10 tham chiếu `None (Enemy)` — đúng bẫy thân bài mô tả.
 - Xoá trail: thêm `TrailRenderer` (Time 0.5) vào prefab, comment dòng `trail.Clear()`: mỗi lần spawn thấy vệt kéo từ chỗ enemy chết wave trước sang chỗ mới. Bật lại dòng đó → hết.
 - Edit ▸ Project Settings ▸ Editor ▸ Enter Play Mode Options, tắt Domain Reload, Play → Stop → Play: HUD wave 1 vẫn `raised 0` lúc bắt đầu và `Sống` bắt đầu từ 0 — nhờ `OnDisable` của Enemy gỡ khỏi set khi scene bị huỷ. Gọi `Die()` hai lần trên cùng enemy (bỏ guard `released`): Console đỏ `Trying to release an object that has already been released to the pool` — đó là `collectionCheck` đang làm việc.
+
+## 🎤 Phỏng vấn
+
+**Câu hay gặp**
+
+| Mức | Câu hỏi |
+|---|---|
+| Junior | Singleton trong Unity viết thế nào cho đúng? Nhược điểm là gì? |
+| Junior | `ScriptableObject` khác `MonoBehaviour` chỗ nào? Dùng khi nào? |
+| Mid | `event Action<T>` của C# và `UnityEvent<T>` — chọn cái nào, vì sao? |
+| Mid | 500 script cùng có `Update()` rỗng thì tốn gì? |
+| Senior | Team 5 người, 12 tháng: Service Locator hay DI framework (VContainer/Zenject)? |
+| Senior | Kể một chỗ anh cố tình **không** dùng pattern vì nó thừa. |
+
+**Khung trả lời 60 giây** — "Anh dùng ScriptableObject vào những việc gì?"
+
+> Ba vai. Một là config bất biến — `WeaponData`, `EnemyData`, chỉ đọc lúc chạy, designer sửa không cần build. Hai là **event channel**: một asset `OnPlayerDied` mà UI, audio, quest cùng tham chiếu qua Inspector — đây là cách duy nhất để hai scene additive nói chuyện với nhau mà không cần tìm nhau bằng `Find`. Ba là **runtime set**: một SO giữ `List<Enemy>` đang sống, enemy tự `Add` trong `OnEnable` và `Remove` trong `OnDisable`, nên spawner và UI đếm quái đọc chung một danh sách thay vì `FindObjectsByType` mỗi frame.
+>
+> Bẫy đi kèm vai 2 và 3 thì phải nói ngay: trong Editor, SO **sống xuyên các lần Play**. Field runtime không có `[NonSerialized]` sẽ bị ghi vào asset — lần Play sau `currentHp` bắt đầu từ 37, danh sách enemy đầy tham chiếu tới object đã destroy. Trên build thì asset chỉ đọc nên reset sạch mỗi lần mở game. Hai hành vi khác nhau nghĩa là bug chỉ lộ ở một nơi.
+
+**Họ sẽ đào tiếp**
+
+- *"Vì sao `UnityEvent` lại tệ hơn?"* → Không hẳn tệ, mà **khác mục đích**. UnityEvent nối được trong Inspector nên designer dùng được; đổi lại nó gọi qua reflection (chậm hơn nhiều lần, có thể cấp phát khi Invoke) và khi bạn **đổi tên hàm thì kết nối mất âm thầm** — Inspector chỉ hiện "Missing", không có lỗi biên dịch. Luật của tôi: logic giữa code dùng `event Action`, chỗ designer cần nối tay thì UnityEvent hoặc SO event channel.
+- *"500 `Update()` rỗng tốn bao nhiêu?"* → Mỗi lần gọi là một chuyến native→managed khoảng 0.5µs kể cả khi thân hàm rỗng: ~0.25ms mỗi frame khi chưa làm gì. Chữa bằng một manager tick `List<ITickable>`, và **xoá hẳn** `Update` khỏi script không cần (để trống vẫn bị gọi).
+- *"Khi nào mới cần DI framework?"* → Khi cần **scope** (per-match, per-scene) và khi cần test có mock. Dưới 15 hệ thống và một người làm thì 1–2 singleton + SO event channel là đủ; thêm container lúc đó chỉ là chi phí. VContainer hơn Zenject ở chỗ ít reflection và có source generator cho IL2CPP.
+- *"Object pool thì tự viết hay dùng có sẵn?"* → Dùng `UnityEngine.Pool.ObjectPool<T>` có sẵn. Cái khó không nằm ở pool mà ở **reset cho đủ**: trail, particle, rigidbody velocity, coroutine đang chạy, animator state — quên một cái là viên đạn thứ hai bay ra với vệt khói của viên trước.
+
+**Cờ đỏ**
+
+- Nói "singleton là anti-pattern" như một câu thần chú mà không nói được *nó hỏng ở đâu trong Unity cụ thể* (thứ tự init, bản trùng, không test được).
+- Khai `public List<Enemy> Items` trong runtime set SO **không** `[NonSerialized]`.
+- `FindObjectOfType` / `GetComponent` trong `Update`.
+- Kể tên 8 pattern nhưng không có ví dụ nào từ dự án thật; hoặc ngược lại, nhét Command + Visitor vào một game 2 tuần.
+- Không biết Domain Reload tắt thì `static` **không** tự reset giữa các lần Play.
+
+**Số / ví dụ nên thuộc**
+
+- ~0.5µs cho một lần gọi `Update` rỗng; 500 script ≈ 0.25ms/frame.
+- `[NonSerialized]` + gỡ đăng ký trong `OnDisable` là hai luật sống còn của SO event channel.
+- `[RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]` để reset `static` khi tắt Domain Reload.

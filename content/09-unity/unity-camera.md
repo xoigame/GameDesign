@@ -354,3 +354,46 @@ public class CameraDirector : MonoBehaviour
 - Nhấn F / Space / K: biên độ rung tăng theo 0.3 / 1.0 / 2.0 và dứt sau ~0.2 s (Bump). Nhấn 0: Shake Scale về 0, ba phím rung không còn tác dụng dù `GenerateImpulseWithForce` vẫn được gọi — chỉ có một chỗ để tắt.
 - Nhấn Space rồi ngay lập tức gõ `Time.timeScale = 0` (hoặc pause bằng nút ▮▮ rồi Step): rung vẫn chạy hết vì `IgnoreTimeScale`. Tắt cờ này: camera đứng kẹt lệch ở đỉnh biên độ cho tới khi resume.
 - Player chạy bằng Rigidbody thẳng 5 s trên màn 144Hz: nền không rung bậc. Tắt Interpolate trên Rigidbody: rung — chứng minh vấn đề nằm ở Rigidbody, không phải ở Damping của Composer.
+
+## 🎤 Phỏng vấn
+
+**Câu hay gặp**
+
+| Mức | Câu hỏi |
+|---|---|
+| Junior | Cinemachine gồm những phần nào? Brain và virtual camera khác nhau chỗ nào? |
+| Junior | Camera bám nhân vật nên viết trong `Update` hay `LateUpdate`? Vì sao? |
+| Mid | Camera chui qua tường ở góc hẹp. Anh xử lý thế nào? |
+| Mid | Camera rung nhẹ khi nhân vật chạy dù frame rate ổn. Nghi gì? |
+| Senior | Rung camera (hitstop + impulse) làm sao cho ra "lực" chứ không ra "lag"? |
+| Senior | Khi nào anh **không** dùng Cinemachine? |
+
+**Khung trả lời 60 giây** — "Anh dựng camera cho game third-person thế nào?"
+
+> Một `CinemachineBrain` trên Main Camera, nhiều virtual camera, chuyển qua lại bằng **priority** chứ không bật/tắt GameObject — nhờ vậy blend giữa hai góc máy là việc của Brain, không phải việc của tôi. Third-person thì Orbital Follow + Rotation Composer + **Deoccluder** chống xuyên tường.
+>
+> Chỗ ai cũng vấp là Deoccluder: để mặc định thì `Collide Against` gồm cả layer Default, nên camera né luôn cây cỏ, cột nhỏ và chính nhân vật — camera nhảy phựt liên tục và người ta đổ cho Cinemachine. Cách làm đúng là một layer riêng `CameraBlock` chỉ chứa tường và địa hình, cộng `IgnoreTag` cho nhân vật, `Damping When Occluded` = 0 để né tức thì và `Damping` ~0.5 để trở về từ tốn.
+>
+> Ngược lại, 2D pixel-perfect chỉ bám hoặc khoá phòng thì tôi **tự viết 30 dòng** — cần vị trí camera là bội số của 1/PPU, thêm damping vào là ra jitter.
+
+**Họ sẽ đào tiếp**
+
+- *"Vì sao `LateUpdate`?"* → Camera phải đọc vị trí **sau khi** nhân vật đã di chuyển trong frame đó; đặt ở `Update` thì tuỳ thứ tự script mà camera bám vị trí của frame trước — hiện ra thành giật nhẹ, không đều.
+- *"Bám vật thể chạy bằng physics?"* → Vị trí chuẩn nằm ở bước physics, nên camera phải theo `Update Method = Fixed`/`Smart` của Brain **và** rigidbody phải bật `Interpolate`. Thiếu một trong hai là rung, và người ta thường đi tối ưu fps thay vì sửa hai ô cài đặt.
+- *"Rung mà thành lag?"* → Bẫy kinh điển: hitstop đặt `timeScale = 0` trong 90ms trong khi `Brain.IgnoreTimeScale = false`, nên impulse **đứng hình ngay đỉnh biên độ** rồi bật về. Chạy thử không hitstop thì bình thường — lỗi chỉ xuất hiện khi ghép hai hệ thống. Rung cũng cần **ngân sách**: biên độ theo mức sự kiện, và một nguồn duy nhất cộng dồn, nếu không bốn hệ thống cùng rung là màn hình nhũn.
+- *"Pixel perfect jitter?"* → Orthographic size phải khớp PPU và chiều cao màn hình; camera phải snap về lưới pixel; và đừng để damping đẩy camera vào giữa hai pixel.
+- *"Co-op hai người?"* → `CinemachineTargetGroup` với weight/radius theo từng người chơi, cộng giới hạn zoom out; chỉ dùng cho co-op màn hình chung hoặc boss to.
+
+**Cờ đỏ**
+
+- Chuyển góc máy bằng `SetActive` từng camera (mất blend, mất state).
+- Thêm CinemachineBrain cho một camera đứng yên trong game puzzle một màn.
+- Viết camera collision bằng một raycast từ nhân vật tới camera rồi kẹp khoảng cách, không xử lý damping → camera giật liên tục.
+- Không biết Confiner 2D cần collider dạng polygon và cần bake lại khi đổi biên.
+- Đổi FOV liên tục để tạo cảm giác tốc độ mà không nói tới say chuyển động (motion sickness).
+
+**Số / ví dụ nên thuộc**
+
+- `Damping When Occluded` = 0, `Damping` ≈ 0.5, `Minimum Distance From Target` ≈ 0.3.
+- Camera bám physics: Brain `Update Method = Fixed` + rigidbody `Interpolate`.
+- Pixel perfect: vị trí camera là bội số của 1/PPU.

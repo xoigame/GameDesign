@@ -105,8 +105,20 @@ function parseLangSuffix(rel) {
   return { base: m[1] + '.md', lang: m[2] }
 }
 
-function countWords(body) {
-  return body.replace(/```[\s\S]*?```/g, ' ').split(/\s+/).filter(Boolean).length
+/**
+ * Đọc file markdown và chuẩn hoá xuống dòng về LF.
+ *
+ * Bắt buộc: git với core.autocrlf=true trả CRLF khi checkout trên Windows, mà mọi
+ * regex tách mục ở đây đều neo bằng $. Ký tự CR sót lại làm "## 🤖 Prompt cho AI"
+ * không khớp nữa — và đó là lỗi IM LẶNG: build vẫn chạy, chỉ là mọi mục
+ * 🤖/🎮/💻/🎤 biến mất khỏi graph.json trên đúng máy đó.
+ */
+function readMd(file) {
+  const CR = String.fromCharCode(13), NL = String.fromCharCode(10)
+  return fs.readFileSync(file, 'utf8').split(CR + NL).join(NL).split(CR).join(NL)
+}
+
+function countWords(body) {  return body.replace(/```[\s\S]*?```/g, ' ').split(/\s+/).filter(Boolean).length
 }
 
 /**
@@ -123,6 +135,8 @@ const SECTIONS = [
   { key: 'unity', re: /^##[ \t]*(?:🎮[ \t]*)?Unity[ \t]*$/, required: false },
   // Tab Code: script demo chạy được + sơ đồ Inspector. Dùng chủ yếu ở nhánh 09-unity.
   { key: 'code', re: /^##[ \t]*(?:💻[ \t]*)?(?:Code|Code demo)[ \t]*$/, required: false },
+  // Tab Phỏng vấn: câu hỏi thật + khung trả lời 60 giây + cờ đỏ. Xem content/_SCHEMA.md.
+  { key: 'interview', re: /^##[ \t]*(?:🎤[ \t]*)?(?:Phỏng vấn|Interview)[ \t]*$/, required: false },
 ]
 
 /**
@@ -214,7 +228,7 @@ function parseGlossary(warnings) {
     if (!fs.existsSync(full)) continue
 
     const entries = {}
-    const lines = fs.readFileSync(full, 'utf8').split('\n')
+    const lines = readMd(full).split('\n')
     let cur = null
     let inFence = false
 
@@ -284,7 +298,7 @@ function build({ strict = false, quiet = false } = {}) {
     const hit = parseLangSuffix(rel)
     if (!hit) { files.push(file); continue }
 
-    const parsed = parseFrontmatter(fs.readFileSync(file, 'utf8'))
+    const parsed = parseFrontmatter(readMd(file))
     const sections = extractSections(parsed.body)
     if (!translations.has(hit.base)) translations.set(hit.base, {})
     translations.get(hit.base)[hit.lang] = {
@@ -294,6 +308,7 @@ function build({ strict = false, quiet = false } = {}) {
       aiPrompt: sections.aiPrompt,
       unity: sections.unity,
       code: sections.code,
+      interview: sections.interview,
       path: rel,
     }
   }
@@ -311,7 +326,7 @@ function build({ strict = false, quiet = false } = {}) {
 
   for (const file of files) {
     const rel = path.relative(CONTENT_DIR, file).split(path.sep).join('/')
-    const parsed = parseFrontmatter(fs.readFileSync(file, 'utf8'))
+    const parsed = parseFrontmatter(readMd(file))
     const data = parsed.data
 
     const fences = countFences(parsed.body)
@@ -322,7 +337,7 @@ function build({ strict = false, quiet = false } = {}) {
       )
     }
 
-    const { body, aiPrompt, unity, code } = extractSections(parsed.body)
+    const { body, aiPrompt, unity, code, interview } = extractSections(parsed.body)
 
     const segments = rel.split('/')
     const fileName = segments[segments.length - 1].replace(/\.md$/, '')
@@ -374,12 +389,13 @@ function build({ strict = false, quiet = false } = {}) {
       order: typeof data.order === 'number' ? data.order : 999,
       collapsed: data.collapsed === true,
       path: rel,
-      words: countWords(body) + countWords(aiPrompt) + countWords(unity) + countWords(code),
+      words: countWords(body) + countWords(aiPrompt) + countWords(unity) + countWords(code) + countWords(interview),
       body,
       aiPrompt,
       unity,
       code,
-      // { en: {title, summary, body, aiPrompt, unity, code} } — thiếu thì UI tự lùi về bản gốc
+      interview,
+      // { en: {title, summary, body, aiPrompt, unity, code, interview} } — thiếu thì UI tự lùi về bản gốc
       hasAiHowto: AI_HOWTO_RE.test(aiPrompt),
       i18n: translations.get(rel) || {},
     })
@@ -483,7 +499,7 @@ function build({ strict = false, quiet = false } = {}) {
 
   // wiki-link [[id]] trong body và trong mục Prompt cho AI
   for (const node of nodes.values()) {
-    const matches = (node.body + '\n' + node.aiPrompt + '\n' + node.code).matchAll(/\[\[([A-Za-z0-9-]+)\]\]/g)
+    const matches = (node.body + '\n' + node.aiPrompt + '\n' + node.code + '\n' + node.interview).matchAll(/\[\[([A-Za-z0-9-]+)\]\]/g)
     for (const m of matches) {
       const target = slugify(m[1])
       if (!nodes.has(target)) {
@@ -563,6 +579,7 @@ function build({ strict = false, quiet = false } = {}) {
       withAiHowto: list.filter((n) => n.hasAiHowto).length,
       glossaryTerms: Object.keys(glossary[BASE_LANG] || {}).length,
       withCode: list.filter((n) => n.code).length,
+      withInterview: list.filter((n) => n.interview).length,
       translated: Object.fromEntries(
         TRANSLATED_LANGS.map((lg) => [lg, list.filter((n) => n.i18n[lg]).length])
       ),
@@ -590,7 +607,7 @@ function build({ strict = false, quiet = false } = {}) {
     console.log(
       '[graph] ' + s.nodes + ' node · ' + s.branches + ' nhánh · ' +
       s.deep + ' deep / ' + s.stub + ' stub · ' + s.relations + ' liên kết · ' +
-      s.withPrompt + '/' + s.nodes + ' có prompt (' + s.withAiHowto + ' có howto) · ' + s.withUnity + ' có Unity · ' + s.glossaryTerms + ' thuật ngữ · ' + s.withCode + ' có Code · ' +
+      s.withPrompt + '/' + s.nodes + ' có prompt (' + s.withAiHowto + ' có howto) · ' + s.withUnity + ' có Unity · ' + s.glossaryTerms + ' thuật ngữ · ' + s.withCode + ' có Code · ' + s.withInterview + ' có Phỏng vấn · ' +
       TRANSLATED_LANGS.map((lg) => s.translated[lg] + '/' + s.nodes + ' ' + lg).join(' · ') + ' · ' +
       s.basic + ' cơ bản / ' + s.intermediate + ' trung cấp / ' + s.advanced + ' chuyên sâu · ' +
       s.words + ' từ'
@@ -642,7 +659,7 @@ function renderIndex(graph, nodes) {
   const line = (id, prefix) => {
     const n = nodes.get(id)
     const badge = n.status === 'stub' ? ' _(stub — cần viết thêm)_' : ''
-    const prompt = (n.aiPrompt ? ' 🤖' : '') + (n.unity ? ' 🎮' : '') + (n.code ? ' 💻' : '') + (n.i18n.en ? ' 🇬🇧' : '')
+    const prompt = (n.aiPrompt ? ' 🤖' : '') + (n.unity ? ' 🎮' : '') + (n.code ? ' 💻' : '') + (n.interview ? ' 🎤' : '') + (n.i18n.en ? ' 🇬🇧' : '')
     const mark = { basic: '●', intermediate: '◐', advanced: '○' }[n.level] || '·'
     L.push(prefix + '- ' + mark + ' `#' + n.readIndex + '` **' + n.title + '** `#' + n.id + '`' +
            badge + prompt + ' — ' + (n.summary || '(chưa có summary)') +
@@ -656,6 +673,8 @@ function renderIndex(graph, nodes) {
   L.push('> 🎮 = node có mục **Unity**: cách hiện thực hoá bước đó trong Unity (code C# + sơ đồ setup).')
   L.push('>')
   L.push('> 💻 = node có mục **Code**: script demo chạy được + sơ đồ thiết lập Inspector (nhánh Unity).')
+  L.push('>')
+  L.push('> 🎤 = node có mục **Phỏng vấn**: câu hỏi hay gặp, khung trả lời 60 giây, câu hỏi đào sâu, cờ đỏ.')
   L.push('>')
   L.push('> 🇬🇧 = node đã có bản dịch tiếng Anh tại `<tên-file>.en.md`.')
   L.push('>')

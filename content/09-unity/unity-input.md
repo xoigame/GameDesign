@@ -456,3 +456,47 @@ public class PauseToggleDemo : MonoBehaviour
 - Bấm Rebind rồi nhấn J: nhãn đổi từ `Space` sang `J`; Space không log nữa, J log. Stop rồi Play lại: nhãn vẫn `J` — PlayerPrefs key `bindings` có JSON override theo id binding.
 - Bấm Reset: nhãn về `Space`, JSON không còn override cho Jump. Nhấn Esc giữa lúc rebind: huỷ, nhãn giữ phím cũ.
 - Cố ý thay `reader.ResolveAction(actionReference)` bằng `actionReference.action`: nhãn đổi sang J nhưng Space vẫn nhảy, J không — đó là bẫy "bản sao asset" của generated class, và là lý do InputReader phải là người tra action.
+
+## 🎤 Phỏng vấn
+
+**Câu hay gặp**
+
+| Mức | Câu hỏi |
+|---|---|
+| Junior | Input System mới khác `Input.GetAxis` cũ ở đâu? |
+| Junior | `started` / `performed` / `canceled` trong callback nghĩa là gì? |
+| Mid | Đọc input ở `Update` hay `FixedUpdate`? Nhảy bị "ăn mất" thì vì sao? |
+| Mid | Làm rebinding cho người chơi tự đổi phím — các bước? |
+| Senior | Người chơi rút tay cầm giữa trận, cắm lại tay cầm khác. Game phải làm gì? |
+| Senior | Mở menu mà nhân vật vẫn chạy theo hướng cuối cùng. Nguyên nhân kiến trúc? |
+
+**Khung trả lời 60 giây** — "Anh tổ chức input thế nào?"
+
+> Một `InputReader` ở giữa: nó là nơi **duy nhất** biết tới Input System, đọc bằng **generated C# class** để đổi tên action là lỗi biên dịch chứ không phải lỗi lúc chạy, rồi phát ra event và giá trị đã chuẩn hoá cho gameplay. Không script nào khác được gọi thẳng `ReadValue`. Nhờ vậy thêm chế độ hold-to-toggle, thêm trợ năng, hay giả lập input để test chỉ sửa một chỗ.
+>
+> Chia **Action Map theo ngữ cảnh**: `Gameplay`, `UI`, `Dialogue`, `Vehicle`. Mở menu là `Gameplay.Disable()` + `UI.Enable()`. Đây cũng là câu trả lời cho chuyện "mở menu mà nhân vật vẫn chạy": hướng di chuyển cuối cùng còn nằm trong biến, nên khi tắt map phải **xoá state** về 0, chứ không chỉ ngừng nghe.
+>
+> Và luật cứng: event chỉ **đặt cờ**, còn vận tốc luôn đặt trong `FixedUpdate`.
+
+**Họ sẽ đào tiếp**
+
+- *"Vì sao event không được đặt velocity trực tiếp?"* → Handler chạy khi Input System xử lý event, ngoài nhịp `FixedUpdate`, nên bước physics kế có thể ghi đè hoặc áp hai lần. Code vẫn biên dịch, nhảy "gần như luôn" được, và hỏng ở màn hình 144Hz — đúng loại bug không ai tái hiện được trên máy dev.
+- *"Nhảy bị ăn mất?"* → `WasPressedThisFrame()` đọc trong `FixedUpdate` sẽ **bỏ sót** khi frame render nhiều hơn bước physics. Cách đúng: `Update` bắt sự kiện và set `jumpBuffered = true` kèm thời hạn (jump buffer ~0.1s), `FixedUpdate` tiêu thụ cờ đó. Coyote time (~0.1s) là cặp bài trùng.
+- *"Rebinding?"* → `PerformInteractiveRebinding()` với `WithControlsExcluding("Mouse")`, chặn phím hệ thống, ghi `SaveBindingOverridesAsJson()` vào save, nạp lại lúc khởi động, và **luôn có nút Reset** — người chơi tự khoá mình ra ngoài là chuyện có thật. Hiện tên phím bằng `InputControlPath.ToHumanReadableString`, đừng hiện đường dẫn thô.
+- *"Đổi thiết bị nóng?"* → Nghe `InputUser.onChange` hoặc `PlayerInput.onControlsChanged` để đổi **glyph** trong UI ngay lập tức: chơi bằng gamepad mà tooltip hiện "Nhấn E" là lỗi hay bị bỏ qua nhất trong QA. Cũng nhớ dừng game khi tay cầm ngắt kết nối giữa trận.
+- *"Deadzone?"* → Đặt bằng **processor trong asset** (Stick Deadzone, Invert, Scale), không nhét `if (Mathf.Abs(x) < 0.2f)` rải rác trong code. Mặc định của Unity thường quá nhỏ cho tay cầm cũ.
+- *"Mobile?"* → Touch qua `EnhancedTouch` hoặc on-screen control; nhớ tách vùng chạm UI khỏi vùng gameplay (`IsPointerOverGameObject`) và test trên máy có safe area.
+
+**Cờ đỏ**
+
+- Bật cả hai backend ("Both") rồi trộn `Input.GetKey` với Input System trong cùng dự án — hai nguồn chân lý, và bug chỉ lộ trên một nền tảng.
+- Gọi `ReadValue` rải rác trong 10 script.
+- Không tắt Action Map khi vào menu, rồi vá bằng một cờ `isPaused` trong mỗi handler.
+- Hardcode "Nhấn Space để nhảy" vào text UI.
+- Không xử lý được trường hợp không có bàn phím (console/mobile) trong flow "Press any key to start".
+
+**Số / ví dụ nên thuộc**
+
+- Jump buffer ≈ 0.1s, coyote time ≈ 0.1s — hai con số làm platformer "cảm giác chuẩn".
+- `started` (vừa chạm ngưỡng) → `performed` (thoả interaction, ví dụ Hold đủ lâu) → `canceled` (nhả).
+- Generated C# class là mặc định; `PlayerInput` component chỉ khi cần local co-op chia thiết bị.

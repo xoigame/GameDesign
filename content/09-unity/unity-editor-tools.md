@@ -644,3 +644,44 @@ public class DebugConsole : MonoBehaviour
 - Kéo một WAV stereo vào `Audio/SFX/`: Force To Mono ☑, Decompress On Load, ADPCM; cột Imported Size nhỏ hơn ~7 lần so với PCM stereo. Kéo OGG 3 phút vào `Audio/Music/`: Streaming + Vorbis 0.7, Memory Profiler cột AudioClip không tăng khi phát.
 - Tools ▸ Validate ▸ Import Settings: Console `Import settings: OK`. Dùng Explorer chép một file vào `Art/UI` khi Unity đang mở nhưng tắt Auto Refresh: menu báo `1 asset lệch chuẩn`, bấm log nhảy đúng asset.
 - Development Build trên điện thoại: 3 ngón chạm mở console; gõ `time 0.2` → slow-mo, `god` → `god = True`, `spawn 5` → 5 cube trước camera, `level Level_02` → nhảy scene (scene phải có trong Build Profiles), `spawn abc` → dòng `Lỗi:` thay vì crash. Release build: gõ `~` không có gì, và `DebugConsole` không xuất hiện trong Build Report.
+
+## 🎤 Phỏng vấn
+
+**Câu hay gặp**
+
+| Mức | Câu hỏi |
+|---|---|
+| Junior | `[SerializeField] private` khác `public` chỗ nào? Vì sao nên dùng cái đầu? |
+| Junior | `OnValidate` chạy khi nào? Dùng nó để làm gì? |
+| Mid | Designer phải sửa 200 asset cùng một trường. Anh làm gì? |
+| Mid | Tắt Domain Reload để Play nhanh hơn — được gì, mất gì? |
+| Senior | Anh đã viết editor tool nào tiết kiệm được bao nhiêu thời gian cho team? |
+| Senior | Khi nào **không** nên viết tool? |
+
+**Khung trả lời 60 giây** — "Anh làm tool cho team thế nào?"
+
+> Theo tầng, từ rẻ tới đắt. **Tầng 0** là attribute có sẵn: `[SerializeField]`, `[Range]`, `[Header]`, `[Tooltip]`, `[ContextMenu]` — miễn phí, làm ngay, và giải quyết 70% cảm giác "Inspector khó dùng". **Tầng 1** là thư viện attribute (NaughtyAttributes miễn phí, Odin nếu team có ngân sách và nhiều SO phức tạp) cho `[Button]`, `[ShowIf]`, list sắp xếp được. **Tầng 2** mới là custom Editor / EditorWindow, và tôi chỉ leo lên đó khi một việc lặp lại đủ nhiều để tính được thời gian tiết kiệm.
+>
+> Hai thứ tôi luôn làm sớm vì chúng trả lãi ngay: **AssetPostprocessor** để import settings đúng tự động (import settings là code, không phải sở thích), và **Gizmo/Handles** để nhìn thấy dữ liệu — tầm đánh, waypoint, vùng spawn vẽ thẳng trong Scene view. Nhìn thấy sai nhanh hơn đọc số sai rất nhiều.
+
+**Họ sẽ đào tiếp**
+
+- *"Sửa 200 asset?"* → Không sửa tay: một `MenuItem` duyệt `AssetDatabase.FindAssets("t:EnemyData")`, sửa, rồi **`EditorUtility.SetDirty(obj)` + `AssetDatabase.SaveAssets()`**. Quên `SetDirty` là bẫy kinh điển: giá trị hiện đúng trong Inspector, đúng trong Play Mode, rồi biến mất khi mở lại project vì asset chưa bao giờ được đánh dấu cần lưu. Cách kiểm chứng duy nhất đáng tin: chỉnh qua tool → đóng Unity → mở lại → xem asset.
+- *"Tắt Domain Reload?"* → Thời gian bấm Play từ 5–15 giây xuống dưới 1 giây, ở dự án trung bình đó là hàng chục phút mỗi ngày cho mỗi người. Cái giá: **static không reset** giữa các lần Play — `static int score` giữ giá trị cũ, `static event` giữ subscriber của lần trước và gọi vào object đã destroy. Muốn dùng thì mọi static có trạng thái phải reset trong `[RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]`.
+- *"`OnValidate`?"* → Chạy trong Editor khi giá trị đổi hoặc script recompile. Tốt để **kiểm tra ràng buộc và cảnh báo sớm** ("minDamage > maxDamage", "prefab thiếu collider"). Không nên làm việc nặng, không gọi tới scene khác, và nhớ nó cũng chạy khi Unity load asset — code có side effect ở đây sinh ra những thay đổi git khó giải thích.
+- *"Cheat console trong build?"* → Một overlay debug bật bằng tổ hợp phím, có trong bản Development của QA: nhảy màn, cho vàng, bất tử, hiện FPS/bộ nhớ. Nó rút ngắn vòng lặp QA hơn mọi thứ khác, và phải có cách **tắt hoàn toàn** ở bản Release (`#if DEVELOPMENT_BUILD`).
+- *"Khi nào không viết tool?"* → Khi việc chỉ lặp vài lần, khi tool sẽ cần bảo trì nhiều hơn việc nó thay thế, hoặc khi vấn đề thật ra là dữ liệu thiết kế sai. Tôi ước lượng thô: tool đáng viết khi *thời gian viết < thời gian tiết kiệm trong một tháng*.
+
+**Cờ đỏ**
+
+- Dùng `public` cho mọi field để hiện trong Inspector.
+- Viết EditorWindow cho một việc làm ba lần.
+- Code editor nằm ngoài thư mục `Editor/` hoặc ngoài asmdef Editor → **build lỗi** vì `UnityEditor` không tồn tại lúc runtime.
+- Sửa asset bằng script mà không `SetDirty`/`SaveAssets`.
+- Không kể được một ví dụ thật nào về tool đã làm — với vị trí mid trở lên, đây là câu hỏi đo mức độ quan tâm tới người dùng nội bộ.
+
+**Số / ví dụ nên thuộc**
+
+- Domain Reload: 5–15s → <1s, đổi lại static không reset.
+- `EditorUtility.SetDirty` + `AssetDatabase.SaveAssets` — cặp không được quên.
+- Code Editor phải nằm trong `Editor/` hoặc asmdef có platform Editor.

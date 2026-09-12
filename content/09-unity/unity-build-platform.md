@@ -387,3 +387,44 @@ public static class BuildScript
 - Chạy dòng lệnh CI với `-buildNumber 123`: `bundleVersionCode` = 123, tên file `game-123.aab`, `bundleVersion` = `1.4.123`. Bỏ `-aab` → ra `.apk` cài được bằng `adb install`.
 - Cố ý đổi `locationPathName` sang ổ không tồn tại (`Z:/...`) rồi chạy CI: process kết thúc với **exit code 1** (`echo %ERRORLEVEL%` / `echo $?`) — đó là thứ làm job CI đỏ; bỏ `EditorApplication.Exit(1)` thì exit code vẫn 0 dù log đầy lỗi.
 - Cài bản Release lên máy thật, load một save thật: mọi trường của `SaveData` có giá trị. Xoá dòng `Game.Save.SaveData` khỏi `link.xml`, build lại, load save: object rỗng nhưng **không exception** — đúng bẫy ở mục 🤖.
+
+## 🎤 Phỏng vấn
+
+**Câu hay gặp**
+
+| Mức | Câu hỏi |
+|---|---|
+| Junior | Mono và IL2CPP khác nhau thế nào? Khi nào bắt buộc IL2CPP? |
+| Junior | Build chạy trong Editor nhưng lỗi trên thiết bị — anh tìm nguyên nhân ở đâu? |
+| Mid | Build Android 300MB, cần xuống dưới 150MB. Anh cắt ở đâu? |
+| Mid | Managed Stripping Level làm gì? Vì sao nó hay làm hỏng deserialize? |
+| Senior | Crash chỉ xảy ra trên bản Release ở một dòng máy. Quy trình của anh? |
+| Senior | Build pipeline của team anh tự động tới đâu? |
+
+**Khung trả lời 60 giây** — "Cắt kích cỡ build Android thế nào?"
+
+> Mở **Build Report** trước, đừng đoán: nó nói thẳng asset nào chiếm bao nhiêu, và gần như luôn là texture và audio chứ không phải code. Thứ tự tôi làm: texture sang **ASTC** và hạ Max Size cho thứ không cần nét (một texture 2048 không nén là 21MB, ASTC 6×6 còn 2.5MB); audio nhạc sang **Streaming** + Vorbis, SFX ngắn ADPCM; xoá asset mồ côi và mọi thứ trong `Resources/` (mọi thứ trong đó **luôn** vào build kể cả không ai dùng).
+>
+> Rồi mới tới cấu trúc: **Play Asset Delivery / Addressables** để đẩy nội dung ra khỏi gói cài — Google Play giới hạn base AAB 200MB, và người dùng ở mạng yếu thì kích cỡ tải là tỉ lệ rớt cài đặt. Cuối cùng là code: IL2CPP + Managed Stripping Level, nhưng đó là vài MB, không phải hàng trăm.
+
+**Họ sẽ đào tiếp**
+
+- *"IL2CPP?"* → Dịch IL sang C++ rồi biên dịch native: bắt buộc cho iOS, bắt buộc cho Android 64-bit trên Play Store, nhanh hơn Mono lúc chạy, khó dịch ngược hơn. Cái giá: **build lâu hơn nhiều**, và là AOT nên không có JIT — `System.Reflection.Emit`, một số generic trên value type, và `dynamic` sẽ nổ lúc chạy chứ không phải lúc biên dịch.
+- *"Stripping ăn mất gì?"* → Thứ chỉ được gọi qua **reflection**: DTO của JSON, class nạp bằng tên, enum trong attribute. Bẫy tinh vi: đánh `[Preserve]` lên class nhưng stripping vẫn xoá **constructor không tham số** và setter không ai gọi trực tiếp → deserialize ra object toàn giá trị mặc định, **không có exception**. Nhìn như "save rỗng" trong khi file trên đĩa đầy dữ liệu. Cách chắc: `preserve="all"` ở cấp type trong `link.xml`, và test trên bản Release chứ không phải Development.
+- *"Crash chỉ trên Release?"* → Bật `Development Build` + `Script Debugging` để có stack trace tên hàm, dựng **symbol** (`symbols.zip` cho Android, dSYM cho iOS) và symbolicate log từ Crashlytics/Play Console. Nếu chỉ xảy ra ở Release mà không ở Development thì nghi stripping, `[Conditional]` code bị xoá, hoặc race lộ ra vì timing khác.
+- *"iOS/Android khác gì đáng nhớ?"* → Android: keystore phải giữ **vĩnh viễn** (mất là không update app được nữa), 64-bit bắt buộc, target API level theo hạn Google. iOS: bitcode đã bỏ, cần Privacy Manifest, và App Store từ chối nếu app ghi cache lớn vào thư mục được iCloud backup.
+- *"Pipeline?"* → Tối thiểu: một hàm `[MenuItem]`/CLI `-batchmode -executeMethod` để build một lệnh, version code tự tăng, symbol upload tự động, và một bản build đêm cho QA. Không cần Jenkins mới gọi là pipeline, nhưng "tôi bấm Build trong Editor rồi kéo file lên Drive" là câu trả lời của dự án một người.
+
+**Cờ đỏ**
+
+- Để asset trong `Resources/` vì "cho tiện".
+- Không biết `Development Build` chậm hơn và **không** được dùng để đo hiệu năng cuối.
+- Test hiệu năng và bộ nhớ trên máy flagship rồi kết luận cho cả thị trường.
+- Mất keystore, hoặc không biết nó nằm ở đâu.
+- Đổi bundle id/Company Name sau phát hành.
+
+**Số / ví dụ nên thuộc**
+
+- Google Play: base AAB **200MB**, tổng có thể lớn hơn nhờ Play Asset Delivery.
+- Texture 2048²: RGBA32 21MB → ASTC 6×6 2.5MB.
+- iOS bắt buộc IL2CPP; Play Store bắt buộc 64-bit.

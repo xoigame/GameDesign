@@ -102,3 +102,54 @@ Trước khi viết, nói bạn sẽ đặt script vào GameObject nào và vì 
 ```
 
 **Bẫy thường gặp:** AI trộn API các phiên bản — `rb.velocity` (cũ) với `rb.linearVelocity` (Unity 6), `Input.GetKey` với Input System, `FindObjectOfType` (đã deprecated) thay vì `FindFirstObjectByType`. Kết quả biên dịch được với warning rồi hỏng ở phiên bản khác. Luôn nêu phiên bản, và yêu cầu AI **không dùng API đã deprecated ở phiên bản đó**.
+
+## 🎤 Phỏng vấn
+
+Node con trong nhánh này đều có mục 🎤 riêng — câu hỏi thật, khung trả lời 60 giây, câu hỏi
+đào sâu, cờ đỏ. Mục này nói về **hình dạng của cả buổi phỏng vấn** và cách dùng nhánh này để ôn.
+
+**Một vòng tuyển Unity thường có bốn chặng**
+
+| Chặng | Họ đo cái gì | Node nên ôn |
+|---|---|---|
+| Sàng lọc qua điện thoại (20–30 phút) | Bạn có thật sự làm Unity không: lifecycle, prefab, coroutine vs async, `.meta` | [[unity-game-loop]], [[unity-project-structure]] |
+| Live coding / bài tập về nhà | Viết được code sạch trong MonoBehaviour, tách dữ liệu khỏi hành vi, không `Find` trong `Update` | [[unity-design-patterns]], [[unity-physics]], [[unity-input]] |
+| Thiết kế hệ thống | Bạn có từng chịu hậu quả của quyết định kiến trúc không | [[unity-project-structure]], [[unity-save-data]], [[unity-multiplayer]] |
+| Đào sâu theo hồ sơ + hành vi | Bạn kể được một lần đo, sửa, và đo lại chưa | [[unity-optimization]], [[unity-editor-tools]] |
+
+**Ba câu gần như chắc chắn xuất hiện**
+
+1. *"Game tụt fps, anh làm gì đầu tiên?"* — câu kiểm tra xem bạn **đo trước hay đoán trước**. Xem [[unity-optimization]].
+2. *"Kể một bug khó nhất anh từng sửa."* — họ nghe cách bạn thu hẹp giả thuyết, không nghe bug đó có ly kỳ không.
+3. *"Vì sao chọn cách đó mà không chọn cách kia?"* — hỏi về bất cứ thứ gì bạn vừa kể. Không có câu trả lời về **đánh đổi** là dấu hiệu học vẹt.
+
+**Cách trả lời có cấu trúc** (dùng được cho mọi câu kỹ thuật)
+
+> **Kết luận trước** (một câu: tôi chọn X) → **vì sao trong bối cảnh này** (ràng buộc: nền tảng,
+> quy mô đội, thời gian) → **đánh đổi tôi chấp nhận** → **cách tôi kiểm chứng**.
+
+Chặng cuối là thứ phân biệt rõ nhất: "tôi bật Interpolate" là câu trả lời của người đọc tài liệu;
+"tôi bật Interpolate rồi quay màn hình 240fps để đối chiếu" là câu trả lời của người đã làm.
+
+**Cờ đỏ xuyên suốt mọi chặng**
+
+- Trả lời bằng danh sách tính năng, không có con số nào.
+- Không phân biệt được "chạy đúng trong Editor" và "chạy đúng trên thiết bị".
+- Đổ lỗi cho engine ("Unity chậm") thay vì chỉ ra chỗ đo được.
+- Nói "tuỳ" rồi dừng lại. Nói "tuỳ" rồi **nêu tiêu chí quyết định** thì lại là điểm cộng lớn.
+
+**Lộ trình ôn 10 ngày** (mỗi ngày 1–2 node, đọc thân bài rồi tự trả lời mục 🎤 **thành tiếng**
+trước khi đọc khung trả lời)
+
+| Ngày | Node |
+|---|---|
+| 1–2 | [[unity-game-loop]], [[unity-project-structure]] |
+| 3–4 | [[unity-design-patterns]], [[unity-save-data]] |
+| 5–6 | [[unity-physics]], [[unity-input]], [[unity-animation]] |
+| 7 | [[unity-ui]], [[unity-camera]] |
+| 8 | [[unity-optimization]] (dành nguyên ngày — đây là node được hỏi nhiều nhất) |
+| 9 | [[unity-shader]], [[unity-lighting]], [[unity-vfx]], [[unity-audio]] |
+| 10 | [[unity-build-platform]], [[unity-multiplayer]], [[unity-editor-tools]] |
+
+Ngày 11 trở đi thì đổi chiều: mở một node bất kỳ, đọc **cờ đỏ** trước, rồi tự hỏi mình đã từng
+mắc cái nào chưa — câu chuyện thật về một lần mắc lỗi và sửa nó có sức nặng hơn mọi định nghĩa.

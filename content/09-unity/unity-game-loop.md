@@ -502,3 +502,42 @@ public sealed class FlowDebugHud : MonoBehaviour
 - Esc trong Gameplay: `timeScale 0`, `AudioListener.pause True`, đồng hồ `scaled` đứng, `unscaled` chạy tiếp. Nếu `Systems` có AudioSource đang phát, nhạc im — chỉ `timeScale = 0` thì không.
 - X: Console đỏ `Chuyển trạng thái cấm: Gameplay → Boot`, HUD vẫn `Gameplay`, không có gì đổi — bấm vào dòng log thấy đúng object gọi.
 - Play thẳng từ `Level01`: Hierarchy có `Level01` + `Boot` (BootGuard nạp thêm), HUD hiện `Gameplay` sau ba dòng log `Menu → Loading → Gameplay`. Menu → Level → Menu lặp 5 vòng bằng Enter/M: Hierarchy luôn đúng hai scene, không có object nào tích thêm.
+
+## 🎤 Phỏng vấn
+
+**Câu hay gặp**
+
+| Mức | Câu hỏi |
+|---|---|
+| Junior | `Awake`, `OnEnable`, `Start` khác nhau chỗ nào? Khi nào dùng cái nào? |
+| Junior | `Update` / `FixedUpdate` / `LateUpdate` — code di chuyển nhân vật đặt ở đâu? |
+| Mid | Bấm Pause: game đứng yên nhưng nhạc vẫn chạy và menu vẫn animate. Giải thích. |
+| Mid | Vì sao cần Bootstrap scene? Không có thì hỏng chỗ nào? |
+| Senior | Quay về Menu rồi vào lại Level thì có **hai** GameManager. Chuyện gì xảy ra và sửa thế nào? |
+| Senior | Load một scene 200MB mà không khựng hình — anh làm gì? |
+
+**Khung trả lời 60 giây** — "Kiến trúc khởi động và chuyển scene của anh thế nào?"
+
+> Scene 0 tên `Boot`, không có gameplay, chỉ chứa một GameObject `Systems`: audio, save, input, UI root, scene loader. Boot không bao giờ bị unload nên không cần rải `DontDestroyOnLoad` khắp nơi. Mọi scene gameplay nạp **additive** phía trên nó, và một state machine cấp ứng dụng (Boot → Menu → Loading → Gameplay → Result) quyết định scene nào đang sống — thay vì một chuỗi `if` trong GameManager.
+>
+> Ba cái lợi: hệ thống khởi tạo đúng một lần theo thứ tự mình kiểm soát; chuyển scene không giết hệ thống; và trong Editor vẫn Play được từ bất kỳ scene nào nhờ một `[RuntimeInitializeOnLoadMethod]` tự nạp Boot nếu chưa có. Cái cuối quan trọng nhất với team — tester mở thẳng scene màn 7 vẫn chạy, không phải bấm lại từ menu.
+
+**Họ sẽ đào tiếp**
+
+- *"Thứ tự `Awake` giữa hai object có đảm bảo không?"* → **Không.** Chỉ đảm bảo mọi `Awake` chạy xong trước `Start` đầu tiên. Luật thực dụng: `Awake` chỉ đụng **chính mình** (GetComponent, cấp phát), `Start` mới đụng **người khác**. Script Execution Order là phương án cuối, không phải phương án đầu.
+- *"`Time.timeScale = 0` dừng được gì?"* → Dừng `deltaTime`, `FixedUpdate`, Animator ở `Update Mode = Normal`, `WaitForSeconds`, physics, NavMeshAgent. **Không** dừng: `Update`/`LateUpdate` vẫn được gọi mỗi frame, `unscaledDeltaTime`, `WaitForSecondsRealtime`, và **AudioSource** — nhạc vẫn chạy. UI menu pause phải để Animator sang `Unscaled Time`, nếu không nút bấm đứng hình.
+- *"Loading vẫn giật dù đã dùng async?"* → `LoadSceneAsync` chỉ giải quyết phần đọc đĩa. Cái giật còn lại đến từ `Instantiate` hàng loạt ở frame kích hoạt và **compile shader lần đầu**; chữa bằng `allowSceneActivation = false` cho tới khi màn che đã lên, warm-up shader variant, và trải việc spawn ra nhiều frame.
+- *"Mobile thì khác gì?"* → `OnApplicationPause(true)` là lúc **bắt buộc lưu**: Android/iOS có thể giết tiến trình mà không gọi `OnApplicationQuit` lần nào. Đừng tin `OnApplicationQuit` trên mobile.
+
+**Cờ đỏ** (nói ra là mất điểm)
+
+- "Tôi bỏ hết vào GameManager với `DontDestroyOnLoad`" — mà không nói được chuyện bản trùng khi quay lại scene cũ.
+- Guard singleton viết `if (Instance != null) Destroy(Instance.gameObject)`: huỷ **bản cũ** đang giữ mọi subscriber, giữ bản mới rỗng. Phải `Destroy(gameObject)` **bản mới** rồi `return` ngay.
+- Gọi `timeScale = 0` rồi khẳng định "game dừng hẳn".
+- Đặt đọc input trong `FixedUpdate` (mất frame bấm) hoặc xoay camera trong `Update` (giật theo nhân vật — phải `LateUpdate`).
+
+**Số / ví dụ nên thuộc**
+
+- `FixedUpdate` mặc định 0.02s = 50 lần/giây; `Time.maximumDeltaTime` 0.333s là cái chặn "spiral of death" khi frame tụt.
+- Trình tự một frame: `FixedUpdate` (0..n lần) → `Update` → coroutine `yield return null` → `LateUpdate` → render.
+- Một kỷ niệm thật đáng kể: Play từ scene Level bị `NullReferenceException` ở `AudioManager.Instance` cho tới khi có Boot guard — đúng loại bug làm chậm cả team chứ không chỉ mình bạn.

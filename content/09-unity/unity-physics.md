@@ -377,3 +377,44 @@ public class PlatformerController2D : MonoBehaviour
 - Chạy khỏi mép và nhấn Space trong 0.1s: vẫn nhảy (coyote). Nhấn Space 0.1s trước khi chạm đất: nhảy ngay khi chạm (buffer).
 - Đổi `jumpHeight` thành 6 khi đang Play: đỉnh nhảy cao gấp đôi mà `timeToApex` không đổi — chứng minh gravity được suy ra, không chọn tay.
 - Profiler ▸ Memory ▸ GC Alloc của script này = 0 B/frame.
+
+## 🎤 Phỏng vấn
+
+**Câu hay gặp**
+
+| Mức | Câu hỏi |
+|---|---|
+| Junior | Vì sao code vật lý phải nằm trong `FixedUpdate`? |
+| Junior | `OnTriggerEnter` không được gọi — kiểm tra những gì? |
+| Mid | Viên đạn bay nhanh xuyên qua tường. Nguyên nhân và cách sửa? |
+| Mid | Ground check của anh viết thế nào? Vì sao không dùng `OnCollisionEnter/Exit`? |
+| Senior | Di chuyển nhân vật: `CharacterController`, Rigidbody kinematic, hay tự cast? Chọn thế nào? |
+| Senior | Physics ăn 8ms/frame trên mobile với 200 object. Thứ tự anh xử lý? |
+
+**Khung trả lời 60 giây** — "Anh điều khiển nhân vật bằng cách nào?"
+
+> Mặc định tôi chọn **Kinematic Rigidbody và tự tính vận tốc**: đặt `linearVelocity` hoặc `MovePosition` trong `FixedUpdate`, engine chỉ lo phát hiện va chạm. Lý do là cảm giác: nhân vật hành động cần dừng ngay khi nhả phím và đạt tốc tối đa trong vài frame, còn dynamic body có quán tính nên luôn trôi — bạn sẽ đi chống lại engine bằng drag và mass. Dynamic tôi để dành cho thứ *nên* tuân vật lý: xe, bóng, thùng, ragdoll.
+>
+> Tự cast hoàn toàn thì chỉ khi cần xác định tuyệt đối — platformer 2D pixel-perfect, game có replay hoặc rollback netcode. Và dù chọn cách nào cũng phải bật **Interpolate** cho nhân vật: physics chạy 50Hz còn màn hình 60–120Hz, không nội suy thì hình rung nhẹ và người ta đi tối ưu frame rate trong khi vấn đề là một checkbox.
+
+**Họ sẽ đào tiếp**
+
+- *"Vì sao không `transform.position` cho rigidbody?"* → Nó dời object mà không qua solver: bỏ qua va chạm ở bước đó, làm hỏng vận tốc tích luỹ và ép đồng bộ lại transform. Dùng `MovePosition`/`MoveRotation` (kinematic) hoặc lực/vận tốc (dynamic). Đụng cả hai đường là nguồn của những bug "thỉnh thoảng lọt sàn".
+- *"`OnTriggerEnter` im lặng thì sao?"* → Ba thứ theo thứ tự: **phải có ít nhất một bên mang Rigidbody** (hai static collider không sinh sự kiện), layer phải bật trong collision matrix, và một bên phải `Is Trigger`. Nhớ thêm: va chạm *không* trigger cần ít nhất một bên là dynamic — hai kinematic chỉ sinh trigger.
+- *"Tunneling?"* → Vật đi xa hơn bề dày collider trong một bước 0.02s thì bước sau đã ở bên kia tường. Chữa theo thứ tự rẻ→đắt: `Collision Detection = Continuous` (hoặc `Continuous Speculative` cho vật nhỏ), làm collider dày hơn, hạ `Fixed Timestep`, và với đạn thì **đừng dùng rigidbody** — `SphereCast` từ vị trí cũ tới vị trí mới mỗi bước.
+- *"Ground check?"* → `BoxCast`/`CapsuleCast` xuống 0.05–0.1 từ đáy collider, **query mỗi bước**, không phải trạng thái tích luỹ từ event. Ray đơn từ tâm trượt khỏi mép nền và nhân vật "rơi" khi đứng nửa người ngoài rìa. Bộ đếm `OnCollisionEnter/Exit` lệch khi hai collider nền chạm cùng lúc và rời khác lúc — nhân vật bay vĩnh viễn, và bug đó chỉ xuất hiện ở chỗ ghép hai sàn.
+- *"Tối ưu physics?"* → Đo trước: `Physics.Processing` và số bước `FixedUpdate` mỗi frame. Rồi: **collision matrix** (rẻ nhất, bỏ hàng nghìn cặp broadphase), primitive collider thay mesh collider, `NonAlloc` cho query, hạ solver iteration cho vật không cần chính xác, để vật đứng yên **sleep**, và cuối cùng mới nới `Fixed Timestep` từ 0.02 lên 0.03 (nhớ chỉnh `maximumDeltaTime` theo).
+
+**Cờ đỏ**
+
+- Đọc input trong `FixedUpdate` (mất frame bấm) — đọc ở `Update`, dùng ở `FixedUpdate`.
+- `Physics.RaycastAll` mỗi frame (cấp phát mảng), hoặc raycast mà không truyền `layerMask`.
+- Dùng `MeshCollider` không convex cho vật di chuyển.
+- Chỉnh `Fixed Timestep` xuống 0.005 "cho mượt" mà không nói tới chi phí CPU gấp 4.
+- Không phân biệt được "vật lý đúng" và "cảm giác đúng": platformer hay cần gravity khác lúc lên/xuống, coyote time, jump buffer — đó là thiết kế, không phải sai vật lý.
+
+**Số / ví dụ nên thuộc**
+
+- `Fixed Timestep` mặc định 0.02s = 50Hz; `maximumDeltaTime` 0.333s chặn spiral of death.
+- Ground check cast 0.05–0.1 đơn vị.
+- Thứ tự chữa tunneling: Continuous → collider dày hơn → hạ timestep → bỏ rigidbody và tự cast.

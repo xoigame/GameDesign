@@ -398,3 +398,44 @@ public class LightBudget : MonoBehaviour
 - `Time.timeScale = 0.2` (đổi trong Project Settings ▸ Time lúc Play): fade vẫn 0.3s thật và nhịp đập vẫn 2 Hz — vì dùng `unscaledDeltaTime` / `unscaledTime`.
 - Đặt 4 Torch có bóng, kéo camera ra xa hơn 25m: Frame Debugger số dòng `AdditionalLightsShadow` giảm theo từng đuốc, Console báo một lần khi vượt "1 + 2" và một lần khi về ngân sách — không lặp mỗi 0.5s.
 - Profiler ▸ CPU: `LightBudget.Audit` chỉ xuất hiện 2 lần/giây; GC Alloc trong frame có audit là một mảng nhỏ (`FindObjectsByType`), các frame khác 0 B.
+
+## 🎤 Phỏng vấn
+
+**Câu hay gặp**
+
+| Mức | Câu hỏi |
+|---|---|
+| Junior | Realtime, Baked, Mixed khác nhau thế nào? |
+| Junior | Vật động trong cảnh đã bake trông tối thui / trôi nổi. Vì sao? |
+| Mid | URP giới hạn bao nhiêu đèn? Forward+ giải quyết gì, và khi nào **không** nên bật? |
+| Mid | Post-processing nào rẻ, nào đắt trên mobile? |
+| Senior | Cảnh mobile đẹp trong Editor, 22fps trên máy. Anh cắt gì trước ở phần ánh sáng? |
+| Senior | Sửa giá trị Volume lúc chạy thế nào cho đúng? |
+
+**Khung trả lời 60 giây** — "Chọn chiến lược ánh sáng thế nào?"
+
+> Theo việc ánh sáng có **đổi** hay không. Mobile với level tĩnh: **Baked toàn bộ**, 0 đèn realtime — lightmap chỉ là một texture, có GI và bóng mềm gần như miễn phí. Có chu kỳ ngày/đêm: **Realtime** với đúng một directional light cộng Environment Lighting đổi theo giờ, giữ số đèn tối thiểu. Indoor có đèn bật/tắt và vật động cần bóng: **Mixed – Shadowmask**. Mobile yếu mà vẫn cần bóng nhân vật: **Subtractive**.
+>
+> Và điều kiện đi kèm với Baked: vật động phải có **Light Probe**, nếu không nó lấy ánh sáng môi trường mặc định và trông như dán vào cảnh chứ không thuộc về cảnh. Probe đặt dày ở nơi ánh sáng đổi nhanh (cửa ra vào, ranh sáng-tối), thưa ở chỗ đồng đều.
+
+**Họ sẽ đào tiếp**
+
+- *"Forward+?"* → Renderer thường của URP giới hạn số đèn **per-object** (mặc định 8 additional light, mobile thường hạ xuống 4), nên đèn thứ 9 đơn giản là biến mất trên object đó. Forward+ chia màn hình thành cluster nên bỏ được giới hạn đó, và là **điều kiện bắt buộc** cho GPU Resident Drawer / GPU Occlusion Culling của Unity 6. Nhưng nó dựng cluster mỗi frame — mobile chỉ có 1–3 đèn thì bật vào là **lỗ**.
+- *"Bóng tốn ở đâu?"* → Shadow map là một lần render cảnh thêm cho mỗi đèn đổ bóng. Cắt theo thứ tự: giảm `Shadow Distance` (thứ rẻ nhất và hiệu quả nhất), giảm số cascade, hạ độ phân giải shadow map, tắt bóng cho đèn phụ, và với mobile thì cân nhắc bóng giả — một quad tối dưới chân nhân vật là đủ cho rất nhiều game.
+- *"Post-processing?"* → Gần như miễn phí vì gộp chung một pass Uber: Tonemapping, Color Adjustments, Vignette, Film Grain. Đắt: Depth of Field 3–6ms (Bokeh đắt gấp ~3 Gaussian — mobile thường bỏ hẳn), Bloom 1.5–3ms (tắt High Quality Filtering, Max Iterations 4, threshold > 1.0 khi có HDR). Chọn tonemapper cũng là quyết định art: **ACES** hợp cảnh thực, nhưng nó bão hoà và tối vùng đỏ nên art pastel hay bị "cháy" — lúc đó dùng Neutral rồi bù bằng Color Adjustments.
+- *"Cứu fps nhanh nhất?"* → `Render Scale` trong URP Asset: 0.75 bỏ 44% số pixel cho mọi pass 3D mà UI vẫn nét vì Canvas vẽ ở độ phân giải gốc. Unity 6 có **STP** upscale nét hơn FSR ở cùng scale, tốn thêm ~1ms. Đây là công tắc nên nối vào cài đặt chất lượng cho người chơi chọn.
+- *"Sửa Volume lúc chạy?"* → `volume.sharedProfile` là **asset gốc** — sửa nó trong Play Mode là ghi vĩnh viễn vào file, và bạn commit nhầm lúc nào không hay. Dùng `volume.profile` (Unity tạo bản sao riêng, nhớ Destroy trong `OnDestroy`), hoặc sạch hơn: một Volume riêng cho hiệu ứng đó và chỉ điều khiển `weight`.
+
+**Cờ đỏ**
+
+- Bake xong không đặt Light Probe.
+- Để `Shadow Distance` mặc định 50m trên mobile.
+- Bật realtime GI "cho đẹp" trên mobile.
+- Không biết vì sao đèn thứ 9 không có tác dụng.
+- Nói "bật Bloom lên cho lung linh" mà không biết threshold và chi phí.
+
+**Số / ví dụ nên thuộc**
+
+- URP additional light mặc định 8 per-object (mobile hay đặt 4); Forward+ bỏ giới hạn đó.
+- DoF 3–6ms · Bloom 1.5–3ms · Tonemapping/Color/Vignette ≈ 0.
+- Render Scale 0.75 ≈ giảm 44% pixel.

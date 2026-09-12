@@ -477,3 +477,47 @@ public class BoidsJobDemo : MonoBehaviour
 - Overlay `PerfBudget`: `GC alloc 0 B` ở hầu hết frame (frame có refresh chuỗi lên vài trăm byte — do chính overlay); `Draw calls ≈ 2003 / 300` **đỏ** và Console một `LogWarning` mỗi giây, không nhiều hơn. Đổi `Count` = 250 → về xanh.
 - Mở Jobs ▸ Burst ▸ *Enable Compilation* ☐ rồi Play lại với jobs: ms tăng 5–10 lần — phần lớn lợi ích đến từ Burst, không phải từ đa luồng.
 - Đưa 2000 boid làm con của `Boids` (sửa `t.SetParent(transform)`): nhánh jobs chậm đi rõ vì `IJobParallelForTransform` chỉ song song hoá giữa các root khác nhau.
+
+## 🎤 Phỏng vấn
+
+**Câu hay gặp**
+
+| Mức | Câu hỏi |
+|---|---|
+| Junior | Game tụt xuống 25fps trên máy Android tầm trung. Anh làm gì **đầu tiên**? |
+| Mid | Làm sao biết đang CPU-bound hay GPU-bound? |
+| Mid | Có mấy cơ chế gom draw call? Chúng loại trừ nhau thế nào? |
+| Mid | Cứ vài giây game khựng một nhịp. Nghi gì trước? |
+| Senior | Trên mobile, giảm draw call hay giảm overdraw quan trọng hơn? |
+| Senior | Bộ nhớ vượt ngưỡng, app bị hệ điều hành kill. Anh cắt ở đâu trước? |
+
+**Khung trả lời 60 giây** — "Game tụt fps, quy trình của anh?"
+
+> Trước khi mở bất kỳ file code nào: **build Development lên đúng máy yếu nhất**, nối Profiler qua máy thật, chụp khoảng 300 frame ở cảnh đông nhất. Profiler chạy trong Editor đo cả Editor, và máy dev có GPU gấp hai chục lần điện thoại — mọi tối ưu trước bước này là đoán.
+>
+> Rồi tách CPU hay GPU bằng tên hàm trên main thread: `Gfx.WaitForPresentOnGfxThread` lớn nghĩa là CPU đang đợi GPU, **GPU-bound**, sửa code C# lúc đó vô ích. `Gfx.WaitForCommands` lớn là quá nhiều draw call và state change. `WaitForTargetFPS` là đang chạm trần vsync, mọi thứ ổn. Không cái nào lớn mà main thread đầy script/physics/animation thì CPU-bound.
+>
+> Một chi tiết hay bị bỏ: chụp ở **phút 1 và phút 15**. Máy nóng lên thì bị throttle, và con số phút 15 mới là con số người chơi thấy.
+
+**Họ sẽ đào tiếp**
+
+- *"Bốn cơ chế batching?"* → **SRP Batcher** (mặc định URP, cùng shader variant, không tốn gì — nhưng `renderer.material` và `MaterialPropertyBlock` phá nó); **Static Batching** (object Static cùng material, gộp lúc build, **trả giá bằng bộ nhớ ×2** vì mỗi instance giữ bản copy vertex); **GPU Instancing** (cùng mesh + material); **Dynamic Batching** (mesh <300 đỉnh — trên URP gần như vô dụng, tốn CPU transform mỗi frame, nên tắt).
+- *"Overdraw?"* → Trên mobile, fill rate và băng thông bộ nhớ thường thắng draw call. Một particle system 200 hạt full-screen alpha là 200 lần vẽ toàn màn hình — GPU chết mà Frame Debugger chỉ hiện **1 draw call**. Nhìn bằng Rendering Debugger → Overdraw; chữa bằng hạt nhỏ hơn, ít lớp hơn, và bỏ panel mờ full-screen chồng lên cảnh 3D.
+- *"Khựng theo chu kỳ?"* → GC. Tìm alloc mỗi frame: LINQ, `foreach` trên `IEnumerable<T>` (boxing enumerator), closure bắt biến trong lambda, nối chuỗi trong log, `Physics.RaycastAll`. Và nhớ `Debug.Log` **vẫn chạy trong bản Release** — format chuỗi cộng lấy stack trace. Bọc bằng `[Conditional("UNITY_EDITOR")]` hoặc tắt `Debug.unityLogger.logEnabled`.
+- *"Cắt bộ nhớ ở đâu?"* → Texture trước, vì nó thường là 80% bộ nhớ: một texture 2048×2048 RGBA32 kèm mipmap tốn **21MB**, cùng texture đó ở **ASTC 6×6 chỉ 2.5MB**. Sau đó là audio (`Streaming` cho nhạc, `Decompress On Load` chỉ cho SFX ngắn), rồi mesh `Read/Write` bật thừa (nhân đôi bản copy trên RAM).
+- *"Animator?"* → `Culling Mode = Cull Update Transforms` cho mọi nhân vật không phải người chơi, bật *Optimize Game Objects* lúc import để bỏ 60 Transform con, và `Skin Weights` để 2 bone trên mobile. 50 kẻ địch × 40 bone × 4 weight là cái Profiler gọi tên `MeshSkinning.Update`.
+
+**Cờ đỏ**
+
+- Nhảy vào object pooling ngay khi nghe chữ "lag", trước khi đo.
+- Trích số đo **trong Editor** như bằng chứng.
+- "Tôi tối ưu bằng cách gộp hết vào một `Update`" mà không có con số trước/sau.
+- Không phân biệt được frame time và fps (60→50fps mất 3.3ms; 30→25fps mất 6.7ms — cùng "5 fps" nhưng khác hẳn).
+- Bật mọi setting "chất lượng thấp" rồi gọi đó là tối ưu.
+
+**Số / ví dụ nên thuộc**
+
+- Ngân sách frame: 60fps = **16.6ms**, 30fps = 33ms. Trên mobile nên chừa nhiệt: nhắm 12ms cho 60fps.
+- Texture 2048² + mipmap: RGBA32 **21MB** · ETC2 5.3MB · **ASTC 6×6 2.5MB** · ASTC 8×8 1.4MB.
+- `Update()` rỗng ≈ 0.5µs mỗi lần gọi.
+- Tên cần nhớ trong Profiler: `Gfx.WaitForPresentOnGfxThread`, `Gfx.WaitForCommands`, `Canvas.BuildBatch`, `MeshSkinning.Update`, `Physics.Processing`.

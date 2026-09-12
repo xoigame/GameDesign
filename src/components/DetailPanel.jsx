@@ -81,8 +81,9 @@ export default function DetailPanel({
 
   // Node mới có thể không có tab đang mở → lùi về tab Nội dung.
   useEffect(() => {
-    if ((tab === 'unity' && !node.unity) || (tab === 'code' && !node.code)) setTab('doc')
-  }, [node.id, node.unity, node.code, tab])
+    if ((tab === 'unity' && !node.unity) || (tab === 'code' && !node.code) ||
+        (tab === 'interview' && !node.interview)) setTab('doc')
+  }, [node.id, node.unity, node.code, node.interview, tab])
 
   const fsIndex = FONT_STEPS.indexOf(fontScale)
   const stepFont = (dir) => {
@@ -142,6 +143,7 @@ export default function DetailPanel({
       kind === 'prompt' ? node.aiPrompt
       : kind === 'unity' ? node.unity
       : kind === 'code' ? node.code
+      : kind === 'interview' ? node.interview
       : buildAiContext(node, nodesById, { subtree: kind === 'subtree' })
     try {
       await navigator.clipboard.writeText(text)
@@ -158,6 +160,7 @@ export default function DetailPanel({
     { id: 'prompt', label: t('tabPrompt', lang), on: true },
     { id: 'unity', label: t('tabUnity', lang), on: !!node.unity },
     { id: 'code', label: t('tabCode', lang), on: !!node.code },
+    { id: 'interview', label: t('tabInterview', lang), on: !!node.interview },
   ].filter((x) => x.on)
 
   /* rehypeGlossary phải chạy SAU rehypeRaw: lúc đó SVG nội tuyến đã thành
@@ -336,6 +339,18 @@ export default function DetailPanel({
             </button>
           </div>
           {renderPane('code', 'code-md')}
+        </section>
+      )}
+
+      {tab === 'interview' && (
+        <section className="tab-pane interview-pane">
+          <div className="pane-head">
+            <p className="pane-hint">{t('interviewHint', lang)}</p>
+            <button className="btn" onClick={() => copy('interview')}>
+              {copied === 'interview' ? t('copied', lang) : t('copySection', lang)}
+            </button>
+          </div>
+          {renderPane('interview', 'interview-md')}
         </section>
       )}
 

@@ -236,6 +236,56 @@ Một câu: demo này dựng cái gì, kiểm chứng được điều gì.
 - Giá trị trong Inspector phải khớp với giá trị mặc định trong script.
 - "Chạy thử" nêu con số hoặc hiện tượng cụ thể để biết demo chạy đúng.
 
+## Mục tuỳ chọn: `## 🎤 Phỏng vấn`
+
+Đặt ở **cuối file**, sau mục 🤖 (và sau 🎮/💻 nếu có). Build tách thành trường
+`node.interview`, web hiện thành tab **🎤 Phỏng vấn**; `KNOWLEDGE_INDEX.md` đánh dấu 🎤.
+
+Mục này phục vụ một mục đích khác hẳn thân bài: thân bài dạy **hiểu**, mục này luyện
+**nói ra miệng trong 60 giây**. Kiến thức đã có sẵn phía trên — đừng chép lại, hãy đổi
+nó sang dạng hỏi–đáp.
+
+Cấu trúc chuẩn **năm phần, theo thứ tự**:
+
+```markdown
+## 🎤 Phỏng vấn
+
+**Câu hay gặp**
+
+| Mức | Câu hỏi |
+|---|---|
+| Junior | <câu hỏi định nghĩa / phân biệt hai khái niệm> |
+| Mid | <câu hỏi tình huống: "X hỏng, anh làm gì"> |
+| Senior | <câu hỏi đánh đổi: "chọn A hay B, vì sao"> |
+
+**Khung trả lời 60 giây** — "<câu hỏi lõi của node này>"
+
+> <Lời nói ra miệng, 3–6 câu, có SỐ và có lý do. Viết như đang trả lời thật,
+> không phải như gạch đầu dòng.>
+
+**Họ sẽ đào tiếp**
+
+- *"<câu hỏi tiếp>"* → <ý bắt buộc phải chạm tới khi trả lời>
+
+**Cờ đỏ**
+
+- <câu trả lời nghe có vẻ ổn nhưng làm người phỏng vấn đánh trượt>
+
+**Số / ví dụ nên thuộc**
+
+- <con số, tên hàm trong Profiler, ngưỡng — thứ phải bật ra ngay, không cần nghĩ>
+```
+
+**Nguyên tắc**
+- **Cụ thể cho node, không chung chung.** "Hãy nói về kinh nghiệm của bạn" là câu vô nghĩa;
+  "Game tụt 25fps trên Android tầm trung, anh làm gì đầu tiên?" mới là câu hỏi thật.
+- Khung trả lời viết ở **giọng nói**, để trong blockquote. Đọc to lên thấy trúc trắc
+  nghĩa là chưa đạt.
+- Mỗi phần "đào tiếp" phải trả lời được **vì sao**, không chỉ **là gì**.
+- Con số lấy từ chính thân bài node, không bịa. Nếu thân bài không có số nào đáng nhớ
+  thì đó là dấu hiệu thân bài cần bổ sung, không phải chỗ để chế ra số.
+- Cờ đỏ là **câu trả lời sai mà nghe hay**, không phải lỗi ngớ ngẩn hiển nhiên.
+
 ## Bản dịch — file song song
 
 Kho viết gốc bằng tiếng Việt. Bản dịch nằm ở **file song song** cùng thư mục:

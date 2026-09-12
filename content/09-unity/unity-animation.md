@@ -426,3 +426,44 @@ public class AttackStateBehaviour : StateMachineBehaviour
 - Nhấn H giữa lúc Attack: state Hit cắt thẳng từ frame 0, hitbox tắt ngay trong cùng frame — không có frame nào gizmo đỏ khi đang Hit, và `IsAttacking` về false nhờ `OnStateExit`.
 - Đổi Update Mode `Fixed` → `Normal` và chạy ở màn 144Hz: nhân vật đi bằng Rigidbody thấy rung bậc 50/144; trả lại `Fixed` là hết.
 - Đổi tên hàm trong `AttackHitboxRelay` thành `OnAttackHitFrame2`: code vẫn biên dịch, Console báo `'Model' AnimationEvent 'OnAttackHitFrame' has no receiver!` khi đánh — đó là toàn bộ cảnh báo bạn nhận được từ Animation Event; kết thúc đòn vẫn báo đúng qua `OnStateExit`.
+
+## 🎤 Phỏng vấn
+
+**Câu hay gặp**
+
+| Mức | Câu hỏi |
+|---|---|
+| Junior | Animator Controller gồm những gì? Gọi một animation từ code thế nào? |
+| Junior | `SetTrigger` và `SetBool` khác nhau ra sao? |
+| Mid | Người chơi kêu "đánh bị chậm một nhịp". Anh chỉnh ở đâu? |
+| Mid | Animation Event có đáng tin không? Nếu không thì thay bằng gì? |
+| Senior | Hitbox của đòn đánh bật/tắt theo cái gì? |
+| Senior | Root motion hay code-driven? Chọn theo tiêu chí nào? |
+
+**Khung trả lời 60 giây** — "Nhân vật đánh thấy chậm, sửa gì?"
+
+> Gần như luôn là **hai con số trên transition**, không phải clip. Một là `Has Exit Time`: bật nghĩa là phải chờ clip hiện tại chạy hết tỉ lệ đã đặt mới chuyển — với đòn do người chơi khởi xướng (Attack, Dodge, Jump) thì phải **tắt**, nếu không mọi cú bấm đều đợi Idle chạy xong. Hai là `Transition Duration`: 0.05–0.1s cho đòn tấn công, và **0** cho Hurt/Death — bị đánh mà blend 0.2s thì phản hồi biến mất.
+>
+> Thứ ba là `Interruption Source`: để `Current State` thì người chơi cancel được đòn đang ra, đó là thứ tạo cảm giác "nhạy". Còn Idle ↔ Walk thì ngược lại, cần 0.1–0.15s cho mượt. Nói cách khác: blend dài cho chuyển động liên tục, blend ~0 cho phản hồi.
+
+**Họ sẽ đào tiếp**
+
+- *"`CrossFade(hash, 0.1f)` là bao nhiêu mili giây?"* → **Không biết được** — đơn vị là tỉ lệ độ dài **clip đích**: 0.1 với clip Hurt 0.25s là 25ms, với clip Death 2s là 200ms. Muốn giây thật thì `CrossFadeInFixedTime`. Đây là câu hỏi phân loại rất nhanh.
+- *"Vì sao không tin Animation Event?"* → Event gắn vào clip nên **mất khi clip bị thay/rename**, không chạy nếu clip bị cắt bởi transition, thứ tự với `Update` không đảm bảo, và nó gọi theo **tên hàm bằng string**. Với gameplay quan trọng (gây damage, bật hitbox) tôi dùng **frame data trong ScriptableObject** — startup/active/recovery tính bằng frame — rồi tự đếm trong code. Animation Event chỉ để lại cho thứ trang trí: bụi, tiếng bước chân.
+- *"Chân trượt trong Blend Tree?"* → Tốc độ di chuyển của code không khớp tốc độ trong clip. Đo tốc độ gốc của clip run, rồi hoặc chỉnh tham số blend theo tốc độ thật, hoặc chỉnh `speed` của state theo tỉ lệ. Không phải lỗi animator, là lỗi đơn vị.
+- *"Đọc trạng thái Animator?"* → `GetCurrentAnimatorStateInfo(0)` **không** đổi ngay sau `SetTrigger` — state mới có ở frame sau, và trong lúc transition thì `IsInTransition(0)` mới đúng. Đọc state để quyết định logic là cách sinh ra bug không tái hiện được; nguồn chân lý phải là state machine của **code**, Animator chỉ hiển thị.
+- *"Khi nào Animator không xứng?"* → Đồ thị quá 30 state là dấu hiệu; lúc đó chia layer/sub-state machine, hoặc bỏ hẳn sang **Playables API** khi cần điều khiển clip bằng code (combat game, animation phát theo dữ liệu). UI thì đừng dùng Animator — dùng tween.
+
+**Cờ đỏ**
+
+- Gọi `SetTrigger` mỗi frame mà không `ResetTrigger`: trigger xếp hàng, nhân vật đánh thêm một nhát ma.
+- Truyền tên parameter bằng string trong `Update` thay vì `Animator.StringToHash` một lần.
+- Dùng Animation Event để gây damage rồi ngạc nhiên vì đòn "thỉnh thoảng không ăn".
+- Không biết Animator vẫn tick khi ngoài màn hình nếu để `Culling Mode = Always Animate`.
+- Bật Animation Rigging/IK cho cả 50 kẻ địch: mỗi constraint ~0.05–0.1ms/nhân vật trên mobile.
+
+**Số / ví dụ nên thuộc**
+
+- Transition: Attack/Dodge 0.05–0.1s · Hurt/Death **0** · Idle↔Walk 0.1–0.15s.
+- `CrossFade` = tỉ lệ clip đích; `CrossFadeInFixedTime` = giây.
+- Frame data một đòn: startup / active / recovery — ngôn ngữ chung với designer.

@@ -521,3 +521,48 @@ public class MusicScheduler : MonoBehaviour
 - Gọi `SetSfxVolume(0.5f)` (Slider hoặc Inspector Debug): cửa sổ AudioMixer hiện SfxVol = −6.0 dB; 0.1 → −20 dB; 0 → −80 dB (im hẳn). Quên Expose to script → Console lỗi đỏ ghi đúng tên tham số ngay ở Start.
 - Nhấn P: trong 0.2 s nhạc "tối" lại (lowpass 800 Hz), Space vẫn phát SFX qua pool, `Time.timeScale` vẫn 1; P lần nữa trở về Normal. Kéo slider MusicVol trong lúc Paused: slider vẫn có tác dụng vì snapshot không giữ MusicVol.
 - Trên điện thoại bấm Home 10 s rồi quay lại: im hoàn toàn khi ẩn, khi về loop bắt đầu lại sau 0.1 s, không "dồn" một loạt SFX. Grep `PlayClipAtPoint` và `PlayOneShot` trong project: 0 kết quả.
+
+## 🎤 Phỏng vấn
+
+**Câu hay gặp**
+
+| Mức | Câu hỏi |
+|---|---|
+| Junior | Slider âm lượng kéo tới 0.9 mới thấy nhỏ đi. Vì sao? |
+| Junior | `PlayOneShot` và `PlayClipAtPoint` có vấn đề gì khi bắn 200 phát đạn? |
+| Mid | Import settings cho SFX, nhạc nền, ambience — khác nhau thế nào và vì sao? |
+| Mid | Nhạc phải đổi đúng nhịp khi vào combat. Anh làm thế nào? |
+| Senior | 30 kẻ địch cùng gầm một lúc, âm thanh vỡ nát. Xử lý? |
+| Senior | Khi nào đáng đưa FMOD/Wwise vào dự án? |
+
+**Khung trả lời 60 giây** — "Kiến trúc audio của anh?"
+
+> AudioMixer với ba bus Music / SFX / UI, và **snapshot cho từng trạng thái game**: Normal, Paused (lowpass 800Hz trên Master, Music −6dB), Underwater, Menu — chuyển bằng `TransitionTo(0.25f)`. Rẻ hơn viết state machine audio riêng, và sound designer chỉnh được trong Editor không cần code.
+>
+> Phát âm thanh đi qua một **pool AudioSource** có voice limit và priority, không `PlayOneShot` rải rác: 200 viên đạn cùng lúc là 200 voice, và hệ thống sẽ tự cắt bừa cái nào cũng được — thường là cắt đúng cái quan trọng. Pool cho phép tôi nói "tối đa 4 tiếng súng cùng loại, cái mới cướp chỗ cái cũ nhất".
+>
+> Và một chi tiết rất hay bị sai: **volume expose là dB, không phải 0–1**. Slider phải quy đổi `Mathf.Log10(Mathf.Max(v, 0.0001f)) * 20f`, nếu không slider chỉ có tác dụng trong khoảng 0.9–1.0.
+
+**Họ sẽ đào tiếp**
+
+- *"Import settings?"* → SFX ngắn dưới 1s: **Decompress On Load + ADPCM** — giải nén một lần lúc load, phát tức thì, CPU gần 0. Nhạc: **Streaming + Vorbis** — không nạp vào RAM, nhưng tối đa 2–4 stream cùng lúc vì mỗi stream là một luồng đọc đĩa. Ambience loop: Compressed In Memory. Sai bảng này là hoặc RAM nổ, hoặc giật mỗi lần phát.
+- *"Nhạc đúng nhịp?"* → Dùng `AudioSettings.dspTime` và `PlayScheduled`, **không** dùng `Time.time`. Mọi biến thời gian nhạc phải là `double`: `Time.time` chịu `timeScale` và trôi theo frame time, `dspTime` thì không — lệch tích luỹ sau vài phút và không ai hiểu vì sao. Intro-rồi-loop làm bằng hai clip + `PlayScheduled(startDsp + intro.length)`.
+- *"Loop bị hở?"* → **Không bao giờ dùng MP3 cho loop**: encoder chèn padding đầu/cuối. Vorbis hoặc ADPCM, cắt đúng ở DAW.
+- *"Crossfade?"* → Equal-power (`cos`/`sin`), không tuyến tính — vì `AudioSource.volume` là amplitude tuyến tính nên fade tuyến tính sẽ nghe "tụt" ở giữa.
+- *"30 con gầm cùng lúc?"* → Voice limit theo nhóm + priority + cooldown theo âm thanh; cộng thêm biến thiên pitch nhẹ (±5%) để không nghe ra hiệu ứng "vọng máy". Nguyên nhân vỡ tiếng là cộng dồn biên độ, không phải chất lượng file.
+- *"FMOD/Wwise?"* → Khi có **sound designer thật** làm việc song song và cần họ tự làm layer, RTPC, adaptive music mà không chờ lập trình; hoặc khi cần profiling audio nghiêm túc. Game nhỏ thì AudioMixer + snapshot là đủ, và mỗi middleware là thêm một build step, thêm một license.
+
+**Cờ đỏ**
+
+- Gán `SetFloat("MusicVol", slider.value)` thẳng từ slider.
+- `PlayClipAtPoint` trong `Update` (tạo GameObject mới mỗi lần).
+- Quên *Expose to script* rồi không hiểu vì sao `SetFloat` trả `false` mà không có lỗi.
+- Không tắt tiếng khi app mất focus trên mobile (`OnApplicationFocus`) — nhạc vẫn chạy khi người chơi nhận cuộc gọi.
+- Để tất cả clip ở `Decompress On Load` vì "nhanh nhất".
+
+**Số / ví dụ nên thuộc**
+
+- dB: `20 * log10(v)`; −80dB coi như tắt, 0dB là full.
+- Streaming tối đa 2–4 stream cùng lúc.
+- 1 phút stereo 44.1k: ADPCM ~2.6MB · Vorbis q0.5 ~1.1MB.
+- `AudioSettings.dspTime` là `double`, không chịu `timeScale`.

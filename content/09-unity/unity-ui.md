@@ -473,3 +473,45 @@ public class PlayerHealth
 - Profiler ▸ Memory ▸ GC Alloc của `HudView.SetHealth` = 0 B. Thử đổi thành `label.text = $"{cur}/{max}"` để thấy ~40–60 B mỗi lần gọi.
 - Device Simulator iPhone 15 landscape → xoay portrait: khung `SafeArea` co lại ngay frame kế, HP_Bar/HP_Text không dưới notch hay thanh home; Frame_BG (ngoài SafeArea) vẫn tràn hết màn.
 - Không Play, chuột phải header Hud View ▸ "Render 37/100": HUD hiện `37/100` — View chạy độc lập gameplay. Bật Pixel Perfect trên Canvas_HUD rồi giữ H: rebuild tăng gấp đôi vì snap vị trí mỗi frame.
+
+## 🎤 Phỏng vấn
+
+**Câu hay gặp**
+
+| Mức | Câu hỏi |
+|---|---|
+| Junior | Anchor và pivot khác nhau thế nào? Canvas có mấy Render Mode? |
+| Junior | `Canvas Scaler` cài sao cho UI đúng trên nhiều tỉ lệ màn hình? |
+| Mid | UI làm tụt fps. Anh bắt đầu từ đâu? |
+| Mid | UGUI hay UI Toolkit cho HUD game mobile, năm nay? |
+| Senior | Trước khi ship, anh làm gì với TextMeshPro? |
+| Senior | Game có 20 màn hình UI — kiến trúc thế nào để không thành 20 `if`? |
+
+**Khung trả lời 60 giây** — "UI tụt fps, anh debug thế nào?"
+
+> Mở Profiler tìm hai cái tên: `Canvas.SendWillRenderCanvases` và `Canvas.BuildBatch`. Chúng nói rằng chi phí nằm ở **rebuild**, và luật của rebuild là: một phần tử đổi thì **cả Canvas** dựng lại mesh. Nên cách chữa không phải là giảm số UI, mà là **tách Canvas theo tần suất đổi** — HUD tĩnh một Canvas, thanh máu một Canvas, số damage bay mỗi frame một Canvas riêng. Tách theo chủ đề ("combat UI chung một Canvas") là sai, vì số damage sẽ kéo thanh máu rebuild theo.
+>
+> Sau đó là ba việc rẻ: tắt `Raycast Target` trên mọi `Image`/`Text` không bấm được — mặc định nó bật và mỗi cái là một phép kiểm mỗi lần chạm; bỏ Layout Group lồng nhau ở chỗ nóng, vì mỗi tầng là một lượt dirty lan xuống; và pool các item trong list thay vì `Instantiate` khi mở.
+
+**Họ sẽ đào tiếp**
+
+- *"UGUI hay UI Toolkit?"* → Runtime HUD game mobile: **UGUI**, vì UI Toolkit runtime chưa có world-space, khó gắn shader/material/particle vào UI, và không dùng Animator được. Editor tool thì ngược lại — UI Toolkit là thứ Unity khuyến nghị, và UXML/USS là text nên dễ diff, dễ để AI sửa. Trả lời "cái nào cũng được" là trả lời trượt.
+- *"TextMeshPro, ba việc?"* → (1) `label.SetText("{0}/{1}", hp, max)` thay cho `label.text = $"..."` — 0 byte alloc thay vì một string mới mỗi frame. (2) Đổi atlas sang **Static** và Update Atlas Texture với toàn bộ chuỗi trong game trước khi ship; Dynamic render SDF lúc chạy, 0.5–2ms mỗi glyph mới, đúng lúc người chơi mở màn hình. (3) **Tiếng Việt**: phần lớn font đẹp thiếu `ẳ ỡ ữ`; TMP không báo lỗi, nó lặng lẽ tìm Fallback rồi hiện ô vuông. Dán một chuỗi đủ dấu vào TMP ngay tuần đầu.
+- *"Safe area?"* → Tai thỏ và thanh gesture: một component đọc `Screen.safeArea` rồi đặt anchor của một RectTransform bọc ngoài. Phải test cả xoay ngang và cả máy có màn hình đục lỗ; đây là loại lỗi chỉ lộ trên thiết bị thật, giả lập không thấy.
+- *"UI khi `timeScale = 0`?"* → Animator của UI phải để `Unscaled Time`, tween phải `SetUpdate(true)`, và mọi coroutine đợi phải là `WaitForSecondsRealtime` — nếu không, menu pause đứng hình đúng lúc cần nó nhất.
+- *"Kiến trúc 20 màn hình?"* → Mỗi màn hình là một prefab có `Show()/Hide()` async, một `UIStack` quản lý push/pop và nút Back của Android, View **không biết** gameplay — nó nhận dữ liệu và bắn event lên. Nhờ vậy mở thẳng một màn hình để test được, không phải bấm qua bốn menu.
+
+**Cờ đỏ**
+
+- Không biết một Canvas rebuild là rebuild **toàn bộ** Canvas đó.
+- Để `Raycast Target` bật trên mọi thứ, kể cả ảnh nền.
+- `GameObject.Find("HealthBar")` trong `Update`.
+- Bật/tắt UI bằng `SetActive` liên tục cho popup nặng (mỗi lần bật là một lần rebuild + `Awake` lại) thay vì tắt `CanvasGroup.alpha` + `blocksRaycasts` hoặc tắt component `Canvas`.
+- Nói "UI Toolkit mới hơn nên tốt hơn" mà không biết nó thiếu world-space ở runtime.
+
+**Số / ví dụ nên thuộc**
+
+- Tên trong Profiler: `Canvas.SendWillRenderCanvases`, `Canvas.BuildBatch`.
+- TMP dynamic atlas: 0.5–2ms cho mỗi glyph mới, và glyph không bị xoá khỏi RAM.
+- CJK gần như luôn cần atlas 4096 và font riêng.
+- Chuỗi test tiếng Việt: `ăâđêôơư ắằẳẵặ ấầẩẫậ ếềểễệ ốồổỗộ ớờởỡợ ứừửữự`.

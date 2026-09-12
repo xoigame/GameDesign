@@ -535,3 +535,46 @@ public sealed class SaveDebugMenu : MonoBehaviour
 - Write v1 fixture → Load: hai dòng `migrate → v2`, `migrate → v3`, rồi `gold 121 · unlock 2` (120.7 làm tròn; chỉ số 7 ngoài bảng bị bỏ, `[0,2]` thành `sword_basic`, `potion_small`). Save ngay: file giờ là v3 với `"legacy_coins": 0` và `"legacy_unlockIndices": []` — field legacy vẫn có mặt, đúng thiết kế.
 - Sửa tay file thành `"version": 99` → Load: warning `save từ bản mới hơn (v99 > v3) — không ghi đè`, nạp `.bak` hoặc tạo mới. Lưu ý autosave 30 giây sau **sẽ** ghi đè file chính (bản v99 chuyển thành `.bak`) — dự án thật phải khoá ghi khi gặp ca này.
 - Đặt `Autosave Interval` 5, bấm Esc để `Time.timeScale = 0` (nếu có GameFlow) hoặc gõ `Time.timeScale = 0` trong Console: log `Đã ghi` vẫn đều 5 giây một lần vì đếm bằng `unscaledDeltaTime`. Trên Android: nhận thưởng → Home ngay → kill từ Recent Apps → mở lại: gold còn, vì `OnApplicationPause(true)` đã ghi đồng bộ.
+
+## 🎤 Phỏng vấn
+
+**Câu hay gặp**
+
+| Mức | Câu hỏi |
+|---|---|
+| Junior | `PlayerPrefs` dùng cho việc gì? Vì sao không lưu tiến trình game vào đó? |
+| Junior | `persistentDataPath` là gì, khác `Application.dataPath` chỗ nào? |
+| Mid | `JsonUtility` hay Newtonsoft? Chọn theo tiêu chí nào? |
+| Mid | Người chơi tắt máy giữa lúc đang ghi save. Làm sao để không mất tất cả? |
+| Senior | Bản 1.3 thêm trường mới, người chơi đang ở save bản 1.0. Anh xử lý thế nào? |
+| Senior | Có nên mã hoá save không? Chống ai? |
+
+**Khung trả lời 60 giây** — "Hệ thống save của anh thiết kế thế nào?"
+
+> `PlayerPrefs` chỉ cho **settings** — âm lượng, ngôn ngữ, độ phân giải. Tiến trình game đi vào một file JSON ở `persistentDataPath`, model là một class `SaveData` có **`version`** ngay từ ngày đầu.
+>
+> Ghi phải **atomic**: ghi ra `save.tmp`, flush, rồi `File.Replace` đè lên `save.json` và giữ `save.bak`. Lý do rất cụ thể: ghi đè trực tiếp mà mất điện hoặc bị hệ điều hành kill giữa chừng thì file còn một nửa — người chơi mất toàn bộ tiến trình, và đó là loại review 1 sao không gỡ được. Trên mobile tôi ghi ở `OnApplicationPause(true)`, vì `OnApplicationQuit` có thể không bao giờ được gọi.
+>
+> Và **lưu id, không lưu tham chiếu**: `"weapon_rusty_sword"` chứ không phải đường dẫn asset hay instance ID — đổi prefab là save cũ chết.
+
+**Họ sẽ đào tiếp**
+
+- *"`JsonUtility` không làm được gì?"* → `Dictionary`, polymorphism, nullable, property. Nó nhanh và an toàn với IL2CPP vì dùng serializer của engine. Newtonsoft làm được hết nhưng chậm hơn 3–10 lần, nhiều GC, và **dựa vào reflection nên IL2CPP stripping có thể xoá mất thứ nó cần** — phải `link.xml` hoặc `[Preserve]`. Tôi mặc định `JsonUtility`, và đổi sang Newtonsoft khi thật sự cần đọc JSON tuỳ ý để migrate.
+- *"Migration?"* → Theo **chuỗi**: `v1→v2→v3`, mỗi bước là một hàm nhỏ, chạy tuần tự cho tới version hiện tại. Không viết một hàm "đọc mọi phiên bản". Và phải có **bộ save cũ trong repo để test** — lưu vài file save thật của từng bản phát hành và chạy load trong CI. Đây là câu trả lời phân biệt người đã ship game với người chưa.
+- *"Mã hoá?"* → Hỏi ngược: chống ai. Game đơn thuần offline thì mã hoá chỉ chặn người sửa file bằng Notepad — ai quyết tâm vẫn lấy được key trong binary, và bạn mất khả năng hỗ trợ người chơi hỏng save. Có leaderboard/IAP thì **chân lý phải nằm ở server**, không phải ở mã hoá phía client. Tối thiểu hợp lý: một checksum để phát hiện sửa tay, cộng thông báo tử tế thay vì crash.
+- *"Đừng lưu cái gì?"* → Vị trí/trạng thái của object trong scene theo kiểu chụp toàn cảnh. Lưu **trạng thái logic** (màn nào, đã mở khoá gì, HP, inventory), rồi dựng lại scene từ đó. Chụp toàn cảnh thì mọi lần sửa level là mọi save cũ hỏng.
+- *"Cloud save conflict?"* → Phải chọn **luật** và nói cho người chơi biết: theo timestamp thiết bị (lệch giờ là hỏng), theo tiến trình lớn hơn, hay hỏi người chơi. Im lặng chọn một bên là cách mất tiến trình quen thuộc nhất.
+
+**Cờ đỏ**
+
+- Không có trường `version` trong save.
+- `Dictionary` trong class đưa cho `JsonUtility` — `ToJson` cho ra `{}` **không báo lỗi**, và trong Editor thấy vẫn đúng vì dữ liệu còn trong RAM.
+- Ghi đè thẳng file save, không tmp, không backup.
+- Dùng `Application.dataPath` để ghi (chỉ đọc trên mobile, nằm trong thư mục cài).
+- Đổi Company/Product Name sau phát hành mà không biết đường dẫn save đổi theo.
+
+**Số / ví dụ nên thuộc**
+
+- Windows: `%USERPROFILE%/AppData/LocalLow/<Company>/<Product>`; iOS: `<App>/Documents` và **mặc định lên iCloud backup** (cache lớn phải `SetNoBackupFlag`, không thì Apple từ chối); WebGL: IndexedDB, cần `syncfs`.
+- Quy trình ghi atomic: tmp → flush → `File.Replace` (giữ `.bak`).
+- Autosave + backup xoay vòng 3 slot là mức tối thiểu cho game có tiến trình dài.

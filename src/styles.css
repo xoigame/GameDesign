@@ -686,6 +686,7 @@ button { font-family: inherit; font-size: inherit; cursor: pointer; }
 .ptab-prompt.on { color: #c4aeff; border-bottom-color: #b197fc; }
 .ptab-unity.on  { color: #7fe3ef; border-bottom-color: #4dd4e0; }
 .ptab-code.on   { color: #8fe3b8; border-bottom-color: #51cf9b; }
+.ptab-interview.on { color: #ffd08a; border-bottom-color: #f0a83c; }
 
 .tab-pane { margin-bottom: 8px; }
 .pane-head {
@@ -724,6 +725,20 @@ button { font-family: inherit; font-size: inherit; cursor: pointer; }
 .code-md code { background: rgba(81,207,155,.12); color: #c6f1dc; }
 .code-md pre { border-color: rgba(81,207,155,.22); }
 .code-md pre code { background: none; color: #c8d3e8; }
+
+.interview-pane .btn {
+  background: rgba(240,168,60,.16); border-color: rgba(240,168,60,.45); color: #ffd08a;
+}
+.interview-pane .btn:hover { background: rgba(240,168,60,.28); }
+.interview-md h3 { color: #ffd08a; }
+.interview-md code { background: rgba(240,168,60,.12); color: #ffe4b8; }
+.interview-md pre { border-color: rgba(240,168,60,.22); }
+.interview-md pre code { background: none; color: #c8d3e8; }
+/* Khung trả lời: blockquote trong tab Phỏng vấn là câu nói ra miệng, không phải trích dẫn. */
+.interview-md blockquote {
+  border-left: 3px solid rgba(240,168,60,.5); background: rgba(240,168,60,.06);
+  margin: 1em 0; padding: .7em 1em; border-radius: 0 6px 6px 0;
+}
 
 @media (max-width: 900px) {
   .ptab { padding: 11px 12px; font-size: 13px; }

@@ -428,3 +428,47 @@ public class NetBootstrap : MonoBehaviour
 - Thêm Network Simulator 150 ms / 3% loss cho Player 2, chạy thẳng: `prediction error` ổn định quanh 0.6–0.8 m và thấy kéo mềm nhẹ mỗi lần đổi hướng — đúng bệnh của prediction không tick-stamp; đó là lý do CSP thật phải gửi `(tick, input)` và chạy lại buffer (xem thân bài).
 - Trong cửa sổ Player 2, chọn capsule của mình và kéo Position X lên 50 trong Inspector: ngay bước FixedUpdate kế nó bị kéo về vị trí server (lệch > 3 m → snap). Client không có quyền với vị trí — chỉ có quyền với input.
 - Sửa `SubmitInputRpc` gửi `new Vector2(100f, 0f)`: nhân vật vẫn đi đúng 5 m/s vì server `ClampMagnitude` — client nói gì cũng chỉ là ý định. Bấm Shutdown ở host: cả hai capsule biến mất ở cả hai cửa sổ.
+
+## 🎤 Phỏng vấn
+
+**Câu hay gặp**
+
+| Mức | Câu hỏi |
+|---|---|
+| Junior | Host (listen server) và dedicated server khác nhau thế nào? |
+| Junior | `NetworkVariable` và `Rpc` — khi nào dùng cái nào? |
+| Mid | Vì sao không để client tự báo vị trí và máu của mình? |
+| Mid | Người chơi thấy mình bắn trúng nhưng server bảo trượt. Xử lý? |
+| Senior | Anh sẽ chọn stack nào cho co-op 4 người, và vì sao không chọn ba cái kia? |
+| Senior | Chi phí ẩn của multiplayer nằm ở đâu? |
+
+**Khung trả lời 60 giây** — "Chọn stack cho co-op 4 người?"
+
+> Co-op 2–8 người, đội quen GameObject: **Netcode for GameObjects** với Unity Relay để vượt NAT — host là một người chơi, không tốn server hàng tháng. Mirror là lựa chọn thay thế hợp lý nếu muốn kiểm soát code và nhiều transport, kể cả Steam.
+>
+> Tôi **không** chọn Photon Fusion cho co-op vì cái nó bán là client-side prediction và rollback sẵn có — thứ đáng tiền cho shooter competitive, còn co-op PvE thì không cần và phải trả tiền theo CCU. Và không chọn Netcode for Entities trừ khi đội đã sống trong DOTS rồi.
+>
+> Đánh đổi phải nói ra: host có độ trễ 0ms nên có lợi thế, host thoát là hết trận (NGO không có host migration sẵn), và mọi thứ PvP có xếp hạng thì sớm muộn cũng phải lên dedicated server.
+
+**Họ sẽ đào tiếp**
+
+- *"`NetworkVariable` hay Rpc?"* → `NetworkVariable` cho **trạng thái** — thứ người vào giữa trận cũng cần biết (máu, điểm, trạng thái cửa). Nó đồng bộ giá trị hiện tại, client mới kết nối nhận ngay. Rpc cho **sự kiện tức thời** — nổ, phát âm thanh, một cú nhảy. Sai lầm quen thuộc là dùng Rpc cho trạng thái: ai vào sau sẽ không bao giờ biết cửa đã mở.
+- *"Vì sao không tin client?"* → Client-authoritative nghĩa là sửa bộ nhớ là bay xuyên tường và bất tử — không phải lý thuyết, là chuyện của mọi game có người chơi cạnh tranh. Luật: client gửi **ý định** ("tôi muốn đi hướng này", "tôi bắn lúc t"), server quyết **kết quả**. Riêng co-op PvE hoàn toàn có thể nới lỏng để đổi lấy độ mượt — đó là lựa chọn có ý thức, không phải lười.
+- *"Bắn trúng mà server bảo trượt?"* → Đó là **lag compensation**: server phải tua ngược vị trí mục tiêu về thời điểm client bắn (theo RTT/2 + interpolation delay) rồi mới kiểm. Không làm thì người chơi ping cao phải "bắn đón", cảm giác như game hỏng. Đi kèm là client-side prediction cho chuyển động của chính mình và **reconciliation** khi server nói khác — nếu không, mọi bước đi đều trễ đúng bằng ping.
+- *"PhysX có deterministic không?"* → **Không**, nên đừng thiết kế lockstep quanh nó. Muốn xác định thì tự viết chuyển động bằng số nguyên/fixed-point, hoặc chấp nhận mô hình server-authoritative.
+- *"Reconnect?"* → State phải gắn với **playerId ổn định**, không phải `clientId` (đổi mỗi lần kết nối). Giữ chỗ 30–60 giây. Đây là thứ hầu như luôn bị bỏ quên tới lúc test trên 4G thật.
+- *"Băng thông?"* → Tick rate và số object đồng bộ là hai núm chính; `NetworkTransform` gửi thẳng transform mỗi tick rất tốn — nén, giảm tần suất theo khoảng cách, và chỉ đồng bộ thứ người khác nhìn thấy được.
+
+**Cờ đỏ**
+
+- "Để client tự tính cho nhẹ server" trong game PvP.
+- Đồng bộ mọi thứ bằng Rpc, kể cả máu.
+- Test multiplayer chỉ bằng hai cửa sổ trên cùng một máy — 0ms ping, không mất gói: **mọi bug netcode đều ẩn**. Phải bật Network Simulator (100–200ms, 2–5% packet loss) từ tuần đầu.
+- Không biết ai trả tiền server sau khi phát hành: VPS 2 vCPU 24/7 khoảng 20–40 USD/tháng chưa tính băng thông, và game chết vẫn phải trả cho tới khi tắt.
+- Trộn logic gameplay với code hiển thị nên không thể chạy server headless.
+
+**Số / ví dụ nên thuộc**
+
+- Lag compensation tua ngược ≈ RTT/2 + interpolation delay.
+- Network Simulator: 100–200ms latency, 2–5% loss, jitter — cấu hình test tối thiểu.
+- NGO hợp 2–16 người; Mirror 2–64; Fusion tới ~200; Netcode for Entities 64–200+.

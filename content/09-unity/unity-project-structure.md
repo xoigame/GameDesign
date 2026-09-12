@@ -367,3 +367,44 @@ File `Assets/_Project/Gameplay/Game.Gameplay.asmdef` — tham chiếu ghi theo *
 - Import ảnh 4096×4096 vào `Features/Combat/Art/`, tab Default đặt Max Size 4096, không tick Android: một warning. Tick `Override for Android` + Max Size 2048 → chạy lại hết. Đây chính là texture đáng ra Preset phải bắt lúc import.
 - Kéo prefab base `P_Enemy` vào `Prefabs/Variants/`: warning; xoá và tạo lại bằng Create ▸ Prefab Variant từ `P_Enemy` → hết. Tạo scene mới trong `Scenes/` chưa thêm Build Settings → warning; thêm vào → hết.
 - Với asmdef: sửa một dòng trong `Features/Combat/Scripts/`, lưu — Console báo compile xong dưới 3 giây vì chỉ `Game.Features.Combat` build lại. Thêm `Game.UI` vào references của `Game.Gameplay` trong khi `Game.UI` đã tham chiếu `Game.Gameplay` → Apply là lỗi ngay `cyclic references detected`. Viết một script ngoài mọi asmdef có `using Game.Gameplay;` → `type or namespace not found`: đó là `Auto Referenced ☐` đang làm việc, không phải bug.
+
+## 🎤 Phỏng vấn
+
+**Câu hay gặp**
+
+| Mức | Câu hỏi |
+|---|---|
+| Junior | File `.meta` là gì? Có commit không? |
+| Junior | Thư mục nào **không** được commit trong dự án Unity? |
+| Mid | Tổ chức asset theo loại (`Scripts/`, `Prefabs/`) hay theo feature? Vì sao? |
+| Mid | Assembly Definition để làm gì? Cái giá phải trả? |
+| Senior | Hai người sửa cùng một scene, merge conflict — quy trình của anh? |
+| Senior | Prefab Variant và kế thừa MonoBehaviour, khi nào chọn cái nào? |
+
+**Khung trả lời 60 giây** — "Anh tổ chức một dự án Unity mới thế nào?"
+
+> Mọi thứ của dự án nằm trong `Assets/_Project/`, tách khỏi asset mua ngoài Store — chỉ riêng cái gạch dưới đã tiết kiệm hàng giờ khi cần biết "cái này của ai". Bên trong chia **theo feature**, không theo loại: `_Project/Combat/` chứa cả script, prefab, material của combat. Một feature = một thư mục = một PR; xoá feature là xoá thư mục, không phải đi mò năm chỗ.
+>
+> Mỗi feature một asmdef, và chiều phụ thuộc là **một chiều**: UI biết Gameplay, Gameplay không biết UI — nó bắn event lên. Vì sao quan trọng: asmdef làm Unity chỉ biên dịch lại assembly bị đổi thay vì cả `Assembly-CSharp`, và chiều phụ thuộc một chiều là thứ ngăn dự án biến thành một cục. Cái giá là mỗi asmdef thành một DLL, nên đừng chẻ 40 cái — chẻ theo ranh giới thật.
+
+**Họ sẽ đào tiếp**
+
+- *"`.meta` hỏng thì sao?"* → `.meta` giữ **GUID**, là sợi dây nối mọi tham chiếu. Hai tai nạn quen mặt: đổi tên/di chuyển file **bên ngoài** Unity (Explorer, `git mv` khi Unity đang đóng) làm meta lạc khỏi asset → mọi reference thành `Missing`; và quên commit `.meta` của thư mục mới → máy đồng đội sinh GUID khác, prefab của họ trỏ vào hư không.
+- *"Commit gì, bỏ gì?"* → Commit `Assets/`, `Packages/` (cả `manifest.json` và `packages-lock.json`), `ProjectSettings/`. Bỏ `Library/`, `Temp/`, `Logs/`, `Build/`, `UserSettings/`. Binary lớn đi Git LFS. Và bật **Force Text** serialization + đăng ký `UnityYAMLMerge` (Smart Merge) trước khi cần tới nó, chứ không phải lúc đang conflict.
+- *"Vẫn conflict scene thì sao?"* → Phòng hơn chữa: chia scene **additive theo vai trò** (Lighting / Layout / Gameplay) để hai người hiếm khi chạm cùng file, và đẩy nội dung vào prefab — sửa prefab không đụng scene. Khi đã conflict thì Smart Merge cứu được phần lớn, phần còn lại thà lấy một bên và làm lại tay còn hơn merge YAML bằng mắt.
+- *"Prefab Variant vs kế thừa?"* → Variant cho **khác biệt về dữ liệu và cấu trúc** (cùng enemy, khác máu/skin/thêm cái khiên) — designer làm được, không cần build. Kế thừa cho khác biệt về **hành vi**. Sai lầm hay gặp là tạo `EnemyArcher : Enemy` chỉ để đổi mấy con số.
+- *"Preset/Import settings?"* → Import settings quyết định hiệu năng nhiều hơn thuật toán. Một texture UI 2048 quên tắt mipmap và Read/Write tốn 16MB thay vì 4MB, mà Editor 32GB RAM thì chẳng ai thấy. Preset + Preset Manager có filter theo đường dẫn giải quyết việc đó **lúc import lần đầu**; asset cũ phải áp tay hoặc qua validator.
+
+**Cờ đỏ**
+
+- Commit `Library/` (hoặc không biết vì sao không nên).
+- Đổi tên asset ngoài Unity.
+- "Tôi để hết trong `Assets/Scripts`" ở dự án nhiều người, không có ranh giới nào.
+- Tạo asmdef cho mọi thư mục — thời gian build và IL2CPP lãnh đủ.
+- Nâng bản Unity giữa dự án mà không nói tới LTS, `packages-lock.json`, hay việc phải nâng cùng lúc cả team.
+
+**Số / ví dụ nên thuộc**
+
+- Texture UI 2048 bật mipmap + Read/Write: 16MB so với 4MB.
+- `Assets/` + `Packages/` + `ProjectSettings/` là ba thứ phải commit; `Library/` sinh lại được nên không.
+- Chiều phụ thuộc: `Game.UI` → `Game.Gameplay` → `Game.Core`. Không bao giờ ngược lại.

@@ -516,3 +516,44 @@ public class FlashDissolveDriver : MonoBehaviour
 - Bật Play: mỗi 0.7s một cú flash 0.08s (≈ 5 frame ở 60 FPS); đúng lúc đó Frame Debugger tách Enemy đang flash thành draw riêng với lý do "Node has a MaterialPropertyBlock", frame kế tiếp gộp lại — nếu **không gộp lại** thì `SetPropertyBlock(null)` chưa được gọi.
 - Dissolve 0.6s: mesh thủng theo noise với viền vàng `#FFD43B`; **bóng dưới đất thủng theo** (ShadowCaster pass cũng clip). Bật Bloom trong Volume, viền loé — vì cộng emission HDR thay vì lerp.
 - Đặt `Flash Duration` = 0.5 ngay trong Play: flash dài rõ mà không cần sửa shader — chứng minh giá trị đi qua MPB. Kiểm `Shader.PropertyToID("_FlashAmount")` bằng cách đổi thành `"Flash Amount"` (Display Name): không lỗi, không hiệu ứng.
+
+## 🎤 Phỏng vấn
+
+**Câu hay gặp**
+
+| Mức | Câu hỏi |
+|---|---|
+| Junior | Material hiện màu hồng. Nghĩa là gì? |
+| Junior | Shader Graph hay viết HLSL tay — anh chọn thế nào? |
+| Mid | SRP Batcher hoạt động nhờ đâu, và cái gì phá nó? |
+| Mid | Làm hit flash (nhân vật loé trắng khi trúng đòn) mà không tăng draw call? |
+| Senior | Thời gian build tăng 10 phút sau khi thêm một shader. Vì sao? |
+| Senior | Transparent bị sort sai, vật sau vẽ đè vật trước. Xử lý? |
+
+**Khung trả lời 60 giây** — "SRP Batcher và cái gì phá nó?"
+
+> SRP Batcher không gộp mesh như batching cũ — nó giữ **hằng số per-material trên GPU** giữa các frame, nên chỉ cần các object dùng **cùng shader variant** là CPU không phải nạp lại buffer mỗi draw. Nghĩa là nhiều material khác nhau vẫn nhanh, miễn là cùng shader.
+>
+> Thứ phá nó thì rất cụ thể: gọi `renderer.material` (Unity **tạo bản sao material** ngay lúc đó — cũng là rò rỉ bộ nhớ nếu không Destroy), và `MaterialPropertyBlock`. Đây là nghịch lý hay bị hỏi: MaterialPropertyBlock từng là cách đúng ở Built-in để tránh nhân bản material, nhưng ở URP nó lại **loại object khỏi SRP Batcher**. Cách đúng bây giờ là cho giá trị per-instance vào vertex color, UV thừa, hoặc dùng `Graphics.RenderMeshInstanced` với mảng matrix.
+
+**Họ sẽ đào tiếp**
+
+- *"Material hồng?"* → Shader không biên dịch được cho pipeline hiện tại — gần như luôn là shader viết cho Built-in (`Standard`, `UnityCG.cginc`) chạy trên URP. Render Pipeline Converter đổi được material dùng shader Unity chuẩn; **shader tự viết của asset Store thì không**, phải viết lại. Nên trước khi mua asset thì đọc xem có ghi URP và phiên bản nào không.
+- *"Variant nổ ra sao?"* → Mỗi `multi_compile` nhân đôi số variant; thêm năm keyword "cho chắc" là nhân 32. Hậu quả: thời gian build tăng hàng chục phút, kích cỡ build phình, và lần đầu gặp variant lúc chạy là một cú khựng vì **compile shader tại chỗ**. Dùng `shader_feature` (chỉ giữ variant thực sự dùng) thay cho `multi_compile` khi có thể, và dùng **SVC (Shader Variant Collection)** để warm-up trước màn hình loading.
+- *"Hit flash?"* → Thêm một property `_FlashAmount` vào shader nhân vật và lerp màu ở fragment — không thêm draw call, không đổi material. Cách sai kinh điển là đổi `renderer.material.color` (nhân bản material, phá batcher) hoặc chồng thêm một mesh trắng (gấp đôi draw call và overdraw).
+- *"Sorting transparent?"* → Transparent không ghi depth nên thứ tự vẽ là theo **khoảng cách tới camera của pivot object**, không theo hình học — một mặt phẳng lớn có pivot ở xa sẽ vẽ sai. Chữa bằng `Render Queue`/`Sorting Priority` thủ công, tách mesh, hoặc dùng alpha-test (cutout) khi hình cho phép.
+- *"Precision trên mobile?"* → `half` thay `float` ở nơi không cần chính xác (màu, UV local) — trên GPU mobile là khác biệt thật, không phải vi chỉnh. Nhưng world position và thời gian tích luỹ phải để `float`, nếu không sẽ thấy hình giật nhảy khi đi xa gốc toạ độ.
+
+**Cờ đỏ**
+
+- `renderer.material` trong `Update` (nhân bản material mỗi lần gọi + rò rỉ).
+- Không biết phân biệt `material` và `sharedMaterial`.
+- Bật mọi keyword "cho chắc chắn".
+- Nói "shader tốn GPU" chung chung mà không nói tới **fill rate và overdraw** — thứ thật sự giết GPU mobile.
+- Dùng `Graphics.Blit` kiểu Built-in trong URP 17 mà không biết Render Graph đã đổi cách viết Renderer Feature.
+
+**Số / ví dụ nên thuộc**
+
+- SRP Batcher = cùng **shader variant**, không cần cùng material.
+- Phá batcher: `renderer.material`, `MaterialPropertyBlock`.
+- `shader_feature` vs `multi_compile`: cái đầu strip được variant không dùng.
