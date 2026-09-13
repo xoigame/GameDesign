@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-09-13T07:02:03.433Z",
+  "generatedAt": "2026-09-13T08:30:38.766Z",
   "root": "root",
   "maps": [
     {
@@ -80,6 +80,8 @@
     "glossaryTerms": 183,
     "withCode": 53,
     "withInterview": 167,
+    "interviewQuestions": 1255,
+    "interviewAnswered": 1255,
     "translated": {
       "en": 24
     },
