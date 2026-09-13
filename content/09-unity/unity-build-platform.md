@@ -392,14 +392,24 @@ public static class BuildScript
 
 **Câu hay gặp**
 
-| Mức | Câu hỏi |
-|---|---|
-| Junior | Mono và IL2CPP khác nhau thế nào? Khi nào bắt buộc IL2CPP? |
-| Junior | Build chạy trong Editor nhưng lỗi trên thiết bị — anh tìm nguyên nhân ở đâu? |
-| Mid | Build Android 300MB, cần xuống dưới 150MB. Anh cắt ở đâu? |
-| Mid | Managed Stripping Level làm gì? Vì sao nó hay làm hỏng deserialize? |
-| Senior | Crash chỉ xảy ra trên bản Release ở một dòng máy. Quy trình của anh? |
-| Senior | Build pipeline của team anh tự động tới đâu? |
+- `Junior` **Mono và IL2CPP khác nhau thế nào? Khi nào bắt buộc IL2CPP?**
+  → IL2CPP dịch IL sang C++ rồi biên dịch native: nhanh hơn lúc chạy, khó dịch ngược hơn. **Bắt buộc cho iOS** và bắt buộc cho Android 64-bit trên Play Store. Cái giá: build lâu hơn nhiều, và vì là AOT nên không có JIT — `Reflection.Emit`, một số generic trên value type, và `dynamic` nổ **lúc chạy** chứ không phải lúc biên dịch.
+- `Junior` **Build chạy trong Editor nhưng lỗi trên thiết bị — anh tìm nguyên nhân ở đâu?**
+  → Ba nhóm khác biệt, theo thứ tự khả năng: **Managed Stripping** xoá thứ chỉ gọi qua reflection; **IL2CPP AOT** không chạy được code cần JIT; và timing — build nhanh hơn Editor nên race condition lộ ra. Bước đầu luôn là build Development có stack trace, rồi symbolicate, chứ không phải đoán.
+- `Junior` **`Development Build` dùng để làm gì và không được dùng để làm gì?**
+  → Dùng để có stack trace tên hàm, nối Profiler, bật Script Debugging. **Không** dùng để đo hiệu năng cuối: nó chậm hơn bản Release vì có thêm instrumentation, nên con số đo được không phải con số người chơi thấy. Đo hiệu năng thì dùng bản Release có symbol.
+- `Mid` **Build Android 300 MB, cần xuống dưới 150 MB. Anh cắt ở đâu?**
+  → Mở **Build Report** trước, đừng đoán — gần như luôn là texture và audio chứ không phải code. Thứ tự: texture sang **ASTC** và hạ Max Size (2048 không nén 21 MB → ASTC 6×6 còn 2,5 MB); nhạc sang **Streaming + Vorbis**, SFX ngắn ADPCM; xoá asset mồ côi và mọi thứ trong `Resources/`. Rồi mới tới **Play Asset Delivery / Addressables** để đẩy nội dung ra khỏi gói cài.
+- `Mid` **Managed Stripping Level làm gì? Vì sao nó hay làm hỏng deserialize?**
+  → Nó xoá code không ai gọi tới để giảm kích cỡ — nhưng "không ai gọi" được tính **tĩnh**, nên thứ chỉ gọi qua **reflection** bị xoá: DTO của JSON, class nạp bằng tên, enum trong attribute. Bẫy tinh vi: đánh `[Preserve]` lên class nhưng constructor không tham số và setter vẫn bị xoá → deserialize ra object toàn giá trị mặc định, **không có exception nào**.
+- `Mid` **Chống stripping cho chắc thì làm thế nào?**
+  → `preserve="all"` ở cấp **type** trong `link.xml` cho mọi type tham gia serialize, thay vì rắc `[Preserve]` từng chỗ. Và quan trọng không kém: **test trên bản Release**, không phải Development — Development thường để stripping thấp hơn nên lỗi này không xuất hiện, đó là lý do nó tới tay người chơi.
+- `Senior` **Crash chỉ xảy ra trên bản Release ở một dòng máy. Quy trình của anh?**
+  → Dựng **symbol** cho đúng bản đó (`symbols.zip` cho Android, `.dSYM` cho iOS) rồi symbolicate log từ Crashlytics hoặc Play Console. Nếu chỉ xảy ra ở Release mà không ở Development thì nghi stripping, code trong `[Conditional]` bị xoá, hoặc race lộ ra vì timing khác. Song song đó tìm mẫu chung theo dòng máy và bản OS.
+- `Senior` **Build pipeline của team anh tự động tới đâu?**
+  → Tối thiểu đáng gọi là pipeline: một hàm `[MenuItem]` hoặc CLI `-batchmode -executeMethod` để build bằng một lệnh, version code tự tăng, **symbol upload tự động**, và một bản build đêm cho QA. Không cần Jenkins mới gọi là pipeline — nhưng "tôi bấm Build trong Editor rồi kéo file lên Drive" là câu trả lời của dự án một người.
+- `Senior` **Thứ gì trong khâu phát hành mà mất là không cứu được?**
+  → **Keystore của Android**: mất là không update app được nữa, phải xuất bản app mới và bỏ lại toàn bộ người dùng cũ. Cùng nhóm rủi ro vĩnh viễn: đổi bundle id hoặc Company/Product Name sau phát hành (đổi luôn đường dẫn save của người chơi), và mất `addressables_content_state.bin` của một bản đã ship.
 
 **Khung trả lời 60 giây** — "Cắt kích cỡ build Android thế nào?"
 

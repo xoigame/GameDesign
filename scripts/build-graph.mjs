@@ -12,6 +12,10 @@
 import fs from 'node:fs'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
+// Parser mục 🎤 dùng CHUNG với web (src/components/Practice.jsx). Cố ý: hai bản
+// parser riêng là cách chắc chắn nhất để cổng kiểm tra báo xanh trong khi web
+// hiện ra thứ khác. File đó là JS thuần, không chạm DOM lúc import.
+import { interviewAudit } from '../src/lib/practice.js'
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
 const ROOT = path.resolve(__dirname, '..')
@@ -388,6 +392,10 @@ function build({ strict = false, quiet = false } = {}) {
       refs: (data.refs || []).map(String),
       order: typeof data.order === 'number' ? data.order : 999,
       collapsed: data.collapsed === true,
+      // map: true -> nhánh này được tách thành một mindmap riêng trên web.
+      // mapLabel: nhãn ngắn hiện trên nút chọn bản đồ (mặc định lấy title).
+      map: data.map === true,
+      mapLabel: data.mapLabel ? String(data.mapLabel) : '',
       path: rel,
       words: countWords(body) + countWords(aiPrompt) + countWords(unity) + countWords(code) + countWords(interview),
       body,
@@ -474,6 +482,36 @@ function build({ strict = false, quiet = false } = {}) {
     const idx = branchIndex.has(node.branch) ? branchIndex.get(node.branch) : 0
     node.color = node.id === rootId ? '#e9ecef' : BRANCH_COLORS[idx % BRANCH_COLORS.length]
   }
+
+  // ---- bản đồ con ----
+  // Nhánh khai `map: true` được tách thành một mindmap riêng trên web.
+  // CÂY DỮ LIỆU KHÔNG ĐỔI: parent vẫn là root, nên lộ trình đọc, [[wiki-link]],
+  // export và KNOWLEDGE_INDEX vẫn thấy toàn kho như cũ — chỉ phần VẼ tách ra.
+  // node.mapId = bản đồ chứa node đó: tổ tiên gần nhất có map: true, nếu không thì gốc.
+  nodes.get(rootId).mapId = rootId
+  const mapStack = [rootId]
+  while (mapStack.length) {
+    const cur = nodes.get(mapStack.pop())
+    for (const childId of cur.children) {
+      const child = nodes.get(childId)
+      child.mapId = child.map ? child.id : cur.mapId
+      mapStack.push(childId)
+    }
+  }
+
+  const allNodes = [...nodes.values()]
+  const maps = [rootId, ...allNodes.filter((n) => n.map && n.id !== rootId).map((n) => n.id)]
+    .map((id) => {
+      const n = nodes.get(id)
+      return {
+        id,
+        title: n.title,
+        label: n.mapLabel || n.title,
+        icon: n.icon,
+        color: n.color,
+        nodes: allNodes.filter((x) => x.mapId === id).length,
+      }
+    })
 
   // ---- liên kết ngang ----
   const relations = []
@@ -565,12 +603,41 @@ function build({ strict = false, quiet = false } = {}) {
     )
   }
 
+  // Mục 🎤: mỗi câu hỏi phải có lời giải của CHÍNH nó. Một câu không lời giải là
+  // một thẻ lật ra mặt sau trắng trong chế độ luyện phỏng vấn — đúng thứ khiến
+  // người học mất lòng tin vào cả bộ thẻ.
+  let qTotal = 0
+  let qAnswered = 0
+  const noAnswer = []
+  const noFrame = []
+  for (const n of list) {
+    const audit = interviewAudit(n)
+    if (!audit) continue
+    qTotal += audit.questions
+    qAnswered += audit.answered
+    if (audit.missing.length) noAnswer.push(n.id + ' (' + audit.missing.length + '/' + audit.questions + ')')
+    if (!audit.hasFrame) noFrame.push(n.id)
+  }
+  if (noAnswer.length) {
+    warnings.push(
+      'Câu hỏi phỏng vấn thiếu lời giải ở ' + noAnswer.length + ' node: ' + noAnswer.join(', ') +
+      ' — mỗi câu viết dạng "- `Mid` **câu hỏi?**" rồi dòng dưới "→ lời giải", xem content/_SCHEMA.md'
+    )
+  }
+  if (noFrame.length) {
+    warnings.push(
+      'Mục 🎤 thiếu "Khung trả lời 60 giây" ở ' + noFrame.length + ' node: ' + noFrame.join(', ')
+    )
+  }
+
   const graph = {
     generatedAt: new Date().toISOString(),
     root: rootId,
+    maps,
     stats: {
       nodes: list.length,
       branches: root.children.length,
+      maps: maps.length,
       deep: list.filter((n) => n.status === 'deep').length,
       stub: list.filter((n) => n.status === 'stub').length,
       relations: relations.length,
@@ -580,6 +647,8 @@ function build({ strict = false, quiet = false } = {}) {
       glossaryTerms: Object.keys(glossary[BASE_LANG] || {}).length,
       withCode: list.filter((n) => n.code).length,
       withInterview: list.filter((n) => n.interview).length,
+      interviewQuestions: qTotal,
+      interviewAnswered: qAnswered,
       translated: Object.fromEntries(
         TRANSLATED_LANGS.map((lg) => [lg, list.filter((n) => n.i18n[lg]).length])
       ),
@@ -605,13 +674,21 @@ function build({ strict = false, quiet = false } = {}) {
   if (!quiet) {
     const s = graph.stats
     console.log(
-      '[graph] ' + s.nodes + ' node · ' + s.branches + ' nhánh · ' +
+      '[graph] ' + s.nodes + ' node · ' + s.branches + ' nhánh · ' + s.maps + ' bản đồ · ' +
       s.deep + ' deep / ' + s.stub + ' stub · ' + s.relations + ' liên kết · ' +
-      s.withPrompt + '/' + s.nodes + ' có prompt (' + s.withAiHowto + ' có howto) · ' + s.withUnity + ' có Unity · ' + s.glossaryTerms + ' thuật ngữ · ' + s.withCode + ' có Code · ' + s.withInterview + ' có Phỏng vấn · ' +
+      s.withPrompt + '/' + s.nodes + ' có prompt (' + s.withAiHowto + ' có howto) · ' + s.withUnity + ' có Unity · ' + s.glossaryTerms + ' thuật ngữ · ' + s.withCode + ' có Code · ' + s.withInterview + ' có Phỏng vấn (' +
+      s.interviewAnswered + '/' + s.interviewQuestions + ' câu có lời giải) · ' +
       TRANSLATED_LANGS.map((lg) => s.translated[lg] + '/' + s.nodes + ' ' + lg).join(' · ') + ' · ' +
       s.basic + ' cơ bản / ' + s.intermediate + ' trung cấp / ' + s.advanced + ' chuyên sâu · ' +
       s.words + ' từ'
     )
+    if (graph.maps.length > 1) {
+      console.log(
+        '        bản đồ: ' +
+        graph.maps.map((m) => (m.icon ? m.icon + ' ' : '') + m.label + ' ' + m.nodes).join(' · ') +
+        '  (bản đồ 1 node = nhánh mới, chưa có node con)'
+      )
+    }
     warnings.forEach((w) => console.warn('  ! ' + w))
     errors.forEach((e) => console.error('  X ' + e))
   }
@@ -659,7 +736,7 @@ function renderIndex(graph, nodes) {
   const line = (id, prefix) => {
     const n = nodes.get(id)
     const badge = n.status === 'stub' ? ' _(stub — cần viết thêm)_' : ''
-    const prompt = (n.aiPrompt ? ' 🤖' : '') + (n.unity ? ' 🎮' : '') + (n.code ? ' 💻' : '') + (n.interview ? ' 🎤' : '') + (n.i18n.en ? ' 🇬🇧' : '')
+    const prompt = (n.aiPrompt ? ' 🤖' : '') + (n.unity ? ' 🎮' : '') + (n.code ? ' 💻' : '') + (n.interview ? ' 🎤' : '') + (n.i18n.en ? ' 🇬🇧' : '') + (n.map && n.id !== graph.root ? ' 🗺' : '')
     const mark = { basic: '●', intermediate: '◐', advanced: '○' }[n.level] || '·'
     L.push(prefix + '- ' + mark + ' `#' + n.readIndex + '` **' + n.title + '** `#' + n.id + '`' +
            badge + prompt + ' — ' + (n.summary || '(chưa có summary)') +
@@ -675,6 +752,8 @@ function renderIndex(graph, nodes) {
   L.push('> 💻 = node có mục **Code**: script demo chạy được + sơ đồ thiết lập Inspector (nhánh Unity).')
   L.push('>')
   L.push('> 🎤 = node có mục **Phỏng vấn**: câu hỏi hay gặp, khung trả lời 60 giây, câu hỏi đào sâu, cờ đỏ.')
+  L.push('>')
+  L.push('> 🗺 = nhánh được vẽ thành **mindmap riêng** trên web (khai `map: true`). Cây dữ liệu không đổi: node vẫn là con của gốc.')
   L.push('>')
   L.push('> 🇬🇧 = node đã có bản dịch tiếng Anh tại `<tên-file>.en.md`.')
   L.push('>')

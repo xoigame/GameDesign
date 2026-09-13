@@ -175,11 +175,27 @@ export default function Practice({ graph, nodesById, lang, onSelect, onProgress 
             </div>
           ) : (
             <div className="pr-answer">
-              {card.parsed.frame && (
-                <section>
-                  <h4>{L('Khung trả lời 60 giây', '60-second frame')}</h4>
+              {/* Lời giải của ĐÚNG câu vừa hỏi. Thẻ câu lõi lấy luôn khung 60 giây
+                  làm lời giải — khung đó vốn được viết cho chính câu đó. */}
+              <section>
+                <h4>{card.isFrame
+                  ? L('Khung trả lời 60 giây', '60-second frame')
+                  : L('Lời giải', 'Answer')}</h4>
+                {card.answer
+                  ? <div className="md pr-frame">{md(card.answer)}</div>
+                  : <p className="pr-todo">{L(
+                      'Câu này chưa có lời giải riêng trong content/. Xem tạm khung trả lời bên dưới, rồi bổ sung "→ lời giải" cho câu này.',
+                      'This question has no answer of its own in content/ yet. Use the frame below, then add a "→ answer" line for it.')}</p>}
+              </section>
+
+              {!card.isFrame && card.parsed.frame && (
+                <details className="pr-more">
+                  <summary>
+                    {L('Khung trả lời 60 giây của node', 'The node\u2019s 60-second frame')}
+                    {card.parsed.frameQuestion ? ' — “' + card.parsed.frameQuestion + '”' : ''}
+                  </summary>
                   <div className="md pr-frame">{md(card.parsed.frame)}</div>
-                </section>
+                </details>
               )}
               {card.parsed.followUps.length > 0 && (
                 <section>

@@ -168,3 +168,57 @@ Không cần dashboard bên ngoài cho giai đoạn playtest nội bộ. Một E
 - Alt-Tab ra rồi vào: log có được flush không?
 - Log dùng `unscaledTime` chứ?
 - Có dữ liệu định danh cá nhân nào trong log không? (không được)
+
+## 🎤 Phỏng vấn
+
+**Câu hay gặp**
+
+- `Junior` **Luật nền của playtest là gì?**
+  → **Người chơi rất giỏi phát hiện vấn đề và rất dở đề xuất giải pháp.** Ai đó nói "nên cho nhân vật nhảy đúp" thì thứ họ thực sự nói là "tôi thấy bực khi di chuyển". Nghe phần vấn đề, tự tìm giải pháp. Hệ quả thứ hai quan trọng hơn: **quan sát, đừng chỉ hỏi** — lời nói bị chi phối bởi phép lịch sự, hành vi thì không.
+- `Junior` **Cần bao nhiêu người để một buổi playtest có giá trị?**
+  → **1 người** đã phát hiện được lỗi khả dụng nghiêm trọng nhất. **5 người** phát hiện khoảng 80% vấn đề khả dụng. **20+ người** mới đủ nói chuyện cân bằng, và **hàng trăm** mới đủ cho phân tích định lượng đáng tin. Năm người ngồi xem trực tiếp có giá trị hơn một khảo sát 200 người.
+- `Junior` **Trong buổi test anh làm gì và không làm gì?**
+  → **Không giải thích gì cả** — ngay khi phải giải thích là đã tìm ra một lỗi thiết kế. Ghi lại **khoảnh khắc do dự** (chỗ tín hiệu chưa rõ), ghi chỗ họ chết và phản ứng ngay sau đó, yêu cầu nói thành tiếng suy nghĩ. Và ngồi im, chống lại mọi thôi thúc muốn hướng dẫn.
+- `Mid` **Hỏi sau buổi test thế nào cho đúng?**
+  → Hỏi mở, tránh dẫn dắt. Tốt: "Kể lại cho tôi chuyện gì vừa xảy ra", "Lúc nào bạn thấy khó chịu nhất?", "Bạn nghĩ mình nên làm gì tiếp theo?". Tệ: "Bạn có thấy phần chiến đấu vui không?" — câu đó vừa gợi ý câu trả lời vừa buộc người ta lịch sự, nên gần như luôn nhận được "có".
+- `Mid` **Vì sao dùng trung vị chứ không dùng trung bình?**
+  → Vì một người để game chạy 8 tiếng sẽ kéo lệch mọi giá trị trung bình. Và quan trọng hơn: **luôn xem phân bố, không chỉ một con số** — thời gian hoàn thành trung vị 4 phút nghe ổn, nhưng p90 là 22 phút nghĩa là 10% người chơi đang có trải nghiệm hoàn toàn khác.
+- `Mid` **Vì sao phễu quan trọng hơn tổng số?**
+  → Vì tổng số không chỉ được chỗ nào hỏng. "1000 người chơi màn 1" không hành động được; "1000 → 780 → 310 → 295" thì chỉ thẳng vào cú rơi từ 780 xuống 310. Sửa theo **bước rơi lớn nhất** đáng hơn mọi cải thiện khác cộng lại, và nó cũng cho một tiêu chí rõ để biết đã sửa xong.
+- `Senior` **Chỉ số cốt lõi nào anh luôn log?**
+  → Tỉ lệ bỏ cuộc theo màn/phút, số lần chết mỗi màn, thời gian hoàn thành (**trung vị + p90**), tỉ lệ thử lại sau khi chết, **tỉ lệ sử dụng từng cơ chế/vũ khí** (gần 0 nghĩa là người chơi không hiểu hoặc nó vô dụng), và độ dài phiên chơi so với thiết kế. Theo hệ thống thì thêm: tồn kho tài nguyên theo thời gian, winrate và pick rate, thời gian tới mốc tiến trình kế tiếp.
+- `Senior` **Log sự kiện hay log trạng thái tổng hợp? Vì sao?**
+  → **Log sự kiện thô.** Sự kiện cho phép đặt **câu hỏi mới sau này** mà không cần thu thập lại — còn tổng hợp sẵn thì khoá mình vào đúng những câu hỏi đã nghĩ ra hôm nay. Kèm theo là nguyên tắc riêng tư: chỉ log dữ liệu gameplay, không log thông tin định danh cá nhân, và nếu phát hành thương mại thì phải thông báo rõ và cho phép từ chối.
+- `Senior` **"Người chơi dùng vũ khí A có tỉ lệ thắng cao hơn" — anh kết luận gì?**
+  → Chưa kết luận gì cả, vì **tương quan không phải nhân quả**: rất có thể người chơi giỏi thích vũ khí A. Cách tách là so trong cùng nhóm kỹ năng, hoặc nhìn winrate của chính những người chơi đó khi họ dùng vũ khí khác. Đây là cái bẫy phổ biến nhất khi một đội bắt đầu có đủ dữ liệu để tự tin.
+
+**Khung trả lời 60 giây** — "Anh chạy một buổi playtest thế nào?"
+
+> **Trước** buổi test tôi viết ra câu hỏi cần trả lời, và nó phải cụ thể: "người chơi có hiểu cơ chế đẩy lùi không", chứ không phải "game có hay không". Không có câu hỏi thì buổi test cho ra ý kiến, không cho ra kết luận.
+>
+> **Trong** buổi test, luật quan trọng nhất là **không giải thích gì cả** — ngay khi tôi phải mở miệng giải thích thì tôi đã tìm ra một lỗi thiết kế. Tôi ghi ba thứ: chỗ họ do dự, chỗ họ chết và phản ứng ngay sau đó, và những gì họ nói thành tiếng. Rồi ngồi im.
+>
+> **Sau** đó hỏi mở chứ không dẫn dắt: "kể lại chuyện vừa xảy ra", "lúc nào bạn khó chịu nhất". Và tôi nhớ luật nền: người chơi **giỏi phát hiện vấn đề, dở đề xuất giải pháp**, nên tôi nghe phần vấn đề và tự tìm giải pháp. Về quy mô thì một người đã đủ thấy lỗi nặng nhất, năm người thấy khoảng 80% vấn đề khả dụng — đừng chờ có hai mươi người mới bắt đầu.
+
+**Họ sẽ đào tiếp**
+
+- *"Vì sao chỗ do dự lại quan trọng hơn chỗ chết?"* → Vì chết là thứ người chơi kể lại được, còn **do dự thì họ quên ngay** — nhưng nó chính là dấu vết của một tín hiệu chưa đủ rõ. Một giây dừng lại trước ba cánh cửa giống nhau không bao giờ xuất hiện trong khảo sát, mà nó là lỗi thiết kế thật.
+- *"Test từ xa và test trực tiếp khác nhau ra sao?"* → Trực tiếp cho mình **khuôn mặt và độ do dự**; từ xa cho mình **số lượng**. Tôi dùng trực tiếp cho câu hỏi "vì sao", từ xa cho câu hỏi "bao nhiêu". Sai lầm hay gặp là dùng khảo sát từ xa để trả lời câu hỏi "vì sao" — và nhận về những lời giải thích mà chính người chơi cũng đang đoán.
+- *"Tỉ lệ sử dụng một vũ khí gần 0 — sửa thế nào?"* → Trước hết phân biệt **không hiểu** và **vô dụng**: cho vài tester dùng nó có hướng dẫn rồi xem họ có thích không. Không hiểu thì sửa truyền đạt và vị trí giới thiệu; vô dụng thì sửa số. Đổi số cho một thứ mà người chơi chưa từng thử là cách tiêu công vào chỗ không ai nhìn thấy.
+- *"Dùng AI ở khâu này thế nào?"* → Giao cho nó **phân tích log thô**: dựng phễu, tìm bước rơi lớn nhất, so phân bố giữa các nhóm, và gợi ý giả thuyết. Việc nó không làm được là ngồi xem người chơi do dự — nên tôi coi nó là công cụ cho nửa định lượng, còn nửa định tính vẫn phải tự ngồi.
+
+**Cờ đỏ**
+
+- Hỏi "game có vui không" rồi ghi lại câu trả lời như dữ liệu.
+- Giải thích cho tester trong lúc họ chơi.
+- Báo cáo bằng trung bình, không có phân bố hay phễu.
+- Làm theo đúng giải pháp người chơi đề xuất.
+- Chờ đủ hai mươi người mới bắt đầu test.
+
+**Số / ví dụ nên thuộc**
+
+- Cỡ mẫu: **1 người** thấy lỗi nặng nhất · **5 người** ≈ 80% vấn đề khả dụng · **20+** cho cân bằng · hàng trăm cho định lượng.
+- Luôn dùng **trung vị + p90**, không dùng trung bình.
+- Phễu dạng **1000 → 780 → 310 → 295**; sửa theo bước rơi lớn nhất.
+- Chỉ số cốt lõi: bỏ cuộc theo màn · chết mỗi màn · thời gian hoàn thành · **tỉ lệ thử lại** · tỉ lệ sử dụng cơ chế · độ dài phiên.
+- Log **sự kiện thô**, không log trạng thái tổng hợp; không log thông tin định danh cá nhân.

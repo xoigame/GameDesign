@@ -433,14 +433,24 @@ public class NetBootstrap : MonoBehaviour
 
 **Câu hay gặp**
 
-| Mức | Câu hỏi |
-|---|---|
-| Junior | Host (listen server) và dedicated server khác nhau thế nào? |
-| Junior | `NetworkVariable` và `Rpc` — khi nào dùng cái nào? |
-| Mid | Vì sao không để client tự báo vị trí và máu của mình? |
-| Mid | Người chơi thấy mình bắn trúng nhưng server bảo trượt. Xử lý? |
-| Senior | Anh sẽ chọn stack nào cho co-op 4 người, và vì sao không chọn ba cái kia? |
-| Senior | Chi phí ẩn của multiplayer nằm ở đâu? |
+- `Junior` **Host (listen server) và dedicated server khác nhau thế nào?**
+  → Host là một người chơi vừa chạy server vừa chơi: không tốn tiền server, nhưng host có **độ trễ 0 ms** nên có lợi thế, và host thoát là hết trận. Dedicated server là tiến trình riêng, công bằng cho mọi người và chịu được reconnect, nhưng phải trả tiền hằng tháng kể cả khi game đã hết người chơi.
+- `Junior` **`NetworkVariable` và `Rpc` — khi nào dùng cái nào?**
+  → `NetworkVariable` cho **trạng thái** — thứ người vào giữa trận cũng cần biết: máu, điểm, cửa đã mở chưa. Nó đồng bộ giá trị hiện tại nên client mới kết nối nhận ngay. `Rpc` cho **sự kiện tức thời** — vụ nổ, âm thanh, một cú nhảy. Sai lầm quen thuộc là dùng Rpc cho trạng thái: ai vào sau sẽ không bao giờ biết cửa đã mở.
+- `Junior` **Test multiplayer bằng hai cửa sổ trên cùng một máy có đủ không?**
+  → Không, và đây là cái bẫy lớn nhất: 0 ms ping, không mất gói, nên **mọi bug netcode đều ẩn**. Phải bật Network Simulator với 100–200 ms latency và 2–5% packet loss **từ tuần đầu**, không phải khi sắp phát hành — vì kiến trúc sai vì giả định mạng hoàn hảo thì sửa rất đắt.
+- `Mid` **Vì sao không để client tự báo vị trí và máu của mình?**
+  → Vì client-authoritative nghĩa là sửa bộ nhớ là bay xuyên tường và bất tử. Luật: client gửi **ý định** ("tôi muốn đi hướng này", "tôi bắn lúc t"), server quyết **kết quả**. Riêng co-op PvE hoàn toàn có thể nới lỏng để đổi lấy độ mượt — nhưng đó phải là lựa chọn có ý thức, ghi vào tài liệu, không phải mặc định vì tiện.
+- `Mid` **Người chơi thấy mình bắn trúng nhưng server bảo trượt. Xử lý?**
+  → Đó là **lag compensation**: server phải tua ngược vị trí mục tiêu về thời điểm client bắn (khoảng RTT/2 + interpolation delay) rồi mới kiểm. Không làm thì người ping cao phải "bắn đón" và cảm giác như game hỏng. Đi kèm là client-side prediction cho chuyển động của chính mình, cộng **reconciliation** khi server nói khác.
+- `Mid` **Băng thông tăng vọt khi lên 16 người. Anh chỉnh gì?**
+  → Hai núm chính: **tick rate** và **số object đồng bộ**. `NetworkTransform` gửi thẳng transform mỗi tick rất tốn — nén giá trị, giảm tần suất theo khoảng cách, và chỉ đồng bộ thứ người khác thật sự nhìn thấy. Đo trước bằng số byte mỗi giây mỗi client, vì trực giác về băng thông gần như luôn sai.
+- `Senior` **Anh sẽ chọn stack nào cho co-op 4 người, và vì sao không chọn ba cái kia?**
+  → **Netcode for GameObjects** với Unity Relay để vượt NAT — host là một người chơi, không tốn server hằng tháng. Mirror là lựa chọn thay thế hợp lý nếu muốn kiểm soát code và nhiều transport, kể cả Steam. Không chọn Photon Fusion vì cái nó bán là prediction/rollback — đáng tiền cho shooter competitive, không cần cho co-op PvE và phải trả theo CCU. Không chọn Netcode for Entities trừ khi đội đã sống trong DOTS.
+- `Senior` **Chi phí ẩn của multiplayer nằm ở đâu?**
+  → Ba chỗ. **Tiền server sau phát hành** — VPS 2 vCPU 24/7 khoảng 20–40 USD/tháng chưa tính băng thông, và game chết vẫn phải trả cho tới khi tắt. **Reconnect**: state phải gắn với `playerId` ổn định chứ không phải `clientId`, giữ chỗ 30–60 giây — thứ luôn bị bỏ quên tới lúc test trên 4G thật. Và **tách logic khỏi hiển thị** để chạy được server headless.
+- `Senior` **PhysX có deterministic không? Điều đó ảnh hưởng kiến trúc thế nào?**
+  → **Không**, nên đừng thiết kế lockstep quanh nó — hai máy chạy cùng input sẽ trôi khác nhau sau vài giây. Muốn xác định thì tự viết chuyển động bằng số nguyên hoặc fixed-point, hoặc chấp nhận mô hình server-authoritative và đồng bộ kết quả. Chọn sai ở điểm này là loại quyết định phải viết lại cả tầng gameplay mới sửa được.
 
 **Khung trả lời 60 giây** — "Chọn stack cho co-op 4 người?"
 

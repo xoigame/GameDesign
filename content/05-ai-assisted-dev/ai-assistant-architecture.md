@@ -265,14 +265,24 @@ public static class AgentBridge
 
 **Câu hay gặp**
 
-| Mức | Câu hỏi |
-|---|---|
-| Junior | Anh dùng AI vào việc gì trong công việc hằng ngày? |
-| Mid | Làm sao để AI viết code đúng **quy ước dự án**, không phải code chung chung? |
-| Mid | Agent viết xong thì ai kiểm, và kiểm cái gì? |
-| Senior | Nếu phải xây trợ lý AI cho cả team Unity, anh thiết kế thế nào? |
-| Senior | Vì sao Unity khó cho agent hơn một dự án web? |
-| Senior | Anh không cho agent làm gì, và vì sao? |
+- `Junior` **Anh dùng AI vào việc gì trong công việc hằng ngày?**
+  → Trả lời bằng **quy trình**, không bằng danh sách công cụ. Cụ thể: việc đọc kỹ và tẻ nhạt (soát cấp phát ẩn, dò mâu thuẫn giữa các file), việc chuyển dạng (bảng số sang struct, JSON sang class), và bản nháp đầu tiên của test. Việc tôi không giao là những gì compile và test không kiểm chứng được.
+- `Junior` **Vòng lặp tự sửa của agent nên có trần bao nhiêu?**
+  → **3–5 vòng** sửa–biên dịch–test, chạm trần thì dừng và báo cáo. Và dừng sớm hơn nữa khi lỗi lặp lại y hệt hai lần — lúc đó agent đang đi vòng tròn, mỗi vòng thêm chỉ đốt thêm token và làm diff rối hơn cho người review.
+- `Mid` **Làm sao để AI viết code đúng quy ước dự án, không phải code chung chung?**
+  → Một **file luật ở gốc repo** mà agent luôn đọc, cộng một mục lục để nó tự chọn file cần mở — thay vì nhồi cả repo vào context, vốn vừa đắt vừa làm nó lạc. Luật phải viết dưới dạng kiểm tra được ("không dùng `Resources/`"), không phải lời khuyên ("giữ code sạch").
+- `Mid` **Agent viết xong thì ai kiểm, và kiểm cái gì?**
+  → Agent làm trên **nhánh riêng**, người review theo **phạm vi đã khai báo trước**: nó được chạm những file nào, và diff có nằm trong đó không. Kiểm ba thứ theo thứ tự: có chạm vùng cấm không, test có thật sự kiểm cái đang sửa không, và phần nào của diff là thừa. Không bao giờ để agent commit thẳng vào nhánh chính.
+- `Mid` **Vì sao lọc đầu ra công cụ lại quan trọng hơn làm công cụ mạnh?**
+  → Vì trả về 5000 dòng log Unity là cách nhanh nhất để đốt context và chôn mất dòng lỗi thật. Trả về **≤ 20 dòng đã lọc** thì hữu ích gấp nhiều lần. Công cụ tốt không phải công cụ mạnh, mà là công cụ **trả lời ngắn và đúng** — đó cũng là chỗ dễ cải thiện nhất mà ít người đụng tới.
+- `Senior` **Nếu phải xây trợ lý AI cho cả team Unity, anh thiết kế thế nào?**
+  → Bốn lớp: **ngữ cảnh** (file luật + mục lục) → **công cụ** (biên dịch được và đọc được lỗi đã lọc, chạy test, cầu nối Editor với allowlist) → **vòng lặp** (trần 3–5 vòng) → **cổng người** (nhánh riêng, review theo phạm vi). Thiếu lớp nào thì lớp sau phải gánh, và lớp gánh nhiều nhất luôn là con người.
+- `Senior` **Vì sao Unity khó cho agent hơn một dự án web?**
+  → Năm thứ. Tham chiếu nằm trong **GUID/`.meta`** chứ không trong code, nên đổi tên file bằng shell là đứt hết. Prefab và scene là YAML sinh bởi máy, sửa tay hỏng âm thầm. Nhiều quyết định chỉ tồn tại trong Editor. Vòng biên dịch chậm nên **số vòng lặp là tài nguyên có hạn**. Và trạng thái Editor dai dẳng: Domain Reload, Play Mode.
+- `Senior` **Cầu nối giữa agent và Unity Editor nên làm thế nào?**
+  → Dùng **file**, không dùng socket: agent ghi `command.json`, Editor script `[InitializeOnLoad]` đọc và ghi `result.json`. Lý do rất cụ thể — file sống sót qua **Domain Reload**, kết nối thì không, mà Domain Reload xảy ra mỗi lần biên dịch lại. Hộp thư đặt trong `Temp/` để Unity không import lại mỗi lần ghi.
+- `Senior` **Anh không cho agent làm gì, và vì sao?**
+  → Những việc **compile và test không kiểm chứng được**: gán tham chiếu Inspector, dựng scene, bake, quyết định cảm giác (đường cong nhảy, hitstop), và sửa YAML prefab bằng tay. Vùng cấm cụ thể: `*.unity`, `*.prefab`, `*.meta`. Danh sách đó nằm thẳng trong file luật ở dạng câu lệnh, không phải lời dặn miệng.
 
 **Khung trả lời 60 giây** — "Thiết kế trợ lý AI cho team Unity thế nào?"
 

@@ -180,3 +180,57 @@ Unity không giúp gì ở đây, đây là quyết định thiết kế. Thực
 - Đặt `A11y.ShakeScale = 0`: chơi hết một màn, không còn rung nào?
 - Đặt `FontScale = 1.5`: có chữ nào bị cắt hoặc tràn khung không?
 - Ảnh chụp chuyển grayscale: còn phân biệt được bạn/thù không?
+
+## 🎤 Phỏng vấn
+
+**Câu hay gặp**
+
+- `Junior` **Luật mã hoá kép là gì? Cho một ví dụ lỗi kinh điển.**
+  → Mọi phân biệt quan trọng phải dùng **màu cộng một kênh thứ hai** — hình dạng, biểu tượng, hoa văn, hoặc vị trí. Lỗi kinh điển: thanh máu đỏ và thanh năng lượng xanh lá đặt cạnh nhau. Khoảng **8% nam giới** mù màu đỏ-lục, đủ lớn để không bỏ qua, và cách sửa chỉ là thêm hai icon khác nhau.
+- `Junior` **Tỉ lệ tương phản tối thiểu cho chữ là bao nhiêu?**
+  → **4,5:1** cho nội dung thường, **3:1** cho chữ lớn. Và phải kiểm bằng công cụ chứ đừng ước lượng bằng mắt — mắt mình đã quen với thiết kế của chính mình, nên ngưỡng cảm nhận đã lệch từ lâu trước khi ai đó báo lỗi.
+- `Junior` **Vì sao trợ năng không chỉ dành cho người khuyết tật?**
+  → Vì phần lớn hạng mục phục vụ **mọi người chơi**: chơi trên điện thoại ngoài nắng cần tương phản cao, chơi lúc một giờ sáng phải tắt tiếng nên cần phụ đề, chơi trên TV cách ba mét cần cỡ chữ lớn, chơi khi mệt cần bớt thông tin. Đóng khung nó là "tính năng cho một nhóm nhỏ" là lý do nó luôn bị xếp cuối danh sách.
+- `Mid` **Bảy hạng mục trợ năng theo thứ tự giá trị trên công sức?**
+  → **Mã hoá kép màu + hình dạng** (gần như miễn phí nếu quyết sớm) → **đổi phím được** → **cỡ chữ chỉnh được** → **công tắc giảm rung màn hình** → **phụ đề** → **điều hướng UI bằng bàn phím/tay cầm** → **tốc độ văn bản**. Sáu mục đầu không cần chuyên môn đặc biệt, chỉ cần quyết định sớm.
+- `Mid` **Vì sao "làm trợ năng sau" lại gần như không khả thi?**
+  → Vì chi phí đổi bậc. Mã hoá kép làm từ đầu là chọn icon khi thiết kế, làm sau là **vẽ lại toàn bộ asset**. Điều hướng bàn phím làm từ đầu là hệ thống focus có sẵn, làm sau là **làm lại mọi màn hình UI**. Giảm rung làm từ đầu là một biến nhân, làm sau là đi tìm mọi chỗ gọi shake rải rác. Cột bên phải chính là lý do nó thường bị bỏ.
+- `Mid` **Người chơi tắt tiếng có chơi được game của anh không? Kiểm thế nào?**
+  → Bằng **test tắt tiếng**: tắt loa rồi chơi một đoạn có chiến đấu. Nếu tiếng động là cách duy nhất biết boss sắp ra đòn thì game không chơi được khi tắt tiếng — và đó vừa là lỗi trợ năng vừa là lỗi thiết kế, vì rất nhiều người chơi mobile luôn để im lặng. Chữa bằng **chỉ báo hình ảnh cho mọi tín hiệu âm thanh mang thông tin gameplay**.
+- `Senior` **Trợ năng vận động gồm những gì mà đội hay bỏ qua?**
+  → **Đổi phím được** — cơ bản nhất nhưng hay bị coi là tính năng cao cấp. **Giữ/bấm chuyển đổi được** — giữ nút để chạy suốt nhiều giờ là vấn đề thật với người đau khớp. **Không bắt bấm liên tục**, hoặc cho tuỳ chọn thay bằng giữ. Và **điều hướng toàn bộ UI bằng bàn phím và tay cầm**, thứ phải có từ kiến trúc chứ không vá được.
+- `Senior` **Chớp sáng và rung màn hình — ràng buộc là gì?**
+  → Phải có công tắc giảm hoặc tắt. Với một số người đây là **say chuyển động thật**; với người nhạy cảm ánh sáng, chớp nhanh có thể **gây co giật** — nên tránh chớp trên **3 lần/giây**. Đây là hạng mục duy nhất trong nhóm mà hậu quả là vấn đề sức khoẻ, nên nó không phải chỗ để cân nhắc theo thẩm mỹ.
+- `Senior` **Trình bày tuỳ chọn trợ năng thế nào cho người chơi thật sự dùng?**
+  → Tách theo **từng trục** thay vì một nút "Dễ", và **đóng khung không mang nhãn giá trị**. Celeste gọi nó là "Assist Mode" kèm lời nhắn rõ rằng đây không phải gian lận — cách trình bày quan trọng ngang bản thân tính năng. Chôn tuỳ chọn trong menu cấp ba với nhãn nghe như thừa nhận thất bại là cách chắc chắn để không ai bật.
+
+**Khung trả lời 60 giây** — "Anh đưa trợ năng vào dự án thế nào?"
+
+> Quan trọng nhất là **thời điểm**, không phải danh sách. Gần như mọi hạng mục rẻ nếu quyết từ đầu và rất đắt nếu làm sau: mã hoá kép làm sớm là chọn icon, làm muộn là vẽ lại toàn bộ asset; điều hướng bàn phím làm sớm là một hệ thống focus, làm muộn là làm lại mọi màn hình.
+>
+> Thứ tự tôi ưu tiên theo giá trị trên công sức: **mã hoá kép màu cộng hình dạng**, **đổi phím được**, **cỡ chữ chỉnh được**, **công tắc giảm rung**, **phụ đề**, **điều hướng UI bằng tay cầm**, rồi tốc độ văn bản. Sáu cái đầu không cần chuyên môn gì đặc biệt.
+>
+> Và tôi coi hai bài kiểm là bắt buộc trước khi nói xong: **test tắt tiếng** — không nghe gì thì còn chơi được không — và kiểm tương phản bằng công cụ, tối thiểu 4,5:1. Cuối cùng là cách trình bày: tách tuỳ chọn theo từng trục và đừng gắn nhãn giá trị, vì "Dễ" nghe như thừa nhận thất bại và người cần nhất sẽ là người không bật.
+
+**Họ sẽ đào tiếp**
+
+- *"Vì sao 8% lại là con số đáng nhớ?"* → Vì nó không phải nhóm thiểu số nhỏ mà là khoảng **một trong mười hai người chơi nam**. Với một game có mười nghìn người chơi thì đó là gần tám trăm người, và họ sẽ không viết review nói "tôi mù màu" — họ chỉ thấy game khó hiểu rồi bỏ.
+- *"Phụ đề làm thế nào cho đúng?"* → Không chỉ lời thoại: **chú thích cả âm thanh mang thông tin gameplay**, kiểu "[tiếng bước chân phía sau]". Kèm tuỳ chọn cỡ chữ và nền mờ phía sau, vì phụ đề trên nền sáng là phụ đề không đọc được. Đây là chỗ hay bị làm nửa vời nhất: có phụ đề thoại nhưng không có chú thích âm thanh.
+- *"Trợ năng nhận thức gồm gì?"* → Tốc độ văn bản chỉnh được và **không tự chuyển trang**; nhắc lại mục tiêu hiện tại, vì người chơi quay lại sau một tuần không nhớ mình đang làm gì; và giảm tải thông tin trên màn hình. Nhóm này ít được nói tới nhất nhưng lại phục vụ đúng nhóm người chơi đông nhất — người bận.
+- *"Có tiêu chuẩn nào để bám không?"* → Có các hướng dẫn trợ năng cho game được dùng rộng rãi trong ngành và các tiêu chuẩn tương phản của web dùng lại được cho UI. Nhưng tôi không trả lời câu hỏi tuân thủ bằng trí nhớ — tôi kiểm tại nguồn ở thời điểm quyết định, vì yêu cầu của từng nền tảng phát hành cũng thay đổi.
+
+**Cờ đỏ**
+
+- Phân biệt trạng thái quan trọng chỉ bằng màu.
+- Coi trợ năng là hạng mục cuối danh sách, làm sau khi game xong.
+- Cỡ chữ cố định và rất nhỏ.
+- Không có cách tắt rung màn hình.
+- Đặt tuỳ chọn hỗ trợ dưới nhãn "Dễ" và chôn trong menu cấp ba.
+
+**Số / ví dụ nên thuộc**
+
+- Mù màu đỏ-lục ≈ **8% nam giới**.
+- Tương phản tối thiểu **4,5:1** (chữ thường) · **3:1** (chữ lớn).
+- Tránh chớp trên **3 lần/giây**.
+- Bảy hạng mục theo thứ tự: **mã hoá kép → đổi phím → cỡ chữ → giảm rung → phụ đề → điều hướng tay cầm → tốc độ văn bản**.
+- Hai bài kiểm bắt buộc: **test tắt tiếng** và **đo tương phản bằng công cụ**.

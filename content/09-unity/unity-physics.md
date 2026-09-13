@@ -382,14 +382,24 @@ public class PlatformerController2D : MonoBehaviour
 
 **Câu hay gặp**
 
-| Mức | Câu hỏi |
-|---|---|
-| Junior | Vì sao code vật lý phải nằm trong `FixedUpdate`? |
-| Junior | `OnTriggerEnter` không được gọi — kiểm tra những gì? |
-| Mid | Viên đạn bay nhanh xuyên qua tường. Nguyên nhân và cách sửa? |
-| Mid | Ground check của anh viết thế nào? Vì sao không dùng `OnCollisionEnter/Exit`? |
-| Senior | Di chuyển nhân vật: `CharacterController`, Rigidbody kinematic, hay tự cast? Chọn thế nào? |
-| Senior | Physics ăn 8ms/frame trên mobile với 200 object. Thứ tự anh xử lý? |
+- `Junior` **Vì sao code vật lý phải nằm trong `FixedUpdate`?**
+  → Vì physics chạy theo nhịp cố định (mặc định 0,02 s = 50 Hz), độc lập với frame rate. Đặt lực hay vận tốc trong `Update` thì kết quả phụ thuộc máy chạy nhanh hay chậm — cùng một cú nhảy cao khác nhau trên hai máy. Nhưng **đọc input vẫn ở `Update`**, rồi dùng ở `FixedUpdate`, nếu không sẽ mất frame bấm.
+- `Junior` **`OnTriggerEnter` không được gọi — kiểm tra những gì?**
+  → Ba thứ theo thứ tự. **Phải có ít nhất một bên mang Rigidbody** — hai static collider không sinh sự kiện nào. Layer phải bật trong collision matrix. Và một bên phải `Is Trigger`. Nhớ thêm: va chạm *không* trigger cần ít nhất một bên là dynamic; hai kinematic chỉ sinh trigger.
+- `Junior` **Vì sao không dùng `transform.position` để dời một Rigidbody?**
+  → Vì nó dời object mà không qua solver: bỏ qua va chạm ở bước đó, làm hỏng vận tốc tích luỹ, và ép đồng bộ lại transform. Dùng `MovePosition`/`MoveRotation` cho kinematic, lực hoặc vận tốc cho dynamic. Đụng cả hai đường là nguồn của những bug "thỉnh thoảng lọt sàn" không tái hiện được.
+- `Mid` **Viên đạn bay nhanh xuyên qua tường. Nguyên nhân và cách sửa?**
+  → Tunneling: vật đi xa hơn bề dày collider trong một bước 0,02 s nên bước sau đã ở bên kia tường. Chữa theo thứ tự rẻ → đắt: `Collision Detection = Continuous` (hoặc `Continuous Speculative` cho vật nhỏ), làm collider dày hơn, hạ `Fixed Timestep`. Với đạn thì cách đúng là **đừng dùng rigidbody** — `SphereCast` từ vị trí cũ tới vị trí mới mỗi bước.
+- `Mid` **Ground check của anh viết thế nào? Vì sao không dùng `OnCollisionEnter/Exit`?**
+  → `BoxCast` hoặc `CapsuleCast` xuống 0,05–0,1 từ đáy collider, **query mỗi bước**, không phải trạng thái tích luỹ từ event. Ray đơn từ tâm trượt khỏi mép nền, nhân vật "rơi" khi đứng nửa người ngoài rìa. Bộ đếm Enter/Exit thì lệch khi hai collider nền chạm cùng lúc và rời khác lúc — nhân vật bay vĩnh viễn, và bug chỉ xuất hiện ở chỗ ghép hai sàn.
+- `Mid` **Vì sao nhân vật rung nhẹ dù frame rate ổn định?**
+  → Thiếu **Interpolate**. Physics chạy 50 Hz còn màn hình 60–120 Hz, không nội suy thì vị trí hiển thị nhảy bậc. Đây là một checkbox trên Rigidbody, nhưng triệu chứng lại giống hệt vấn đề hiệu năng — nên rất nhiều người đi tối ưu frame rate trong khi lỗi nằm ở đó.
+- `Senior` **Di chuyển nhân vật: `CharacterController`, Rigidbody kinematic, hay tự cast? Chọn thế nào?**
+  → Mặc định tôi chọn **Kinematic Rigidbody và tự tính vận tốc**, vì lý do cảm giác: nhân vật hành động cần dừng ngay khi nhả phím và đạt tốc tối đa trong vài frame, còn dynamic body có quán tính nên luôn trôi. Dynamic để dành cho thứ *nên* tuân vật lý: xe, bóng, thùng, ragdoll. Tự cast hoàn toàn chỉ khi cần xác định tuyệt đối — platformer pixel-perfect, replay, rollback netcode.
+- `Senior` **Physics ăn 8 ms/frame trên mobile với 200 object. Thứ tự anh xử lý?**
+  → Đo trước: `Physics.Processing` và số bước `FixedUpdate` mỗi frame. Rồi theo thứ tự hiệu quả: **collision matrix** (rẻ nhất, bỏ hàng nghìn cặp broadphase), primitive collider thay mesh collider, `NonAlloc` cho query, hạ solver iteration cho vật không cần chính xác, cho vật đứng yên **sleep**, và cuối cùng mới nới `Fixed Timestep` từ 0,02 lên 0,03 — nhớ chỉnh `maximumDeltaTime` theo.
+- `Senior` **Khi nào "sai vật lý" thật ra là "đúng thiết kế"?**
+  → Platformer hay cần gravity khác nhau lúc lên và lúc xuống, coyote time, jump buffer, và vận tốc bị cắt khi nhả nút nhảy. Không cái nào đúng vật lý cả, nhưng cả bốn đều làm nhân vật **cảm giác** đúng. Lẫn hai chuyện này là lý do có người đi sửa mass và drag hàng tuần cho một vấn đề thuộc về thiết kế.
 
 **Khung trả lời 60 giây** — "Anh điều khiển nhân vật bằng cách nào?"
 

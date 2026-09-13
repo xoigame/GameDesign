@@ -175,3 +175,57 @@ if (GUILayout.Button("Kiểm tra lạm phát")) {
 - Mô phỏng cùng seed hai lần: kết quả giống hệt không?
 - Chạy được logic kinh tế ngoài Unity (`dotnet run`) không?
 - Tiền tệ đang lưu bằng `long` chứ không `float`?
+
+## 🎤 Phỏng vấn
+
+**Câu hay gặp**
+
+- `Junior` **Source, sink, converter là gì?**
+  → **Source (faucet)** là nơi tài nguyên sinh ra: rơi đồ, thưởng nhiệm vụ, thu hoạch. **Sink (drain)** là nơi nó biến mất: mua bán, nâng cấp, sửa chữa, phí. **Converter** biến tài nguyên này thành tài nguyên khác: chế tạo, luyện kim. Sức khoẻ nền kinh tế là **tốc độ source so với tốc độ sink theo thời gian**, không phải tổng lượng tại một thời điểm.
+- `Junior` **Source nhiều hơn sink kéo dài thì hỏng thế nào?**
+  → Lạm phát: tiền mất nghĩa, mọi phần thưởng mất giá, và người chơi hết mục tiêu — cái cuối mới là thứ giết game. Ngược lại, sink nhiều hơn source kéo dài thì bế tắc: cày mà không tiến, người chơi bỏ. Cân bằng tuyệt đối lại nhàm, vì không có cảm giác giàu lên.
+- `Junior` **Sink cứng và sink mềm khác nhau thế nào?**
+  → **Sink cứng** làm tài nguyên biến mất vĩnh viễn — phí sửa chữa, thuế, tiêu hao. Chống lạm phát rất tốt nhưng dễ gây ức chế nếu lộ liễu. **Sink mềm** đổi tài nguyên lấy thứ có giá trị — nâng cấp, trang trí, mở khoá. Người chơi thích, nhưng nó **bão hoà**: mua hết rồi là hết sink.
+- `Mid` **Cái bẫy "sink không co giãn" là gì? Sửa thế nào?**
+  → Sink là hằng số trong khi source tăng theo cấp độ — tới cấp 50 thì tiền hoàn toàn vô nghĩa. Sửa bằng cách cho **sink tăng cùng bậc với source**: hệ số tăng trưởng khoảng **1,15–1,35** cho hầu hết game. Dưới 1,1 thì cuối game quá dễ; trên 1,5 thì tường cày cuốc dựng lên quá sớm.
+- `Mid` **Mục tiêu của một nền kinh tế lành mạnh là gì, nếu không phải cân bằng hoàn hảo?**
+  → **Dư nhẹ ở giai đoạn đầu** để có cảm giác tiến bộ, rồi **thắt dần về sau** để tài nguyên trở nên có giá trị. Đường cong đó tạo ra hai cảm xúc khác nhau ở hai giai đoạn, trong khi cân bằng phẳng chỉ tạo ra sự đều đều — đúng kỹ thuật mà không ai thấy thú vị.
+- `Mid` **Game sống lâu cần loại sink nào?**
+  → **Sink mềm vô hạn**: cosmetic, hạng bậc, tài nguyên phục vụ nội dung endgame. Vì mọi sink hữu hạn đều bão hoà, và khi người chơi lâu năm đã mua hết thì họ trở thành nguồn lạm phát: vẫn kiếm tài nguyên mà không còn chỗ tiêu. Đó là lúc giá trong shop mất nghĩa với cả người mới.
+- `Senior` **Sự kiện hằng tuần ảnh hưởng gì tới kinh tế?**
+  → Mỗi sự kiện **phát thêm tài nguyên**, nên phải có drain tương ứng, nếu không thì sau ba tháng kinh tế lạm phát và mọi giá đã cân bằng trước đó đều sai. Đây là chi phí ẩn của LiveOps mà đội hay quên tính: nội dung thì có lịch, còn cân bằng kinh tế thì phải theo lịch đó.
+- `Senior` **Kinh tế đã lạm phát rồi. Anh sửa thế nào mà không làm người chơi nổi giận?**
+  → Không rút tài nguyên đã phát — thu hồi là cách nhanh nhất mất lòng tin. Cách dùng được là **thêm sink mới hấp dẫn** (nội dung endgame, cosmetic bậc cao), điều chỉnh source cho người mới để đường cong của họ đúng, và để lạm phát cũ tự loãng theo thời gian. Chậm hơn, nhưng nó không phá vỡ hợp đồng ngầm với người chơi.
+- `Senior` **Đo sức khoẻ kinh tế bằng chỉ số nào?**
+  → Tồn kho trung vị theo nhóm thời gian chơi (không phải trung bình — vài người chơi cực đoan kéo lệch hết), tỉ lệ source/sink theo tuần, và **thời gian để mua được món tiếp theo** ở từng giai đoạn. Con số cuối là thứ gần với trải nghiệm nhất: nó dài ra bất thường nghĩa là tường cày cuốc vừa dựng lên ở đâu đó.
+
+**Khung trả lời 60 giây** — "Anh thiết kế nền kinh tế của một game thế nào?"
+
+> Bắt đầu bằng việc vẽ ra **mọi source và mọi sink** — kể cả những cái không ai gọi là kinh tế, như tiêu hao đạn hay phí hồi sinh. Mọi game có tài nguyên đều có nền kinh tế, kể cả khi không ai cố ý thiết kế nó; không thiết kế nghĩa là để nó tự hỏng.
+>
+> Luật quan trọng nhất là **sink phải tăng cùng bậc với source**, hệ số khoảng 1,15–1,35. Cái bẫy kinh điển là sink hằng số trong khi source tăng theo cấp: tới cấp 50 thì tiền vô nghĩa, và lúc đó mọi phần thưởng trong game cũng vô nghĩa theo.
+>
+> Đích không phải cân bằng hoàn hảo mà là **dư nhẹ lúc đầu, thắt dần về sau**. Và với game sống lâu thì phải có **sink mềm vô hạn** — cosmetic, hạng bậc, tài nguyên endgame — vì mọi sink hữu hạn đều bão hoà, rồi người chơi lâu năm trở thành nguồn lạm phát.
+
+**Họ sẽ đào tiếp**
+
+- *"Vì sao sink cứng dễ gây ức chế?"* → Vì nó lấy đi thứ người chơi đã có mà không trả lại gì nhìn thấy được. Cách làm mềm nó là gắn vào một lựa chọn: phí sửa chữa thì cho phép tránh bằng cách chơi cẩn thận hơn, thuế thì đổi lấy dịch vụ. Sink cứng bị ghét nhất khi nó **không tránh được và không giải thích được**.
+- *"Nhiều loại tiền tệ thì sao?"* → Mỗi loại tiền là một nền kinh tế riêng cần source và sink riêng, nên số loại tiền là chi phí thiết kế chứ không phải tính năng. Quy tắc tôi dùng: chỉ thêm loại tiền mới khi cần **ngăn chuyển đổi** giữa hai vòng tiến trình; nếu người chơi đổi qua đổi lại tự do thì thực chất vẫn là một loại tiền với thêm bước phiền phức.
+- *"Kinh tế có giao dịch giữa người chơi khác gì?"* → Khác về bậc: người chơi trở thành cả source lẫn sink, và bot cày tự động trở thành source không giới hạn. Lúc đó cần sink cứng mạnh (phí giao dịch, tiêu hao) và cần giám sát, vì một lỗ hổng nhỏ bị nhân lên bởi cả cộng đồng trong vài giờ.
+- *"Dùng AI ở khâu này thế nào?"* → Giao cho nó **mô phỏng dòng chảy**: cho tốc độ source và sink theo cấp, chạy 1000 người chơi ảo với vài kiểu chơi khác nhau, in ra tồn kho theo thời gian. Nó cũng tốt ở việc liệt kê các đường chuyển đổi tài nguyên mà mình không nghĩ tới — đó chính là chỗ lỗ hổng kinh tế hay nằm.
+
+**Cờ đỏ**
+
+- Không kể được sink nào ngoài "mua đồ trong shop".
+- Sink hằng số trong khi source tăng theo cấp.
+- Thêm sự kiện phát thưởng mà không thêm drain.
+- Chữa lạm phát bằng cách thu hồi tài nguyên đã phát.
+- Đọc tồn kho trung bình thay vì trung vị theo nhóm thời gian chơi.
+
+**Số / ví dụ nên thuộc**
+
+- Ba khái niệm: **source (faucet) · sink (drain) · converter**.
+- Hệ số tăng trưởng sink theo source: **1,15–1,35**; dưới 1,1 quá dễ, trên 1,5 dựng tường cày cuốc.
+- Đích: **dư nhẹ giai đoạn đầu → thắt dần về sau**, không phải cân bằng phẳng.
+- Game sống lâu cần **sink mềm vô hạn**; mọi sink hữu hạn đều bão hoà.
+- Chỉ số theo dõi: tồn kho **trung vị** theo nhóm thời gian chơi, tỉ lệ source/sink theo tuần, **thời gian để mua món tiếp theo**.

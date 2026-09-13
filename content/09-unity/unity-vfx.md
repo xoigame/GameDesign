@@ -497,14 +497,24 @@ public class HitStopReceiver : MonoBehaviour
 
 **Câu hay gặp**
 
-| Mức | Câu hỏi |
-|---|---|
-| Junior | Particle System và VFX Graph khác nhau ở đâu? |
-| Junior | Vì sao phải pool ParticleSystem thay vì `Instantiate` mỗi lần? |
-| Mid | Hiệu ứng chỉ 200 hạt mà GPU chết. Nguyên nhân? |
-| Mid | Gameplay cần biết hạt chạm cái gì — dùng hệ nào? |
-| Senior | Mô tả pipeline của một cú đánh trúng, theo mili giây. |
-| Senior | Hitstop bằng `Time.timeScale` hay clock riêng cho từng thực thể? |
+- `Junior` **Particle System và VFX Graph khác nhau ở đâu?**
+  → Particle System (Shuriken) chạy trên **CPU**, gameplay đọc/ghi được hạt (`GetParticles`, `OnParticleCollision`), va chạm với collider thật, chạy mọi máy. VFX Graph chạy trên **GPU compute**: hàng trăm nghìn hạt, nhưng CPU gần như không đọc lại được, va chạm chỉ qua depth buffer/SDF, và **cần GLES 3.1+/Vulkan/Metal**.
+- `Junior` **Vì sao phải pool ParticleSystem thay vì `Instantiate` mỗi lần?**
+  → Vì `Instantiate` + `Destroy` mỗi lần bắn là cấp phát và sinh rác mỗi lần — đúng chỗ xảy ra nhiều nhất trong game hành động. Pool thì tái sử dụng; nhớ đặt `Stop Action = Callback` hoặc `Disable` và trả về pool trong `OnParticleSystemStopped`, nếu không hệ hạt trong pool sẽ tự bật lại.
+- `Junior` **Hiệu ứng 2D bị nằm sau nhân vật. Thiếu gì?**
+  → Thiếu `Sorting Layer` và `Order in Layer` trên Renderer của hệ hạt. Particle Renderer không tự theo sorting của sprite, nên mặc định nó rơi vào layer Default và thứ tự vẽ thành ngẫu nhiên theo khoảng cách. Đây là thứ nên đặt sẵn trong prefab mẫu để không phải nhớ lại mỗi lần.
+- `Mid` **Hiệu ứng chỉ 200 hạt mà GPU chết. Nguyên nhân?**
+  → Ngân sách của VFX không phải **số hạt** mà là **overdraw**. 200 hạt alpha, mỗi hạt phủ nửa màn hình, là 100 lần vẽ toàn màn hình ở 1080p — GPU chết trong khi Frame Debugger chỉ hiện **một draw call**, nên người ta đi tìm nhầm chỗ. Nhìn bằng Rendering Debugger → Overdraw; vùng đỏ đậm là câu trả lời.
+- `Mid` **Gameplay cần biết hạt chạm cái gì — dùng hệ nào?**
+  → **Particle System**, vì nó chạy trên CPU nên có `OnParticleCollision` và `GetParticles`, va chạm với collider thật. VFX Graph chạy trên GPU nên dữ liệu hạt gần như không đọc ngược về CPU được, va chạm chỉ qua depth buffer hoặc SDF. Nguyên tắc: gameplay-facing thì Shuriken, cảnh hoành tráng không tương tác thì VFX Graph.
+- `Mid` **Giảm overdraw của VFX theo thứ tự nào?**
+  → Hạt nhỏ hơn và ít lớp chồng hơn. Dùng Additive thay cho nhiều lớp alpha blend. Cắt `Max Particle Size` để hạt không phình full-screen khi camera lại gần — đây là cái hay bị quên và gây tụt fps đúng lúc cận cảnh. Và với khói/lửa lớn thì **ít hạt to có texture tốt** hơn nhiều hạt nhỏ mờ.
+- `Senior` **Mô tả pipeline của một cú đánh trúng, theo mili giây.**
+  → **0 ms**: SFX + flash trắng + hitstop bắt đầu + burst hạt + camera impulse, tất cả trong **cùng một hàm ở frame va chạm**, không đợi animation. **0–70 ms**: hitstop — hai thực thể đứng hình nhưng hạt vẫn chạy. **70 ms**: flash tắt, knockback bắt đầu. **70–150 ms**: knockback giảm, camera hồi. Hạt tan tự do tới ~400 ms rồi trả pool.
+- `Senior` **Hitstop bằng `Time.timeScale` hay clock riêng cho từng thực thể?**
+  → `timeScale = 0` chỉ 5 dòng nhưng dừng **cả thế giới**: số sát thương bay ngừng, hạt đóng băng, và không dùng được khi có nhiều mục tiêu hoặc có multiplayer. Cách đúng cho game hành động là **local time scale**: mỗi thực thể có `Delta` riêng, movement và animator nhân theo nó. Đổi lại phải tự nhân velocity, vì `FixedUpdate` không biết tới clock riêng của mình.
+- `Senior` **Decal vết đạn trên sàn — quản lý thế nào?**
+  → URP Decal Projector cần thêm Decal Renderer Feature; mỗi decal ≈ một draw call cộng một lần đọc depth. 30–50 decal đồng thời là ổn trên mobile với Screen Space. Bắt buộc giới hạn bằng **ring buffer**, xoá cái cũ nhất — không giới hạn thì sàn đầy vết đạn sau 5 phút và fps đi xuống dần, rất khó quy tội cho ai.
 
 **Khung trả lời 60 giây** — "Vì sao 200 hạt lại giết GPU?"
 

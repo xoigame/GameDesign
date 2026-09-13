@@ -10,8 +10,15 @@ import { hierarchy, tree } from 'd3-hierarchy'
  *   'radial'  — toả tròn quanh root
  */
 
-const NODE_GAP_Y = 58   // khoảng cách dọc giữa 2 node anh em
-const NODE_GAP_X = 300  // khoảng cách ngang giữa 2 tầng
+/**
+ * Khoảng cách giữa các node. `compact` dùng cho màn hình hẹp: vẫn cây đó nhưng bó
+ * lại, nên fitView cho ra mức zoom đọc được thay vì thu cả bản đồ thành hạt vừng.
+ * Node vẫn giữ kích thước cố định — xem widthFor() trong MindMap.jsx.
+ */
+export const GAP = {
+  wide:    { y: 58, x: 300 },   // y = dọc giữa 2 node anh em, x = ngang giữa 2 tầng
+  compact: { y: 50, x: 196 },
+}
 
 function buildTree(nodesById, rootId, isCollapsed, childFilter) {
   const make = (id, depth) => {
@@ -30,10 +37,10 @@ function buildTree(nodesById, rootId, isCollapsed, childFilter) {
   return make(rootId, 0)
 }
 
-function runTree(rootSpec) {
+function runTree(rootSpec, gap) {
   const root = hierarchy(rootSpec, (d) => d.children)
   const layout = tree()
-    .nodeSize([NODE_GAP_Y, NODE_GAP_X])
+    .nodeSize([gap.y, gap.x])
     .separation((a, b) => (a.parent === b.parent ? 1 : 1.45))
   return layout(root)
 }
@@ -45,19 +52,19 @@ function subtreeSize(spec) {
   return n
 }
 
-export function computeLayout(nodesById, rootId, collapsedSet, mode = 'mindmap', childFilter = null) {
+export function computeLayout(nodesById, rootId, collapsedSet, mode = 'mindmap', childFilter = null, gap = GAP.wide) {
   const isCollapsed = (id) => collapsedSet.has(id)
   const spec = buildTree(nodesById, rootId, isCollapsed, childFilter)
   const pos = new Map()
   if (!spec) return pos
 
   if (mode === 'radial') {
-    const laid = runTree(spec)
+    const laid = runTree(spec, gap)
     const maxDepth = Math.max(1, ...laid.descendants().map((d) => d.depth))
     const xs = laid.descendants().map((d) => d.x)
     const span = Math.max(1, Math.max(...xs) - Math.min(...xs))
     const minX = Math.min(...xs)
-    const radiusStep = 260
+    const radiusStep = Math.round(gap.x * 0.87)
 
     for (const d of laid.descendants()) {
       if (d.depth === 0) {
@@ -78,7 +85,7 @@ export function computeLayout(nodesById, rootId, collapsedSet, mode = 'mindmap',
   }
 
   if (mode === 'tree') {
-    const laid = runTree(spec)
+    const laid = runTree(spec, gap)
     for (const d of laid.descendants()) {
       pos.set(d.data.id, { x: d.y, y: d.x, side: 'right' })
     }
@@ -106,7 +113,7 @@ export function computeLayout(nodesById, rootId, collapsedSet, mode = 'mindmap',
   const placeSide = (children, side) => {
     if (!children.length) return
     const fakeRoot = { id: '__side_' + side, depth: 0, data: spec.data, children }
-    const laid = runTree(fakeRoot)
+    const laid = runTree(fakeRoot, gap)
     const dir = side === 'right' ? 1 : -1
     // căn giữa theo trục dọc quanh root
     const rootX = laid.x

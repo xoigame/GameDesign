@@ -194,3 +194,57 @@ Unity ghi vào rất nhiều file khi bạn bấm Play (Library/, .meta, scene).
 - Có ít nhất một test EditMode chạy xanh chưa?
 - `design/decisions.md` có ghi các quyết định Unity chưa?
 - `.gitignore` có Library/, Temp/, Logs/, obj/ chưa?
+
+## 🎤 Phỏng vấn
+
+**Câu hay gặp**
+
+- `Junior` **Bảy giai đoạn làm game với AI là gì?**
+  → **Thiết kế** (mình làm, không uỷ quyền) → **viết GDD** → **dựng khung** (chạy được và build được, dù chỉ là màn hình trống) → **vertical slice** → **nhân rộng theo chiều ngang** → **cân bằng** → **đánh bóng**. Sai lầm phổ biến nhất là nhảy từ bước 2 sang bước 5: thêm rất nhiều nội dung **trước khi biết core loop có vui không**.
+- `Junior` **Một nhiệm vụ giao cho agent nên to cỡ nào?**
+  → **Một lần commit, kiểm chứng được, chạy được sau khi xong.** "Làm hệ thống chiến đấu" là quá to. Vừa là: "Thêm `HealthComponent` với API `TakeDamage(amount, source)`, sự kiện `OnDamaged`/`OnDeath`, khoảng bất tử 0,5 s sau khi trúng đòn, kèm unit test, chưa cần UI."
+- `Junior` **Sau mỗi nhiệm vụ anh làm gì?**
+  → **Chạy game, xem có đúng không, commit.** Đừng chồng năm nhiệm vụ rồi mới kiểm tra — khi có lỗi thì không biết nó đến từ đâu, và việc chia đôi để truy vết lúc đó tốn hơn nhiều so với kiểm từng bước. "Build được" không phải là "chạy đúng".
+- `Mid` **Bước nào trong vòng lặp làm việc tiết kiệm nhiều thời gian nhất mà hay bị bỏ qua?**
+  → **Đọc kế hoạch trước khi agent viết code.** Đọc kế hoạch mất 30 giây; đọc 300 dòng code sai hướng mất 20 phút. Với nhiệm vụ lớn tôi yêu cầu rõ: "trình bày kế hoạch trước, chưa viết code, chờ tôi duyệt" — và phần lớn sai hướng bị chặn ngay ở đó.
+- `Mid` **Agent quên mọi thứ giữa các phiên. Bù bằng gì?**
+  → Hai chiến lược. **Tài liệu là bộ nhớ dài hạn** — file luật ở gốc repo cộng thư mục `design/` được đọc mỗi phiên; mọi quyết định quan trọng phải nằm ở đó, không nằm trong lịch sử chat. Và **nhật ký quyết định** `design/decisions.md` ghi lại lựa chọn kèm lý do — không có nó thì cứ vài phiên agent lại đề xuất ECS và mình lại giải thích lại từ đầu.
+- `Mid` **Vì sao vertical slice là chốt chặn, không phải cột mốc?**
+  → Vì nó là lúc kiểm chứng **core loop có vui không**: một màn chơi được, một kẻ địch, một vũ khí, nhưng **hoàn chỉnh và có juice**. Không vui thì quay lại bước thiết kế, **đừng đi tiếp**. Nhân rộng nội dung trên một core loop nhạt chỉ tạo ra nhiều nội dung nhạt hơn, và lúc đó quay đầu rất đắt.
+- `Senior` **Năm điểm mù của AI mà anh phải tự bù trong quy trình?**
+  → **Tích hợp** — từng phần đúng, ghép lại hỏng, nên luôn chạy thử thật. **Hiệu năng** — code sạch nhưng cấp phát trong vòng lặp. **Tương tác giữa các hệ thống** — thêm hệ thống mới làm hỏng cân bằng hệ thống cũ. **Đặc thù engine** — API cũ, mẫu lỗi thời, nên luôn nêu rõ phiên bản engine. Và **"có vui không"** — không bao giờ uỷ quyền được.
+- `Senior` **Anh dùng version control thế nào khi làm với agent?**
+  → **Commit trước mỗi nhiệm vụ lớn.** Kết quả tệ thì `git reset` rẻ hơn nhiều so với gỡ rối thủ công. Thay đổi lớn mang tính thử nghiệm thì dùng nhánh riêng. Và đặt tên commit cho biết phần nào do agent sinh ra — chi tiết nhỏ nhưng rất hữu ích khi truy vết bug vài tháng sau.
+- `Senior` **Giai đoạn nào AI phát huy mạnh nhất, và vì sao?**
+  → **Bước 5, nhân rộng theo chiều ngang**: thêm kẻ địch, vũ khí, màn chơi sau khi đã có vertical slice. Lý do là lúc đó đã có **khuôn mẫu tốt** để nhân bản theo, tiêu chí đúng/sai rõ ràng, và mỗi việc kiểm chứng được nhanh. Ngược lại, bước 1 và bước 7 gần như hoàn toàn là việc của người — một bên là quyết định, một bên là cảm giác.
+
+**Khung trả lời 60 giây** — "Quy trình làm game với AI của anh thế nào?"
+
+> Bảy giai đoạn, và ranh giới quan trọng nhất nằm ở hai đầu. **Thiết kế thì tôi làm, không uỷ quyền** — pillar và core loop là thứ định nghĩa game này là của mình. **Đánh bóng** ở cuối cũng phần lớn là việc của người, vì nó là cảm giác.
+>
+> Ở giữa: viết GDD cho AI đọc — đây là khoản đầu tư sinh lời cao nhất, một buổi chiều viết tài liệu tiết kiệm hàng tuần sửa code sai hướng. Rồi dựng khung cho chạy được, rồi **vertical slice** như một chốt chặn: một màn, một địch, một vũ khí nhưng hoàn chỉnh và có juice. Không vui thì quay lại bước một, **đừng đi tiếp**. Sai lầm phổ biến nhất là nhảy thẳng sang nhân rộng nội dung khi chưa biết core loop có vui không.
+>
+> Về cách làm việc hằng ngày: nhiệm vụ cỡ **một commit, kiểm chứng được**; luôn **đọc kế hoạch trước khi agent viết code** — ba mươi giây đổi lấy hai mươi phút; và **commit trước mỗi nhiệm vụ lớn**, vì `git reset` rẻ hơn gỡ rối.
+
+**Họ sẽ đào tiếp**
+
+- *"Vì sao nhật ký quyết định lại cần thiết?"* → Vì agent **không có trí nhớ giữa các phiên**, còn quyết định thì có lý do mà chỉ mình biết. Không ghi lại thì mỗi vài phiên nó lại đề xuất đúng thứ mình đã cân nhắc và loại bỏ — mình mất thời gian giải thích lại, hoặc tệ hơn là đồng ý vì đã quên mất lý do ban đầu.
+- *"Dựng khung trước gameplay có phải lãng phí không?"* → Không, vì mục tiêu của nó là có một thứ **chạy được và build được** càng sớm càng tốt. Nó kiểm tra rẻ một loạt rủi ro không lộ ra ở chỗ khác — thiết lập dự án, quy trình build, ký số — và nó cho mọi nhiệm vụ sau một chỗ để cắm vào.
+- *"Chia nhiệm vụ theo kích thước hay theo ranh giới?"* → Theo **ranh giới kiểm chứng được**, và kích thước là hệ quả. Mỗi nhiệm vụ phải có một cách biết nó đúng trong vài phút — test, hoặc chạy thử quan sát được. Chia theo kích thước thuần thì vẫn có thể cho ra một mảnh không kiểm được, và nó sẽ dồn rủi ro về cuối.
+- *"Đo quy trình này có hiệu quả không thì đo bằng gì?"* → Bằng **tỉ lệ nhiệm vụ xong trong một vòng**, **phần diff bị người sửa lại**, và thời gian review. Ba con số đó nói về giá trị thật, khác hẳn với "bao nhiêu phần trăm code do AI viết" — chỉ số đó không nói gì về giá trị và tạo động cơ xấu ngay lập tức.
+
+**Cờ đỏ**
+
+- Uỷ quyền phần thiết kế và pillar cho AI.
+- Nhảy từ GDD sang nhân rộng nội dung, bỏ qua vertical slice.
+- Giao nhiệm vụ cỡ "làm hệ thống chiến đấu".
+- Chồng nhiều nhiệm vụ rồi mới chạy thử một lần.
+- Mọi quyết định quan trọng chỉ tồn tại trong lịch sử chat.
+
+**Số / ví dụ nên thuộc**
+
+- Bảy giai đoạn: **thiết kế → GDD → dựng khung → vertical slice → nhân rộng → cân bằng → đánh bóng**.
+- Kích thước nhiệm vụ: **một commit, kiểm chứng được, chạy được sau khi xong**.
+- Đọc kế hoạch trước: **30 giây** đổi lấy **20 phút** không đọc code sai hướng.
+- Năm điểm mù phải tự bù: **tích hợp · hiệu năng · tương tác hệ thống · đặc thù engine · "có vui không"**.
+- **Commit trước** mỗi nhiệm vụ lớn; nhánh riêng cho thay đổi thử nghiệm.

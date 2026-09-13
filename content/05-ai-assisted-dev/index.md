@@ -34,8 +34,10 @@ Toàn bộ kho kiến thức này tồn tại để bạn viết được đặc
 
 **Cách làm việc**
 - **[[ai-workflow]]** — quy trình 7 giai đoạn từ ý tưởng tới build chạy được.
+- **[[coding-agents]]** — Claude Code, Codex, Cursor: chọn hình thái nào cho việc nào, thiết lập repo một lần, đọc diff agent viết, chạy nhiều agent song song.
 - **[[gdd-for-ai]]** — viết tài liệu thiết kế mà máy đọc được. Node quan trọng nhất nhánh này.
 - **[[prompt-patterns]]** — các mẫu prompt cho từng loại việc trong gamedev.
+- **[[context-engineering]]** — vì sao phiên dài tốn tiền theo bình phương, bảy đòn bẩy tiết kiệm token, và ba tầng ngữ cảnh.
 - **[[agent-guardrails]]** — rào chắn để agent không phá vỡ thiết kế của bạn.
 - **[[ai-limits]]** — chỗ AI thất bại đáng tin cậy, và cách phát hiện khi mình nhờ sai việc.
 - **[[asset-generation]]** — sinh sprite, âm thanh, nhạc.
@@ -44,6 +46,9 @@ Toàn bộ kho kiến thức này tồn tại để bạn viết được đặc
 - **[[ai-assistant-architecture]]** — bốn lớp của một trợ lý dùng được: ngữ cảnh, công cụ, vòng lặp tự sửa, cổng người. Kèm cầu nối Editor chạy được.
 - **[[knowledge-base-for-agents]]** — kho kiến thức máy đọc được làm ngữ cảnh dùng chung. Case study chính kho này, kèm hai lỗi im lặng đã xảy ra thật.
 - **[[ai-eval]]** — đo xem trợ lý có thật sự tốt lên không: golden task lấy từ lịch sử repo, bốn nhóm chỉ số, cách so sánh không tự lừa mình.
+
+**Nói về nó trong phòng phỏng vấn**
+- **[[ai-interview]]** — ba thứ người phỏng vấn thật sự đang đo khi hỏi "anh dùng AI thế nào", bằng chứng nên mang theo, và bộ câu hỏi khi chính bạn ngồi ghế phỏng vấn.
 
 ## Ba khâu, ba cách dùng khác nhau
 
@@ -168,3 +173,55 @@ Bước 5 không uỷ quyền được. Đó là lý do nhiệm vụ nên nhỏ:
 - `CLAUDE.md` có khối project settings chưa?
 - Agent có bao giờ sửa `.prefab`/`.unity` không? (nên không)
 - Nhiệm vụ giao có kiểm chứng được trong một lần bấm Play không?
+
+## 🎤 Phỏng vấn
+
+Node con trong nhánh này đều có mục 🎤 riêng. Mục này gom câu hỏi về **cách làm việc với AI** —
+loại câu ngày càng xuất hiện ở mọi vị trí, và là chỗ dễ trả lời hời hợt nhất.
+
+**Câu hỏi về AI xuất hiện ở ba dạng**
+
+| Dạng | Họ đo cái gì | Node nên ôn |
+|---|---|---|
+| "Anh dùng AI thế nào?" | Bạn kể quy trình hay kể tên công cụ | [[ai-workflow]], [[ai-tooling]] |
+| "Làm sao nó viết đúng quy ước dự án?" | Bạn có hạ tầng hay chỉ có prompt | [[gdd-for-ai]], [[agent-guardrails]] |
+| "Có đo được nó giúp gì không?" | Bạn đo hay bạn cảm thấy | [[ai-eval]], [[ai-limits]] |
+
+**Câu hay gặp**
+
+- `Junior` **Anh dùng AI vào việc gì trong công việc hằng ngày?**
+  → Trả lời bằng **quy trình**, không bằng danh sách công cụ. Cụ thể: việc đọc kỹ và tẻ nhạt (soát cấp phát ẩn, dò mâu thuẫn giữa các file), việc chuyển dạng (bảng số sang struct), bản nháp test, và editor tool. Việc không giao là những gì **compile và test không kiểm chứng được** — gán Inspector, dựng scene, và mọi quyết định cảm giác.
+- `Junior` **Bốn câu tự kiểm trước khi giao việc cho AI?**
+  → **Kiểm chứng được không** — có cách biết đúng sai trong vài phút? **Đặc tả được bằng chữ không** — phải nói "bạn hiểu ý tôi mà" là chưa đủ. **Sai thì hoàn tác rẻ không** — đã commit trước chưa? **Mình hiểu được kết quả không** — nếu không thì ai bảo trì? "Không" ở bất kỳ câu nào thì cân nhắc tự làm.
+- `Mid` **Làm sao để AI viết code đúng quy ước dự án?**
+  → Một **file luật ở gốc repo** mà agent đọc mỗi phiên, viết ở dạng **luật kiểm tra được** chứ không phải lời khuyên, cộng một mục lục để nó tự mở đúng file cần. Rồi chuyển các bất biến quan trọng thành **test chạy trong CI** — để chúng được thi hành kể cả khi mình quên nhắc.
+- `Mid` **Cái bẫy "80% nhanh, 20% cuối chậm hơn" là gì và tránh thế nào?**
+  → 20% cuối là **tích hợp, trường hợp biên, và những thứ chỉ lộ ra khi chạy thật** — đúng ba điểm mù của AI — và mình đang sửa code mình không viết. Tránh bằng cách chia nhiệm vụ theo **lát cắt dọc chạy được**, để phần khó lộ ra ở nhiệm vụ thứ hai chứ không dồn về tuần cuối.
+- `Senior` **Đo xem AI có thật sự giúp được không thì đo bằng gì?**
+  → Bằng **golden task lấy từ lịch sử repo** — 20–40 thay đổi thật, tiêu chí đạt máy chấm được — chạy mỗi task **n = 3** vì agent không tất định, đổi **một** thứ mỗi lần. Bốn nhóm chỉ số: tỉ lệ **xong trong một vòng**, **% diff bị người sửa lại**, chi phí **mỗi nhiệm vụ hoàn thành**, và thời gian review. "Bao nhiêu % code do AI viết" là chỉ số tệ vì nó tạo động cơ xấu ngay lập tức.
+- `Senior` **Ranh giới nào anh không bước qua khi làm việc với AI?**
+  → Không để nó quyết định **thiết kế** (pillar, core loop) vì nó kéo mọi thứ về trung bình của ngành; không để nó **quyết định hành vi gameplay** trong các hệ thống chạy thời gian thực; không commit code mình **không giải thích được cho người khác**; và không trả lời câu hỏi **giấy phép hay quy định store** bằng trí nhớ của nó — cái đó tra nguồn chính thức tại thời điểm phát hành.
+
+**Khung trả lời 60 giây** — "Anh làm việc với AI trong dự án game thế nào?"
+
+> Tôi chia theo giai đoạn, và ranh giới ở hai đầu là cứng: **thiết kế tôi làm, không uỷ quyền**, và **đánh bóng** ở cuối cũng phần lớn là việc của người vì nó là cảm giác. Ở giữa, khoản đầu tư sinh lời cao nhất là **tài liệu cho AI đọc** — một buổi chiều viết tiết kiệm hàng tuần sửa code sai hướng.
+>
+> Cách làm hằng ngày có ba chốt: nhiệm vụ cỡ **một commit, kiểm chứng được**; **đọc kế hoạch trước khi agent viết code** — ba mươi giây đổi lấy hai mươi phút; và **commit trước mỗi nhiệm vụ lớn**, vì `git reset` rẻ hơn gỡ rối.
+>
+> Còn phần tôi cho là quan trọng nhất mà ít người làm: **rào chắn kiểm tra được và đo được**. Bất biến viết kèm cách phát hiện vi phạm, chuyển thành test chạy trong CI; và đánh giá bằng golden task lấy từ lịch sử repo với **n = 3**, nhìn tỉ lệ xong trong một vòng và **phần diff bị người sửa lại** — chứ không nhìn bao nhiêu phần trăm code do AI viết.
+
+**Cờ đỏ**
+
+- Trả lời bằng danh sách công cụ, không có quy trình nào.
+- Không có file luật trong repo; mọi quyết định chỉ tồn tại trong lịch sử chat.
+- Đánh giá bằng cảm giác "tôi thấy nó viết khá hơn".
+- Nhận con số cân bằng từ AI mà không có mô phỏng.
+- Merge code không giải thích được vì "nó chạy được".
+
+**Số / ví dụ nên thuộc**
+
+- Bảy giai đoạn: **thiết kế → GDD → dựng khung → vertical slice → nhân rộng → cân bằng → đánh bóng**.
+- Bốn thất bại hệ thống: **trung bình hoá · không cảm nhận · không trực giác không gian · tự tin khi sai**.
+- Eval: **20–40 golden task**, **n = 3**, canary **5 task** mỗi lần sửa luật, bộ để riêng theo tháng.
+- Chỉ số hay bị bỏ quên nhất: **% diff bị người sửa lại**.
+- Trần vòng tự sửa **3–5**; đọc kế hoạch **30 giây** đổi lấy **20 phút**.

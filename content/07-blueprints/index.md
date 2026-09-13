@@ -145,3 +145,47 @@ GDD: design/GDD.md — mục Pillars, Bất biến, Ngoài phạm vi là RÀNG B
 - Unity project có `CLAUDE.md` trỏ về kho kiến thức chưa?
 - GDD có mục "trạng thái Unity project" chưa?
 - Node blueprint trong kho này có trỏ đúng đường dẫn GDD thật chưa?
+
+## 🎤 Phỏng vấn
+
+Nhánh này là phần **được thực thi** — tài liệu mà agent đọc rồi sinh code theo. Mục 🎤 ở đây
+vì thế không hỏi về game design nói chung, mà hỏi về **cách viết một đặc tả người khác làm theo được**.
+
+**Câu hay gặp**
+
+- `Junior` **Ba mục quan trọng nhất trong một GDD cho AI đọc?**
+  → **Design Pillars** kèm danh sách loại trừ, **Bất biến** kèm cột cách phát hiện vi phạm, và **Không thuộc phạm vi**. Cả ba đều là mục **loại trừ** — đó là điểm chung và cũng là lý do chúng đứng đầu: phần khẳng định thì AI đoán khá đúng, phần "đừng làm gì" thì nó không suy ra được.
+- `Junior` **Viết đặc tả cụ thể tới mức nào là vừa?**
+  → **Viết *cái gì* và *bao nhiêu*, để AI quyết định *bằng cách nào*.** Quy tắc kèm theo: con số nào ảnh hưởng cảm giác chơi thì phải viết ra — không viết thì nó dùng mặc định của engine và mình mất một buổi chiều chỉnh lại. Quá chi tiết tới mức mô tả tên hàm thì vừa đóng băng thiết kế vừa lỗi thời ngay khi code đổi.
+- `Mid` **Bảy thứ AI luôn bịa nếu không được nói là gì?**
+  → **Số frame và thời lượng · đường cong tiến trình · xử lý biên · thứ tự thực thi · trạng thái lưu · hành vi khi thất bại · ngân sách hiệu năng.** Dùng nó như một checklist trước khi giao việc: mục nào chưa có thì hoặc viết vào, hoặc ghi rõ "chưa quyết, hỏi tôi" — ô trắng luôn bị hiểu là tự quyết.
+- `Mid` **Bất biến viết thế nào để nó không thành trang trí?**
+  → Ở dạng **có thể vi phạm được**, mỗi dòng kèm một cột **cách phát hiện**. Số lượng ít và đắt — khoảng năm tới tám dòng, chỉ cho thứ sai thì đắt: kinh tế, tiến trình, save, ranh giới kiến trúc. Đặt bất biến cho mọi thứ thì không ai đọc, và lúc đó bảng bất biến cũng vô dụng như không có.
+- `Senior` **Giữ tài liệu và code không lệch nhau bằng cách nào?**
+  → Ba việc: tài liệu **nằm trong repo** và sửa trong **cùng PR** với code; bảng số **chỉ có một bản** ở file dữ liệu, còn tài liệu giữ ý định và khoảng chấp nhận được rồi trỏ tới; và một việc định kỳ cho agent **soát mâu thuẫn giữa tài liệu và code thật**. Hai bản số ở hai nơi thì bản trong tài liệu luôn là bản cũ.
+- `Senior` **Đặc tả tốt cho AI và đặc tả tốt cho người mới — có khác nhau không?**
+  → Gần như không, và đó là lý lẽ thuyết phục nhất khi đội ngại đầu tư. Người mới vào dự án được lợi từ đúng những thứ làm agent làm việc tốt hơn: **số cụ thể, bất biến rõ, danh sách không thuộc phạm vi, và lý do đằng sau mỗi quyết định**. Nó không phải tài liệu cho máy — nó là tài liệu tốt, tình cờ máy đọc được.
+
+**Khung trả lời 60 giây** — "Anh viết một đặc tả mà người khác làm theo được thế nào?"
+
+> Nguyên tắc bao trùm: **viết *cái gì* và *bao nhiêu*, để người làm quyết định *bằng cách nào*.** Mọi con số ảnh hưởng tới cảm giác chơi đều phải nằm trong tài liệu ở dạng giá trị, không phải tính từ — "chiến đấu phải đã tay" không thực thi được, còn `startup 8 frame, hitstop 90 ms` thì được.
+>
+> Ba mục tôi luôn có và luôn viết trước: **pillar kèm danh sách loại trừ**, **bất biến kèm cách phát hiện vi phạm**, và **không thuộc phạm vi**. Điểm chung của cả ba là chúng **loại trừ** — và đó là phần mà người đọc, dù là người hay máy, không tự suy ra được.
+>
+> Cuối cùng là chuyện giữ nó sống: tài liệu **nằm trong repo** và sửa cùng PR với code; bảng số chỉ tồn tại **một bản** ở file dữ liệu còn tài liệu trỏ tới đó; và chỗ nào chưa quyết thì ghi rõ **"chưa quyết — hỏi trước khi làm"**, vì một ô trắng luôn bị hiểu là được tự quyết.
+
+**Cờ đỏ**
+
+- Đặc tả toàn tính từ, không có con số nào.
+- Không có mục bất biến và mục không thuộc phạm vi.
+- Bất biến viết ở dạng nguyện vọng, không có cách phát hiện vi phạm.
+- Bảng số chép hai bản, một trong tài liệu một trong dữ liệu.
+- Ô chưa quyết để trắng thay vì ghi rõ là chưa quyết.
+
+**Số / ví dụ nên thuộc**
+
+- Ba mục ưu tiên: **pillar (có loại trừ) · bất biến (có cách phát hiện) · không thuộc phạm vi**.
+- Bất biến: **5–8 dòng**, đánh mã **INV-01…**, chỉ cho thứ sai thì đắt.
+- Bảy thứ AI luôn bịa: **frame · đường cong tiến trình · xử lý biên · thứ tự thực thi · trạng thái lưu · hành vi khi thất bại · ngân sách hiệu năng**.
+- Quy tắc độ cụ thể: **cái gì / bao nhiêu** là của mình, **bằng cách nào** là của người làm.
+- Tài liệu **trong repo**, sửa **cùng PR** với code; bảng số chỉ có **một bản**.

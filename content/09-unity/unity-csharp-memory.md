@@ -309,14 +309,24 @@ public class AllocLab : MonoBehaviour
 
 **Câu hay gặp**
 
-| Mức | Câu hỏi |
-|---|---|
-| Junior | `struct` và `class` khác nhau thế nào? `Vector3` là cái nào? |
-| Junior | Coroutine dừng khi nào? |
-| Mid | Game khựng đều mỗi vài giây dù fps trung bình vẫn ổn. Nghi gì? |
-| Mid | Kể ba thứ cấp phát mà nhìn code không thấy. |
-| Senior | `async/await` trong MonoBehaviour nguy hiểm ở đâu? |
-| Senior | Vì sao code chạy trong Editor mà nổ trên bản IL2CPP? |
+- `Junior` **`struct` và `class` khác nhau thế nào? `Vector3` là cái nào?**
+  → `struct` là value type: sao chép khi gán, nằm trên stack hoặc nội tuyến trong object chứa nó, không sinh rác. `class` là reference type: gán là gán tham chiếu, nằm trên heap, do GC thu. `Vector3` là **struct** — nên `transform.position.x = 5` không biên dịch, vì `position` trả về một bản sao.
+- `Junior` **Coroutine dừng khi nào?**
+  → Khi `StopCoroutine`/`StopAllCoroutines` được gọi, khi GameObject bị **tắt** (`SetActive(false)`), hoặc khi nó bị destroy. Chú ý: tắt riêng component không dừng coroutine, tắt GameObject mới dừng. Đó cũng là ưu điểm so với `Task` — coroutine tự chết theo vòng đời GameObject mà không cần mình nhớ.
+- `Junior` **`foreach` trong Unity có sinh rác không?**
+  → `foreach` trên `List<T>` **không** sinh rác, vì enumerator của nó là struct. Sinh rác là khi duyệt trên biến kiểu **interface** `IEnumerable<T>` — lúc đó enumerator bị boxing. Câu "đừng dùng foreach trong Unity" đúng với Unity 5 và đã sai từ rất lâu; nói được cả chiều ngược lại mới là hiểu.
+- `Mid` **Game khựng đều mỗi vài giây dù fps trung bình vẫn ổn. Nghi gì?**
+  → GC. Khựng **đều đặn theo chu kỳ** là chữ ký của nó, khác hẳn tụt fps liên tục. Mở Profiler, sắp Hierarchy theo cột **GC Alloc** giảm dần — thường 30 giây là ra hàm thủ phạm, và gần như luôn là LINQ, closure trong lambda, hoặc nối chuỗi trong `Update`.
+- `Mid` **Kể ba thứ cấp phát mà nhìn code không thấy.**
+  → Closure bắt biến cục bộ trong lambda. Boxing khi struct bị ép sang interface — một `List<ITickable>` chứa struct, tick 500 lần/frame là 500 object rác mỗi frame. Và `foreach` trên biến kiểu `IEnumerable<T>`. Thêm cái thứ tư hay gặp: `string` nối trong `Update` để cập nhật HUD.
+- `Mid` **Vì sao GC của Unity đau hơn GC bình thường?**
+  → Vì collector là **Boehm: non-generational, non-compacting**. Heap chỉ lớn lên chứ không co lại và không trả về hệ điều hành, và thời gian mỗi lần thu gom tỉ lệ với **số object đang sống** chứ không phải số rác vừa tạo. Incremental GC chia spike ra nhiều frame nhưng không giảm tổng chi phí.
+- `Senior` **`async/await` trong MonoBehaviour nguy hiểm ở đâu?**
+  → `Task` **không** tự huỷ khi GameObject bị destroy. Người chơi thoát scene giữa lúc đang chờ, continuation quay lại và chạm vào `this` đã chết. Từ Unity 2022 mọi MonoBehaviour có `destroyCancellationToken` — truyền vào mọi chỗ chờ. Và `async void` nuốt exception, chỉ dùng cho event handler bắt buộc.
+- `Senior` **Vì sao code chạy trong Editor mà nổ trên bản IL2CPP?**
+  → Editor chạy Mono có JIT, build là AOT. Ba nhóm lỗi: `Reflection.Emit` và `dynamic` không tồn tại; generic virtual trên value type chưa dùng tĩnh ở đâu thì ném `ExecutionEngineException`; và **Managed Stripping** xoá thứ chỉ được gọi qua reflection, làm deserialize ra object rỗng **mà không có exception nào** — loại tệ nhất vì nó im lặng.
+- `Senior` **`list[i].hp -= 10` với `List<struct>` — chuyện gì xảy ra?**
+  → Không biên dịch, vì indexer của `List<T>` trả về một **bản sao**. Phải lấy ra, sửa, gán lại. Dùng mảng thì được, vì mảng trả về tham chiếu tới phần tử. Đây là ví dụ điển hình của việc value type trong Unity không chỉ là chuyện hiệu năng mà còn là chuyện ngữ nghĩa.
 
 **Khung trả lời 60 giây** — "Game khựng đều mỗi vài giây, anh làm gì?"
 

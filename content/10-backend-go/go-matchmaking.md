@@ -328,3 +328,57 @@ public class MatchmakingScreen : MonoBehaviour
 - Bấm Tìm trận, bật Airplane Mode 10 giây rồi tắt: vẫn đang tìm, không nhảy ra lỗi và không tạo ticket thứ hai.
 - Mở hai bản build cùng lúc với MMR chênh 90: ghép được trong vài giây; chênh 900 thì phải chờ tới khi dải chạm trần.
 - Ghép xong rồi cố tình không bấm Ready ở một máy: máy kia quay lại hàng đợi và **không** bị reset đồng hồ chờ về 0.
+
+## 🎤 Phỏng vấn
+
+**Câu hay gặp**
+
+- `Junior` **Ba tham số của matchmaking là gì, và vì sao không cùng tốt được?**
+  → Chất lượng cặp đấu, thời gian chờ, và số người online. Bạn chọn được hai: muốn chênh MMR nhỏ thì phải chờ lâu hơn, muốn vào trận trong 15 giây thì phải chấp nhận ghép lệch. Tham số thứ ba nằm ngoài tầm với — nó là hệ quả của marketing và giờ trong ngày, không phải của thuật toán.
+- `Junior` **Vì sao dải MMR phải nới theo thời gian chờ?**
+  → Vì giữ dải chặt mãi thì người ở đuôi phân bố không bao giờ có trận. Thiết kế thực dụng là bắt đầu chặt — ví dụ ±50 ở giây 0 — rồi loe dần theo thời gian chờ, và **có trần**, ví dụ ±400 từ giây 35.
+- `Mid` **Vì sao cần trần, sao không nới mãi cho ai cũng có trận?**
+  → Vì ghép một người 1500 với một người 2600 tệ hơn là bắt họ chờ thêm. Trận một chiều làm người thua bỏ game và người thắng cũng chán — bạn mất cả hai. Chờ lâu chỉ mất một người tạm thời; ghép lệch mất hai người vĩnh viễn.
+- `Mid` **Hai worker cùng chốt một người chơi vào hai trận thì sao?**
+  → Đó là lý do việc chốt cặp phải **nguyên tử**. Nếu không, một người xuất hiện trong hai phòng cùng lúc — triệu chứng là người chơi bị đá ra khỏi trận ngay khi vừa vào, và nó chỉ xảy ra lúc đông người nên rất khó tái hiện. Cách xử lý là dùng thao tác nguyên tử của Redis hoặc một khoá để chỉ một worker giành được cả hai bên của cặp.
+- `Senior` **Ready check để làm gì, và xử lý người không bấm thế nào?**
+  → Để không cấp phòng cho người đã rời máy — cấp phòng rồi mới phát hiện thiếu người là lãng phí và làm người còn lại chờ vô ích. Người không bấm thì bị đưa ra; người còn lại quay về hàng đợi và **không bị reset đồng hồ chờ**, vì họ không có lỗi gì và đã chờ đủ lâu rồi.
+- `Senior` **Anh đo gì để biết matchmaking đang khoẻ?**
+  → Phân bố thời gian chờ theo phân vị chứ không phải trung bình — trung bình che mất cái đuôi, mà cái đuôi mới là người bỏ game. Cộng thêm phân bố chênh MMR của các cặp đã ghép, và tỉ lệ trận một chiều. Nếu chênh MMR đẹp mà đuôi thời gian chờ dài thì dải đang quá chặt.
+
+**Khung trả lời 60 giây** — "Thiết kế matchmaking cho game PvP của anh"
+
+> Ba tham số không cùng tối ưu được: chất lượng cặp, thời gian chờ, số người online. Cái thứ ba nằm ngoài tầm với, nên tôi thiết kế quanh hai cái đầu: **bắt đầu chặt, nới dần theo thời gian chờ, và có trần**.
+>
+> Cụ thể là dải MMR loe từ khoảng ±50 ở giây 0 tới trần ±400 từ giây 35, sau đó không nới thêm. Trần quan trọng không kém phần nới — ghép 1500 với 2600 thì người thua bỏ game và tôi mất cả hai người, tệ hơn là bắt họ chờ thêm.
+>
+> Phần dễ sai nhất về kỹ thuật là **chốt cặp phải nguyên tử**. Hai worker cùng chốt một người vào hai trận thì người đó bị đá ra ngay khi vừa vào — lỗi chỉ xảy ra lúc đông người nên không tái hiện được ở môi trường dev.
+
+**Họ sẽ đào tiếp**
+
+- *"Chọn hệ MMR nào?"* → Elo đủ cho phần lớn game và dễ giải thích cho người chơi; Glicko hoặc TrueSkill hơn ở chỗ theo dõi được **độ không chắc chắn**, nên người mới hội tụ nhanh hơn và người lâu không chơi không bị đánh giá bằng số cũ. Chọn theo việc bạn có cần xếp hạng đội nhiều người hay không.
+- *"Vì sao hàng đợi để trong Redis?"* → Vì nó sống vài giây và tốc độ quan trọng hơn độ bền — mất hàng đợi thì người chơi bấm tìm lại, không ai mất gì. Ngược lại MMR là thứ phải bền, nên nó nằm ở Postgres.
+- *"Người chơi ở xa thì sao?"* → Region phải là tham số ghép, không phải điều kiện phụ. Ghép được cặp MMR hoàn hảo mà ping 250ms thì trận vẫn hỏng — với game realtime, độ trễ ảnh hưởng kết quả nhiều hơn chênh lệch kỹ năng vừa phải.
+- *"Party nhiều người thì ghép thế nào?"* → Phức tạp hơn hẳn vì phải cân cả cỡ party lẫn MMR trung bình, và party toàn người mạnh đi cùng người yếu là chỗ mọi hệ thống đều lúng túng. Cách thực dụng là tính MMR hiệu dụng cao hơn trung bình một chút cho party, để họ không farm người mới.
+- *"Bot có nên dùng không?"* → Khi số người online quá thấp thì bot giữ được trải nghiệm, nhưng phải quyết trước một điều: người chơi có được biết không. Giấu rồi bị phát hiện là mất niềm tin, và chuyện này luôn bị phát hiện.
+
+**Cờ đỏ**
+
+- Nới dải vô hạn cho ai cũng có trận.
+- Chốt cặp không nguyên tử, rồi xử lý hậu quả bằng cách đá người ra khỏi phòng.
+- Đo thời gian chờ bằng trung bình thay vì phân vị.
+- Reset đồng hồ chờ của người không có lỗi khi ready check thất bại.
+- Bỏ qua region vì "MMR quan trọng hơn".
+
+**Số / ví dụ nên thuộc**
+
+- Dải mẫu: **±50** ở giây 0, nới tới trần **±400** từ giây **35**.
+- Mục tiêu thời gian chờ thường đặt quanh **15 giây** cho game casual.
+- Hàng đợi ở Redis (sống vài giây); MMR ở Postgres (phải bền).
+- Đo bằng **phân vị**, không phải trung bình.
+
+**Kể trong dự án**
+
+- *"Anh làm phần ghép trận à?"* → Nêu quy mô: bao nhiêu người online lúc đỉnh, thời gian chờ phân vị 95 là bao nhiêu. Matchmaking không có số thì nghe như lý thuyết.
+- *"Khó khăn gặp phải?"* → Mẫu rất thật: người chơi bị đá khỏi trận ngay khi vừa vào, chỉ xảy ra vào giờ cao điểm. Kể cách bạn lần ra là hai worker cùng chốt một người, và vì sao nó không bao giờ tái hiện được ở môi trường dev với hai người test.
+- *"Anh cân bằng chất lượng và thời gian chờ thế nào?"* → Câu trả lời tốt nói về **cách đo rồi chỉnh**, không phải về con số cố định: đặt dải, nhìn phân bố chênh MMR và đuôi thời gian chờ, rồi chỉnh trần theo số liệu thật của giờ thấp điểm — vì giờ thấp điểm mới là lúc hệ thống bị thử thách.

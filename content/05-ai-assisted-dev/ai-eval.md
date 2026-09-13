@@ -128,13 +128,24 @@ hoặc tiêu chí đạt không kiểm tự động được) và nói rõ vì s
 
 **Câu hay gặp**
 
-| Mức | Câu hỏi |
-|---|---|
-| Mid | Làm sao anh biết một prompt/luật mới tốt hơn cái cũ? |
-| Mid | Anh đo gì khi đưa AI vào quy trình? |
-| Senior | Dựng bộ eval cho coding agent thế nào? Lấy nhiệm vụ ở đâu? |
-| Senior | Hai cấu hình: A hoàn thành 70%, B hoàn thành 80%. Chọn cái nào? |
-| Senior | Vì sao "bao nhiêu % code do AI viết" là chỉ số tệ? |
+- `Junior` **Golden task là gì, và lấy ở đâu?**
+  → Là bộ nhiệm vụ chuẩn dùng để so hai cấu hình AI với nhau. Lấy từ **lịch sử repo**, không nghĩ ra: mở git, chọn 20–40 thay đổi thật đã làm, viết lại thành đầu bài kèm tiêu chí đạt **máy chấm được** — build xanh, test nào phải xanh, được chạm những file nào. Task do AI tự viết từ diff thì rò rỉ lời giải và cho điểm cao giả.
+- `Junior` **Vì sao tiêu chí đạt phải máy chấm được?**
+  → Vì "code sạch, dễ bảo trì" không so sánh được giữa hai lần chạy, nên nó biến eval thành cảm giác có bảng biểu. Tiêu chí máy chấm được — lệnh test nào phải xanh, file nào không được chạm — cho cùng một câu trả lời hôm nay và tháng sau, và chạy lại được khi đổi model.
+- `Mid` **Anh đo gì khi đưa AI vào quy trình?**
+  → Bốn nhóm. Kết quả: tỉ lệ hoàn thành, và quan trọng hơn là **tỉ lệ xong trong một vòng**. Chất lượng: **bao nhiêu phần diff bị người sửa lại** sau review, số lần vi phạm ranh giới. Chi phí: tiền và thời gian **mỗi nhiệm vụ hoàn thành**, không phải giá mỗi nghìn token. Và thời gian review của người.
+- `Mid` **Làm sao anh biết một prompt hay file luật mới tốt hơn cái cũ?**
+  → Kỷ luật giống hệt A/B test: đổi **một** thứ mỗi lần, chạy mỗi task ít nhất **ba lần** vì agent không xác định, và so theo cặp trên cùng task. Kết luận rút từ một lần chạy là kết luận về nhiễu. Đổi model và đổi ngữ cảnh cùng lúc rồi tuyên bố thắng là lỗi phổ biến nhất.
+- `Mid` **Chạy eval tốn tiền. Chạy khi nào?**
+  → Ba nhịp. **5 task canary** mỗi lần sửa file luật hoặc prompt hệ thống — đủ để bắt hồi quy thô. Bộ đầy đủ với n = 3 mỗi tuần, hoặc trước khi đổi model. Và bộ **để riêng** mỗi tháng một lần. Ba nhịp này giữ chi phí ở mức chấp nhận được mà vẫn bắt được cả lỗi nhanh lẫn lỗi trôi chậm.
+- `Senior` **Hai cấu hình: A hoàn thành 70%, B hoàn thành 80%. Chọn cái nào?**
+  → Chưa đủ dữ kiện. Nếu B hoàn thành cao hơn nhưng **% diff bị sửa lại** cũng cao hơn thì nó chỉ đang đẩy việc sang người review, và thời gian tiết kiệm là ảo. Tôi hỏi thêm ba số: tỉ lệ một vòng, thời gian review trung bình, và số lần chạm vùng cấm.
+- `Senior` **Vì sao "bao nhiêu % code do AI viết" là chỉ số tệ?**
+  → Nó không nói gì về giá trị và tạo động cơ xấu ngay lập tức: muốn số đẹp thì cứ để agent viết cả những chỗ không nên viết. Chỉ số phải gắn với **kết quả công việc** — task xong, ít vòng sửa, ít thời gian review — chứ không gắn với sản lượng.
+- `Senior` **Overfit bộ eval thì sao? Phòng thế nào?**
+  → Chỉnh luật cho tới khi cả bộ task xanh là tối ưu cho bộ test chứ không cho dự án — cùng một sai lầm với việc tuning trên tập test trong ML. Tôi giữ **5–10 task để riêng**, chỉ chạy mỗi tháng một lần và không bao giờ dùng khi đang tinh chỉnh. Chênh lệch giữa bộ chính và bộ để riêng chính là mức overfit.
+- `Senior` **Đội nhỏ chưa có hạ tầng eval thì bắt đầu từ đâu?**
+  → **10 task trong một bảng tính, chạy tay mỗi tháng.** Số liệu thô mà tồn tại và so sánh được qua thời gian vẫn hơn hẳn một hạ tầng đẹp chưa bao giờ dựng xong. Chỗ cần chặt chẽ không phải công cụ mà là tiêu chí đạt và số lần chạy — hai thứ đó viết được bằng tay.
 
 **Khung trả lời 60 giây** — "Làm sao biết trợ lý tốt lên?"
 

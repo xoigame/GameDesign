@@ -118,12 +118,24 @@ Chỉ viết những gì tôi đã nói; chỗ nào tôi chưa trả lời thì 
 
 **Câu hay gặp**
 
-| Mức | Câu hỏi |
-|---|---|
-| Mid | Anh dùng AI trong quy trình làm việc thế nào? Cho một ví dụ cụ thể. |
-| Mid | Làm sao để AI viết code theo **quy ước dự án**? |
-| Senior | Kể về một công cụ hoặc quy trình anh tự dựng và tác động của nó. |
-| Senior | Tri thức của dự án anh lưu ở đâu, và làm sao nó không mục đi? |
+- `Junior` **Nội dung gì nên đưa vào kho kiến thức cho agent, và gì thì không?**
+  → Nên: quyết định đã chốt kèm **vì sao**, bẫy đã làm hỏng dự án một lần kèm cách phát hiện, quy ước đặt tên và chiều phụ thuộc, đường biên cái gì agent không được chạm. Không nên: tài liệu API — agent đã biết và mình không cập nhật kịp — kiến thức chung, và ghi chú cuộc họp.
+- `Junior` **Phép thử một câu để biết một mục có đáng nằm trong kho không?**
+  → *Phát biểu này có làm agent hoặc người mới vào dự án làm khác đi không?* Không thì nó là trang trí, xoá. "Hãy giữ code sạch và tách biệt mối quan tâm" trượt phép thử này; "không dùng thư mục `Resources/`, dùng Addressables" thì đạt.
+- `Mid` **Làm sao để AI viết code theo quy ước dự án?**
+  → Đặt quy ước ở **file luật trong repo** mà agent đọc trước, viết dưới dạng luật kiểm tra được chứ không phải lời khuyên, và có validator chạy trong CI. Quy ước sống trong đầu người hoặc trong Confluence thì agent không thấy; quy ước viết mơ hồ thì agent diễn giải theo cách nó quen.
+- `Mid` **Sao không để tài liệu trong Confluence hay Notion?**
+  → Ba lý do. Agent đọc repo dễ hơn đọc API của công cụ khác. Tri thức đi cùng code trong cùng một PR nên **review được** — sửa luật và sửa code nằm trong một diff. Và validator chạy được trong CI. Tài liệu ở nơi khác luôn trôi khỏi code sau vài tháng, không ai cố ý làm điều đó cả.
+- `Mid` **Kho kiến thức làm sao để không mục đi?**
+  → Cùng lý do code không mục: nó **được dùng hằng ngày** và có cổng kiểm chạy bằng một lệnh. Thêm một việc định kỳ: cho agent soát tìm mâu thuẫn giữa các node và những phát biểu nói về API đã đổi. Kho không ai đọc thì tệ hơn không có, vì nó tạo cảm giác đã ghi lại rồi.
+- `Senior` **Kể về một công cụ hoặc quy trình anh tự dựng và tác động của nó.**
+  → Kho kiến thức máy đọc được làm ngữ cảnh dùng chung: markdown là nguồn chân lý duy nhất, một script build sinh mục lục phẳng cho agent và dữ liệu cho web mindmap cho người, cấu trúc suy ra từ cây thư mục. Điểm đáng nói nhất là **coi tri thức như code** — validator thoát khác 0 khi có link gãy, trùng id, hay thiếu mục bắt buộc.
+- `Senior` **Tri thức của dự án anh lưu ở đâu, và ai chịu trách nhiệm?**
+  → Trong repo, cùng chỗ với code, một nguồn chân lý và mọi dạng khác được **sinh ra** chứ không sửa tay. Trách nhiệm gắn với PR: ai đổi một quyết định thì sửa luôn node nói về quyết định đó trong cùng PR. Không có "người viết tài liệu" riêng — vai đó luôn là vai đầu tiên bị cắt khi dự án gấp.
+- `Senior` **Lỗi im lặng trong pipeline tri thức — anh gặp loại nào và chữa ra sao?**
+  → Hai lỗi thật, chung một tính chất: build vẫn xanh, nội dung âm thầm biến mất. **Code fence lẻ** làm mọi heading sau đó bị coi là code nên các mục bị tách mất. **CRLF trên Windows** làm regex neo `$` không khớp, toàn bộ mục bị rỗng trên đúng máy đó. Cách chữa chung không phải đoán trước từng lỗi mà là **in vài con số tổng hợp sau mỗi build và nhìn chúng**.
+- `Senior` **Tác động của kho kiến thức đo được không?**
+  → Chỗ trung thực để đo là eval: tỉ lệ nhiệm vụ xong trong một vòng, phần diff bị người sửa lại, số lần agent chạm vùng cấm — so trước và sau khi có file luật. Nếu chưa đo thì tôi nói thẳng là chưa đo và nêu cách sẽ đo; điều đó ăn điểm hơn một con số bịa ra.
 
 **Khung trả lời 60 giây** — "Anh dùng AI trong quy trình thế nào?"
 

@@ -202,3 +202,57 @@ Key trong `Resources/` hoặc `PlayerPrefs` là key công khai: build client d�
 - Rút mạng giữa hội thoại: game có tiếp tục bình thường không?
 - Bật Profiler lúc gọi API: main thread có khựng không?
 - Sửa response giả thành `action` sai: có bị chặn không?
+
+## 🎤 Phỏng vấn
+
+**Câu hay gặp**
+
+- `Junior` **Cho LLM điều khiển NPC thì tầng nào được phép làm gì?**
+  → Kiến trúc phân tầng: game logic quyết định **hành vi** (tấn công hay không, mở cửa hay không, cho quest hay không), LLM chỉ **diễn đạt** quyết định đó thành lời. Lý do rất cụ thể: LLM không tất định, không kiểm chứng được, và không chịu ràng buộc luật game — ba thứ mà mọi quyết định gameplay đều cần.
+- `Junior` **Đầu ra của LLM nên có dạng gì?**
+  → **Có cấu trúc, trong một tập đóng**: `action` phải nằm trong enum như `["greet","warn","trade","attack","give_quest","ignore"]`, kèm phần lời thoại tự do. Code kiểm tra hợp lệ trước khi dùng; giá trị ngoài danh sách thì từ chối và dùng phản hồi dự phòng. Không có bước này thì không có ranh giới an toàn nào.
+- `Junior` **Vì sao NPC nói mâu thuẫn với chính nó, và sửa thế nào?**
+  → Vì LLM không có nguồn sự thật — nó sinh ra thứ nghe hợp lý. NPC nói có ba người con, mười phút sau nói chưa vợ, và người chơi mất niềm tin vào cả thế giới. Nguyên tắc chữa: **sự thật nằm trong dữ liệu game, không nằm trong LLM** — bơm các sự kiện đã xác lập vào prompt mỗi lần gọi.
+- `Mid` **Bốn rào cản thật khi đưa LLM vào NPC là gì?**
+  → **Độ trễ** 400 ms–2 s: hội thoại chịu được, phản ứng thời gian thực thì không. **Chi phí**: 50 NPC × 10.000 người chơi × 20 lượt là hoá đơn vượt xa doanh thu game indie. **Tính nhất quán**: LLM mâu thuẫn với chính nó. **Người chơi sẽ phá**: thuyết phục NPC thoát vai, đọc system prompt, nói chuyện ngoài chủ đề.
+- `Mid` **Xử lý độ trễ trong hội thoại thế nào?**
+  → Ba cách, thường dùng cùng nhau: phát **animation "đang suy nghĩ"** để độ trễ trở thành diễn xuất; phát trước một **câu đệm chung** trong lúc chờ; và **sinh sẵn** phản hồi cho các tình huống thường gặp. Cái không làm được là giấu độ trễ — nên biến nó thành một phần của nhân vật thay vì cố che.
+- `Mid` **Chi phí vận hành kiểm soát bằng cách nào?**
+  → Mô hình nhỏ chạy cục bộ, **cache theo ngữ cảnh**, và quan trọng nhất: **sinh sẵn khi build** thay vì sinh lúc chạy. Cách cuối chuyển chi phí từ biến đổi theo số người chơi sang cố định theo dự án — đó là khác biệt giữa một tính năng khả thi và một tính năng phá vỡ mô hình kinh doanh.
+- `Senior` **Trí nhớ của NPC thiết kế thế nào?**
+  → Ba tầng: ngắn hạn (lượt hội thoại hiện tại), trung hạn (phiên chơi), và **dài hạn phải là dữ liệu game thật** — các dữ kiện đã xác lập, được chèn vào prompt mỗi lần gọi. Không lưu trí nhớ **trong** LLM: nó là thứ sinh văn bản, không phải cơ sở dữ liệu, và mọi thứ chỉ tồn tại trong ngữ cảnh đều sẽ trôi mất.
+- `Senior` **Vì sao hội thoại vô hạn thường làm game tệ đi?**
+  → Vì **ràng buộc tạo ra ý nghĩa**. Cây hội thoại viết tay có trọng lượng vì mỗi dòng đều được chọn lọc; khi NPC nói gì cũng được thì không câu nào đáng nhớ, và người chơi chuyển từ *nghe một nhân vật* sang *nghịch một chatbot* — rồi ngừng quan tâm tới cốt truyện. Đây là vấn đề thiết kế, không phải vấn đề kỹ thuật, nên mô hình mạnh hơn không giải quyết được.
+- `Senior` **Vậy ứng dụng nào của LLM cho NPC là hứa hẹn nhất hiện nay?**
+  → Bốn, và không cái nào là thay thế cây hội thoại: **diễn đạt lại lời thoại viết tay** theo tâm trạng và quan hệ hiện tại; **phản ứng vụn** với hành động người chơi (đốt nhà → dân làng bình luận); **lời thoại lấp khoảng** giữa các NPC để tạo không khí; và **sinh nội dung lúc build** rồi con người biên tập — an toàn nhất về cả chi phí lẫn chất lượng.
+
+**Khung trả lời 60 giây** — "Anh sẽ đưa LLM vào NPC thế nào?"
+
+> Kiến trúc phân tầng, và ranh giới rất cứng: **game logic quyết định hành vi, LLM chỉ diễn đạt**. Nó không được phép quyết định NPC tấn công hay không, mở cửa hay không, cho quest hay không — vì nó không tất định, không kiểm chứng được và không chịu ràng buộc luật game. Đầu ra phải có **schema**: `action` nằm trong một enum đóng, ngoài danh sách thì từ chối và dùng phản hồi dự phòng.
+>
+> Bốn rào cản tôi tính trước: độ trễ 400 ms tới 2 giây — biến nó thành animation "đang suy nghĩ" chứ đừng cố giấu; chi phí — cache và **sinh sẵn lúc build** thay vì sinh lúc chạy; tính nhất quán — **sự thật nằm trong dữ liệu game**, bơm vào prompt mỗi lần gọi; và việc người chơi sẽ tìm cách phá, nên phải lọc đầu ra và chấp nhận không có biện pháp nào kín tuyệt đối.
+>
+> Nhưng câu trả lời quan trọng hơn là về thiết kế: **hội thoại vô hạn thường làm game tệ đi**, vì ràng buộc mới tạo ra trọng lượng. Nên tôi dùng LLM cho diễn đạt lại lời thoại đã viết, phản ứng vụn, thoại lấp khoảng — chứ không dùng để thay cây hội thoại.
+
+**Họ sẽ đào tiếp**
+
+- *"Nếu để LLM quyết định hành vi thì hỏng thế nào?"* → Hỏng ở chỗ không tái hiện được và không cân bằng được: cùng một tình huống cho hai kết quả khác nhau, nên bug không truy được và designer không chỉnh được. Thêm nữa, người chơi sẽ tìm ra cách nói chuyện để mở khoá thứ lẽ ra phải làm nhiệm vụ mới có — và đó là lỗ hổng gameplay, không phải lỗi văn bản.
+- *"Chặn prompt injection từ người chơi thế nào?"* → Coi mọi thứ người chơi gõ là **dữ liệu, không phải chỉ thị**: tách rõ trong prompt, lọc đầu ra theo danh sách chủ đề, giới hạn độ dài, và không bao giờ để đầu ra của LLM đi thẳng vào một hành động có hậu quả. Và phải giả định sẽ có người vượt qua, nên thiệt hại tối đa khi bị vượt phải là "NPC nói một câu lạc đề", không phải "người chơi nhận được vật phẩm".
+- *"Sinh lúc build khác gì sinh lúc chạy?"* → Chi phí cố định thay vì biến đổi, độ trễ bằng không, **con người biên tập được**, và nội dung nằm trong bản build nên QA kiểm được. Đổi lại là mất tính phản ứng theo tình huống. Với phần lớn game, đánh đổi đó nghiêng hẳn về phía sinh lúc build.
+- *"Đo chất lượng của phần này thế nào?"* → Bằng eval như mọi tính năng LLM khác: một bộ tình huống cố định, chạy n lần, chấm theo tiêu chí máy đọc được — có đúng schema không, có nhắc tới sự kiện đã xác lập không, có thoát vai không. Ấn tượng chủ quan sau vài lần thử là cách phổ biến nhất để tự lừa mình ở đây.
+
+**Cờ đỏ**
+
+- Để LLM quyết định hành vi hoặc phần thưởng.
+- Không có schema, không validate, không có phản hồi dự phòng.
+- Lưu trí nhớ NPC trong ngữ cảnh của LLM thay vì trong dữ liệu game.
+- Không ước tính chi phí theo số người chơi trước khi bắt đầu.
+- Coi hội thoại vô hạn là mục tiêu, không nhận ra ràng buộc mới tạo ra trọng lượng.
+
+**Số / ví dụ nên thuộc**
+
+- Độ trễ gọi API **400 ms – 2 s**; hội thoại chịu được, thời gian thực thì không.
+- Ranh giới: **LLM diễn đạt, game logic quyết định**.
+- Đầu ra **có schema**, `action` trong enum đóng, ngoài danh sách thì từ chối.
+- Ba tầng trí nhớ: lượt · phiên · **dữ liệu game** (tầng dài hạn).
+- Bốn ứng dụng hứa hẹn: diễn đạt lại thoại viết tay · phản ứng vụn · thoại lấp khoảng · **sinh lúc build có người biên tập**.

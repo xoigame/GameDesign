@@ -179,3 +179,57 @@ Và kiểm tra `Navigation` của mỗi `Selectable` — chế độ `Automatic`
 - Chạy ở 1920×1080, 1280×800, 2560×1080 — UI có vỡ không?
 - Rút chuột ra, chỉ dùng bàn phím: tới được mọi nút chứ?
 - Mọi nút có `:focus` / `Selected` state nhìn thấy rõ không? Xem [[accessibility]].
+
+## 🎤 Phỏng vấn
+
+**Câu hay gặp**
+
+- `Junior` **UI game khác UI ứng dụng ở điểm nào?**
+  → Ở chỗ **người chơi đang bận**. Họ không đọc kỹ, không rê chuột tìm tooltip, không suy nghĩ về cấu trúc menu. Nên mọi thứ phải **nhận ra được**, không phải đọc hiểu được — đó là lý do biểu tượng, hình dạng và vị trí quan trọng hơn nhãn chữ trong game, ngược hẳn với ứng dụng năng suất.
+- `Junior` **Vì sao nên dựng hệ thống trước, màn hình sau?**
+  → Vì thiết kế từng màn một cho ra hai mươi màn hình với mười bốn kích thước nút khác nhau. Hệ thống tối thiểu phải chốt trước: **thang khoảng cách** (mọi khoảng là bội số của một đơn vị — không bao giờ 13px hay 27px), **thang chữ** 4–5 cỡ, **bảng màu UI tách khỏi bảng màu thế giới**, và bộ **trạng thái** cho phần tử tương tác.
+- `Junior` **Một phần tử tương tác cần mấy trạng thái? Cái nào hay thiếu nhất?**
+  → Năm: `default · hover · pressed · disabled · **focused**`. Thiếu `focused` là lỗi phổ biến nhất, và hậu quả rất cụ thể — game **không chơi được bằng bàn phím hoặc tay cầm**, tức là mất cả một nhóm người chơi lẫn một hạng mục trợ năng cơ bản.
+- `Mid` **Quy tắc typography cho UI game?**
+  → Cỡ nhỏ nhất **13–14px @1080p**, console thì **20px+** vì người chơi ngồi xa 2–3 mét. Chiều dài dòng **45–75 ký tự**. Không dùng font trang trí cho nội dung — để dành cho tiêu đề. Chữ trên ảnh nền **luôn** cần một lớp tối mờ phía sau. Và kiểm **font có đủ chữ tiếng Việt** ngay tuần đầu, vì rất nhiều font game miễn phí thiếu dấu.
+- `Mid` **Icon dùng thế nào cho đúng?**
+  → Icon chỉ hiệu quả khi người chơi **đã biết nó là gì**, nên: icon **cộng chữ** ở lần đầu gặp, chỉ icon sau khi đã quen. Icon quan trọng phải phân biệt được **bằng hình dạng ở 24px**, không chỉ bằng màu. Tối đa khoảng **12–15 icon** người chơi phải nhớ. Và một icon là một ý nghĩa, xuyên suốt game.
+- `Mid` **Scale UI qua nhiều độ phân giải thế nào?**
+  → Chọn **một trong hai và đừng trộn**: scale theo **chiều cao màn hình** (dễ đoán, hay dùng cho game), hoặc scale theo **khoảng cách vật lý** (đúng hơn về trải nghiệm, hợp console/mobile). Dù chọn gì cũng kiểm ở ba tỉ lệ **16:9, 16:10, 21:9**, và thêm **safe area** nếu có mobile.
+- `Senior` **Vùng chạm trên mobile — những con số nào là bắt buộc?**
+  → Tối thiểu **44×44px**, khoảng cách giữa hai mục **≥ 8px**. Hai mẹo quan trọng hơn con số: **vùng chạm được phép lớn hơn hình vẽ** — nút nhìn 32px nhưng vùng bấm 48px, người chơi không thấy mà chỉ thấy "dễ bấm"; và **chừa khoảng 80px dưới cùng** cho ngón cái che, tránh đặt nút quan trọng ở góc trên vì không với tới bằng một tay.
+- `Senior` **Vì sao bảng màu UI nên tách khỏi bảng màu thế giới?**
+  → Để UI **không lẫn với vật thể trong game**. Dùng chung bảng màu thì có cảnh nào đó UI biến mất vào nền, và lỗi này xuất hiện ngẫu nhiên theo màn chứ không tái hiện được ở một chỗ cố định. Tách ra còn cho phép art direction đổi tông cảnh mà không phải kiểm lại toàn bộ UI.
+- `Senior` **Hệ thống UI ảnh hưởng thế nào tới tốc độ làm việc của cả đội?**
+  → Rất lớn, và đó là lý do thật để đầu tư: có thang khoảng cách, thang chữ và bộ trạng thái thì **thêm một màn hình mới là ghép sẵn có**, không phải thiết kế lại. Không có hệ thống thì mỗi màn hình là một cuộc thương lượng, và mỗi lần sửa là sửa hai mươi chỗ. Đây cũng là điều kiện để agent sinh UI mới mà vẫn nhất quán.
+
+**Khung trả lời 60 giây** — "Anh xây UI cho một game thế nào?"
+
+> **Hệ thống trước, màn hình sau.** Sai lầm phổ biến là thiết kế từng màn một, và kết quả là hai mươi màn hình với mười bốn kích thước nút khác nhau. Thứ tôi chốt trước gồm bốn thứ: thang khoảng cách theo bội số một đơn vị, thang chữ bốn năm cỡ, bảng màu UI tách khỏi bảng màu thế giới, và đủ năm trạng thái cho mọi phần tử tương tác — `default`, `hover`, `pressed`, `disabled`, và `focused`.
+>
+> `focused` là cái hay thiếu nhất, và thiếu nó thì game không chơi được bằng tay cầm. Đó vừa là lỗi nền tảng vừa là lỗi trợ năng.
+>
+> Về chữ và icon, tôi giữ vài con số cứng: cỡ nhỏ nhất 13–14px ở 1080p và 20px trở lên cho console; dòng dài 45–75 ký tự; icon quan trọng phải phân biệt **bằng hình dạng ở 24px**; và tối đa mười hai tới mười lăm icon người chơi phải nhớ. Cuối cùng là kiểm ở ba tỉ lệ màn hình và, nếu có mobile, kiểm safe area cùng vùng chạm tối thiểu 44×44.
+
+**Họ sẽ đào tiếp**
+
+- *"Vì sao thang khoảng cách lại có tác dụng lớn đến thế?"* → Vì phần lớn cảm giác "lệch lệch" đến từ các giá trị tuỳ hứng — 13px ở đây, 27px ở kia. Ràng buộc bội số loại bỏ chuyện đó mà không cần ai có mắt thẩm mỹ tốt, và nó cũng làm việc review nhanh hơn: sai thang là thấy ngay, không phải tranh luận.
+- *"Font thiếu dấu tiếng Việt phát hiện lúc nào?"* → Phải phát hiện **tuần đầu**, bằng cách dán một chuỗi đủ dấu vào một nhãn thật. Phát hiện muộn thì hoặc đổi font và làm lại toàn bộ layout, hoặc sống chung với chữ bị rơi dấu — cả hai đều đắt. Đây là loại lỗi vừa im lặng vừa chỉ lộ ra ở đúng ngôn ngữ của mình.
+- *"Vùng chạm lớn hơn hình vẽ có gây bấm nhầm không?"* → Có, nếu các nút đặt sát nhau — nên đi kèm khoảng cách tối thiểu 8px và không cho hai vùng chạm chồng lên nhau. Đúng cách thì nó là một trong những thay đổi rẻ nhất làm mobile "cảm thấy chính xác hơn" mà không ai chỉ ra được vì sao.
+- *"Dùng AI ở khâu này thế nào?"* → Giao cho nó việc **soát tính nhất quán**: liệt kê mọi giá trị khoảng cách và cỡ chữ đang dùng thật trong dự án rồi chỉ ra cái nào lệch thang, tìm phần tử thiếu trạng thái `focused`, tìm icon dùng cho hai nghĩa. Đó là việc duyệt và đối chiếu, máy làm nhanh và không bỏ sót.
+
+**Cờ đỏ**
+
+- Thiết kế từng màn hình một, không có hệ thống chung.
+- Thiếu trạng thái `focused`, nên UI không dùng được bằng tay cầm.
+- Icon phân biệt chỉ bằng màu, hoặc quá nhiều icon phải nhớ.
+- Không kiểm ở tỉ lệ 21:9 và không kiểm safe area trên mobile.
+- Chữ đặt thẳng trên ảnh nền, không có lớp tối phía sau.
+
+**Số / ví dụ nên thuộc**
+
+- Cỡ chữ nhỏ nhất **13–14px @1080p** · console **20px+**; dòng dài **45–75 ký tự**.
+- Năm trạng thái: `default · hover · pressed · disabled · **focused**`.
+- Icon: phân biệt bằng **hình dạng ở 24px**; tối đa **12–15** icon phải nhớ.
+- Vùng chạm mobile **≥ 44×44px**, cách nhau **≥ 8px**, chừa **~80px** dưới cùng.
+- Kiểm ở **16:9 · 16:10 · 21:9**, cộng safe area nếu có mobile.

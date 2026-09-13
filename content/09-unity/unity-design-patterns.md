@@ -510,14 +510,24 @@ public sealed class EnemySpawner : MonoBehaviour
 
 **Câu hay gặp**
 
-| Mức | Câu hỏi |
-|---|---|
-| Junior | Singleton trong Unity viết thế nào cho đúng? Nhược điểm là gì? |
-| Junior | `ScriptableObject` khác `MonoBehaviour` chỗ nào? Dùng khi nào? |
-| Mid | `event Action<T>` của C# và `UnityEvent<T>` — chọn cái nào, vì sao? |
-| Mid | 500 script cùng có `Update()` rỗng thì tốn gì? |
-| Senior | Team 5 người, 12 tháng: Service Locator hay DI framework (VContainer/Zenject)? |
-| Senior | Kể một chỗ anh cố tình **không** dùng pattern vì nó thừa. |
+- `Junior` **Singleton trong Unity viết thế nào cho đúng? Nhược điểm là gì?**
+  → Guard phải huỷ **bản mới**: `if (Instance != null) { Destroy(gameObject); return; }` rồi `Instance = this; DontDestroyOnLoad(gameObject);`. Nhược điểm cụ thể trong Unity, không phải câu thần chú "anti-pattern": thứ tự khởi tạo không đảm bảo, bản trùng khi quay lại scene cũ, và không thay được bằng mock khi test.
+- `Junior` **`ScriptableObject` khác `MonoBehaviour` chỗ nào? Dùng khi nào?**
+  → SO là asset, không gắn vào GameObject, không có `Update`, sống độc lập với scene. Dùng cho ba vai: **config bất biến** (`WeaponData`), **event channel** (một asset `OnPlayerDied` mà UI, audio, quest cùng tham chiếu), và **runtime set** (một SO giữ `List<Enemy>` đang sống, thay cho `FindObjectsByType` mỗi frame).
+- `Junior` **Vì sao `currentHp` trong ScriptableObject lần Play sau lại bắt đầu từ 37?**
+  → Vì trong Editor, SO **sống xuyên các lần Play** và field runtime không có `[NonSerialized]` sẽ bị ghi thẳng vào asset. Trên build thì asset chỉ đọc nên reset sạch mỗi lần mở game — hai hành vi khác nhau, nghĩa là bug chỉ lộ ở một nơi. `[NonSerialized]` cộng gỡ đăng ký trong `OnDisable` là hai luật sống còn của SO.
+- `Mid` **`event Action<T>` của C# và `UnityEvent<T>` — chọn cái nào, vì sao?**
+  → Không phải cái nào tệ hơn mà là **khác mục đích**. UnityEvent nối được trong Inspector nên designer dùng được; đổi lại nó gọi qua reflection (chậm hơn nhiều lần, có thể cấp phát khi Invoke) và **đổi tên hàm thì kết nối mất âm thầm** — Inspector chỉ hiện "Missing". Luật: logic giữa code dùng `event Action`; chỗ designer cần nối tay thì UnityEvent hoặc SO event channel.
+- `Mid` **500 script cùng có `Update()` rỗng thì tốn gì?**
+  → Mỗi lần gọi là một chuyến native→managed khoảng **0,5 µs** kể cả khi thân hàm rỗng — khoảng **0,25 ms mỗi frame** khi chưa làm gì cả. Chữa bằng một manager tick `List<ITickable>`, và **xoá hẳn** `Update` khỏi script không cần: để trống vẫn bị gọi.
+- `Mid` **Object pool thì tự viết hay dùng có sẵn?**
+  → Dùng `UnityEngine.Pool.ObjectPool<T>` có sẵn. Cái khó không nằm ở pool mà ở **reset cho đủ**: trail, particle, vận tốc rigidbody, coroutine đang chạy, animator state. Quên một cái là viên đạn thứ hai bay ra với vệt khói của viên trước — và loại bug đó rất khó truy vì nó phụ thuộc thứ tự tái sử dụng.
+- `Senior` **Team 5 người, 12 tháng: Service Locator hay DI framework?**
+  → Tuỳ hai thứ: có cần **scope** (per-match, per-scene) không, và có cần test với mock không. Dưới 15 hệ thống và một người làm thì 1–2 singleton cộng SO event channel là đủ, thêm container chỉ là chi phí. Team 5 người 12 tháng thì DI thường đáng; VContainer hơn Zenject ở chỗ ít reflection và có source generator cho IL2CPP.
+- `Senior` **Kể một chỗ anh cố tình không dùng pattern vì nó thừa.**
+  → Ví dụ thật: một game jam hai tuần, tôi để hai singleton `AudioManager` và `GameManager` gọi thẳng nhau thay vì dựng event bus. Lý do: vòng đời dự án ngắn hơn thời gian mà chi phí ghép chặt kịp phát sinh. Pattern mua **khả năng thay đổi trong tương lai**; không có tương lai đó thì nó chỉ là chi phí.
+- `Senior` **Tắt Domain Reload thì `static` có tự reset không?**
+  → **Không** — đó chính là cái đánh đổi: vào Play Mode nhanh hơn nhiều, nhưng mọi `static` và mọi đăng ký sự kiện giữ nguyên từ lần Play trước. Cách chữa là `[RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]` để tự tay reset. Không biết điều này thì triệu chứng là "chạy lần đầu đúng, lần hai sai".
 
 **Khung trả lời 60 giây** — "Anh dùng ScriptableObject vào những việc gì?"
 

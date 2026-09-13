@@ -100,3 +100,55 @@ Lợi ích thật: hai người sửa hai scene khác nhau không conflict. Scen
 - Sửa chỉ số một loại quái: có phải mở scene nào không? (không nên)
 - Hai người sửa hai màn khác nhau: có conflict không?
 - Prefab variant hay copy-paste prefab? (grep số lượng prefab gần giống nhau)
+
+## 🎤 Phỏng vấn
+
+Node con trong nhánh này đều có mục 🎤 riêng. Mục này gom những câu về **nội dung và cách dẫn
+người chơi qua nó** — phần việc người phỏng vấn hay kiểm bằng một bài tập nhỏ tại chỗ.
+
+**Content design được hỏi ở ba dạng**
+
+| Dạng | Họ đo cái gì | Node nên ôn |
+|---|---|---|
+| "Dạy cơ chế này mà không dùng tutorial" | Bạn nghĩ bằng không gian hay bằng hộp thoại | [[level-design]], [[onboarding]] |
+| "Màn này lê thê, sửa sao" | Bạn đo được nhịp hay chỉ cảm thấy | [[pacing]] |
+| "Sinh nội dung tự động cho game này" | Bạn biết chỗ procgen thường hỏng chưa | [[procedural-generation]], [[narrative]] |
+
+**Câu hay gặp**
+
+- `Junior` **Dạy một cơ chế mới mà không dùng hộp thoại — anh làm thế nào?**
+  → **Ba nhịp**: bối cảnh an toàn (thất bại không bị phạt) → áp dụng có phạt → kết hợp với cơ chế cũ. Nấm đầu tiên trong Mario đi *về phía* người chơi trong hành lang kín, nên không thể tránh được việc học. Bỏ nhịp một thì người chơi thấy bất công, bỏ nhịp ba thì họ không bao giờ dùng lại cơ chế đó.
+- `Junior` **Người chơi đi lạc trong màn của anh. Sửa từ đâu?**
+  → Từ **ánh sáng**, vì nó là tín hiệu mạnh nhất và rẻ nhất để sửa — mắt luôn đi về phía sáng nhất. Rồi thêm landmark thấy được từ nhiều vị trí, rồi kiểm đường dẫn hình học có chỉ sai hướng không. Chỉ tiêu: biết hướng đi **trong 3 giây** sau khi vào phòng mới. Biển chỉ đường là phương án cuối vì nó vá triệu chứng.
+- `Mid` **Tester nói "màn này lê thê" nhưng không chỉ được chỗ nào. Anh làm gì?**
+  → Định nghĩa một **công thức cường độ đếm được** rồi ghi lại theo thời gian trong lúc họ chơi. Công thức gần như chắc chắn không "đúng" — giá trị của nó là cho một con số để vẽ đồ thị và so với đường cong mục tiêu. Tranh luận đổi từ "tôi thấy hơi lê thê" sang "đoạn này phẳng ở mức 2 suốt 80 giây, ta định vậy không".
+- `Mid` **Onboarding mất 40% người chơi. Tìm chỗ hỏng thế nào?**
+  → Dựng **phễu bảy sự kiện** trước khi đoán, rồi sửa theo **bước rơi cao nhất** chứ không nhìn tổng tỉ lệ rơi. Hai con số xem đầu tiên: thời gian tới `core_loop_complete` (trung vị nên dưới 60 giây) và thời gian tới `first_death`. Song song đó ngồi xem một người lạ chơi và **im lặng** — chỗ mình buộc phải lên tiếng là chỗ thiết kế đang thiếu.
+- `Senior` **Sinh màn tự động cho game của chúng tôi — anh bắt đầu từ đâu?**
+  → Từ **ghép phòng**: làm sẵn một tập phòng bằng tay rồi nối theo luật. Nguyên tắc bao trùm là **procgen sắp xếp lại nội dung thủ công, không sinh từ số không** — bài học No Man's Sky là đa dạng thống kê không phải đa dạng cảm nhận. Và phần khó không phải sinh mà là **đảm bảo chơi được**: sinh → kiểm tra → hỏng thì sinh lại.
+- `Senior` **Cơ chế và cốt truyện của game mâu thuẫn nhau. Anh xử lý thế nào?**
+  → Phát hiện bằng **năm động từ** người chơi làm nhiều nhất — danh sách đó mô tả người như thế nào, có khớp nhân vật trong cốt truyện không. Xử lý theo giá: rẻ nhất là **đổi câu chuyện cho khớp cơ chế**, rồi biến mâu thuẫn thành chủ đề, đắt nhất là đổi cơ chế. Thứ không làm là thêm chữ để giải thích — nó luôn làm mâu thuẫn nổi bật hơn.
+
+**Khung trả lời 60 giây** — "Anh dẫn người chơi qua nội dung thế nào?"
+
+> Bằng **không gian trước, chữ sau**. Thứ tự người chơi đi theo là ánh sáng, chuyển động, tương phản màu, đường dẫn hình học, rồi landmark — và nếu tôi phải đặt biển chỉ đường thì bố cục đã thất bại ở đâu đó. Chữ để dành cho thứ **không suy ra được**: con số, ngưỡng, luật trừu tượng.
+>
+> Cơ chế mới thì dạy bằng **ba nhịp** — an toàn, có phạt, kết hợp — và một cơ chế mới mỗi phòng, không hơn. Cách đó không cần hộp thoại nào, và người chơi nhớ lâu hơn vì họ học bằng cách chơi.
+>
+> Về nhịp, tôi không tranh luận bằng tính từ: định nghĩa một **công thức cường độ đếm được**, ghi lại theo thời gian, rồi so với đường cong mục tiêu. Ràng buộc khởi điểm cho màn 12 phút: đúng ba cao trào với cái cuối mạnh nhất, tối thiểu 60 giây cường độ thấp sau mỗi cao trào, tổng đoạn thấp chiếm 25–30%, và không đoạn cao nào kéo quá 45 giây.
+
+**Cờ đỏ**
+
+- Vá chuyện đi lạc bằng mũi tên trên HUD.
+- Dạy ba cơ chế trong một phòng rồi tưởng đã dạy xong ba cơ chế.
+- Tranh luận nhịp độ hoàn toàn bằng tính từ.
+- Coi khoảng lặng là thời gian chết cần cắt.
+- Procgen sinh từ số không rồi ngạc nhiên vì mọi màn đều nhạt.
+
+**Số / ví dụ nên thuộc**
+
+- Dẫn dắt: **ánh sáng > chuyển động > tương phản màu > đường dẫn hình học > landmark**; biết hướng trong **3 giây**.
+- Ba nhịp dạy cơ chế: **an toàn → có phạt → kết hợp**, giãn **1–2 phút** rồi **trong 5 phút**.
+- Ba mốc onboarding: **30 giây · 5 phút · 30 phút**; phễu **7 sự kiện**, sửa theo **bước rơi cao nhất**.
+- Nhịp màn 12 phút: **3 cao trào**, **≥ 60 giây** thấp sau mỗi cao trào, đoạn thấp **25–30%**, cao liên tục **≤ 45 giây**.
+- Procgen: **ghép phòng trước**, vòng đời **sinh → kiểm tra → sinh lại**.

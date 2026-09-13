@@ -135,3 +135,57 @@ CI đỏ khi ai đó (kể cả AI agent) vi phạm pillar. Xem [[unity-build-pl
 - Cố tình thêm `Random.value` vào `Combat/`: test có đỏ không?
 - Test pillar chạy dưới 1 giây chứ?
 - CI có chạy test EditMode không?
+
+## 🎤 Phỏng vấn
+
+**Câu hay gặp**
+
+- `Junior` **Design pillar là gì? Cho một ví dụ tốt và một ví dụ tệ.**
+  → Là 2–4 câu ngắn định nghĩa game **là gì và không là gì**, tồn tại để trả lời một loại câu hỏi: "có nên thêm tính năng X không?". Tệ: "Game phải vui" — không bác bỏ được gì. Tốt: "Mỗi cái chết phải là lỗi của người chơi, không bao giờ do hên xui" — nó bác bỏ crit ngẫu nhiên, quái spawn sau lưng, damage roll.
+- `Junior` **Phép thử một câu để biết pillar đã đủ sắc chưa?**
+  → **Nếu pillar không giết được ít nhất một tính năng bạn từng muốn làm, nó chưa phải pillar.** Đó là lý do mỗi pillar phải viết kèm **danh sách những gì nó loại trừ** — phần loại trừ quan trọng ngang phần khẳng định, và là phần duy nhất dùng được khi tranh luận.
+- `Junior` **Viết pillar về trải nghiệm hay về tính năng?**
+  → Về **trải nghiệm người chơi**: "Người chơi cảm thấy…", không phải "Game có…". Viết theo tính năng thì pillar hết tác dụng ngay khi tính năng đó đổi, và nó không giúp quyết định gì về những tính năng khác. Viết theo trải nghiệm thì nó còn dùng được suốt dự án.
+- `Mid` **Có ý tưởng mới, anh dùng pillar để lọc thế nào?**
+  → Ba nhánh: **củng cố** pillar thì làm; **trung tính** thì cắt — độ phức tạp có giá còn sự trung tính thì không mang lại gì; **mâu thuẫn** thì cắt, hoặc sửa pillar một cách có ý thức và ghi lại lý do. Nhánh giữa là nhánh khó nhất vì ai cũng muốn giữ những thứ "cũng hay mà".
+- `Mid` **Bao nhiêu pillar là vừa? Vì sao?**
+  → Ba. Bốn là nhiều rồi, **năm nghĩa là chưa quyết định gì cả** — càng nhiều pillar thì càng ít thứ bị loại, mà loại bỏ mới là công dụng duy nhất của chúng. Danh sách năm câu đẹp đẽ thường là danh sách mong muốn chứ không phải bộ lọc.
+- `Mid` **Sửa pillar giữa dự án có được không?**
+  → Được, và đôi khi bắt buộc. Cái sai không phải là sửa mà là **sửa lặng lẽ**: pillar trôi dần theo từng quyết định nhỏ mà không ai tuyên bố, và game biến thành một mớ tính năng chắp vá. Sửa đúng cách là nêu rõ pillar cũ bị thay bởi cái gì, vì sao, và những gì đã quyết theo pillar cũ có phải xem lại không.
+- `Senior` **Viết pillar cho một dự án mới, anh bắt đầu từ đâu?**
+  → Chơi 3 game gần nhất với ý tưởng, rồi viết ra điều **duy nhất** mình muốn làm khác đi — pillar sinh ra từ một khác biệt cụ thể, không sinh ra từ trang giấy trắng. Sau đó diễn đạt thành câu về trải nghiệm, giới hạn ở ba câu, và với mỗi câu viết kèm danh sách loại trừ.
+- `Senior` **Sếp muốn thêm một tính năng mâu thuẫn pillar. Anh xử lý thế nào?**
+  → Không tranh luận về tính năng mà đưa **danh sách loại trừ** ra: tính năng này nằm trong danh sách mình đã thống nhất bỏ, và đây là những quyết định khác đã được ra dựa trên pillar đó. Rồi hỏi: ta đổi pillar, hay đổi tính năng? Câu hỏi đó biến một cuộc cãi nhau về sở thích thành một quyết định có phạm vi.
+- `Senior` **Pillar liên quan gì tới việc làm game cùng AI agent?**
+  → Pillar là **thứ đầu tiên agent cần đọc**, vì nó là ràng buộc cứng mà agent không suy ra được từ code. Không có nó thì agent tối ưu theo mặc định của thể loại và đề xuất đúng những thứ pillar muốn loại. Viết kèm danh sách loại trừ ở dạng câu lệnh là cách rẻ nhất để agent từ chối đúng chỗ.
+
+**Khung trả lời 60 giây** — "Pillar tốt khác pillar dở ở chỗ nào?"
+
+> Ở **khả năng nói không**. "Game phải vui", "đồ hoạ đẹp", "chiến đấu hấp dẫn" đều đúng và đều vô dụng, vì không tính năng nào bị chúng bác bỏ. Pillar dùng được thì kèm được một danh sách những thứ nó giết: "mỗi cái chết phải là lỗi của người chơi" bác bỏ crit ngẫu nhiên, quái spawn sau lưng, damage roll.
+>
+> Nên khi viết, tôi luôn viết đôi: một câu khẳng định về **trải nghiệm** — "người chơi cảm thấy…", không phải "game có…" — và ngay dưới là danh sách loại trừ. Phần loại trừ mới là phần được dùng tới trong các cuộc họp.
+>
+> Giới hạn ba câu. Bốn là nhiều, năm nghĩa là chưa quyết định gì. Và khi một ý tưởng mới tới, ba nhánh: củng cố thì làm, trung tính thì **cắt** — vì độ phức tạp có giá còn trung tính thì không — mâu thuẫn thì cắt hoặc sửa pillar một cách có ý thức, kèm lý do ghi lại.
+
+**Họ sẽ đào tiếp**
+
+- *"Vì sao trung tính lại cắt?"* → Vì mọi tính năng đều có chi phí: thời gian làm, thời gian QA, thời gian dạy người chơi, và diện tích trên màn hình. Tính năng trung tính trả chi phí đó mà không mua lại gì. Cắt nó là quyết định rẻ nhất trong dự án, và cũng là quyết định khó thuyết phục nhất vì không ai ghét nó.
+- *"Pillar và USP có phải một không?"* → Không. USP là thứ nói với **người mua**, pillar là thứ nói với **đội làm**. Chúng có thể trùng nhau nhưng mục đích khác: USP phải hấp dẫn, pillar phải sắc. Một pillar tốt có thể nghe rất chán trong trailer mà vẫn làm đúng việc của nó.
+- *"Đội không đồng ý về pillar thì sao?"* → Đó là dấu hiệu tốt: bất đồng đang lộ ra ở tháng thứ nhất thay vì ở tháng thứ tám. Cách gỡ nhanh là bỏ tranh luận trừu tượng và đưa ra một danh sách **năm tính năng cụ thể**, hỏi từng người giữ hay bỏ. Bất đồng thật luôn nằm ở danh sách loại trừ, không nằm ở câu khẳng định.
+- *"Làm sao biết pillar đang bị bỏ quên?"* → Nhìn các quyết định gần nhất và hỏi cái nào đã bị bác bỏ nhờ pillar. Ba tháng không bác bỏ được gì nghĩa là pillar đã thành trang trí — hoặc vì nó quá mềm, hoặc vì không ai mở nó ra nữa. Cả hai đều cần xử lý, và cả hai đều rẻ khi phát hiện sớm.
+
+**Cờ đỏ**
+
+- Pillar là tính từ: "vui", "đẹp", "hấp dẫn".
+- Không có danh sách loại trừ đi kèm.
+- Năm hay sáu pillar, mỗi cái một hướng.
+- Pillar nói về tính năng thay vì về trải nghiệm.
+- Pillar trôi dần qua từng quyết định nhỏ mà không ai tuyên bố.
+
+**Số / ví dụ nên thuộc**
+
+- **2–4 câu**, lý tưởng là 3; năm là chưa quyết định gì.
+- Phép thử: pillar phải **giết được ít nhất một tính năng** mình từng muốn làm.
+- Ba nhánh lọc: củng cố → làm · trung tính → **cắt** · mâu thuẫn → cắt hoặc sửa pillar có ghi lý do.
+- Ví dụ thuộc lòng: "Mỗi cái chết là lỗi của người chơi" → bác bỏ crit ngẫu nhiên, quái spawn sau lưng, damage roll.
+- Dạng câu đúng: "Người chơi cảm thấy…" chứ không phải "Game có…".

@@ -18,12 +18,12 @@ Khi nhờ AI viết game, vấn đề lớn nhất không phải là AI code ké
 
 Kho này lấp đúng khoảng trống đó theo hai lớp:
 
-1. **Lớp kiến thức** (nhánh 1–6, 8–10) — nguyên lý game design và AI in game. Đây là vốn hiểu biết chung: AI đọc để có chung ngôn ngữ và chuẩn mực với bạn.
+1. **Lớp kiến thức** (nhánh 1–6, 8–13) — nguyên lý game design và AI in game. Đây là vốn hiểu biết chung: AI đọc để có chung ngôn ngữ và chuẩn mực với bạn.
 2. **Lớp bản thiết kế** ([[blueprints]]) — GDD của game cụ thể bạn đang làm. Đây mới là thứ AI thực thi.
 
 Thiếu lớp 1, AI làm ra game "đúng yêu cầu nhưng chán". Thiếu lớp 2, AI không có gì để làm.
 
-## Mười nhánh
+## Các nhánh
 
 | Nhánh | Nội dung | Dùng khi |
 |---|---|---|
@@ -35,7 +35,9 @@ Thiếu lớp 1, AI làm ra game "đúng yêu cầu nhưng chán". Thiếu lớp
 | [[ai-assisted-dev]] | Dùng AI (Codex/Claude) để **làm** game | Muốn AI code hộ mà kết quả dùng được |
 | [[production]] | Kiến trúc, data-driven, đo đạc, hiệu năng | Biến prototype thành sản phẩm |
 | [[unity]] | Unity thực chiến: vật lý, animation, pattern, UI, audio, VFX, shader, ánh sáng, tối ưu, build, multiplayer | Hiện thực hoá trong Unity mà không dính bẫy |
+| [[cocos-creator]] | Cocos Creator 3.x: chọn engine theo nơi phát hành, bản đồ Unity → Cocos, bẫy web và mini game | Làm game H5 hoặc mini game trong siêu ứng dụng |
 | [[backend-go]] | Backend Go & database: API, phòng realtime, Postgres/Redis, dữ liệu kinh tế | Game có tài khoản, IAP hay bảng xếp hạng |
+| [[team-lead]] | Làm team lead đội game 5–15 người: 30 ngày đầu, ước lượng, giao việc, 1:1, báo cáo lên, crunch và sự cố | Bạn chịu trách nhiệm cho thứ mình không tự tay làm |
 | [[blueprints]] | GDD của game thật + template | Bắt tay vào một dự án cụ thể |
 
 Phân biệt quan trọng: **[[game-ai]] là AI *trong* game** (con quái biết né đạn). **[[ai-assisted-dev]] là AI *làm ra* game** (Claude viết script cho con quái đó). Hai thứ hoàn toàn khác nhau, đừng lẫn.
@@ -120,3 +122,62 @@ Và một quyết định kiến trúc: **`Assets/Scripts/Core/` không `using U
 - `Project Settings > Player > Color Space` = Linear?
 - `Time > Fixed Timestep` = 0.01667?
 - `grep -r "using UnityEngine" Assets/Scripts/Core/` → rỗng?
+
+## 🎤 Phỏng vấn
+
+Mỗi node trong kho đều có mục 🎤 riêng: câu hỏi thật kèm **lời giải cho từng câu**, khung trả lời
+60 giây, câu đào sâu, cờ đỏ, và số nên thuộc. Mục này nói về **cách dùng cả kho để ôn** và những
+câu bắc ngang mọi nhánh.
+
+**Ba cách dùng kho này để chuẩn bị**
+
+| Cách | Làm gì | Khi nào |
+|---|---|---|
+| Chế độ 🎤 Luyện phỏng vấn trên web | Hỏi — tự trả lời thành tiếng — lật lời giải — tự chấm; tiến độ nhớ theo hộp Leitner | Ôn hằng ngày, 15–20 phút |
+| Nút **🎤 Xuất bộ ôn** | Gom toàn bộ mục 🎤 thành một file markdown mang đi đọc | Ôn offline, trước buổi phỏng vấn |
+| Lọc theo nhánh + mức | Chỉ ôn nhánh đúng với vị trí đang ứng tuyển | Tuần trước buổi phỏng vấn |
+
+**Nguyên tắc ôn quan trọng hơn nội dung ôn**
+
+Đọc lời giải không phải là ôn. **Trả lời thành tiếng trước khi lật đáp án** mới là ôn — vì thứ
+bạn phải làm trong phòng phỏng vấn là nói, không phải nhận ra. Chấm "chưa được" cho câu mình đọc
+xong thấy quen nhưng nói không trôi; tự lừa mình ở bước này là lý do người ta thuộc bài mà vẫn trượt.
+
+**Câu hay gặp**
+
+- `Junior` **Giới thiệu về bản thân và một dự án anh đã làm.**
+  → Ba phần, khoảng 90 giây: **vai trò và phạm vi** (tôi làm phần nào, đội mấy người), **một quyết định cụ thể tôi đã ra** kèm ràng buộc lúc đó, và **kết quả đo được**. Kể tính năng thì ai cũng kể được; kể một quyết định kèm đánh đổi thì chỉ người đã làm mới kể được.
+- `Junior` **Anh học thứ mới thế nào?**
+  → Trả lời bằng một ví dụ thật gần đây chứ không bằng phương pháp luận: học gì, vì sao cần, **thứ đầu tiên dựng để kiểm chứng là gì**, và chỗ nào hiểu sai lúc đầu. Câu cuối quan trọng nhất — nó cho thấy bạn có vòng lặp phản hồi, chứ không chỉ đọc tài liệu.
+- `Mid` **Kể một lần anh sai và hậu quả của nó.**
+  → Chọn lỗi **thật sự có hậu quả** và kể theo quy trình: điều mình tin lúc đó, cái làm lộ ra là sai, thiệt hại, và **thay đổi nào trong cách làm việc còn giữ tới hôm nay**. Chọn một lỗi vô hại để kể an toàn là cách trả lời mà người phỏng vấn nhận ra ngay.
+- `Mid` **Anh làm gì khi không đồng ý với quyết định của cả nhóm?**
+  → Nêu bất đồng bằng **dữ liệu hoặc rủi ro cụ thể**, không bằng sở thích; nếu vẫn không được chọn thì **làm hết sức theo quyết định chung** và ghi lại điều kiện mình lo ngại để sau này đối chiếu. Người phỏng vấn đo hai thứ ngược nhau ở đây: dám nói, và dám theo.
+- `Senior` **Vì sao chọn cách đó mà không chọn cách kia?**
+  → Câu này được hỏi về **bất cứ thứ gì bạn vừa kể**, nên chuẩn bị theo cấu trúc chứ không theo nội dung: **kết luận trước** (tôi chọn X) → **ràng buộc lúc đó** (nền tảng, quy mô đội, thời gian) → **đánh đổi tôi chấp nhận** → **cách tôi kiểm chứng**. Không có phần đánh đổi là dấu hiệu học vẹt rõ nhất.
+- `Senior` **Anh muốn hỏi chúng tôi điều gì?**
+  → Hỏi thứ **đổi được quyết định của bạn**: vòng lặp từ lúc sửa code tới lúc thấy trên máy đích dài bao lâu, ai quyết định phạm vi khi trễ hạn, và bản build gần nhất có gì làm cả đội mất nhiều thời gian nhất. Ba câu đó cho biết nhiều về nơi làm việc hơn mọi trang tuyển dụng.
+
+**Khung trả lời 60 giây** — "Cấu trúc trả lời dùng được cho mọi câu kỹ thuật"
+
+> **Kết luận trước, một câu**: tôi chọn X. Rồi **vì sao trong bối cảnh này** — nêu ràng buộc thật: nền tảng đích, quy mô đội, thời gian, kinh nghiệm sẵn có. Rồi **đánh đổi tôi chấp nhận**: X mất gì so với Y, và vì sao cái mất đó chấp nhận được ở đây.
+>
+> Cuối cùng và quan trọng nhất: **cách tôi kiểm chứng**. Đây là chặng phân biệt rõ nhất giữa người đọc tài liệu và người đã làm. "Tôi bật Interpolate" là câu trả lời của người đọc tài liệu; "tôi bật Interpolate rồi quay màn hình tốc độ cao để đối chiếu" là câu trả lời của người đã làm.
+>
+> Cấu trúc này dùng được cho cả câu kỹ thuật lẫn câu hành vi, và nó cũng là cách tự kiểm khi ôn: nói xong mà thiếu phần đánh đổi hoặc phần kiểm chứng thì câu trả lời chưa đạt, dù nội dung đúng.
+
+**Cờ đỏ xuyên suốt mọi vòng phỏng vấn**
+
+- Trả lời bằng tên công nghệ thay vì bằng quyết định và lý do.
+- Không nêu được **đánh đổi** của lựa chọn mình vừa kể.
+- Kể bug như một câu chuyện ly kỳ, không kể cách thu hẹp giả thuyết.
+- Nói "tôi đã tối ưu" mà không có con số trước và sau.
+- Không phân biệt được thứ mình **đã làm** với thứ mình **đã đọc**.
+
+**Số / ví dụ nên thuộc**
+
+- Cấu trúc trả lời: **kết luận → ràng buộc → đánh đổi → cách kiểm chứng**.
+- Giới thiệu bản thân: khoảng **90 giây**, ba phần — vai trò · một quyết định · kết quả đo được.
+- Ôn bằng cách **nói thành tiếng trước khi lật đáp án**; phiên 15–20 phút.
+- Hộp Leitner trong chế độ luyện tập: ôn lại sau **0 · 1 · 3 · 7 · 21 ngày**.
+- Ba câu nên hỏi ngược: **độ dài vòng lặp build · ai quyết phạm vi khi trễ hạn · thứ tốn thời gian nhất ở bản build gần nhất**.

@@ -278,3 +278,58 @@ public class ConnectionGuard : MonoBehaviour
 - Bật 20 bản build rồi restart server: nhìn log — request không dồn vào cùng một giây (jitter có tác dụng).
 - Hạ `minClientVersion` giả trên staging: client cũ bị chặn ở màn hình đầu với nút mở store, không lọt vào gameplay rồi mới lỗi.
 - Bật cờ bảo trì: mọi client hiện thông báo bảo trì kèm thời gian dự kiến, không phải lỗi 503 trần trụi.
+
+## 🎤 Phỏng vấn
+
+**Câu hay gặp**
+
+- `Junior` **Bốn chỉ số vàng là gì?**
+  → Độ trễ đo bằng p99 theo từng endpoint chứ không phải trung bình; lưu lượng gồm request mỗi giây và số kết nối WebSocket đang mở; tỉ lệ lỗi 5xx tách riêng khỏi 4xx; và độ bão hoà — CPU, RAM, số kết nối database đang dùng trên tối đa, số goroutine. Mỗi cái phải có ngưỡng cảnh báo định sẵn, nếu không thì nó chỉ là biểu đồ đẹp.
+- `Junior` **Vì sao nhìn p99 chứ không nhìn trung bình?**
+  → Vì trung bình luôn đẹp và luôn vô dụng. Một phần trăm request chậm mười giây vẫn cho trung bình rất ổn, trong khi đó chính là nhóm người chơi đang bỏ game. p99 nói cho bạn biết trải nghiệm tệ nhất mà một phần đáng kể người chơi thực sự gặp.
+- `Mid` **Deploy thế nào để không rớt người đang chơi?**
+  → Bốn việc. Migration chạy trước và phải tương thích ngược, vì trong lúc deploy bản cũ và bản mới cùng đọc một database. Bản cũ phải bị rút khỏi cân bằng tải **trước khi** bị dừng, không thì vài request cuối rơi vào process đang đóng. Room server phải drain chứ không kill. Và client phải chịu được — reconnect có backoff, cộng cổng chặn phiên bản.
+- `Mid` **Đổi tên một cột database thì deploy mấy lần?**
+  → Hai lần, không phải một. Lần một: thêm cột mới, chuyển dữ liệu, deploy code ghi cả hai và đọc cột mới. Lần hai, sau khi chắc chắn không còn bản cũ nào chạy: xoá cột cũ. Làm một lần thì trong vài giây hai bản cùng chạy sẽ có một bản đọc cột không còn tồn tại.
+- `Senior` **API trả 503 hàng loạt nhưng CPU thấp. Anh nghi gì?**
+  → Pool kết nối database cạn vì một query chậm đang giữ kết nối. CPU thấp chính là manh mối — process đang **chờ**, không đang làm. Kiểm ngay bằng cách đếm kết nối theo trạng thái trong `pg_stat_activity`, rồi tìm thủ phạm trong `pg_stat_statements`.
+- `Senior` **Chọn mức hạ tầng nào cho game sắp phát hành?**
+  → Theo quy mô thật, không theo sơ đồ trông chuyên nghiệp. Một VPS với systemd đủ tới vài nghìn CCU một region, khoảng 20–60 USD mỗi tháng, đổi lại máy chết là game chết. Docker Compose trên 1–3 VPS khi đã có nhiều service. k8s cộng Agones chỉ đáng khi nhiều region, phòng cần cấp phát động, và **có người trực** — nếu không thì bạn vừa thêm một hệ thống nữa phải vận hành.
+
+**Khung trả lời 60 giây** — "Deploy giữa lúc 200 người đang trong trận?"
+
+> Tách hai loại process ra vì chúng chịu deploy khác nhau. **API stateless** thì rolling restart vô hại, chỉ cần rút khỏi cân bằng tải trước khi dừng — trên k8s là `preStop` sleep vài giây, trên VPS là gỡ khỏi upstream nginx rồi mới `systemctl stop`.
+>
+> **Room server thì phải drain, không được kill**: ngừng nhận phòng mới, chờ trận hiện tại kết thúc với trần khoảng hai phút, rồi mới thoát. Kill thẳng là 200 người mất trận cùng lúc.
+>
+> Còn migration thì chạy **trước** và phải tương thích ngược, vì trong lúc deploy bản cũ và bản mới cùng đọc một database. Thêm cột thì được; đổi tên hay xoá cột phải chia làm hai lần deploy.
+
+**Họ sẽ đào tiếp**
+
+- *"Vì sao `CGO_ENABLED=0`?"* → Để binary thật sự tĩnh và chạy được trong image trống như distroless. Bật CGO là lại phải lo phiên bản glibc của máy đích — đúng thứ mà việc chọn Go vốn giúp bạn tránh.
+- *"Cấu hình để ở đâu?"* → Biến môi trường, không phải file trong image. Cùng một image chạy được ở staging và production, khác nhau chỉ ở biến — nhờ vậy thứ bạn test ở staging đúng là thứ chạy ở production. Secret thì không nằm trong repo và không nằm trong image.
+- *"Production đang chạy code nào?"* → Phải trả lời được trong năm giây, nên version được nhúng vào binary và in ra ở dòng log đầu tiên. Không có nó thì mỗi lần sự cố lại mất mười lăm phút chỉ để xác định đang chạy bản nào.
+- *"Lưu lượng rơi đột ngột 30% nghĩa là gì?"* → Thường là client không vào được, **không phải** hết người chơi. Đó là lý do lưu lượng phải là một chỉ số có cảnh báo: nó bắt được loại sự cố mà tỉ lệ lỗi không bắt được, vì request hỏng thì không bao giờ tới server để mà đếm thành 5xx.
+- *"Sao lưu thì sao?"* → Phải **phục hồi thử** vào một instance trống. Bản sao lưu chưa restore thử lần nào không phải sao lưu, nó là một file bạn hy vọng dùng được. Mất save là thứ người chơi không tha thứ, khác hẳn một bug gameplay.
+
+**Cờ đỏ**
+
+- Kill room server khi deploy rồi coi đó là chuyện bình thường.
+- Auto-migrate lúc server khởi động.
+- Dùng tag `latest` cho image — không biết đang chạy gì, không rollback được.
+- Cảnh báo dựa trên độ trễ trung bình.
+- Chọn k8s cho một game 500 CCU không có người trực.
+- "Chúng tôi có backup" mà chưa từng phục hồi thử.
+
+**Số / ví dụ nên thuộc**
+
+- Ba mức hạ tầng: 1 VPS **20–60 USD/tháng** · Compose 1–3 VPS **60–200** · k8s **từ 300**.
+- Ngưỡng: 5xx **> 1%** trong 5 phút · p99 **> 2×** bình thường · pool database **> 80%**.
+- Lưu lượng rơi **> 30%** đột ngột = client không vào được.
+- Drain room server: trần khoảng **2 phút**.
+
+**Kể trong dự án**
+
+- *"Anh có trực vận hành không?"* → Nếu có, kể một sự cố kèm **dòng thời gian có giờ**: phát hiện lúc mấy giờ, từ cảnh báo hay từ người chơi báo, chặn máu bằng gì, và bao lâu thì ổn.
+- *"Khó khăn gặp phải?"* → Mẫu rất thật: 503 hàng loạt mà CPU thấp. Kể cách bạn nhận ra dấu hiệu "đang chờ chứ không đang làm", lần ra query chậm giữ kết nối, và biện pháp sau đó — thêm index, đặt timeout cho query, và thêm cảnh báo cho tỉ lệ pool.
+- *"Anh cải thiện gì cho quy trình deploy?"* → Nếu bạn đưa graceful drain hoặc bước rút khỏi cân bằng tải vào quy trình, nêu cái trước đó: mỗi lần deploy mất vài trận, cả đội ngại deploy, bản vá nằm chờ hàng tuần. Hệ quả dây chuyền đó là phần thuyết phục nhất.

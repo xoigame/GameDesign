@@ -201,3 +201,57 @@ public class EnemyBT : AiBrain {
 - In ra đường đi trong cây (node nào Running) lên gizmo — không thấy thì không gỡ lỗi được.
 - Hạ máu NPC dao động quanh 25%: nó có rung giữa chạy trốn và tấn công không? (không được)
 - Chặn hết chỗ nấp: NPC có chuyển sang nhánh khác chứ không đứng im?
+
+## 🎤 Phỏng vấn
+
+**Câu hay gặp**
+
+- `Junior` **Behavior Tree có mấy loại node?**
+  → Bốn. **Composite** có nhiều con: `Selector` (HOẶC — chạy tới khi một con thành công), `Sequence` (VÀ — chạy tới khi một con thất bại), `Parallel`. **Decorator** có một con và biến đổi kết quả: `Inverter`, `Repeat`, `Cooldown`. **Condition** (lá) chỉ kiểm tra. **Action** (lá) thực hiện và trả về Success/Failure/**Running**.
+- `Junior` **Trạng thái `Running` giải quyết vấn đề gì?**
+  → Nó cho phép một hành động **kéo dài nhiều frame** — đi tới điểm A — tồn tại trong cây: node trả `Running`, và tick sau cây tiếp tục từ đúng chỗ đó thay vì bắt đầu lại. Không có `Running` thì BT chỉ là cây quyết định, và mọi hành động phải xong trong một tick.
+- `Junior` **Ưu tiên trong BT nằm ở đâu?**
+  → Ở **thứ tự các nhánh từ trên xuống** dưới một `Selector`. Muốn đổi độ ưu tiên thì kéo nhánh lên hoặc xuống — không phải sửa chuyển tiếp ở nơi khác. Đây chính là thứ FSM không làm được, và là lý do chính người ta đổi sang BT khi số hành vi tăng.
+- `Mid` **Blackboard là gì, và vì sao không lưu trạng thái trong node?**
+  → Blackboard là từ điển key–value dùng chung cho một agent. Nó tách **cảm nhận** (perception ghi vào) khỏi **quyết định** (BT đọc ra), nên kiến trúc sạch và **test được**: nạp blackboard giả là chạy cây mà không cần cả cảnh. Lưu trạng thái trong node thì node không tái sử dụng được và không ai biết dữ liệu đến từ đâu.
+- `Mid` **AI đổi ý liên tục giữa hai nhánh, hành vi giật cục. Sửa thế nào?**
+  → Đó là **thrashing** do hai nhánh có ưu tiên gần nhau. Hai cách chữa: decorator `Cooldown`, và **ngưỡng trễ (hysteresis)** — vào chế độ chạy trốn ở HP < 25% nhưng chỉ thoát ra khi HP > 40%. Ngưỡng trễ là cách tổng quát hơn vì nó áp cho mọi quyết định có ngưỡng, không riêng BT.
+- `Mid` **BT nên tick bao nhiêu lần một giây?**
+  → **5–10 lần/giây** là đủ cho hầu hết trường hợp, và trải đều tick của các agent qua các frame khác nhau để không dồn cục. Tick mỗi frame là lãng phí lớn khi có nhiều NPC — và cũng là nguồn của lỗi điều kiện được tính lại quá nhiều lần, vì mỗi tick duyệt lại từ gốc.
+- `Senior` **Cây phình quá lớn. Anh xử lý thế nào?**
+  → Quá **40–50 node** thì không ai đọc nổi. Cách chữa là tách thành **subtree tái sử dụng được** — `CombatSubtree`, `FleeSubtree` — rồi tham chiếu. Đồng thời cache kết quả perception vào blackboard **một lần mỗi tick** để cây chỉ đọc, thay vì gọi `CanSeePlayer()` nhiều lần trong một lượt duyệt.
+- `Senior` **Khi nào BT không còn là lựa chọn đúng?**
+  → BT thể hiện **cách làm**, không thể hiện **vì sao**. Khi NPC cần tự tìm ra chuỗi hành động cho một mục tiêu chưa lường trước thì dùng GOAP. Khi có nhiều lựa chọn cạnh tranh cần chấm điểm liên tục — game mô phỏng, quản lý — thì dùng utility AI. Chọn theo hình dạng bài toán, không theo độ "hiện đại" của kiến trúc.
+- `Senior` **Vì sao nhánh dự phòng cuối cùng phải không có điều kiện?**
+  → Vì AI không có hành động hợp lệ sẽ **đứng đờ ra**, và lỗi đó trông tệ hơn mọi hành vi ngớ ngẩn khác — người chơi đọc nó là game hỏng. Một nhánh cuối luôn chạy được (tuần tra, nhìn quanh, đứng cảnh giác) biến trường hợp "không biết làm gì" thành một hành vi có chủ đích.
+
+**Khung trả lời 60 giây** — "Vì sao behavior tree thắng FSM khi số hành vi tăng?"
+
+> Vì **ưu tiên nằm ở cấu trúc**, không nằm ở các cạnh chuyển tiếp. Trong FSM, số cạnh tăng theo bình phương số trạng thái: thêm một trạng thái mới là phải sửa nhiều trạng thái cũ. Trong BT, muốn đổi độ ưu tiên thì kéo một nhánh lên hoặc xuống, và các nhánh khác không biết gì về nhau.
+>
+> Thứ làm BT dùng được trong thực tế là trạng thái **Running**: một hành động kéo dài nhiều frame trả về Running và tick sau cây tiếp tục từ đó. Cộng với **blackboard** — perception ghi vào, cây chỉ đọc — nên cảm nhận và quyết định tách rời, và tôi test được cây bằng blackboard giả.
+>
+> Đổi lại có ba bẫy phải biết trước: cây phình quá 40–50 node thì tách subtree; điều kiện bị tính lại nhiều lần trong một tick thì cache vào blackboard; và thrashing giữa hai nhánh ngang ưu tiên thì thêm `Cooldown` hoặc ngưỡng trễ. Và tick 5–10 lần một giây là đủ, không cần mỗi frame.
+
+**Họ sẽ đào tiếp**
+
+- *"Selector và Sequence dễ nhầm chỗ nào?"* → Ở chỗ chúng là HOẶC và VÀ. `Selector` dừng khi **thành công**, `Sequence` dừng khi **thất bại**. Lỗi hay gặp là đặt điều kiện dưới `Selector` rồi ngạc nhiên vì điều kiện sai vẫn chạy tiếp sang nhánh sau — đó đúng là hành vi mong muốn của Selector, chỉ là người viết đang nghĩ theo kiểu `if`.
+- *"Test một behavior tree thế nào?"* → Bằng blackboard giả: dựng một bảng giá trị, chạy tick, khẳng định node nào được chọn. Vì cây không tự lấy dữ liệu từ thế giới nên test không cần scene, không cần physics, chạy trong EditMode. Đó là lợi ích kiến trúc của blackboard mà người ta hay bỏ quên.
+- *"Debug một BT đang chạy sai?"* → Vẽ **đường đi của tick** ra màn hình: nhánh nào được duyệt, node nào trả Running. BT khó chẩn đoán hơn FSM ở chỗ không có một "tên trạng thái" duy nhất để in, nên công cụ hiển thị cây lúc chạy gần như là bắt buộc khi cây vượt vài chục node.
+- *"Dùng AI để viết behavior tree thì sao?"* → Nó viết khung cây và các node chuẩn rất nhanh, nhưng **thứ tự ưu tiên** là phần thiết kế và phải do mình quyết — đó chính là nội dung thiết kế của BT. Việc đáng giao nhất là soát cây tìm nhánh không bao giờ chạy tới được và nhánh thiếu điều kiện thoát, vì đó là việc duyệt tổ hợp.
+
+**Cờ đỏ**
+
+- Không biết `Running` dùng để làm gì.
+- Lưu trạng thái trong node thay vì trong blackboard.
+- Không có nhánh dự phòng cuối cùng.
+- Tick mỗi frame cho mọi agent.
+- Cây 200 node không tách subtree, và không có công cụ nhìn cây lúc chạy.
+
+**Số / ví dụ nên thuộc**
+
+- Bốn loại node: **Composite (Selector/Sequence/Parallel) · Decorator · Condition · Action**.
+- Ba kết quả: **Success / Failure / Running**.
+- Ngưỡng dễ đọc: **40–50 node** rồi tách subtree.
+- Tick **5–10 lần/giây**, trải đều giữa các agent.
+- Hysteresis mẫu: vào chạy trốn ở **HP < 25%**, thoát ra ở **HP > 40%**.

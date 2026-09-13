@@ -169,3 +169,57 @@ Kiểm tra `vp.z < 0` là bắt buộc — mục tiêu sau lưng camera cho view
 - Profiler mục `Canvas.BuildBatch` / `Canvas.SendWillRenderCanvases`: dưới 1ms?
 - Đặt breakpoint: thanh máu đổi có làm rebuild Canvas chứa khung tĩnh không?
 - Số sát thương: GC Alloc = 0 B khi 20 con trúng đòn cùng lúc?
+
+## 🎤 Phỏng vấn
+
+**Câu hay gặp**
+
+- `Junior` **HUD tồn tại để làm gì? Bài test câu hỏi là gì?**
+  → Để trả lời **những câu hỏi người chơi đang có ngay lúc này** — mỗi pixel HUD chiếm là một pixel không nhìn thấy game. Bài test: với mỗi phần tử, viết ra câu hỏi nó trả lời và tần suất được hỏi. Không trả lời câu hỏi nào thì **bỏ**; chỉ được hỏi ở cửa hàng thì chỉ hiện ở cửa hàng. Bài test này thường cắt được **30–40%** HUD ban đầu.
+- `Junior` **Ba tầng hiển thị của HUD là gì?**
+  → **Thường trực** — tối đa **4–5 phần tử**, chỉ những gì được hỏi liên tục: máu, tài nguyên chính, nguy hiểm sắp tới. **Theo ngữ cảnh** — hiện khi liên quan rồi biến mất: số đạn khi cầm súng, nhắc phím khi đứng gần vật thể. **Theo yêu cầu** — bản đồ, túi đồ, chỉ số chi tiết. Sai lầm phổ biến là nhét mọi thứ vào tầng một.
+- `Junior` **Trong chiến đấu nên hiện số hay hiện hình?**
+  → **Hình**: thanh máu thay vì "347/500", vì con số chính xác nhưng chậm đọc còn hình ảnh nhanh nhưng mơ hồ. Khi **so sánh và lên kế hoạch** — cửa hàng, bảng chỉ số — thì ngược lại, ưu tiên số. Ngoại lệ đáng nhớ: **số sát thương bay lên** thực ra là hình ảnh, người chơi không đọc "247" mà đọc "to hơn lần trước".
+- `Mid` **Quy tắc thị giác ngoại vi trong HUD là gì?**
+  → Người chơi nhìn vào **nhân vật của mình**, không nhìn góc màn hình — nên trạng thái sống còn phải đọc được **mà không rời mắt**. Máu thấp thì hiệu ứng toàn màn hình (viền đỏ, mạch đập, khử màu), không chỉ thanh ở góc. Nguy hiểm sắp tới thì chỉ báo ở rìa theo hướng. Nguyên tắc: **càng khẩn cấp thì càng phải gần tâm nhìn**.
+- `Mid` **Ba phép thử chẩn đoán HUD?**
+  → **Tắt tiếng** — tắt loa còn chơi được không; không thì đang dồn thông tin sống còn vào một kênh duy nhất. **Tắt HUD** — ẩn hết còn chơi được ở mức cơ bản không; hoàn toàn không thì game đang phụ thuộc số liệu thay vì phản hồi trong thế giới. **Ảnh chụp** — dừng game ở một khoảnh khắc bất kỳ, người chưa chơi có đoán được đang có chuyện gì không.
+- `Mid` **Diegetic UI đáng dùng khi nào?**
+  → Khi game coi trọng **nhập vai và nhịp chậm**. Cái giá phải nói rõ: đọc chậm hơn UI truyền thống, khó scale qua nhiều độ phân giải, và thường **không đọc được với người thị lực kém**. Với game hành động nhanh thì UI rõ ràng thắng UI nhập vai — đây là đánh đổi, không phải nâng cấp.
+- `Senior` **HUD của anh có 12 phần tử thường trực. Anh cắt thế nào?**
+  → Chạy bài test câu hỏi cho từng cái rồi phân về ba tầng: cái nào được hỏi liên tục thì giữ (tối đa 4–5), cái nào hỏi theo tình huống thì cho vào tầng ngữ cảnh, cái nào chỉ hỏi khi dừng lại thì đưa vào màn hình riêng. Với những cái buộc phải giữ mà vẫn chật, chuyển chúng từ HUD sang **phản hồi trong thế giới** — hiệu ứng trên nhân vật thay vì icon ở thanh trạng thái.
+- `Senior` **Thông tin nào nên rời HUD để vào chính thế giới game?**
+  → Thứ **khẩn cấp và liên tục**: máu thấp, debuff quan trọng, hướng nguy hiểm. Lý do là thị giác ngoại vi đọc được hiệu ứng toàn màn hình và hiệu ứng gắn trên nhân vật, nhưng không đọc được icon nhỏ ở góc. Chuyển được thì vừa giảm HUD vừa tăng tốc độ đọc — hiếm khi có đánh đổi nào lợi cả hai chiều như vậy.
+- `Senior` **HUD và trợ năng gặp nhau ở đâu?**
+  → Ở gần như mọi quyết định. **Test tắt tiếng** chính là bài kiểm trợ năng thính giác. Mã hoá kép (màu cộng hình dạng) là điều kiện để thanh trạng thái đọc được với người mù màu. Cỡ chữ chỉnh được và tương phản 4,5:1 áp thẳng cho HUD. Nên làm HUD đúng ngay từ đầu là đã trả trước phần lớn hoá đơn trợ năng.
+
+**Khung trả lời 60 giây** — "Anh thiết kế HUD cho một game hành động thế nào?"
+
+> Bắt đầu bằng việc **cắt**. Với mỗi phần tử tôi viết ra hai thứ: nó trả lời câu hỏi gì, và người chơi hỏi câu đó bao lâu một lần. Cái không trả lời câu hỏi nào thì bỏ; cái chỉ được hỏi trong cửa hàng thì chỉ hiện trong cửa hàng. Bài test này một mình thường cắt ba mươi tới bốn mươi phần trăm HUD ban đầu.
+>
+> Phần còn lại chia **ba tầng**: thường trực tối đa bốn năm phần tử, theo ngữ cảnh, và theo yêu cầu. Sai lầm phổ biến nhất là nhét mọi thứ vào tầng một.
+>
+> Rồi tới quy tắc tôi coi là quan trọng nhất: người chơi **nhìn vào nhân vật**, không nhìn góc màn hình. Nên máu thấp phải là hiệu ứng toàn màn hình chứ không chỉ là thanh ở góc, và nguy hiểm sắp tới phải có chỉ báo ở rìa theo hướng. Càng khẩn cấp thì càng phải gần tâm nhìn. Cuối cùng tôi chạy ba phép thử: tắt tiếng, tắt HUD, và đưa một ảnh chụp cho người chưa chơi.
+
+**Họ sẽ đào tiếp**
+
+- *"Test tắt HUD thất bại hoàn toàn thì sao?"* → Nghĩa là game đang phụ thuộc **số liệu** thay vì phản hồi trong thế giới. Không phải lúc nào cũng sai — game chiến thuật thì đúng là vậy — nhưng với game hành động thì nó báo rằng hitstop, âm thanh và hiệu ứng trên nhân vật chưa gánh đủ phần việc của chúng.
+- *"4–5 phần tử thường trực có cứng nhắc quá không?"* → Đó là ngân sách khởi điểm, không phải luật. Điểm của con số là buộc phải **đổi cái này lấy cái kia** thay vì cộng dồn — mỗi lần muốn thêm một phần tử thường trực thì phải nói được nó thay cho cái nào. Không có ngân sách thì HUD chỉ có một chiều phát triển.
+- *"Số sát thương bay lên có phải là số không?"* → Về mặt chức năng thì không: người chơi đọc **kích thước, màu và số lượng**, không đọc giá trị. Nên thiết kế nó như một hiệu ứng — to hơn khi mạnh hơn, màu khác khi crit — và đừng lo con số có chính xác tới đơn vị hay không.
+- *"Dùng AI ở khâu này thế nào?"* → Giao cho nó làm **bảng test câu hỏi**: liệt kê mọi phần tử HUD hiện có, hỏi lại từng cái trả lời câu hỏi gì và ai hỏi khi nào. Nó cũng tốt ở việc soát tính nhất quán — cùng loại thông tin có đang hiện ở hai chỗ khác nhau không. Còn cảm giác "HUD này chật" thì vẫn phải tự nhìn.
+
+**Cờ đỏ**
+
+- HUD là nơi khoe mọi số liệu đang có.
+- Mười phần tử ở tầng thường trực.
+- Máu thấp chỉ báo bằng một thanh ở góc màn hình.
+- Chưa từng chạy test tắt tiếng hay tắt HUD.
+- Chọn diegetic UI cho game hành động nhanh vì nó "nhập vai hơn".
+
+**Số / ví dụ nên thuộc**
+
+- Bài test câu hỏi thường cắt **30–40%** HUD ban đầu.
+- Tầng thường trực: tối đa **4–5 phần tử**.
+- Ba tầng: **thường trực · theo ngữ cảnh · theo yêu cầu**.
+- Nguyên tắc: **càng khẩn cấp càng gần tâm nhìn**; máu thấp → hiệu ứng toàn màn hình.
+- Ba phép thử: **tắt tiếng · tắt HUD · ảnh chụp cho người chưa chơi**.

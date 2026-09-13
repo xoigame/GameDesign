@@ -372,14 +372,24 @@ File `Assets/_Project/Gameplay/Game.Gameplay.asmdef` — tham chiếu ghi theo *
 
 **Câu hay gặp**
 
-| Mức | Câu hỏi |
-|---|---|
-| Junior | File `.meta` là gì? Có commit không? |
-| Junior | Thư mục nào **không** được commit trong dự án Unity? |
-| Mid | Tổ chức asset theo loại (`Scripts/`, `Prefabs/`) hay theo feature? Vì sao? |
-| Mid | Assembly Definition để làm gì? Cái giá phải trả? |
-| Senior | Hai người sửa cùng một scene, merge conflict — quy trình của anh? |
-| Senior | Prefab Variant và kế thừa MonoBehaviour, khi nào chọn cái nào? |
+- `Junior` **File `.meta` là gì? Có commit không?**
+  → Có, bắt buộc. `.meta` giữ **GUID** — sợi dây nối mọi tham chiếu trong dự án, kể cả tham chiếu tới thư mục. Quên commit `.meta` của thư mục mới thì máy đồng đội sinh GUID khác và prefab của họ trỏ vào hư không, mà không có lỗi biên dịch nào để lần ra.
+- `Junior` **Thư mục nào không được commit trong dự án Unity?**
+  → `Library/`, `Temp/`, `Logs/`, `Build/`, `UserSettings/` — tất cả đều sinh lại được. Phải commit: `Assets/`, `Packages/` (cả `manifest.json` **và** `packages-lock.json`), `ProjectSettings/`. Binary lớn đi Git LFS.
+- `Junior` **Vì sao không được đổi tên asset bên ngoài Unity?**
+  → Vì Unity đổi tên thì đổi **cả file và `.meta`** cùng lúc. Đổi bằng Explorer hoặc `git mv` khi Unity đang đóng thì meta lạc khỏi asset, Unity sinh meta mới với GUID mới, và mọi reference cũ thành `Missing` — lỗi không hiện ở compile mà hiện lúc chạy, ở một scene khác.
+- `Mid` **Tổ chức asset theo loại (`Scripts/`, `Prefabs/`) hay theo feature? Vì sao?**
+  → Theo **feature**: `_Project/Combat/` chứa cả script, prefab, material của combat. Một feature = một thư mục = một PR; xoá feature là xoá thư mục chứ không phải đi mò năm chỗ. Và để tất cả trong `Assets/_Project/` tách khỏi asset mua ngoài Store — riêng cái gạch dưới đã tiết kiệm hàng giờ khi cần biết "cái này của ai".
+- `Mid` **Assembly Definition để làm gì? Cái giá phải trả?**
+  → Nó chia code thành nhiều assembly nên Unity chỉ biên dịch lại phần bị đổi thay vì cả `Assembly-CSharp`, và nó cho phép ép **chiều phụ thuộc một chiều**: `Game.UI` → `Game.Gameplay` → `Game.Core`, không bao giờ ngược. Cái giá: mỗi asmdef thành một DLL, nên chẻ 40 cái thì thời gian build và IL2CPP lãnh đủ. Chẻ theo ranh giới thật.
+- `Mid` **Import settings ảnh hưởng thế nào mà hay bị bỏ qua?**
+  → Nó quyết định hiệu năng nhiều hơn thuật toán. Một texture UI 2048 quên tắt mipmap và Read/Write tốn **16 MB thay vì 4 MB**, mà trên Editor 32 GB RAM thì chẳng ai thấy. Preset + Preset Manager có filter theo đường dẫn giải quyết việc đó **lúc import lần đầu**; asset cũ phải áp tay hoặc qua validator.
+- `Senior` **Hai người sửa cùng một scene, merge conflict — quy trình của anh?**
+  → Phòng hơn chữa: chia scene **additive theo vai trò** (Lighting / Layout / Gameplay) để hai người hiếm khi chạm cùng file, và đẩy nội dung vào prefab — sửa prefab không đụng scene. Bật **Force Text** và đăng ký `UnityYAMLMerge` **trước** khi cần tới nó. Khi đã conflict thì Smart Merge cứu phần lớn; phần còn lại thà lấy một bên và làm lại tay còn hơn merge YAML bằng mắt.
+- `Senior` **Prefab Variant và kế thừa MonoBehaviour, khi nào chọn cái nào?**
+  → Variant cho khác biệt về **dữ liệu và cấu trúc** — cùng enemy, khác máu, khác skin, thêm cái khiên. Designer làm được, không cần build. Kế thừa cho khác biệt về **hành vi**. Sai lầm hay gặp là tạo `EnemyArcher : Enemy` chỉ để đổi mấy con số: nó biến một thay đổi cân bằng thành một lần biên dịch và một lần review code.
+- `Senior` **Nâng phiên bản Unity giữa dự án — anh làm thế nào?**
+  → Chỉ nâng lên **LTS**, và nâng **cùng lúc cả team** — một người mở dự án bằng bản mới hơn là ghi lại `ProjectSettings` và `packages-lock.json` cho mọi người. Quy trình: nhánh riêng, nâng, chạy toàn bộ test và build lên thiết bị đích, so số liệu hiệu năng trước/sau, rồi mới merge. Không nâng ở tuần cuối trước milestone.
 
 **Khung trả lời 60 giây** — "Anh tổ chức một dự án Unity mới thế nào?"
 

@@ -160,3 +160,57 @@ Cách nhanh nhất: tạo một `Volume` với **Color Adjustments → Saturatio
 - Chạy Validate Palette: có màu nào ngoài palette không?
 - Bật Volume saturation -100: còn phân biệt được nhân vật với nền không?
 - Frame Debugger: bao nhiêu draw call cho sprite? (nên gom hết vào 1–2 atlas)
+
+## 🎤 Phỏng vấn
+
+**Câu hay gặp**
+
+- `Junior` **Art direction là gì, nếu không phải là "vẽ đẹp"?**
+  → Là **tập ràng buộc** khiến mọi asset trông như thuộc cùng một thế giới, và khiến người chơi **đọc được tình huống trong một phần giây**. Nói cách khác nó là quyết định về chức năng trước, thẩm mỹ sau — và đó là lý do một art direction tốt có thể trông rất đơn giản.
+- `Junior` **Ba câu hỏi phải trả lời trước khi chọn phong cách?**
+  → **Người chơi cần phân biệt gì trong 0,2 giây?** (bạn/thù, sát thương được/không, đi được/không). **Bao nhiêu vật thể trên màn hình cùng lúc?** — 5 hay 200, quyết định mức chi tiết cho phép. **Xem ở kích thước nào?** — nhân vật cao 40px trên điện thoại khác hẳn 400px trên PC. Phong cách được chọn *sau* để phục vụ ba câu đó.
+- `Junior` **Test silhouette làm thế nào và kiểm cái gì?**
+  → Tô toàn bộ màn hình thành **đen trắng thuần** rồi xem còn phân biệt được nhân vật, kẻ địch, vật phẩm và lối đi không. Cụ thể hơn: mỗi loại kẻ địch phải khác hình bóng **ở 32px**, nhân vật người chơi phải có yếu tố silhouette độc nhất không lặp ở NPC nào. Đây là kiểm tra rẻ nhất và bị bỏ qua nhiều nhất.
+- `Mid` **Luật then chốt về bảng màu là gì?**
+  → **Giữ một màu chỉ dành riêng cho nguy hiểm.** Nếu đỏ vừa là máu, vừa là nút bấm, vừa là trang trí tường thì nó mất hết giá trị cảnh báo — Hades dùng đỏ gần như *chỉ* cho vùng sát thương. Và tách nền với tiền cảnh bằng **bão hoà và độ sáng** hiệu quả hơn bằng sắc độ, đồng thời vẫn hoạt động với người mù màu.
+- `Mid` **Vampire Survivors chọn pixel art thô vì lý do gì?**
+  → Không phải vì thẩm mỹ mà vì **300 thực thể cùng lúc cần silhouette cực gọn**. Đây là ví dụ mẫu cho nguyên tắc "chức năng trước, phong cách sau": số lượng vật thể trên màn hình là ràng buộc, và phong cách là câu trả lời cho ràng buộc đó.
+- `Mid` **Asset đến từ nhiều nguồn — ép về một phong cách thế nào?**
+  → Năm việc: **bảng màu cưỡng bức** (mọi asset đi qua bước giảm về đúng palette), **độ dày nét thống nhất**, **một hướng nguồn sáng** (thường trên-trái) ép cho mọi asset, **cùng pixels-per-unit và cùng tỉ lệ** — sai tỉ lệ là thứ mắt phát hiện ngay dù không gọi tên được — và **một lớp hậu kỳ chung** che được nhiều khác biệt còn lại.
+- `Senior` **Quyết định nào về art phải chốt từ đầu vì đổi sau là làm lại toàn bộ asset?**
+  → Sáu: **độ phân giải tham chiếu**, **pixels-per-unit**, **tỉ lệ nhân vật**, **góc nhìn** (side-on / top-down / isometric 2:1), **bảng màu** dưới dạng danh sách hex cố định, và **hướng nguồn sáng**. Đây cũng đúng là danh sách cần nằm trong tài liệu cho người ngoài và cho công cụ sinh asset.
+- `Senior` **Art direction gặp trợ năng ở đâu?**
+  → Ở chỗ **mã hoá kép**: phân biệt quan trọng phải dùng màu cộng hình dạng, và đó là quyết định của art chứ không phải của UI. Cũng ở chỗ tách nền/tiền cảnh bằng độ sáng và bão hoà thay vì sắc độ — cách đó vừa đọc được với người mù màu vừa đọc được trên màn hình ngoài nắng. Làm đúng từ đầu thì gần như miễn phí; sửa sau là vẽ lại asset.
+- `Senior` **Dùng asset sinh bằng AI mà vẫn giữ nhất quán — anh làm thế nào?**
+  → Chốt **một asset chuẩn do người làm** để mọi thứ sau bị so vào, rồi dựng **pipeline hậu kỳ trước khi sinh hàng loạt**: ép về bảng màu cố định, chuẩn hoá PPU và tỉ lệ, cắt và căn pivot, áp một bộ lọc thống nhất. Nhất quán **không đến từ prompt**, nó đến từ ràng buộc áp sau khi sinh — và bảng màu là bước có tác dụng lớn nhất trên mỗi đơn vị công sức.
+
+**Khung trả lời 60 giây** — "Anh dựng art direction cho một game thế nào?"
+
+> Bắt đầu từ **chức năng, không từ phong cách**. Ba câu hỏi trước tiên: người chơi cần phân biệt gì trong hai phần mười giây, có bao nhiêu vật thể trên màn hình cùng lúc, và nó được xem ở kích thước nào. Phong cách chọn sau để phục vụ ba câu đó — Vampire Survivors dùng pixel art thô không vì thẩm mỹ mà vì ba trăm thực thể cùng lúc cần silhouette cực gọn.
+>
+> Kiểm tra tôi chạy thường xuyên nhất là **silhouette**: tô màn hình thành đen trắng thuần, còn phân biệt được nhân vật, địch, vật phẩm và lối đi thì đạt. Mỗi loại địch phải khác hình bóng ở 32px, không chỉ khác màu.
+>
+> Về màu, luật then chốt là **giữ một màu chỉ dành cho nguy hiểm** — đỏ mà vừa là máu vừa là trang trí thì mất giá trị cảnh báo. Và tôi chốt sớm sáu thứ không sửa được về sau: độ phân giải tham chiếu, pixels-per-unit, tỉ lệ nhân vật, góc nhìn, danh sách màu hex, và hướng nguồn sáng.
+
+**Họ sẽ đào tiếp**
+
+- *"Vì sao độ sáng và bão hoà tách nền tốt hơn sắc độ?"* → Vì mắt người nhạy với độ sáng hơn nhiều so với sắc độ, và vì **8% nam giới mù màu đỏ-lục** nên sắc độ không đáng tin làm kênh duy nhất. Tách bằng độ sáng còn sống sót qua màn hình kém, ánh nắng, và ảnh chụp màn hình bị nén.
+- *"Silhouette khác biệt ở 32px nghĩa là gì trong thực tế?"* → Nghĩa là khác ở **tỉ lệ và đường viền ngoài**: cao gầy với thấp bè, có sừng với tròn trịa, vũ khí chĩa ngang với tay không. Chi tiết bên trong biến mất hết ở kích thước đó, nên thứ duy nhất còn lại là đường bao — và đó chính là thứ người chơi nhận ra trong một phần giây.
+- *"Đổi bảng màu giữa dự án thì tốn gì?"* → Tốn theo cấp số: mọi asset đã vẽ, mọi hiệu ứng, mọi UI đã cân, và mọi ảnh quảng bá đã duyệt. Đó là lý do bảng màu nằm trong nhóm quyết định chốt sớm. Nếu buộc phải đổi thì cách rẻ nhất là **một lớp hậu kỳ chung** thay vì sửa từng asset — chấp nhận kết quả gần đúng.
+- *"Dùng AI ở khâu này thế nào?"* → Nó rất tốt ở **khám phá hướng** — sinh năm mươi biến thể trong một buổi để chọn — và ở **pipeline hậu kỳ** ép nhất quán. Việc không giao là chốt asset chuẩn, vì đó là thứ mọi asset sau bị so vào và nó quyết định bản sắc của game.
+
+**Cờ đỏ**
+
+- Chọn phong cách trước khi biết có bao nhiêu vật thể trên màn hình.
+- Phân biệt kẻ địch chỉ bằng màu.
+- Không có màu nào dành riêng cho nguy hiểm.
+- Chưa từng chạy test silhouette.
+- Trộn asset nhiều nguồn mà không có bảng màu cưỡng bức và không thống nhất hướng sáng.
+
+**Số / ví dụ nên thuộc**
+
+- Ba câu hỏi trước khi chọn phong cách: **phân biệt gì trong 0,2 s · bao nhiêu vật thể · xem ở kích thước nào**.
+- Silhouette khác biệt **ở 32px**; test bằng **đen trắng thuần**.
+- **Một màu dành riêng cho nguy hiểm** — Hades dùng đỏ gần như chỉ cho vùng sát thương.
+- Sáu quyết định chốt sớm: **độ phân giải tham chiếu · PPU · tỉ lệ nhân vật · góc nhìn · bảng màu hex · hướng sáng**.
+- Ép nhất quán nhiều nguồn: **palette cưỡng bức · độ dày nét · một nguồn sáng · cùng PPU · lớp hậu kỳ chung**.

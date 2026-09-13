@@ -355,3 +355,58 @@ public class SaveSync : MonoBehaviour
 - Sửa `local.gold` bằng debugger rồi đẩy lên: lần đồng bộ kế tiếp server trả về con số của nó, không phải của bạn.
 - Bấm Home ngay sau khi mua đồ rồi mở lại app: vật phẩm còn đó, vàng bị trừ đúng một lần.
 - Ngắt mạng 5 phút rồi bật lại: đúng **một** request save được gửi, không phải 10 request dồn.
+
+## 🎤 Phỏng vấn
+
+**Câu hay gặp**
+
+- `Junior` **Vì sao tiền phải là số nguyên?**
+  → Vì `float` không biểu diễn chính xác được và sai số tích lại theo từng giao dịch — tới lúc đối soát thì lệch mà không ai tìm ra từ đâu. Dùng `bigint` cho vàng, gem, EXP, điểm; muốn chia nhỏ thì đổi đơn vị, ví dụ lưu 1 vàng thành 100 đơn vị, chứ không dùng dấu phẩy động.
+- `Junior` **Dữ liệu nào vào Postgres, dữ liệu nào vào Redis?**
+  → Postgres cho thứ không được phép mất và cần transaction: tài khoản, ví, inventory, tiến trình. Redis cho thứ mất cũng không sao hoặc cần tốc độ: phiên đăng nhập, hàng đợi matchmaking, presence, bảng xếp hạng bằng ZSET. Và Postgres một mình đủ cho vài nghìn CCU đầu tiên — thêm Redis khi đo được điểm nghẽn thật, không phải vì sơ đồ trông chuyên nghiệp hơn.
+- `Mid` **Lệnh trừ tiền chạy hai lần thì xử lý thế nào?**
+  → Client sinh `request_id`, database đặt ràng buộc `UNIQUE` lên nó, và dòng ghi id nằm **trong cùng transaction** với việc trừ tiền. Lần gửi thứ hai đụng ràng buộc `UNIQUE` nên không thực hiện lại, server trả về kết quả đã lưu. Mạng rớt giữa chừng là chuyện hằng ngày trên 4G, nên không có idempotency thì mỗi lần rớt là một lần nhân đôi hoặc mất trắng.
+- `Mid` **Sổ cái append-only để làm gì, sao không chỉ lưu số dư?**
+  → Vì số dư một mình không trả lời được câu hỏi nào khi có khiếu nại. Mỗi thay đổi tài nguyên là một dòng không sửa không xoá, kèm `reason` như `quest:12` hay `iap:gems_500`. Nó cho ba thứ cùng lúc: dựng lại số dư khi nghi ngờ, hoàn đồ đúng người có bằng chứng, và đo faucet/drain thật mà không cần dựng thêm hệ thống đo nào.
+- `Senior` **Vì sao ràng buộc phải đặt ở database chứ không chỉ trong code?**
+  → Vì code sẽ có bug, còn database không bao giờ quên. `CHECK (gold >= 0)`, `UNIQUE (request_id)`, khoá ngoại — đó là lưới an toàn cuối cùng. Một dòng `CHECK` biến "vàng âm âm thầm lan ra toàn hệ thống" thành một lỗi nổ ngay tại chỗ ghi sai, ở đúng request gây ra nó.
+- `Senior` **Bảng xếp hạng triệu người, anh làm thế nào?**
+  → Redis ZSET, vì `ZREVRANK` là O(log N) còn `ORDER BY` trên một triệu dòng mỗi request thì không trụ nổi. Cuối mùa chốt kết quả xuống Postgres để có bản lưu vĩnh viễn. Cái bẫy của ZSET là nó nằm trong bộ nhớ và không bền — mất Redis là mất bảng xếp hạng, nên nguồn chân lý của điểm vẫn phải ở Postgres.
+
+**Khung trả lời 60 giây** — "Thiết kế bảng cho ví tiền của game"
+
+> Hai bảng, không phải một. Bảng `wallet` giữ số dư hiện tại, kiểu `bigint`, kèm `CHECK (gold >= 0)` ngay ở tầng database. Bảng `wallet_tx` là **sổ cái append-only**: mỗi thay đổi một dòng, có `delta`, `balance_after`, `reason`, và `request_id` đặt `UNIQUE`.
+>
+> Mọi thao tác đổi tiền nằm trong **một transaction**: ghi dòng sổ cái và cập nhật số dư cùng lúc. Trừ tiền rồi cộng đồ ở hai request khác nhau là hai cơ hội để chỉ một nửa xảy ra.
+>
+> `request_id` `UNIQUE` chính là cơ chế chống nhân đôi: client gửi lại thì đụng ràng buộc và server trả kết quả cũ. Còn thời gian thì luôn dùng `now()` của Postgres — đọc timestamp client gửi lên là mời người chơi chỉnh đồng hồ máy để tua idle game.
+
+**Họ sẽ đào tiếp**
+
+- *"Vì sao một transaction cho một quyết định?"* → Vì nửa kết quả tệ hơn không có kết quả. Trừ tiền thành công mà cộng đồ thất bại thì người chơi mất tiền không được gì — và bạn phát hiện ra từ khiếu nại, không phải từ log.
+- *"Save state đơn giản thì để đâu?"* → Cột `jsonb` trong Postgres nếu không cần quan hệ, chỉ cần lưu và trả nguyên khối. Đừng vì có `jsonb` mà nhét cả ví tiền vào đó — thứ cần ràng buộc và transaction thì phải là cột thật.
+- *"Analytics thì sao?"* → Không để trong Postgres, nó sẽ phình và chậm dần cho tới lúc ảnh hưởng cả request của người chơi. Đẩy sang ClickHouse, BigQuery hoặc file. Tương tự, replay và ảnh người chơi tạo thì để object storage, đừng nhét binary lớn vào database.
+- *"Dọn `request_id` cũ thế nào?"* → Giữ đủ lâu để bao phủ mọi khả năng client còn retry — vài ngày là hợp lý — rồi dọn theo lô. Giữ vĩnh viễn thì bảng phình; dọn quá sớm thì mất tác dụng chống nhân đôi.
+- *"Migration chạy lúc nào?"* → Ở staging trước, luôn luôn. Đó là chỗ duy nhất thử được migration trên dữ liệu giống thật trước khi đụng vào dữ liệu người chơi.
+
+**Cờ đỏ**
+
+- Lưu tiền bằng `float` hoặc `decimal` với dấu phẩy động.
+- Chỉ lưu số dư, không có sổ cái — không điều tra được khiếu nại nào.
+- Ràng buộc chỉ nằm trong code ứng dụng.
+- Lấy thời gian từ client cho mốc nhận thưởng hoặc tính idle.
+- Dùng Redis làm nguồn chân lý cho điểm số hoặc tiền.
+- "Chúng tôi có backup" mà chưa từng phục hồi thử.
+
+**Số / ví dụ nên thuộc**
+
+- Tiền là `bigint`; chia nhỏ bằng cách đổi đơn vị (1 vàng = 100 đơn vị).
+- `ZREVRANK` là **O(log N)**; `ORDER BY` trên triệu dòng mỗi request thì không.
+- Postgres một mình đủ cho **vài nghìn CCU** đầu tiên.
+- Sáu luật dữ liệu kinh tế: số nguyên · ràng buộc ở DB · sổ cái append-only · idempotent · một transaction một quyết định · thời gian của server.
+
+**Kể trong dự án**
+
+- *"Anh thiết kế schema đó à?"* → Nếu schema có sẵn, kể **cái bạn thêm**: sổ cái, ràng buộc `CHECK`, hay `UNIQUE (request_id)`. Mỗi cái đều là một câu chuyện có trước-có sau.
+- *"Khó khăn gặp phải?"* → Mẫu rất mạnh: khiếu nại mất đồ mà log không có lỗi nào. Kể cách bạn phát hiện bằng đối chiếu số lượng giao dịch với số vật phẩm phát ra, rồi dựng sổ cái để lần sau điều tra được trong mười phút thay vì ba ngày.
+- *"Anh có phải hoàn đồ cho người chơi bao giờ chưa?"* → Nếu có, đây là câu chuyện tốt vì nó chứng minh bạn đã vận hành hệ thống có tiền thật. Nêu rõ bạn dựa vào gì để biết hoàn cho ai, hoàn bao nhiêu — nếu câu trả lời là sổ cái thì điểm cộng đã nằm sẵn trong đó.

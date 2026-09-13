@@ -144,3 +144,55 @@ void OnDrawGizmosSelected() =>
 - Chọn một NPC trong Scene view: có thấy nó đang ở trạng thái/hành động nào không?
 - Profiler với 30 NPC: mục AI dưới 2ms/frame?
 - `grep -r "using UnityEngine" Assets/Scripts/AI/Core/` → nên rỗng.
+
+## 🎤 Phỏng vấn
+
+Node con trong nhánh này đều có mục 🎤 riêng. Mục này gom câu hỏi **chọn kiến trúc AI** — loại câu
+mà người phỏng vấn dùng để phân biệt người biết tên kiến trúc với người đã chịu hậu quả của một lựa chọn.
+
+**AI programmer được hỏi ở ba dạng**
+
+| Dạng | Họ đo cái gì | Node nên ôn |
+|---|---|---|
+| "Chọn kiến trúc cho NPC này" | Bạn chọn theo hình dạng bài toán hay theo độ hiện đại | [[fsm]], [[behavior-tree]], [[utility-ai]], [[goap]] |
+| "NPC làm điều kỳ quặc, sửa sao" | Bạn có công cụ nhìn được AI đang nghĩ gì không | [[behavior-tree]], [[perception]] |
+| "Hàng trăm agent tụt frame" | Bạn biết chỗ chi phí thật nằm ở đâu | [[pathfinding]], [[steering-flocking]] |
+
+**Câu hay gặp**
+
+- `Junior` **FSM, behavior tree, utility AI, GOAP — chọn cái nào cho kẻ địch thường?**
+  → Theo **số hành vi và mức chúng chia sẻ điều kiện**. Dưới năm trạng thái, ít điều kiện chung: **FSM**, vì nó rẻ và dễ chẩn đoán nhất. Nhiều hành vi có ưu tiên cạnh tranh: **BT**. Nhiều nhu cầu cần chấm điểm liên tục: **utility**. Cần tự tìm chuỗi hành động cho mục tiêu chưa lường trước: **GOAP**. Rất nhiều game thương mại dùng FSM cho địch thường và BT cho boss.
+- `Junior` **Vì sao không dùng `canSeePlayer` kiểu bool?**
+  → Vì nó xoá mất toàn bộ vùng chơi: lén lút diễn ra trong khoảng giữa "chưa biết" và "đã biết". Thang awareness 0→1 còn cho bốn trạng thái hành vi phân biệt được — tuần tra, nghi ngờ, điều tra, báo động — và cho người chơi cửa sổ để phản ứng, tức là phần gameplay thật của thể loại.
+- `Mid` **AI của anh đổi ý liên tục, hành vi giật cục. Nguyên nhân chung là gì?**
+  → **Thrashing** — hai lựa chọn có giá trị gần nhau quanh một ngưỡng. Cách chữa giống nhau ở mọi kiến trúc: **ngưỡng trễ (hysteresis)** — vào chế độ chạy trốn ở HP < 25% nhưng chỉ thoát ở HP > 40% — cộng cooldown hoặc **cam kết tối thiểu N giây** cho quyết định đã chọn.
+- `Mid` **500 đơn vị cùng đuổi người chơi. Anh dùng gì?**
+  → **Flow field**: một lần Dijkstra từ đích ra toàn bản đồ, mỗi ô lưu hướng tốt nhất, mỗi agent chỉ đọc O(1). Chênh hai bậc độ lớn so với 500 lần A*. Và bất kể thuật toán nào, khi có nhiều agent thì việc rẻ nhất và ăn nhất vẫn là **trải đều tìm đường theo thời gian** — hàng đợi, giới hạn N lần mỗi frame.
+- `Senior` **Làm sao để AI vừa công bằng vừa trông có vẻ công bằng?**
+  → Hai phần tách rời. **Công bằng**: một nguồn duy nhất được biết về người chơi — `PerceptionSystem` — mọi truy cập `player.transform` ở nơi khác là vi phạm, và luật đó **kiểm tra được bằng grep**. **Trông có vẻ công bằng**: chia sẻ thông tin trong nhóm phải kèm **hành động nhìn thấy được** như tiếng hét, và chỉ báo cảnh giác phải chạy theo đúng biến AI dùng để quyết định.
+- `Senior` **NPC thông minh mà người chơi không nhận ra. Vấn đề ở đâu?**
+  → Ở phần **sân khấu**, không ở phần AI. Kẻ địch F.E.A.R. trông như biết bọc sườn một phần nhờ planner chèn bước di chuyển, một phần nhờ câu thoại "Bọc sườn nó!" phát đúng lúc đó. Thiếu lời thoại thì người chơi chỉ thấy địch biến mất rồi xuất hiện ở sườn — không phân biệt được với đi lung tung.
+
+**Khung trả lời 60 giây** — "Anh chọn kiến trúc AI cho một game thế nào?"
+
+> Theo **hình dạng bài toán**, không theo độ hiện đại của kiến trúc. Ít trạng thái và ít điều kiện chung thì FSM là đủ, và nó có một ưu thế không kiến trúc nào khác có: in tên trạng thái ra là biết ngay AI đang nghĩ gì. Giới hạn của nó là số chuyển tiếp tăng theo **bình phương** — năm trạng thái là hai mươi cạnh, mười hai trạng thái là một trăm ba mươi hai.
+>
+> Khi nhiều hành vi có ưu tiên cạnh tranh thì chuyển sang **behavior tree**, vì ở đó ưu tiên nằm ở **cấu trúc**: kéo một nhánh lên xuống là đổi độ ưu tiên, các nhánh khác không biết gì về nhau. Nhiều nhu cầu cần chấm điểm liên tục thì **utility**; cần tự tìm chuỗi hành động cho tình huống chưa lường trước thì **GOAP** — nhưng GOAP đắt CPU và khó gỡ lỗi, nên trong sản phẩm thật nó thường là **GOAP chiến lược cộng BT chiến thuật**.
+>
+> Và bất kể kiến trúc nào, tôi luôn làm hai thứ: tách **perception thành nguồn duy nhất** biết về người chơi, và dựng công cụ **nhìn được AI đang nghĩ gì** — bảng điểm, đường đi của tick, kế hoạch đã chọn.
+
+**Cờ đỏ**
+
+- Chọn kiến trúc theo độ hiện đại, không nói được ngưỡng nó vỡ ở đâu.
+- `Vector3.Distance < range` rồi coi như đã có perception.
+- Không có cơ chế chống dao động nào.
+- Không có công cụ nhìn được AI đang quyết định gì.
+- Tính lại đường đi mỗi frame, hoặc cho mọi agent tìm đường trong cùng một frame.
+
+**Số / ví dụ nên thuộc**
+
+- FSM: chuyển tiếp tăng theo **bình phương** — 5 trạng thái **20 cạnh**, 12 trạng thái **132 cạnh**.
+- BT: **40–50 node** thì tách subtree; tick **5–10 lần/giây**, trải đều giữa agent.
+- Hysteresis mẫu: vào ở **25%**, thoát ở **40%**.
+- Perception: nón **90–120°**, tầm **15–25 m**, vùng cận kề **2–3 m**; raycast **5–10 lần/giây**.
+- Nhiều agent: **flow field** khi chung đích; **6–8 láng giềng** cho bầy đàn; trải đều tìm đường theo thời gian.

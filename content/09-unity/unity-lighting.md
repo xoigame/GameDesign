@@ -403,14 +403,24 @@ public class LightBudget : MonoBehaviour
 
 **Câu hay gặp**
 
-| Mức | Câu hỏi |
-|---|---|
-| Junior | Realtime, Baked, Mixed khác nhau thế nào? |
-| Junior | Vật động trong cảnh đã bake trông tối thui / trôi nổi. Vì sao? |
-| Mid | URP giới hạn bao nhiêu đèn? Forward+ giải quyết gì, và khi nào **không** nên bật? |
-| Mid | Post-processing nào rẻ, nào đắt trên mobile? |
-| Senior | Cảnh mobile đẹp trong Editor, 22fps trên máy. Anh cắt gì trước ở phần ánh sáng? |
-| Senior | Sửa giá trị Volume lúc chạy thế nào cho đúng? |
+- `Junior` **Realtime, Baked, Mixed khác nhau thế nào?**
+  → Realtime tính lại mỗi frame — đổi được lúc chạy, đắt nhất. Baked nướng sẵn vào lightmap lúc build — gần như miễn phí lúc chạy, có GI và bóng mềm, nhưng **không đổi được** và không chiếu lên vật động. Mixed là lai: đèn bake cho vật tĩnh nhưng vẫn đổ bóng realtime lên vật động, qua Shadowmask hoặc Subtractive.
+- `Junior` **Vật động trong cảnh đã bake trông tối thui / trôi nổi. Vì sao?**
+  → Thiếu **Light Probe**. Lightmap chỉ áp cho vật tĩnh; vật động lấy ánh sáng từ probe, không có probe thì nó rơi về ánh sáng môi trường mặc định và trông như dán vào cảnh chứ không thuộc về cảnh. Đặt probe dày ở nơi ánh sáng đổi nhanh (cửa ra vào, ranh sáng-tối), thưa ở chỗ đồng đều.
+- `Junior` **Cắt fps nhanh nhất ở phần dựng hình bằng cách nào?**
+  → `Render Scale` trong URP Asset: 0,75 bỏ **44% số pixel** cho mọi pass 3D, mà UI vẫn nét vì Canvas vẽ ở độ phân giải gốc. Unity 6 có **STP** upscale nét hơn FSR ở cùng scale, tốn thêm ~1 ms. Đây là công tắc nên nối thẳng vào cài đặt chất lượng cho người chơi chọn.
+- `Mid` **URP giới hạn bao nhiêu đèn? Forward+ giải quyết gì, và khi nào không nên bật?**
+  → Renderer thường giới hạn số đèn **per-object** — mặc định 8 additional light, mobile thường hạ xuống 4 — nên đèn thứ 9 đơn giản là biến mất trên object đó. Forward+ chia màn hình thành cluster nên bỏ được giới hạn, và là **điều kiện bắt buộc** cho GPU Resident Drawer của Unity 6. Nhưng nó dựng cluster mỗi frame, nên mobile chỉ có 1–3 đèn thì bật vào là **lỗ**.
+- `Mid` **Post-processing nào rẻ, nào đắt trên mobile?**
+  → Gần như miễn phí vì gộp chung một pass Uber: Tonemapping, Color Adjustments, Vignette, Film Grain. Đắt: **Depth of Field 3–6 ms** (Bokeh đắt gấp ~3 Gaussian, mobile thường bỏ hẳn) và **Bloom 1,5–3 ms** — tắt High Quality Filtering, Max Iterations 4, threshold > 1.0 khi có HDR.
+- `Mid` **Chọn tonemapper cũng là quyết định art — vì sao?**
+  → **ACES** hợp cảnh thực nhưng nó bão hoà và làm tối vùng đỏ, nên art pastel hay màu tươi hay bị "cháy" và mất sắc độ. Lúc đó dùng Neutral rồi bù bằng Color Adjustments. Đây là chỗ kỹ thuật và art phải quyết cùng nhau: đổi tonemapper ở tuần cuối là đổi lại toàn bộ bảng màu đã duyệt.
+- `Senior` **Cảnh mobile đẹp trong Editor, 22 fps trên máy. Anh cắt gì trước ở phần ánh sáng?**
+  → Theo thứ tự hiệu quả: giảm **`Shadow Distance`** — rẻ nhất và ăn nhất, mặc định 50 m là quá xa cho mobile; giảm số cascade; hạ độ phân giải shadow map; tắt bóng cho đèn phụ. Với nhiều game mobile thì **bóng giả** — một quad tối dưới chân nhân vật — là đủ, và nó rẻ hơn shadow map cả một bậc.
+- `Senior` **Sửa giá trị Volume lúc chạy thế nào cho đúng?**
+  → **Không** đụng `volume.sharedProfile`: đó là asset gốc, sửa trong Play Mode là ghi vĩnh viễn vào file và mình commit nhầm lúc nào không hay. Dùng `volume.profile` — Unity tạo bản sao riêng, nhớ `Destroy` trong `OnDestroy`. Sạch hơn nữa: một Volume riêng cho hiệu ứng đó và chỉ điều khiển `weight`.
+- `Senior` **Chọn chiến lược ánh sáng theo tiêu chí nào?**
+  → Theo việc ánh sáng có **đổi** hay không. Mobile với level tĩnh: Baked toàn bộ, 0 đèn realtime. Có chu kỳ ngày/đêm: Realtime với đúng một directional light cộng Environment Lighting đổi theo giờ. Indoor có đèn bật/tắt và vật động cần bóng: **Mixed – Shadowmask**. Mobile yếu mà vẫn cần bóng nhân vật: **Subtractive**.
 
 **Khung trả lời 60 giây** — "Chọn chiến lược ánh sáng thế nào?"
 

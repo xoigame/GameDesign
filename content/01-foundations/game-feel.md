@@ -175,3 +175,58 @@ Với dự án nhỏ, tự viết một `CameraShake` 30 dòng có `amplitude`, 
 - Tắt hết particle và âm thanh, chỉ để hitstop + flash. Vẫn thấy "đã tay" không? Nếu có, nền tảng đúng.
 - Đặt `ShakeScale = 0` trong settings — game vẫn chơi được bình thường chứ?
 - Profiler: `OnHit` không được cấp phát (GC Alloc = 0 B).
+
+## 🎤 Phỏng vấn
+
+**Câu hay gặp**
+
+- `Junior` **Game feel là gì? Vì sao nhân vật "đúng vật lý" lại cảm thấy tệ?**
+  → Game feel là cảm giác vật lý khi điều khiển — nó quyết định phần lớn ấn tượng trong 30 giây đầu và gần như nằm ngoài phần "tính năng" của tài liệu. Nhân vật đúng vật lý cảm thấy tệ vì trực giác người chơi không phải vật lý: rơi nhanh gấp 1,5–2,5 lần lúc bay lên và có vài frame lơ lửng ở đỉnh thì mới cảm thấy đúng. Game feel là **nói dối cho hợp trực giác**.
+- `Junior` **Coyote time và input buffer là gì? Đặt bao nhiêu?**
+  → Coyote time **80–120 ms**: vẫn nhảy được sau khi đã rời mép nền. Input buffer **100–150 ms**: nhấn nhảy sớm trước khi chạm đất vẫn được ghi nhận. Cả hai đều là "tha thứ" cho sai số của người chơi, và cả hai đều vô hình — người chơi không biết chúng tồn tại, chỉ thấy game nhạy.
+- `Junior` **Ba công cụ đầu tiên anh làm để game "đã tay" hơn?**
+  → Theo đúng thứ tự: **hitstop** (50–120 ms khi trúng đòn), **âm thanh đúng frame va chạm** (không phải sau animation), và **chớp trắng** trên sprite trúng đòn 60–80 ms. Ba cái đó chiếm khoảng 70% cảm giác và tốn ít công nhất; screenshake, hạt và số sát thương đứng sau.
+- `Mid` **Screenshake đặt thế nào cho đúng?**
+  → Biên độ **4–10 px**, thời lượng **100–200 ms**, và **bắt buộc giảm dần**. Quan trọng hơn con số là quy tắc: cường độ tỉ lệ với **ý nghĩa của sự kiện** — đòn thường 4 px, hạ boss 12 px. Nếu mọi thứ đều 12 px thì không gì đáng chú ý cả. Và luôn có tuỳ chọn giảm rung, vì đây là vấn đề trợ năng thật với người dễ say chuyển động.
+- `Mid` **Người chơi kêu "game bị lag" nhưng profiler cho 60 fps ổn định. Nghi gì?**
+  → Nghi độ trễ phản hồi chứ không phải frame rate. Phản hồi phải trong **≤ 2 frame (33 ms)**; trên 100 ms là cảm thấy lag dù không lag. Nguồn hay gặp: input đọc trong `FixedUpdate`, hiệu ứng chờ animation event, âm thanh phát sau animation, hoặc một đoạn blend transition 0,2 s ở đúng chỗ cần phản hồi tức thì.
+- `Mid` **Vì sao âm thanh hay bị đánh giá thấp trong game feel?**
+  → Vì nó không nhìn thấy trong ảnh chụp màn hình, nên nó rơi khỏi danh sách review. Nhưng nó rẻ và hiệu quả cao: ngẫu nhiên cao độ **±8%** mỗi lần phát để tránh cảm giác lặp máy móc, phát **cùng frame** với va chạm, và một khoảng im lặng ngắn ngay trước cú đánh lớn làm nó nghe nặng hơn hẳn.
+- `Senior` **Juice quá tay hỏng ở đâu, và anh phát hiện bằng cách nào?**
+  → Khi mọi thứ đều rung, chớp và nổ thì người chơi **không đọc được trạng thái trận đấu** nữa — đó là lỗi về khả năng đọc, không phải về thẩm mỹ. Cách phát hiện: quay video một trận rồi xem lại có nói được lúc nào mình sắp chết không. Cách chữa là lập ngân sách theo mức sự kiện, và một nguồn duy nhất cộng dồn rung thay vì bốn hệ thống cùng rung.
+- `Senior` **Game feel viết vào tài liệu thế nào để agent hoặc người mới làm đúng?**
+  → Bằng **số và đơn vị**, không bằng tính từ: hitstop 70 ms, coyote 100 ms, chớp trắng 60 ms, rung 6 px giảm dần trong 150 ms, trọng lực rơi ×2. "Cảm giác nặng tay" không chuyển thành code được, còn bảng số thì chuyển được — và nó cũng biến tranh luận về cảm giác thành tranh luận về một con số cụ thể.
+- `Senior` **Game feel có đánh đổi gì không, hay cứ thêm là tốt?**
+  → Có ba đánh đổi thật. Khả năng đọc trận đấu (juice quá tay). **Trợ năng**: rung và chớp là vấn đề sức khoẻ với một phần người chơi, nên phải tắt được. Và **độ trễ cảm nhận**: hitstop làm đòn nặng hơn nhưng cũng làm game phản hồi chậm hơn đúng bằng thời lượng đó — với game đối kháng cạnh tranh thì đó là chi phí phải cân nhắc, không phải quà tặng miễn phí.
+
+**Khung trả lời 60 giây** — "Làm sao để một prototype cảm thấy đã tay?"
+
+> Tôi làm theo thứ tự cố định và dừng khi đã đủ: **hitstop**, **âm thanh đúng frame**, **chớp trắng**, rồi mới tới screenshake có giảm dần, hạt, và số sát thương. Ba cái đầu chiếm khoảng 70% cảm giác và tốn ít công nhất — đảo thứ tự này là lý do nhiều người đổ cả tuần vào hạt mà game vẫn nhạt.
+>
+> Con số tôi mang theo: hitstop 50–120 ms, chớp trắng 60–80 ms, rung 4–10 px giảm dần trong 100–200 ms, coyote time và input buffer khoảng 100 ms, tăng giảm tốc 0,05–0,15 giây — dài hơn là trơn như đi trên băng. Và trọng lực bất đối xứng, rơi nhanh gấp 1,5–2,5 lần lúc bay lên.
+>
+> Nguyên tắc bao trùm là **cường độ tỉ lệ với ý nghĩa sự kiện**. Đòn thường rung 4 px, hạ boss rung 12 px. Nếu mọi thứ đều 12 px thì người chơi không đọc được trận đấu nữa, và lúc đó juice đã quay sang chống lại game.
+
+**Họ sẽ đào tiếp**
+
+- *"Vì sao hitstop lại mạnh đến vậy?"* → Vì nó dừng đúng khoảnh khắc va chạm, nên não đọc thành "hai vật thể thật sự chạm nhau". Nó cũng rẻ nhất trong mọi công cụ: vài dòng code, không cần asset, không cần artist. Cái giá là độ trễ — game phản hồi chậm hơn đúng bằng thời lượng hitstop.
+- *"Hitstop cài bằng `timeScale` được không?"* → Được cho game một mục tiêu, nhưng nó dừng cả thế giới: số sát thương bay ngừng, hạt đóng băng. Game hành động nhiều mục tiêu hoặc có multiplayer thì cần **local time scale** — mỗi thực thể một hệ số delta riêng.
+- *"Làm game feel cho game mobile thì khác gì?"* → Không có phản hồi xúc giác từ nút bấm nên phần nhìn và rung máy phải gánh nhiều hơn. Thêm nữa, ngón tay che một phần màn hình, nên hiệu ứng đặt dưới chỗ chạm là lãng phí. Và rung máy tốn pin, nên nó cũng phải có ngân sách.
+- *"Đo game feel thế nào cho khách quan?"* → Đo **độ trễ đầu vào** bằng quay video tốc độ cao đếm frame từ lúc bấm tới lúc có phản hồi trên màn hình; đó là con số duy nhất trong nhóm này khách quan hoàn toàn. Phần còn lại thì so sánh cặp: cùng một tester chơi hai bản khác nhau một tham số.
+- *"Dùng AI ở khâu này thế nào?"* → Giao cho nó việc chuyển bảng số thành code và sinh biến thể để mình so sánh — nó dựng nhanh hơn mình gõ. Việc **không** giao là quyết định con số nào đúng: đó là thứ chỉ tay mình và mắt người chơi trả lời được, và một câu "cảm giác đã hơn" do AI viết ra không phải bằng chứng.
+
+**Cờ đỏ**
+
+- Mô tả game feel bằng tính từ, không có con số nào.
+- Làm hạt và số sát thương trước khi có hitstop và âm thanh.
+- Screenshake không giảm dần, hoặc cùng biên độ cho mọi sự kiện.
+- Không có tuỳ chọn tắt rung.
+- Phát âm thanh theo animation event thay vì cùng frame va chạm.
+
+**Số / ví dụ nên thuộc**
+
+- Coyote time **80–120 ms** · input buffer **100–150 ms** · phản hồi **≤ 2 frame (33 ms)**.
+- Hitstop **50–120 ms** · chớp trắng **60–80 ms** · rung **4–10 px** trong **100–200 ms**, giảm dần.
+- Tăng/giảm tốc **0,05–0,15 s**; squash & stretch **±15–25%**; trọng lực rơi **×1,5–2,5**.
+- Ngẫu nhiên cao độ âm thanh **±8%**; số sát thương mờ dần trong **0,6 s**.
+- Thứ tự làm: **hitstop → âm thanh → chớp trắng → rung → hạt → số**; ba cái đầu ≈ **70%** cảm giác.

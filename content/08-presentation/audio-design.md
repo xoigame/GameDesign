@@ -171,3 +171,57 @@ AudioMixer có sẵn EQ effect. Đặt trên bus `Music`: cắt nhẹ 2–6 kHz 
 - `priority` của âm cảnh báo có **nhỏ hơn** âm phụ không?
 - Profiler mục Audio: bao nhiêu voice đang phát? Vượt 32 là không ai nghe ra gì.
 - Build ra máy thật: dung lượng RAM cho audio bao nhiêu?
+
+## 🎤 Phỏng vấn
+
+**Câu hay gặp**
+
+- `Junior` **Một SFX tốt dựng thế nào?**
+  → Hiếm khi là một file. Nó là nhiều **lớp** chồng lên nhau, mỗi lớp một nhiệm vụ: **transient** (tiếng "tách" sắc, ngắn — phần tạo cảm giác lực), **body** (thân âm thanh), và **tail** (vọng). Ví dụ kiếm chém trúng giáp: tách sắc + kim loại cọ + vọng nhẹ.
+- `Junior` **Muốn đòn đánh nghe mạnh hơn thì tăng gì?**
+  → **Tăng transient, đừng tăng âm lượng tổng.** Đây là sai lầm phổ biến nhất: tăng volume chỉ làm ồn, không làm nặng. Cảm giác lực nằm ở phần đầu cực ngắn của âm thanh, nên chỉnh ở đó rẻ hơn và không đẩy cả bản mix lên.
+- `Junior` **Ba kỹ thuật chống lặp âm thanh?**
+  → **Ngẫu nhiên cao độ ±5–10%** — rẻ nhất, hiệu quả nhất, áp cho gần như mọi SFX. **3–5 biến thể, chọn không lặp liền** bằng shuffle bag chứ không random thuần. **Ngẫu nhiên âm lượng ±2–3 dB**, nhẹ thôi. Ngoại lệ: âm thanh UI và âm báo trạng thái **không** nên ngẫu nhiên, vì chúng cần nhất quán để người chơi học nhận diện.
+- `Mid` **Chia dải tần để làm gì? Dải nào phải giữ cho gameplay?**
+  → Để nhiều âm thanh cùng lúc không che nhau thành một mớ đục. Dải **2–6 kHz là nơi tai nhạy nhất** — giữ nó cho **phản hồi quan trọng**: trúng đòn, nhặt đồ, cảnh báo; và cắt bớt nhạc cùng ambience ở dải đó để nhường chỗ. Đây chính là lý do kỹ thuật của ducking.
+- `Mid` **Mỗi SFX nên trả lời câu hỏi gì?**
+  → Bốn câu: **hành động của tôi có tác dụng không** (tiếng trúng khác tiếng hụt rõ rệt); **có nguy hiểm không** (âm cảnh báo trước đòn — chính là telegraph bằng tai); **nguy hiểm ở đâu** (âm thanh có hướng); và **trạng thái tôi thế nào** (nhịp tim khi máu thấp, tiếng thở khi hết stamina).
+- `Mid` **Ngân sách âm thanh thực tế là bao nhiêu?**
+  → **16–32 âm thanh đồng thời** là đủ cho game 2D; vượt quá thì không ai nghe ra gì nữa. Tối đa **3–4 instance cùng lúc** của cùng một SFX — mười viên đạn bắn cùng frame không được phát mười tiếng vì sẽ clip và méo. Và khoảng cách tối thiểu **30–50 ms** giữa hai lần phát cùng một âm.
+- `Senior` **Hai phép thử nào phải qua cả hai?**
+  → **Tắt hình**: nhắm mắt chơi 30 giây, có biết chuyện gì đang xảy ra không — không thì âm thanh đang chỉ trang trí. Và **tắt tiếng**: tắt loa còn chơi được không — không thì thông tin sống còn đang nằm ở một kênh duy nhất, vừa là lỗi trợ năng vừa là lỗi thiết kế. Thông tin sống còn cần **cả hai kênh**.
+- `Senior` **Vì sao âm thanh là kênh phản hồi có tỉ lệ hiệu quả trên công sức cao nhất?**
+  → Vì **tai phản ứng nhanh hơn mắt** và âm thanh truyền thông tin mà **không chiếm diện tích màn hình** — nó là kênh duy nhất mở rộng được mà không phải trả giá bằng pixel. Nghịch lý là nó cũng là thứ bị cắt đầu tiên khi thiếu thời gian; tắt tiếng một game hay và nó lập tức cảm thấy như prototype.
+- `Senior` **Vì sao dùng shuffle bag thay vì random thuần khi chọn biến thể?**
+  → Vì random thuần cho phép **lặp lại liền hai ba lần**, và tai phát hiện điều đó ngay lập tức — đúng thứ mà việc có nhiều biến thể sinh ra để tránh. Shuffle bag đảm bảo đi hết tập rồi mới lặp, nên với 4 biến thể cộng ngẫu nhiên cao độ thì gần như không bao giờ nghe giống hệt nhau.
+
+**Khung trả lời 60 giây** — "Anh thiết kế âm thanh cho một game hành động thế nào?"
+
+> Tôi coi âm thanh là **kênh thông tin**, không phải lớp trang trí — tai phản ứng nhanh hơn mắt và âm thanh không chiếm pixel nào. Nên mỗi SFX phải trả lời một câu hỏi: đòn của tôi có trúng không, có nguy hiểm không, nguy hiểm ở đâu, tôi đang ở trạng thái nào.
+>
+> Về mặt dựng, một âm thanh tốt là nhiều **lớp**: transient, body, tail. Muốn đòn nghe mạnh hơn thì **tăng transient chứ đừng tăng âm lượng tổng** — tăng volume chỉ làm ồn. Và chống lặp bằng ba thứ rẻ: ngẫu nhiên cao độ ±5–10%, ba tới năm biến thể chọn bằng shuffle bag, ngẫu nhiên âm lượng vài dB.
+>
+> Ở tầng mix, tôi **chia dải tần có chủ ý** và giữ dải **2–6 kHz** — nơi tai nhạy nhất — cho phản hồi gameplay, cắt bớt nhạc ở dải đó. Cuối cùng là hai phép thử phải qua cả hai: **tắt hình** vẫn biết chuyện gì đang xảy ra, và **tắt tiếng** vẫn chơi được.
+
+**Họ sẽ đào tiếp**
+
+- *"Vì sao âm thanh UI không nên ngẫu nhiên?"* → Vì chúng là **tín hiệu cần học thuộc**: người chơi nhận ra "đã lưu xong" hay "không đủ tiền" bằng cách nhớ đúng âm đó. Biến thiên làm chậm việc nhận diện, và với âm báo lỗi thì nó còn làm người ta nghi ngờ chính mình có nghe nhầm không.
+- *"Ducking là gì và vì sao cần?"* → Là hạ tạm âm lượng của nhạc và ambience khi có âm thanh quan trọng phát, để nhường dải tần. Không có nó thì âm cảnh báo bị nhạc che đúng lúc cần nhất — và đó là lỗi chỉ lộ ra ở cảnh đông, tức là đúng lúc tệ nhất.
+- *"Giới hạn 3–4 instance mỗi SFX cài ở đâu?"* → Ở tầng phát, cùng chỗ với pool AudioSource: đếm theo nhóm, có priority, và cái mới cướp chỗ cái cũ nhất. Cài ở tầng gọi thì mỗi hệ thống sẽ tự quản một kiểu, và tổng số vẫn vượt — đây là loại ràng buộc phải áp ở một chỗ duy nhất.
+- *"Dùng AI ở khâu này thế nào?"* → SFX là **loại asset AI làm được nhất** vì tai khoan dung với biến thể hơn mắt, nên nó tốt cho việc sinh biến thể và nguyên liệu thô. Việc vẫn phải của người: chọn transient, cân mix, và quyết định âm nào mang thông tin gameplay — đó là quyết định thiết kế chứ không phải quyết định âm học.
+
+**Cờ đỏ**
+
+- Một file cho một âm thanh, phát lại y hệt mỗi lần.
+- Tăng âm lượng để đòn nghe mạnh hơn.
+- Không có giới hạn số instance, mười viên đạn phát mười tiếng.
+- Thông tin sống còn chỉ tồn tại ở kênh âm thanh.
+- Nhạc và SFX tranh nhau dải 2–6 kHz, không có ducking.
+
+**Số / ví dụ nên thuộc**
+
+- Ba lớp một SFX: **transient · body · tail**; mạnh hơn = **tăng transient**.
+- Chống lặp: cao độ **±5–10%** · **3–5 biến thể** chọn bằng shuffle bag · âm lượng **±2–3 dB**.
+- Dải **2–6 kHz** dành cho phản hồi gameplay; **20–80 Hz** cho nổ và cảm giác rung.
+- Ngân sách: **16–32 âm đồng thời** · tối đa **3–4 instance** mỗi SFX · cách nhau **30–50 ms**.
+- Hai phép thử: **tắt hình** (âm thanh có mang thông tin không) và **tắt tiếng** (có chơi được không).

@@ -251,3 +251,57 @@ Nếu đã lỡ dùng Animation Event, ít nhất hãy viết test đối chiế
 - Mỗi `AttackData` có `counter` khác `None` — mỗi đòn phải có đúng một câu trả lời.
 - Đòn của kẻ địch: `startupFrames >= 18` (0.3s) để người chơi phản ứng kịp.
 - Bật Gizmos, pause ở frame active — hitbox có khớp với animation không?
+
+## 🎤 Phỏng vấn
+
+**Câu hay gặp**
+
+- `Junior` **Một đòn đánh chia làm mấy giai đoạn? Giai đoạn nào quan trọng nhất về thiết kế?**
+  → Ba: **startup** (telegraph — thứ người chơi đọc để phản ứng), **active** (cửa sổ gây sát thương thật), **recovery** (cửa sổ trừng phạt, nơi đối phương được thưởng vì đã né đúng). Startup quan trọng nhất về thiết kế, vì toàn bộ "cuộc hội thoại" của chiến đấu diễn ra ở đó.
+- `Junior` **Frame data của một đòn nhẹ và một đòn nặng khoảng bao nhiêu?**
+  → Ở 60 FPS: đòn nhẹ startup **6–10 frame** (100–166 ms), active 3–5, recovery 10–14 — phải cảm thấy tức thì. Đòn nặng startup **18–30 frame** (300–500 ms), active 5–8, recovery 25–40 — phạt nặng nếu hụt. Đòn boss chí mạng startup **45–70 frame** (750 ms–1,2 s) để đọc được.
+- `Junior` **Luật vàng về telegraph là gì?**
+  → Telegraph phải **dài hơn thời gian phản ứng của con người cộng thời gian thực hiện hành động né**. Phản ứng thị giác trung bình 250 ms; người chơi bình thường cần **~400 ms** để nhận biết và bấm. Telegraph dưới 300 ms là không phản ứng được, chỉ ghi nhớ được — đó là lựa chọn hợp lệ nhưng phải cố ý.
+- `Mid` **Ba câu hỏi người chơi phải trả lời được trong mọi khoảnh khắc chiến đấu?**
+  → "Tôi có đang bị nhắm không?" (hướng nhìn, chỉ báo, âm thanh riêng). "Đòn gì đang tới?" — mỗi đòn cần một **hình bóng khác biệt**, không chỉ khác animation. "Tôi phải làm gì?" — telegraph phải ánh xạ **nhất quán** tới hành động đúng, ví dụ ánh đỏ nghĩa là không đỡ được, phải né.
+- `Mid` **Vì sao chiến đấu không có tài nguyên lại thoái hoá?**
+  → Vì không có gì buộc người chơi cân nhắc: lối chơi tối ưu trở thành lặp lại đòn có tỉ lệ sát thương trên thời gian cao nhất. Ba tài nguyên thường dùng: **stamina** (giới hạn cả đánh lẫn né, tạo nhịp), **poise/stagger** (thưởng cho áp lực liên tục), và **vị trí** — thứ rẻ nhất và bị đánh giá thấp nhất.
+- `Mid` **Bốn phép thử chất lượng chiến đấu?**
+  → **Dừng khung hình** giữa trận — đoán được chuyện sắp xảy ra không? Không thì telegraph chưa đủ rõ. **Test một nút** — chỉ bấm tấn công; thắng được nghĩa là hệ thống thiếu áp lực. **Tắt tiếng** — còn chơi được không? Không thì đang dồn quá nhiều thông tin vào âm thanh, và đó cũng là vấn đề trợ năng. **Lỗi có chủ ý** — đánh hụt rồi xem hình phạt có tương xứng và dễ hiểu không.
+- `Senior` **Tam giác khắc chế dùng để làm gì, và mở rộng thế nào?**
+  → Cấu trúc kéo-búa-bao ép người chơi **đọc tình huống** thay vì spam một nút — đây là bộ khung tối thiểu tạo chiều sâu mà không thêm cơ chế nào. Mở rộng bằng ba trục: khoảng cách (gần/xa), độ cao, và tài nguyên (stamina). Mở rộng bằng cách thêm nhánh thứ tư, thứ năm thì thường chỉ làm bảng ghi nhớ dài ra chứ không thêm quyết định.
+- `Senior` **Người chơi kêu chiến đấu "hỗn loạn, không hiểu vì sao chết". Anh sửa từ đâu?**
+  → Từ **khả năng đọc**, không từ cân bằng. Kiểm tra ba câu hỏi: có biết mình bị nhắm không, có phân biệt được đòn nào đang tới bằng hình bóng không, và telegraph có ánh xạ nhất quán tới hành động đúng không. Rất thường là nhiều địch cùng ra đòn trong một cửa sổ — lúc đó sửa là giãn nhịp spawn và giới hạn số địch được tấn công cùng lúc.
+- `Senior` **Chiến đấu nhiều địch cùng lúc thiết kế thế nào cho đọc được?**
+  → Giới hạn số kẻ **được phép tấn công đồng thời** (một "token tấn công" luân phiên), cho những con đang chờ đứng ở tư thế nhìn ra ngay là chưa nguy hiểm, và giữ telegraph của đòn nguy hiểm nhất dài nhất. Nếu mọi con cùng ra đòn thì dù từng telegraph đều chuẩn, tổng thể vẫn không đọc được — khả năng đọc là thuộc tính của **cảnh**, không phải của từng đòn.
+
+**Khung trả lời 60 giây** — "Anh thiết kế một hệ thống chiến đấu thế nào?"
+
+> Tôi coi chiến đấu là một **cuộc hội thoại**: kẻ địch nói bằng telegraph, người chơi trả lời bằng né, đỡ hoặc phản, và cả hai bên phải hiểu cùng một ngôn ngữ. Nên thứ tôi làm trước là **frame data**: startup, active, recovery cho từng đòn, viết vào dữ liệu để designer chỉnh mà không cần build lại.
+>
+> Ràng buộc cứng là luật telegraph: startup phải dài hơn thời gian phản ứng cộng thời gian thực hiện hành động né — phản ứng thị giác trung bình 250 ms, thực tế cần khoảng 400 ms. Dưới 300 ms là đòn học thuộc chứ không phải đòn phản ứng, và nếu tôi vẫn làm thì đó phải là quyết định có chủ ý.
+>
+> Sau đó là hai thứ tạo chiều sâu mà không thêm cơ chế: **tam giác khắc chế** để ép đọc tình huống, và **tài nguyên** — stamina, poise, và vị trí. Cuối cùng tôi chạy bốn phép thử: dừng khung hình, test một nút, tắt tiếng, và cố ý đánh hụt.
+
+**Họ sẽ đào tiếp**
+
+- *"Vì sao recovery lại là phần thưởng cho người chơi?"* → Vì nó là **cửa sổ trừng phạt**: né đúng thì được đánh trả miễn phí. Không có recovery đủ dài thì né đúng chẳng được gì và người chơi quay về spam. Đó cũng là lý do đòn nặng phải có recovery dài — chi phí của sức mạnh nằm ở đó chứ không nằm ở con số sát thương.
+- *"Hình bóng khác biệt nghĩa là gì trong thực tế?"* → Nghĩa là nhìn **ảnh đen trắng** của khung hình vẫn phân biệt được đòn nào: tay giơ cao, người cúi thấp, vũ khí chĩa ngang. Đổi màu hiệu ứng không đủ, vì màu bị mất trong cảnh đông và với người mù màu. Đây là lý do art direction của chiến đấu là quyết định chung, không phải quyết định thẩm mỹ riêng.
+- *"Test một nút thất bại thì sửa thế nào?"* → Thêm áp lực, không thêm HP. Theo thứ tự: tài nguyên cho hành động tấn công (stamina), địch có đòn phạt việc đứng yên, và tam giác khắc chế buộc đổi hành động. Tăng HP chỉ làm trận đấu dài hơn, và spam vẫn thắng — chỉ lâu hơn.
+- *"Dùng AI ở khâu này thế nào?"* → Giao cho nó **mô phỏng tổ hợp frame data**: với bảng đòn này, có tồn tại chuỗi nào khoá đối phương vĩnh viễn không, có đòn nào recovery ngắn tới mức an toàn tuyệt đối không. Đó là việc duyệt tổ hợp, máy làm nhanh và không bỏ sót. Còn "đòn này có đã tay không" thì vẫn phải tự cầm tay chơi.
+
+**Cờ đỏ**
+
+- Không có frame data, chỉnh chiến đấu bằng cách sửa animation.
+- Telegraph dưới 300 ms mà không nhận đó là đòn học thuộc.
+- Phân biệt đòn bằng màu hiệu ứng thay vì bằng hình bóng.
+- Chữa "quá dễ" bằng cách tăng HP kẻ địch.
+- Chưa từng chạy test tắt tiếng, nên không biết bao nhiêu thông tin đang nằm ở âm thanh.
+
+**Số / ví dụ nên thuộc**
+
+- Ba giai đoạn: **startup · active · recovery**.
+- Đòn nhẹ **6–10f** startup · đòn nặng **18–30f** · boss chí mạng **45–70f** (60 FPS).
+- Phản ứng thị giác **250 ms**; thực tế cần **~400 ms**; telegraph **< 300 ms** = học thuộc, không phản ứng.
+- Ba tài nguyên: **stamina · poise/stagger · vị trí**.
+- Bốn phép thử: **dừng khung hình · một nút · tắt tiếng · lỗi có chủ ý**.

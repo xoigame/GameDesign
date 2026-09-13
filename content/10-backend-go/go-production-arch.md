@@ -406,3 +406,57 @@ Phía client, lớp mạng là một `ApiClient` mỏng bọc `UnityWebRequest`,
 - Sửa cache master của client cho lệch một phiên bản: request kế tiếp phải trả lỗi buộc tải master, **không** phải lỗi chung chung.
 - Bật một proxy trả HTML cho mọi request: client hiện thông báo mạng, không phải `ProtoException`.
 - Build IL2CPP sau khi thêm một message có `Dictionary<uint, X>` mới mà **không** sinh lại AOT hints: phải tái hiện được crash — đó là cách bạn tin rằng bước sinh lại là bắt buộc.
+
+## 🎤 Phỏng vấn
+
+**Câu hay gặp**
+
+- `Junior` **Một binary nhiều mode nghĩa là gì? Lợi và hại?**
+  → Toàn hệ thống là **một file binary**, chọn vai trò bằng cờ dòng lệnh: `api`, `tool`, `mnt`, `realtime`, `multiplay`, `notice`, `batch`. Lợi ích thật là **một artifact duy nhất đi qua CI** — không bao giờ có chuyện api build từ commit A còn realtime từ commit B. Cái giá: mọi mode phải deploy cùng nhịp, kể cả khi chỉ sửa một dòng ở tool.
+- `Junior` **Mode nào stateless, mode nào stateful, và điều đó đổi cách vận hành thế nào?**
+  → `api`, `tool`, `mnt` **stateless** nên restart tự do. `realtime` và `multiplay` **stateful** nên phải **drain** — chờ kết nối và phiên chơi kết thúc trước khi tắt. Đó là lý do restart realtime là thao tác đắt nhất, và là lý do mô hình một-binary-nhiều-mode chỉ hợp với đội deploy theo đợt chứ không theo giờ.
+- `Junior` **Config nhúng vào binary bằng `go:embed` — bẫy số một của người mới là gì?**
+  → **Sửa file YAML rồi restart không có tác dụng gì** — phải build lại. Nghe ngược đời nhưng đổi lại ba thứ: binary chạy được ở mọi môi trường mà không cần mang theo file, không bao giờ có chuyện config trên máy chủ khác config trong repo, và **rollback binary là rollback luôn config**.
+- `Mid` **Nhúng config vào binary thì đổi tham số nóng bằng cách nào?**
+  → Đẩy những thứ **cần đổi nóng** — cờ bảo trì, phiên bản master — sang **memcached/redis** thay vì để trong config. Đây là điều kiện để mô hình nhúng config hoạt động được: nó chỉ hợp khi **đã có sẵn một chỗ khác** cho các cờ cần đổi ngay, nếu không thì mọi sự cố nhỏ đều phải qua một vòng build–deploy.
+- `Mid` **Ba tầng kiểm phiên bản ở middleware giải quyết vấn đề gì?**
+  → Tránh **vòng chết**: client lệch master nên bị chặn, mà muốn hết lệch thì phải tải master — và đường tải master cũng bị chặn. Cách chữa là kiểm ở middleware **cộng một danh sách đường dẫn miễn kiểm**. Cùng nguyên lý với việc cổng kiểm master data phải có **nấc** mức độ: cổng không có nấc thì cuối cùng sẽ bị tắt hẳn.
+- `Mid` **Vì sao message lỗi cần trường `level` chứ không chỉ cần mã lỗi?**
+  → Để client **phân nhánh đúng** giữa "mất mạng, thử lại được" và "lỗi thật, phải dừng". Chỉ có mã lỗi thì client hoặc thử lại mọi thứ — kể cả thứ không bao giờ thành công — hoặc dừng mọi thứ, kể cả sự cố mạng thoáng qua. Cùng nhóm với việc **kiểm `Content-Type` trước khi giải mã** để bắt đúng trường hợp wifi có cổng đăng nhập.
+- `Senior` **Sinh `.proto` từ schema database — đánh đổi là gì?**
+  → Nhanh và không lệch, vì codegen là một trục xuyên suốt từ schema ra tới DLL cho client. Nhưng nó **nối chặt bảng với giao thức**: đổi schema là đụng client, và một thay đổi nội bộ trong database trở thành một thay đổi có phiên bản đối ngoại. Chép được khi đội client và server cùng công ty, cùng nhịp phát hành; đội ngoài thì nên đẩy `.proto` để client tự sinh.
+- `Senior` **Con số nào trong một case study kiểu này tuyệt đối không nên chép thẳng?**
+  → **`max_open` của connection pool.** Hàng nghìn kết nối chỉ đúng khi thứ đứng sau chịu được — chép con số mà không chép hoàn cảnh là cách giết database. Nguyên tắc chung khi đọc case study: chép **cấu trúc và lý do**, không chép **tham số**; tham số là hàm của phần cứng, lưu lượng và hình dạng truy vấn của riêng họ.
+- `Senior` **Header `X-App-Format: json` để làm gì, và vì sao nó đáng chép?**
+  → Để bật JSON cho **một request cụ thể** trong khi production vẫn chạy protobuf nhị phân. Nó giữ lại được hai thứ rất đắt khi mất: **`curl` gõ tay được** và **log đọc được bằng mắt**. Đây là ví dụ mẫu cho một loại quyết định đáng chép — chi phí gần bằng không, và nó cứu đúng lúc đang có sự cố lúc ba giờ sáng.
+
+**Khung trả lời 60 giây** — "Kể về kiến trúc một backend game anh đã đọc kỹ hoặc đã làm"
+
+> Tôi mô tả theo **quyết định và cái giá đi kèm**, không theo danh sách công nghệ. Ví dụ hệ thống này: toàn bộ là **một binary nhiều mode** — api, tool, realtime, multiplay, batch — chọn vai trò bằng cờ dòng lệnh. Được cái không bao giờ lệch phiên bản giữa các thành phần vì chỉ có một artifact đi qua CI; mất cái mọi mode phải deploy cùng nhịp, mà realtime là thứ đắt nhất để restart vì nó stateful và phải drain.
+>
+> Quyết định thứ hai gây bất ngờ nhất là **nhúng config vào binary bằng `go:embed`**: sửa YAML rồi restart không có tác dụng, phải build lại. Đổi lại là tính bất biến — không bao giờ có chuyện config trên máy chủ khác config trong repo, và rollback binary là rollback luôn config. Điều kiện để nó chạy được là **những cờ cần đổi nóng phải nằm ở chỗ khác**, ở đây là redis.
+>
+> Và điều tôi rút ra khi đọc bất kỳ case study nào: chép **cấu trúc và lý do**, đừng chép **tham số**. `max_open` hàng nghìn là con số của phần cứng và lưu lượng của họ, không phải của mình.
+
+**Họ sẽ đào tiếp**
+
+- *"Một binary nhiều mode có phải là monolith không?"* → Về mặt **triển khai** thì gần như vậy, về mặt **runtime** thì không: mỗi mode là một tiến trình riêng, scale riêng, chịu tải riêng. Nó đổi vấn đề "lệch phiên bản giữa service" lấy vấn đề "deploy cùng nhịp" — và với đội deploy theo đợt thì đó là một đổi chác tốt.
+- *"Drain một service stateful làm thế nào?"* → Ngừng nhận kết nối mới, giữ kết nối cũ tới khi phiên kết thúc hoặc hết thời gian chờ, rồi mới tắt. Kèm theo là phía client phải **reconnect được** và state phải gắn với một id ổn định chứ không phải id kết nối — nếu không thì drain êm ở phía server vẫn là mất phiên ở phía người chơi.
+- *"Vì sao marshal deterministic lại quan trọng?"* → Vì payload có `map` thì thứ tự khoá không ổn định, nên cùng một dữ liệu ra hai chuỗi byte khác nhau. Hệ quả rất cụ thể: **cache miss giả**, và không so sánh được hai response để biết có thật sự đổi gì không. Bật deterministic là một dòng, và nó xoá cả một lớp bug khó truy.
+- *"Đọc một case study thì nên tự hỏi gì?"* → Ba câu: quyết định này giải quyết **ràng buộc nào của họ**; ràng buộc đó mình có không; và **cái giá** họ trả mình có trả nổi không. Không hỏi ba câu đó thì case study trở thành danh sách việc cần làm, và đó là cách chép về đúng những quyết định không hợp hoàn cảnh của mình.
+
+**Cờ đỏ**
+
+- Chép `max_open` hoặc bất kỳ tham số nào mà không chép hoàn cảnh.
+- Nhúng config vào binary nhưng không có chỗ nào cho cờ cần đổi nóng.
+- Kiểm phiên bản ở middleware mà không có danh sách đường dẫn miễn kiểm.
+- Restart service stateful như restart service stateless.
+- Kể kiến trúc bằng danh sách công nghệ, không nói được quyết định nào đổi lấy cái gì.
+
+**Số / ví dụ nên thuộc**
+
+- Bảy mode: **api · tool · mnt · realtime · multiplay · notice · batch**; **realtime** và **multiplay** là stateful, phải drain.
+- Ba biến môi trường: `APPLICATION_ENV` · `APPLICATION_REGION` · `APPLICATION_HOME` — chúng **chọn khối config**, không chứa config.
+- `go:embed` config → sửa YAML phải **build lại**; cờ đổi nóng đi qua **redis/memcached**.
+- **Ba tầng phiên bản** kiểm ở middleware + **danh sách đường dẫn miễn kiểm** để tránh vòng chết.
+- Nguyên tắc đọc case study: chép **cấu trúc và lý do**, không chép **tham số**.

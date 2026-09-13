@@ -210,3 +210,57 @@ enemy.maxHealth *= difficultyMultiplier;
 - Chạy Validate Curve: có màn nào kết hợp cơ chế chưa dạy không?
 - Grep `hpMultiplier`/`damageMultiplier` trong code độ khó → nên bằng 0?
 - Log số lần chết mỗi màn: trung vị 2–5 ở boss chứ?
+
+## 🎤 Phỏng vấn
+
+**Câu hay gặp**
+
+- `Junior` **Lý thuyết Flow nói gì về độ khó?**
+  → Người ta chìm đắm khi **thử thách xấp xỉ kỹ năng** (Csíkszentmihályi). Quá khó thì lo âu và bỏ cuộc, quá dễ thì chán và cũng bỏ cuộc. Vấn đề thực tế: kỹ năng người chơi tăng theo đường cong **riêng của từng người** và mình không biết trước — nên thiết kế phải chịu được nhiều đường cong khác nhau, không chỉ một.
+- `Junior` **Vì sao đường cong khó nên là răng cưa chứ không phải đường thẳng?**
+  → Vì tăng đều tuyến tính gây mệt mỏi và không có chỗ để cảm nhận tiến bộ. Mỗi răng cưa là một chu kỳ: giới thiệu cơ chế (dễ) → luyện tập → thử thách đỉnh → hạ xuống. **Đoạn hạ xuống không lãng phí** — đó là lúc người chơi thấy nội dung từng khó nay đã dễ, tức là thấy mình đã mạnh lên.
+- `Junior` **Tăng độ khó có mấy cách, và cách nào tệ nhất?**
+  → Từ tốt tới tệ: thêm cơ chế mới → kết hợp cơ chế cũ → thu hẹp cửa sổ phản ứng (telegraph 900 ms → 650 ms) → tăng mật độ → **nhân chỉ số**. Nhân chỉ số tệ nhất vì nó làm trận đấu **dài hơn chứ không khó hơn**, và làm mất giá kỹ năng. Phần lớn game dở chỉ dùng đúng cách cuối.
+- `Mid` **Dynamic Difficulty Adjustment: cái gì được điều chỉnh ngầm, cái gì không?**
+  → An toàn: tần suất rơi máu và đạn, nhịp spawn, khoảng nghỉ giữa các đợt, độ hung hăng của AI, độ chính xác của địch dưới ngưỡng nhận biết. **Nguy hiểm**: HP và sát thương của địch — người chơi **đếm được số đòn** nên nhận ra ngay. Nguyên tắc sống còn là người chơi không được phép nhận ra.
+- `Mid` **Vì sao rubber-banding trong game đua là ví dụ kinh điển về cách làm sai?**
+  → Vì ai cũng nhận ra, và khi đã nhận ra thì chơi giỏi ở giai đoạn giữa trở nên vô nghĩa — dẫn trước bao nhiêu cũng bị kéo lại. Nó phá đúng nhu cầu **competence**: chiến thắng không còn là kết quả của kỹ năng. Bài học chung: DDA bị phát hiện thì tệ hơn không có DDA.
+- `Mid` **Số lần chết bao nhiêu ở một trận boss là lành mạnh?**
+  → Trung vị **2–5 lần**. Trên 10 là tường khó. Dưới 1 nghĩa là boss không phải thử thách. Kèm theo là ba chỉ số khác: thời gian hoàn thành (trung vị **và** phân vị 90 — đuôi dài nghĩa là một nhóm đang vật lộn), tỉ lệ bỏ cuộc theo màn, và tỉ lệ thử lại sau khi chết.
+- `Senior` **Chọn độ khó hay công tắc trợ năng? Vì sao xu hướng đổi?**
+  → Công tắc riêng lẻ — tốc độ game, bất tử, bỏ qua phòng, hỗ trợ ngắm — có ba lợi thế: người chơi tự gỡ **đúng rào cản của mình** thay vì nhận một gói cố định; không gắn nhãn giá trị ("dễ" nghe như thất bại); và mình chỉ phải cân bằng **một đường cong duy nhất**. Celeste đóng khung nó là "Assist Mode" với lời nhắn rõ đây không phải gian lận — cách trình bày quan trọng ngang tính năng.
+- `Senior` **Tỉ lệ thử lại sau khi chết giảm mạnh ở màn 7. Anh kết luận gì?**
+  → Đó là chỉ báo trực tiếp nhất rằng đã vượt ngưỡng chịu đựng — không phải "khó" mà là **khó theo cách không đáng thử lại**. Tôi xem tiếp hai thứ: thời gian từ lúc chết tới lúc chơi lại (trên 3 giây là tự phạt người chơi thêm một lần), và cái chết có đọc được nguyên nhân không. Rất thường là vấn đề truyền đạt chứ không phải vấn đề số.
+- `Senior` **Làm đường cong khó cho game có nhiều nhóm kỹ năng rất khác nhau — anh làm thế nào?**
+  → Thiết kế **một đường cong lõi** cho nhóm mục tiêu, rồi mở rộng hai đầu bằng thứ tách rời: công tắc trợ năng cho nhóm dưới, nội dung tuỳ chọn khó hơn cho nhóm trên. Cái không nên làm là kéo giãn cùng một đường cong cho vừa cả hai — nó cho ra một đường cong nhạt ở giữa và không nhóm nào thấy đúng tầm.
+
+**Khung trả lời 60 giây** — "Anh thiết kế đường cong độ khó thế nào?"
+
+> Hình dạng trước, con số sau. Hình dạng là **răng cưa đi lên**, mỗi răng là một chu kỳ giới thiệu → luyện tập → thử thách đỉnh → hạ xuống. Đoạn hạ xuống là chỗ người chơi cảm nhận mình đã mạnh lên, nên nó không phải thời gian lãng phí — bỏ nó đi thì game chỉ còn mệt.
+>
+> Khi cần tăng khó, tôi đi theo thứ tự: thêm cơ chế mới, kết hợp cơ chế cũ, thu hẹp cửa sổ phản ứng, tăng mật độ, và **cuối cùng** mới nhân chỉ số. Nhân chỉ số làm trận đấu dài hơn chứ không khó hơn, và phần lớn game dở chỉ dùng đúng cách đó.
+>
+> Rồi tôi đo thay vì đoán: số lần chết mỗi màn, thời gian hoàn thành ở trung vị và phân vị 90, tỉ lệ bỏ cuộc, tỉ lệ thử lại sau khi chết. Mốc thực dụng là **trung vị 2–5 lần chết ở boss** — trên 10 là tường, dưới 1 nghĩa là boss không phải thử thách.
+
+**Họ sẽ đào tiếp**
+
+- *"Vì sao phải nhìn cả phân vị 90, không chỉ trung vị?"* → Vì trung vị mô tả người chơi điển hình còn **đuôi dài mô tả người sắp bỏ**. Một màn có trung vị 4 phút và phân vị 90 là 22 phút nghĩa là có cả một nhóm đang vật lộn với thứ mà thiết kế không nhìn thấy — thường là một cơ chế chưa được dạy đủ, chứ không phải độ khó nói chung.
+- *"DDA có bao giờ đúng không?"* → Có, khi nó điều chỉnh **tài nguyên và nhịp** chứ không điều chỉnh kết quả một hành động cụ thể. Cho rơi thêm băng cứu thương khi người chơi máu thấp thì không ai đếm được; giảm HP con boss giữa trận thì đếm được. Ranh giới là: người chơi có thể **quan sát trực tiếp** thứ mình đang đổi không.
+- *"Dạy cơ chế bằng đường cong khó thế nào?"* → Chính là ba nhịp của một răng cưa: giới thiệu riêng lẻ trong bối cảnh an toàn → kết hợp với cơ chế cũ → đưa vào thử thách đỉnh. Làm được thế thì không cần hộp thoại tutorial nào, và người chơi nhớ lâu hơn vì họ học bằng cách chơi chứ không bằng cách đọc.
+- *"Trợ năng có làm mất bản sắc game khó không?"* → Không, nếu đóng khung đúng và nếu **mặc định vẫn là đường cong lõi**. Điều làm mất bản sắc là thay đổi lặng lẽ độ khó mặc định để giảm tỉ lệ bỏ cuộc — lúc đó người chơi giỏi mất thứ họ tới vì nó, còn người chơi mới thì vẫn chưa được giúp đúng chỗ.
+
+**Cờ đỏ**
+
+- Tăng độ khó chỉ bằng nhân HP và sát thương.
+- Đường cong tuyến tính, không có đoạn hạ xuống nào.
+- DDA chỉnh HP hoặc sát thương của địch.
+- Đặt độ khó bằng cảm giác, không log số lần chết và tỉ lệ bỏ cuộc.
+- Gọi chế độ trợ năng là "dễ" và để nó nghe như thừa nhận thất bại.
+
+**Số / ví dụ nên thuộc**
+
+- Flow: **thử thách ≈ kỹ năng**; Csíkszentmihályi.
+- Thứ tự tăng khó: cơ chế mới → kết hợp → **thu hẹp cửa sổ phản ứng** (900 ms → 650 ms) → mật độ → nhân chỉ số.
+- Boss: trung vị **2–5 lần chết**; > 10 là tường; < 1 là không phải thử thách.
+- Chỉ số theo dõi: chết mỗi màn · thời gian hoàn thành (**trung vị + P90**) · tỉ lệ bỏ cuộc · **tỉ lệ thử lại**.
+- DDA an toàn: rơi máu/đạn, nhịp spawn, độ hung hăng AI. Cấm: **HP và sát thương của địch**.

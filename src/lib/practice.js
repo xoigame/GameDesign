@@ -40,6 +40,43 @@ function blockAfter(md, labels) {
   return null
 }
 
+/** Bỏ cặp ** bao quanh cả chuỗi. */
+const unbold = (s) => String(s).trim().replace(/^\*\*([\s\S]+)\*\*$/, '$1').trim()
+
+/**
+ * Đọc danh sách câu hỏi CÓ LỜI GIẢI:
+ *
+ *     - `Mid` **Game tụt 25 FPS trên Android tầm trung, anh làm gì đầu tiên?**
+ *       → Không sửa gì cả, đo trước. …
+ *
+ * Mọi dòng sau dòng câu hỏi, cho tới gạch đầu dòng kế tiếp, là lời giải của ĐÚNG
+ * câu đó — mũi tên → chỉ là dấu dẫn cho người đọc, parser bỏ đi.
+ * Trả về [] nếu khối không viết theo dạng này (node còn dùng bảng cũ).
+ */
+function questionList(block) {
+  if (!block) return []
+  const out = []
+  let cur = null
+  const flush = () => { if (cur) { cur.answer = cur.answer.trim(); out.push(cur) } }
+
+  for (const raw of block.body.split('\n')) {
+    const m = raw.match(/^\s*[-*]\s+`([^`]+)`\s*(.+)$/)
+    if (m) {
+      flush()
+      cur = { level: LEVEL_MAP[m[1].trim().toLowerCase()] || 'mid', text: unbold(m[2]), answer: '' }
+      continue
+    }
+    if (!cur) continue
+    const line = raw.trim()
+    if (!line) { cur.answer += '\n\n'; continue }
+    // nối tiếp lời giải; xuống dòng trong markdown nguồn chỉ là ngắt dòng mềm
+    const sep = !cur.answer || cur.answer.endsWith('\n') ? '' : ' '
+    cur.answer += sep + line.replace(/^(?:→|->)\s*/, '')
+  }
+  flush()
+  return out
+}
+
 /** "- nội dung" hoặc "- *"câu hỏi"* → ý" thành mảng chuỗi markdown. */
 function bullets(block) {
   if (!block) return []
@@ -56,10 +93,13 @@ function bullets(block) {
 export function parseInterview(md) {
   if (!md || !md.trim()) return null
 
-  // --- bảng câu hỏi theo mức ---
+  // --- câu hỏi theo mức ---
+  // Dạng chuẩn là danh sách có lời giải. Bảng hai cột là dạng CŨ, giữ lại để node
+  // chưa chuyển đổi không rơi khỏi bộ luyện tập — nhưng câu lấy từ bảng không có
+  // lời giải riêng, và `npm run check` sẽ nhắc đúng node nào còn thiếu.
   const qBlock = blockAfter(md, ['câu hay gặp', 'common questions', 'câu hỏi hay gặp'])
-  const questions = []
-  if (qBlock) {
+  const questions = questionList(qBlock)
+  if (qBlock && !questions.length) {
     for (const row of qBlock.body.split('\n')) {
       const line = row.trim()
       if (!line.startsWith('|')) continue
@@ -68,7 +108,7 @@ export function parseInterview(md) {
       if (cells.length < 2) continue
       const raw = cells[0].toLowerCase()
       if (raw === 'mức' || raw === 'level') continue             // dòng tiêu đề
-      questions.push({ level: LEVEL_MAP[raw] || 'mid', text: cells[1] })
+      questions.push({ level: LEVEL_MAP[raw] || 'mid', text: cells[1], answer: '' })
     }
   }
 
@@ -98,14 +138,39 @@ export function cardsFor(node) {
   if (!parsed) return []
   const cards = []
   if (parsed.frameQuestion) {
-    cards.push({ id: node.id + '#core', nodeId: node.id, level: 'core', question: parsed.frameQuestion, parsed })
+    // Lời giải của câu lõi CHÍNH LÀ khung 60 giây — nó vốn được viết cho câu này.
+    cards.push({
+      id: node.id + '#core', nodeId: node.id, level: 'core',
+      question: parsed.frameQuestion, answer: parsed.frame, isFrame: true, parsed,
+    })
   }
   parsed.questions.forEach((q, i) => {
-    // Câu lõi thường trùng một câu trong bảng — bỏ bản trùng cho khỏi hỏi hai lần.
+    // Câu lõi có thể trùng một câu trong danh sách — bỏ bản trùng cho khỏi hỏi hai lần.
     if (parsed.frameQuestion && similar(q.text, parsed.frameQuestion)) return
-    cards.push({ id: node.id + '#q' + i, nodeId: node.id, level: q.level, question: q.text, parsed })
+    cards.push({
+      id: node.id + '#q' + i, nodeId: node.id, level: q.level,
+      question: q.text, answer: q.answer || '', isFrame: false, parsed,
+    })
   })
   return cards
+}
+
+/**
+ * Soi một node cho `npm run check`: câu nào còn thiếu lời giải.
+ * Build và web dùng CHUNG hàm parse ở trên — hai parser riêng là cách chắc chắn
+ * để cổng kiểm tra báo xanh trong khi web hiện ra thứ khác.
+ */
+export function interviewAudit(node) {
+  const parsed = parseInterview(node.interview)
+  if (!parsed) return null
+  const missing = parsed.questions.filter((q) => !String(q.answer || '').trim()).map((q) => q.text)
+  return {
+    questions: parsed.questions.length,
+    answered: parsed.questions.length - missing.length,
+    missing,
+    hasFrame: !!parsed.frame,
+    cards: cardsFor(node).length,
+  }
 }
 
 function similar(a, b) {

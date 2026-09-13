@@ -295,14 +295,24 @@ public class CrashContext : MonoBehaviour
 
 **Câu hay gặp**
 
-| Mức | Câu hỏi |
-|---|---|
-| Junior | Kể một bug khó nhất anh từng sửa. |
-| Junior | Người chơi báo "game bị văng" — anh hỏi lại những gì? |
-| Mid | Crash chỉ xảy ra trên bản Release, không xảy ra trong Editor. Anh làm gì? |
-| Mid | ANR là gì? Trong Unity thì thường do đâu? |
-| Senior | App biến mất mà **không có** stack trace nào. Chẩn đoán? |
-| Senior | Anh theo dõi chỉ số ổn định nào, và ngưỡng bao nhiêu? |
+- `Junior` **Người chơi báo "game bị văng" — anh hỏi lại những gì?**
+  → Máy gì và bản Android/iOS nào, bản app nào, đang ở màn hình nào, có tái hiện được không, và **game biến mất ngay hay đứng đơ một lúc rồi mới tắt**. Câu cuối quan trọng nhất vì nó tách ba loại khác hẳn nhau: crash có stack trace, **ANR** (main thread bị chặn), và **bị hệ điều hành kill vì hết RAM**.
+- `Junior` **Kể một bug khó nhất anh từng sửa.**
+  → Kể theo **quy trình thu hẹp giả thuyết**, không kể như một câu chuyện ly kỳ: hiện tượng là gì, chia đôi ở đâu, giả thuyết nào bị loại bằng bằng chứng nào, và cuối cùng cái gì xác nhận nguyên nhân. Người phỏng vấn nghe cách bạn suy luận; cốt truyện hay mà không có bước loại trừ nào thì không nói lên điều gì.
+- `Junior` **ANR là gì? Trong Unity thì thường do đâu?**
+  → Main thread không phản hồi quá **~5 giây** trên Android. Nguyên nhân quen thuộc: I/O đồng bộ khi save hoặc chuyển scene, `Resources.UnloadUnusedAssets()` gọi giữa gameplay, parse JSON lớn, chờ callback SDK quảng cáo, và compile shader lần đầu trên máy yếu. Chữa bằng cách đẩy sang thread nền hoặc trải ra nhiều frame.
+- `Mid` **Crash chỉ xảy ra trên bản Release, không xảy ra trong Editor. Anh làm gì?**
+  → Nghi ba nhóm khác biệt Editor/build: **IL2CPP AOT** (`Reflection.Emit`, generic virtual trên value type), **Managed Stripping** xoá thứ chỉ gọi qua reflection, và thời gian — build chạy nhanh hơn nên race condition lộ ra. Bước đầu tiên là build Development có stack trace đầy đủ và **symbolicate**, đừng đoán trước khi có tên hàm.
+- `Mid` **Stack trace toàn hex thì làm sao đọc?**
+  → Bản IL2CPP crash trong code native nên phải **symbolicate**: `symbols.zip` cho Android (nộp lên Play Console hoặc dùng `ndk-stack`), `.dSYM` cho iOS. Phải là symbol của **đúng bản build đó** — dùng nhầm bản thì tên hàm sai mà không có cảnh báo nào. Vì vậy symbol phải được lưu cùng artifact của từng bản phát hành.
+- `Mid` **Làm sao tăng khả năng tái hiện một bug từ người chơi?**
+  → Cheat console để nhảy thẳng tới trạng thái. Nút gửi báo lỗi trong game **đính kèm save của người chơi** — thường chính nó là chìa khoá. Seed cố định ở chế độ debug. Và dựng lại điều kiện xấu: máy 2 GB RAM, mạng chập chờn, máy đã nóng 15 phút. Test trên flagship là cách bỏ sót phần lớn báo cáo.
+- `Senior` **App biến mất mà không có stack trace nào. Chẩn đoán?**
+  → Gần như chắc là **bị hệ điều hành kill vì hết RAM** — không có exception nên không có gì để ghi lại. Xác nhận bằng mẫu: tỉ lệ **tăng theo thời lượng phiên chơi** và tập trung ở máy RAM thấp. Sau đó đi theo hướng bộ nhớ: texture, audio, và rò rỉ handle Addressables, chứ không đi tìm lỗi logic.
+- `Senior` **Anh theo dõi chỉ số ổn định nào, và ngưỡng bao nhiêu?**
+  → **Crash-free sessions**, không phải số vụ tuyệt đối — số tuyệt đối tăng theo lượng người chơi và làm mình hoảng nhầm chỗ. Dưới **99%** là có vấn đề rõ, từ **99,5%** trở lên là ổn định. Kèm theo là chia theo dòng máy và theo bản app, vì một bản hỏng trên một dòng máy hay bị trung bình che mất.
+- `Senior` **Bắt hết exception cho game khỏi văng — sai ở đâu?**
+  → Đó là đổi một lỗi **nhìn thấy** lấy một lỗi **âm thầm**: dữ liệu hỏng dần, người chơi mất tiến trình, và mình mất luôn báo cáo để sửa. `catch { }` rỗng trên đường gameplay chính là cờ đỏ. Bắt exception phải đi kèm ghi nhận (breadcrumb, log) và một đường xử lý thật, chứ không phải nuốt cho êm.
 
 **Khung trả lời 60 giây** — "App văng ở máy người chơi, không tái hiện được. Anh làm gì?"
 

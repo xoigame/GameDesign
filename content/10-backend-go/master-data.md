@@ -367,3 +367,58 @@ public class MasterCatalog
 - Publish một version master mới trên staging trong lúc client đang mở: client nhận ra lệch version và tải lại, không cần đóng game.
 - Sửa file cache trong `persistentDataPath` để hạ giá một vật phẩm xuống 1 vàng: UI hiện 1 vàng nhưng server vẫn trừ đúng giá thật và trả lỗi nếu không đủ.
 - Xoá một item khỏi master rồi mở túi đồ của người đang sở hữu nó: UI không sập, chỉ báo thiếu dữ liệu.
+
+## 🎤 Phỏng vấn
+
+**Câu hay gặp**
+
+- `Junior` **Master data và user data khác nhau thế nào?**
+  → Khác ở mọi dòng. Master do designer tạo, ghi vài lần một tuần theo đợt, giống nhau giữa mọi người chơi, mất thì nạp lại từ nguồn, và nằm gọn trong RAM. User data do người chơi tạo, ghi liên tục mỗi hành động, riêng từng người, cần transaction, và mất là mất người chơi. Vì thế chúng lưu khác chỗ và sửa theo hai quy trình khác nhau.
+- `Junior` **Vì sao master data nạp vào RAM chứ không query mỗi request?**
+  → Vì vài nghìn dòng chỉ là vài MB, và tra một map nhanh hơn một round-trip database khoảng mười nghìn lần. Dữ liệu này chỉ đọc và chỉ đổi theo đợt phát hành, nên giữ trong RAM là đúng bản chất của nó chứ không phải tối ưu sớm.
+- `Mid` **Vì sao user data không được sao chép giá trị từ master?**
+  → Vì sao chép thì buff kiếm sắt hôm nay chỉ có tác dụng với người mua từ ngày mai, và không ai hiểu vì sao. Bảng `user_item` lưu `item_id`, không lưu `price` hay `atk` — mọi chỉ số tra ngược về master lúc dùng. Đây là lỗi thiết kế phổ biến nhất và nó chỉ lộ ra ở đợt cân bằng đầu tiên sau khi phát hành.
+- `Mid` **Đường đi từ Google Sheet tới server ra sao?**
+  → Sheet có quy ước cố định: hàng 1 tên cột `snake_case`, hàng 2 kiểu dữ liệu cho validator, hàng 3 ghi chú cho người, hàng 4 trở đi là dữ liệu. Một tool đọc sheet, validate theo hàng 2, rồi publish thành một **version mới** trong database. Server nạp version đó vào RAM; rollback là trỏ lại con trỏ version cũ.
+- `Senior` **Version hoá master data nghĩa là gì, và vì sao không sửa tại chỗ?**
+  → Mỗi lần publish tạo một bản bất biến mang số version; không bao giờ `UPDATE` lên bản đang chạy. Nhờ vậy rollback là đổi con trỏ và mất vài giây, thay vì phải nhập tay lại số cũ dưới áp lực. Nó cũng cho phép biết chắc một người chơi hôm qua đã thấy giá nào, khi họ khiếu nại.
+- `Senior` **Master đổi mà user data đang trỏ vào bản cũ thì sao?**
+  → Phải quyết trước một luật và ghi vào tài liệu: người chơi thấy giá trị **mới** ngay, hay giữ giá trị tại thời điểm mua. Với chỉ số chiến đấu thì thường là mới ngay, để cân bằng có hiệu lực. Với thứ họ đã trả tiền thì cần cân nhắc, vì đổi xuống bị coi là lấy mất đồ. Và id đã xoá khỏi master vẫn phải hiển thị được, không được làm sập UI.
+
+**Khung trả lời 60 giây** — "Designer sửa một con số lúc 9 giờ tối, bao lâu thì người chơi thấy?"
+
+> Vài phút, và không cần build lại app — đó là toàn bộ lý do hệ thống này tồn tại.
+>
+> Designer sửa trên Google Sheet theo quy ước cố định: hàng 1 tên cột, hàng 2 kiểu dữ liệu, hàng 3 ghi chú, hàng 4 trở đi là dữ liệu. Một tool đọc sheet, **validate** theo hàng 2 — id duy nhất, giá dương, tổng tỉ lệ drop bằng 100 — rồi publish thành một version mới, bất biến, trong database. Server nạp version đó vào RAM.
+>
+> Rollback là **đổi con trỏ version**, mất vài giây, chứ không phải nhập tay lại số cũ lúc 11 giờ đêm. Và luật quan trọng nhất là user data chỉ lưu `item_id`, không sao chép `price` hay `atk` — nếu sao chép thì buff hôm nay chỉ áp dụng cho người mua từ mai.
+
+**Họ sẽ đào tiếp**
+
+- *"Vì sao `id` là chuỗi do người đặt?"* → Vì nó nằm trong save của người chơi mãi mãi. `sword_iron` đọc được trong log và không bao giờ đổi; dùng số tự tăng thì một lần đánh lại số là mọi người mất đồ. Đây là ràng buộc vĩnh viễn, không phải sở thích.
+- *"Vì sao không để chữ hiển thị trong master data?"* → Vì thêm một ngôn ngữ là phải sửa cả bảng cân bằng. Lưu `name_key`, chữ thật nằm ở bảng nội địa hoá — hai thứ đó có nhịp thay đổi và người phụ trách khác nhau.
+- *"Bẫy của Google Sheet là gì?"* → Hai lỗi âm thầm: cột số không đặt "Plain text" thì `1-2` thành ngày tháng và `1.5` thành `1,5` trên máy đặt locale Việt Nam. Và `IMPORTRANGE` trỏ sang file khác sẽ vỡ **im lặng** khi quyền chia sẻ đổi.
+- *"Validator kiểm gì?"* → Bất biến viết ra từng dòng, không mô tả chung chung: id duy nhất, giá lớn hơn 0, tổng tỉ lệ drop bằng 100, rarity thuộc danh sách cho phép, mọi `ref:` trỏ tới id có thật. Và nó gom hết lỗi rồi mới thoát, để designer sửa một lượt.
+- *"Client có cache master không?"* → Có, theo version, và server trả 304 khi version không đổi — đó là cách giữ thời gian vào sảnh dưới ngân sách. Nhưng client sửa file cache được, nên server vẫn phải tự tra giá thật khi trừ tiền.
+
+**Cờ đỏ**
+
+- Sao chép chỉ số từ master vào user data "cho nhanh".
+- Sửa bảng master tại chỗ bằng `UPDATE`, không có version.
+- Dùng số tự tăng làm `id` của vật phẩm.
+- Nhúng bảng cân bằng vào build client — mỗi lần chỉnh số phải chờ store duyệt.
+- Không có validator: dữ liệu sai đi thẳng vào production và lộ ra qua khiếu nại.
+- Để chữ hiển thị nhiều ngôn ngữ ngay trong bảng cân bằng.
+
+**Số / ví dụ nên thuộc**
+
+- Master vài nghìn dòng = vài MB, vừa trong RAM; tra map nhanh hơn round-trip database cỡ **10.000 lần**.
+- Quy ước Sheet: hàng 1 tên cột · hàng 2 kiểu · hàng 3 ghi chú · hàng 4+ dữ liệu.
+- Rollback master = đổi con trỏ version, mất **vài giây**.
+- `id` là chuỗi do người đặt (`sword_iron`), không bao giờ đổi.
+
+**Kể trong dự án**
+
+- *"Ai làm pipeline này?"* → Nếu bạn dựng nó, nêu **cái nó thay thế**: trước đó designer phải nhờ lập trình viên đổi số và chờ một build, sau đó họ tự làm trong vài phút. Thay đổi về thời gian là thứ dễ kể và dễ tin.
+- *"Khó khăn gặp phải?"* → Mẫu rất thật: một con số bị Google Sheets tự đổi thành ngày tháng, lọt qua và lên production. Kể cách bạn thêm kiểm tra kiểu ở hàng 2 và ép định dạng Plain text để nó không lặp lại.
+- *"Anh học được gì?"* → Một bài học đáng nói: phần khó của master data không phải kỹ thuật mà là **quy ước với người không lập trình**. Validator tồn tại để bảo vệ designer khỏi một công cụ vốn không được thiết kế cho việc này.

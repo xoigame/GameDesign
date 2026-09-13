@@ -235,3 +235,57 @@ Hỏi MỖI LẦN MỘT CÂU. Câu trả lời thiếu số cụ thể thì hỏ
 - GDD có mục "trạng thái Unity project" chưa?
 - Mọi số liệu chuyển động có đơn vị Unity (unit, gravityScale) chưa?
 - Layer number có ghi đúng số, không chỉ ghi tên chưa?
+
+## 🎤 Phỏng vấn
+
+**Câu hay gặp**
+
+- `Junior` **GDD cho AI khác GDD cho người ở chỗ nào?**
+  → **Ngắn, đặc, có số, có ràng buộc phủ định.** "Chiến đấu phải nhanh và đã tay" thành `attack.startup = 8 frames, hitstop = 90ms`; "kẻ địch đa dạng" thành một bảng 6 loại với đầy đủ chỉ số và telegraph; "tiến trình thoả mãn" thành `xp_curve = 100 × level^1.8`, mốc mỗi 12–18 phút.
+- `Junior` **Mức độ cụ thể cần tới đâu?**
+  → Quy tắc: **nếu một con số ảnh hưởng tới cảm giác chơi thì viết nó ra**. Không viết thì AI chọn giá trị mặc định của engine và mình mất một buổi chiều để chỉnh lại. Nhưng quá chi tiết cũng hại — ranh giới là **viết *cái gì* và *bao nhiêu*, để AI quyết định *bằng cách nào***.
+- `Junior` **Mục nào phân biệt GDD cho AI với GDD thường?**
+  → Hai mục thường thiếu: **bất biến** (luật cứng không được vi phạm) và **không thuộc phạm vi** (những gì game này cố ý không làm). Không có chúng thì agent sẽ liên tục thêm tính năng mình không muốn — vì đó là điều phổ biến nhất trong các dự án tương tự mà nó đã học.
+- `Mid` **Kể bảy thứ AI luôn bịa nếu mình không nói.**
+  → **Số frame và thời lượng** (mặc định thành giá trị "mượt" chung chung). **Đường cong tiến trình** (mặc định tuyến tính hoặc `level × 100`). **Xử lý biên** — HP về 0 giữa lúc đang choáng thì sao? **Thứ tự thực thi** — buff áp trước hay sau khi tính giáp, ảnh hưởng lớn tới cân bằng. **Trạng thái lưu**. **Hành vi khi thất bại** — pathfinding không tìm được đường thì sao? Và **ngân sách hiệu năng**.
+- `Mid` **Vì sao "thứ tự thực thi" lại là mục đáng viết ra?**
+  → Vì nó **không nhìn thấy được trong đặc tả nhưng đổi hẳn kết quả**: buff +20% sát thương áp trước khi trừ giáp cho ra con số khác hẳn áp sau. Cả hai cách đều "đúng" với mô tả bằng chữ, nên AI chọn một cách và mình chỉ phát hiện khi cân bằng lệch mà không hiểu vì sao.
+- `Mid` **Đặt tài liệu ở đâu và cho agent đọc thế nào?**
+  → Trong repo, và cho agent **đọc file trực tiếp thay vì dán vào chat** — vừa rẻ hơn vừa luôn cập nhật. Cấu trúc thực dụng: một file điểm vào ở gốc chỉ đường tới phần còn lại, thư mục `design/` chứa GDD, `invariants.md`, và các file hệ thống tách riêng; cộng thư mục `data/` chứa bảng số agent được phép sửa.
+- `Senior` **Vì sao ràng buộc phủ định lại quan trọng hơn phần mô tả khẳng định?**
+  → Vì phần khẳng định là thứ AI đoán khá đúng, còn phần phủ định là thứ nó **không thể suy ra**. Nói "làm roguelite có meta-progression" thì nó thêm cộng chỉ số vĩnh viễn, vì đó là mẫu phổ biến nhất — không sai kỹ thuật nhưng mâu thuẫn với thiết kế của mình. Mọi thứ mình làm khác trung bình đều phải nói ra.
+- `Senior` **Viết GDD cho AI có làm mất tính linh hoạt của thiết kế không?**
+  → Không, nếu tách đúng hai tầng: **bất biến** thì cứng và ít, **tham số** thì mềm và nằm trong dữ liệu. Cái làm mất linh hoạt là viết ra *bằng cách nào* — đặc tả từng dòng code trong tài liệu — chứ không phải viết ra *cái gì* và *bao nhiêu*. Tài liệu tốt còn làm thiết kế dễ đổi hơn, vì ai cũng biết đổi cái này thì ảnh hưởng tới cái gì.
+- `Senior` **Giữ GDD không bị lỗi thời bằng cách nào?**
+  → Bằng cách để nó **đi cùng code trong cùng PR**: đổi thiết kế thì sửa node tương ứng trong cùng một diff, và có cổng kiểm trong CI. Thêm một việc định kỳ: cho agent **soát tìm mâu thuẫn giữa tài liệu và code thật** — số trong GDD so với số trong bảng dữ liệu. Tài liệu ở nơi khác code thì luôn trôi sau vài tháng.
+
+**Khung trả lời 60 giây** — "Viết tài liệu thiết kế cho AI đọc thì viết thế nào?"
+
+> Ngược hẳn với GDD cho người: **ngắn, đặc, có số, và có ràng buộc phủ định**. "Chiến đấu nhanh và đã tay" là câu không thực thi được; `startup = 8 frames, hitstop = 90ms` thì thực thi được. Quy tắc của tôi là **nếu một con số ảnh hưởng tới cảm giác chơi thì viết nó ra** — không viết thì AI dùng mặc định của engine và tôi mất một buổi chiều chỉnh lại.
+>
+> Hai mục quyết định là **bất biến** và **không thuộc phạm vi**. Đây là phần phân biệt GDD cho AI với GDD thường, vì phần khẳng định thì nó đoán khá đúng còn phần "đừng làm gì" thì nó không suy ra được — và mặc định của nó là trung bình của ngành.
+>
+> Tôi cũng giữ một danh sách **những thứ AI luôn bịa nếu mình không nói**: số frame, đường cong tiến trình, xử lý biên, **thứ tự thực thi**, trạng thái lưu, hành vi khi thất bại, và ngân sách hiệu năng. Và ranh giới độ chi tiết: viết **cái gì** và **bao nhiêu**, để AI quyết định **bằng cách nào**.
+
+**Họ sẽ đào tiếp**
+
+- *"Danh sách bảy thứ hay bịa dùng thế nào trong thực tế?"* → Như một **checklist trước khi giao việc**: đọc lướt bảy mục, mục nào chưa có trong tài liệu thì hoặc viết vào, hoặc ghi rõ "chưa quyết, hỏi tôi". Câu thứ hai quan trọng — nó biến một chỗ trống thành một câu hỏi, thay vì thành một giả định âm thầm.
+- *"Viết chi tiết tới mức nào thì quá?"* → Khi tài liệu bắt đầu mô tả **cách hiện thực**: tên hàm, cấu trúc lớp, thứ tự gọi. Lúc đó nó vừa đóng băng thiết kế vừa lỗi thời ngay khi code đổi. Ranh giới sạch là tài liệu nói về **hành vi quan sát được và con số**; code nói về cách đạt được điều đó.
+- *"Bảng số nên nằm trong GDD hay ở file dữ liệu?"* → Ở **file dữ liệu**, và GDD trỏ tới đó. Hai bản số ở hai nơi thì chắc chắn lệch nhau, và bản trong tài liệu luôn là bản cũ. GDD nên giữ **ý định và khoảng chấp nhận được** — "TTK mục tiêu 4–6 giây" — còn con số cụ thể thì ở bảng, nơi nó được chỉnh hằng ngày.
+- *"Tài liệu này ai đọc ngoài AI?"* → Người mới vào dự án, và họ được lợi từ đúng những thứ làm AI làm việc tốt hơn: số cụ thể, bất biến rõ, danh sách không thuộc phạm vi. Đó cũng là lý lẽ thuyết phục nhất khi đội ngại đầu tư — nó không phải tài liệu cho máy, nó là tài liệu tốt tình cờ máy đọc được.
+
+**Cờ đỏ**
+
+- GDD toàn tính từ, không có con số nào.
+- Không có mục bất biến và mục không thuộc phạm vi.
+- Bảng số chép hai bản: một trong tài liệu, một trong dữ liệu.
+- Đặc tả tới mức mô tả tên hàm và cấu trúc lớp.
+- Dán tài liệu vào chat mỗi lần thay vì để agent đọc file trong repo.
+
+**Số / ví dụ nên thuộc**
+
+- Ranh giới độ chi tiết: **viết *cái gì* và *bao nhiêu*, để AI quyết *bằng cách nào***.
+- Hai mục phân biệt: **bất biến** và **không thuộc phạm vi**.
+- Bảy thứ AI luôn bịa: **số frame · đường cong tiến trình · xử lý biên · thứ tự thực thi · trạng thái lưu · hành vi khi thất bại · ngân sách hiệu năng**.
+- Ví dụ đặc tả nhảy: `height 3.2` · `rise 380 ms` · `fall gravity ×2.1` · `coyote 100 ms` · `buffer 120 ms` · `air control 0.75`.
+- Nơi đặt: file điểm vào ở gốc repo → `design/` (GDD, invariants, systems) → `data/` (bảng số agent được sửa).

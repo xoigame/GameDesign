@@ -466,3 +466,71 @@ see: unity-third-party
 ## phần thưởng chờ | pending reward
 Phần thưởng đã được xác nhận nhưng chưa ghi vào tài khoản người chơi, lưu xuống đĩa trước khi trao. Không có nó thì app bị kill đúng lúc trao là người chơi xem xong quảng cáo mà mất thưởng.
 see: unity-monetization-sdk
+
+## mini game | minigame | mini-game
+Game chạy bên trong một siêu ứng dụng (WeChat, Douyin, Zalo, Messenger) thay vì cài từ store. Đổi lại sự tiện đó là ba ràng buộc cứng: hạn mức dung lượng gói chính, không có DOM của trình duyệt, và phải dùng SDK riêng của từng nền tảng.
+see: cocos-creator
+
+## hot update | cập nhật nóng
+Tải phần chênh lệch của asset và script rồi nạp đè khi app khởi động, không qua duyệt store. Là lợi thế lớn của bản native Cocos cho game live-ops — kèm nghĩa vụ tự lo CDN, phiên bản, và đường lùi khi tải hỏng giữa chừng.
+see: cocos-creator
+
+## value type
+Kiểu mà biến giữ **chính dữ liệu**: gán là copy toàn bộ, không do GC quản. `struct`, `int`, `enum`, `Vector3` đều là value type — nên `transform.position.x = 5` không biên dịch, vì `position` trả về một bản sao.
+see: csharp-type-system
+
+## reference type
+Kiểu mà biến chỉ giữ **địa chỉ** của object nằm trên heap: gán là copy tham chiếu, hai biến trỏ cùng một object, và GC là thứ dọn nó. Mọi `class` đều là reference type.
+see: csharp-type-system
+
+## boxing
+Copy một value type lên heap và bọc trong một object — xảy ra khi ép struct sang `object` hoặc sang interface. Mỗi lần tốn một lần cấp phát (~24 byte cho một `int`) cộng một lần copy, nên trong vòng lặp mỗi frame nó là nguồn rác lớn.
+see: csharp-type-system
+
+## closure
+Object do trình biên dịch sinh ra để giữ biến mà một lambda "bắt" từ bên ngoài. Lambda không bắt biến nào thì được cache lại và không cấp phát; bắt một biến cục bộ thì mỗi lần chạy sinh một object mới.
+see: csharp-linq
+
+## deferred execution
+Truy vấn LINQ là **công thức**, không phải kết quả: `Where(...)` không duyệt gì cho tới khi có người `foreach`, `ToList()` hay `Count()`. Hệ quả là duyệt hai lần thì chạy hai lần, và nguồn đổi giữa chừng thì kết quả đổi theo.
+see: csharp-linq
+
+## swap-back
+Mẹo xoá phần tử khỏi `List` bằng cách kéo phần tử cuối lấp vào chỗ vừa xoá rồi cắt đuôi — O(1) thay vì O(n) của `RemoveAt`. Cái giá là mất thứ tự, chấp nhận được với danh sách enemy hay đạn đang bay.
+see: csharp-collections
+
+## delegate
+Con trỏ hàm có kiểu, giữ được nhiều hàm cùng lúc (multicast). Nó giữ cả `Target` — object chủ của hàm — và chính `Target` là nguyên nhân khiến sự kiện chưa huỷ đăng ký gây rò rỉ bộ nhớ.
+see: csharp-delegate-event
+
+## IDisposable
+Hợp đồng "tôi nắm thứ GC không biết dọn": file, socket, native buffer, `NativeArray`. Dùng qua `using` để `Dispose` chạy cả khi có exception — khác hẳn finalizer vì thời điểm là xác định.
+see: csharp-memory
+
+## finalizer
+Hàm `~MyClass()` chạy lúc GC quyết định, không xác định thời điểm và có thể không bao giờ chạy. Nó làm object sống thêm ít nhất một chu kỳ GC, nên chỉ dùng làm lưới an toàn cho handle native, không thay được `Dispose`.
+see: csharp-memory
+
+## Span | Span<T> | ReadOnlySpan
+Cửa sổ nhìn vào một vùng nhớ có sẵn — mảng, chuỗi, hoặc `stackalloc` — cho phép cắt và xử lý mà không copy, không cấp phát. Là `ref struct` nên không làm field của class được và không dùng trong `async`.
+see: csharp-memory
+
+## race condition
+Kết quả phụ thuộc vào thứ tự chạy của các thread, ví dụ hai thread cùng làm `counter++` (đọc–cộng–ghi) và mất một lần đếm. Dấu hiệu nhận biết là kết quả khác nhau ở mỗi lần chạy.
+see: csharp-threading
+
+## SynchronizationContext
+Thứ quyết định phần code sau `await` chạy trên thread nào. Unity cài một context đưa bạn về main thread — đó là lý do `await` dùng được với API engine, và cũng là lý do `.Result` trên main thread gây khoá chết.
+see: csharp-async
+
+## CancellationToken
+Cách huỷ **hợp tác**: không ai giết được tác vụ của bạn, chính code phải kiểm token và tự dừng. Trong Unity, mọi `MonoBehaviour` có sẵn `destroyCancellationToken` để continuation không quay lại chạm object đã destroy.
+see: csharp-async
+
+## null giả | fake null
+Unity nạp chồng toán tử `==` để object đã `Destroy` được coi như `null`, dù tham chiếu C# vẫn còn. Hệ quả: `?.` và `??` **không** nhận ra vì chúng bỏ qua toán tử nạp chồng, nên với `UnityEngine.Object` chỉ dùng `== null`.
+see: csharp-exception-null
+
+## AOT | ahead-of-time
+Biên dịch sẵn toàn bộ mã máy lúc build thay vì sinh lúc chạy. IL2CPP là AOT, nên mọi tổ hợp generic với value type phải xuất hiện tĩnh trong code — thiếu là `ExecutionEngineException` trên thiết bị dù Editor chạy tốt.
+see: csharp-generic

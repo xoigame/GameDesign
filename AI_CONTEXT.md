@@ -3,17 +3,21 @@
 Bạn đang ở trong **GameDesign Brain**, một kho kiến thức về game design và AI trong game.
 File này là điểm vào. Đọc hết file này trước khi mở bất cứ file nào khác.
 
+> **File này nói kho *chứa gì*. [`AGENTS.md`](AGENTS.md) nói *làm việc thế nào*** —
+> được sửa gì, quy trình thêm/sửa/dịch node, cổng kiểm tra, bẫy đã từng làm hỏng kho.
+> Cả hai đều cần đọc; `AGENTS.md` là luật chung cho mọi agent (Codex, Claude Code, Cursor…).
+
 ## Kho này là gì
 
 Hai lớp, phục vụ hai mục đích khác nhau:
 
 | Lớp | Thư mục | Vai trò của bạn |
 |---|---|---|
-| **Kiến thức** | `content/01-*` … `content/06-*`, `content/08-*`, `content/09-*` | Đọc để hiểu bối cảnh và chuẩn mực. Đây là nền tri thức chung giữa bạn và người dùng. |
+| **Kiến thức** | `content/01-*` … `content/06-*`, `content/08-*` … `content/14-*` | Đọc để hiểu bối cảnh và chuẩn mực. Đây là nền tri thức chung giữa bạn và người dùng. |
 | **Bản thiết kế** | `content/07-blueprints/` | **Đây mới là thứ bạn thực thi.** GDD của game cụ thể đang được làm. |
 
 Nếu người dùng nhờ bạn *làm ra một game*, tài liệu quyết định nằm ở `content/07-blueprints/`.
-Tám nhánh còn lại là để bạn hiểu *vì sao* thiết kế được viết như vậy — riêng `content/09-unity/` nói *làm thế nào* trong Unity.
+Chín nhánh còn lại là để bạn hiểu *vì sao* thiết kế được viết như vậy — riêng `content/09-unity/` và `content/11-cocos-creator/` nói *làm thế nào* trong từng engine.
 
 ## Lộ trình đọc và mức độ
 
@@ -86,7 +90,7 @@ mọi metadata khác chỉ tồn tại ở file gốc. Quy tắc đầy đủ �
 
 Cú pháp `[[node-id]]` trong nội dung là liên kết tới node khác. Ví dụ `[[behavior-tree]]` → `content/04-game-ai/behavior-tree.md`.
 
-## Bản đồ nhanh 10 nhánh
+## Bản đồ nhanh các nhánh
 
 | Id nhánh | Nội dung | Mở khi cần |
 |---|---|---|
@@ -97,11 +101,18 @@ Cú pháp `[[node-id]]` trong nội dung là liên kết tới node khác. Ví d
 | `game-ai` | FSM, Behavior Tree, GOAP, Utility AI, pathfinding, AI Director, LLM-NPC | Viết AI cho NPC/enemy |
 | `ai-assisted-dev` | Quy trình làm game với AI, GDD cho AI, prompt pattern, guardrails | **Đọc khi làm việc trong kho này** |
 | `production` | Kiến trúc, data-driven, playtest metrics, hiệu năng | Viết code, tổ chức dự án |
+| `csharp` | Ngôn ngữ C#: value type/reference type, OOP và interface, collection, LINQ, delegate/event, generic và AOT, bộ nhớ, async/await, đa luồng, exception và null giả của Unity, C# 9, bộ đề phỏng vấn | **Viết code C# hoặc đi phỏng vấn** — phần ngôn ngữ nằm dưới engine, tách khỏi `unity` là phần engine |
 | `unity` | Kinh nghiệm thực chiến Unity: vòng đời game, pattern, vật lý, animation, input, camera, UI, audio, VFX, shader, ánh sáng, tối ưu, build, multiplayer, editor tools | **Viết code Unity** — đọc node tương ứng trước khi sinh code |
 | `backend-go` | Backend Go & database: API stateless, room server, Postgres/Redis, dữ liệu kinh tế, idempotency | **Làm phần chạy trên máy chủ** — tài khoản, IAP, bảng xếp hạng, phòng chơi chung |
+| `cocos-creator` | Cocos Creator 3.x: chọn engine theo nơi phát hành, bản đồ khái niệm Unity → Cocos, UI đa tỉ lệ, draw call, hạn mức gói mini game, hot update | **Làm game H5 / mini game** — đọc trước khi sinh code Cocos, vì AI hay trả về API 2.x đã chết |
+| `project` | Dựng một dự án client–server từ đầu tới phát hành: chốt phạm vi, chia ranh giới hai phía, tuyến xuyên suốt một phiên chơi, hợp đồng message, mốc bàn giao, soft launch, kể lại dự án khi phỏng vấn | **Ghép mọi thứ lại thành một dự án** — đọc khi cần thứ tự làm việc, không phải kiến thức theo chủ đề |
+| `team-lead` | Làm team lead một đội game 5–15 người: 30 ngày đầu, ước lượng và lịch, giao việc và review, 1:1 và kèm cặp, báo cáo lên, trượt tiến độ và crunch | **Phụ trách người chứ không chỉ phụ trách code** — đọc khi câu hỏi là "chia việc, ước lượng, báo cáo, xử lý trượt mốc thế nào" |
+| `screens` | Màn hình & tính năng meta của game mobile F2P: Home, gacha, shop và IAP, nhiệm vụ và battle pass, hộp quà, piggy bank, túi đồ và nâng cấp, kết quả trận, bảng xếp hạng | **Làm một màn hình cụ thể** — mỗi node theo khuôn mẫu tám ô: mục tiêu, bố cục, dữ liệu, API, vòng đời, trạng thái rỗng, số liệu, vận hành |
 | `blueprints` | GDD dự án thật + template | **Thực thi yêu cầu của người dùng** |
 
 **Lưu ý phân biệt:** `game-ai` là AI *trong* game (NPC thông minh). `ai-assisted-dev` là dùng AI để *làm ra* game. Đừng lẫn hai nhánh này.
+
+**Nhánh có mindmap riêng:** trong bảng trên là `csharp`, `unity`, `cocos-creator`, `backend-go`, `project`, `team-lead`, `screens` — chúng khai `map: true` nên trên web chúng được vẽ thành bản đồ tách rời, không nằm chung bản đồ kiến thức thiết kế (thanh chọn bản đồ ở góc trên). Trong dữ liệu thì **không có gì đổi** — chúng vẫn là con của gốc trong `graph.json` và `KNOWLEDGE_INDEX.md` (đánh dấu 🗺), lộ trình đọc vẫn chạy xuyên suốt cả kho.
 
 ## Quy tắc khi làm việc trong kho này
 

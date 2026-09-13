@@ -193,3 +193,57 @@ Một dòng, và nó là khác biệt giữa "đám đông" và "dàn clone".
 - Mọi transition đã bỏ `Has Exit Time` chưa?
 - Bấm nút đánh giữa lúc animation khác đang chạy: có phản hồi trong 2 frame không?
 - Hitstop có làm animation đứng theo không? (nếu không → Update Mode đang sai)
+
+## 🎤 Phỏng vấn
+
+**Câu hay gặp**
+
+- `Junior` **Animation game khác animation phim ở chỗ nào?**
+  → Animator phim tối ưu cho **vẻ đẹp**, animator game tối ưu cho **phản hồi**. Khi hai thứ xung đột thì game luôn chọn phản hồi — và đó là lý do animation game trông "sai" với người quen làm phim. Luật số một: **hành động bắt đầu ở frame 1**, người chơi bấm nút là nhân vật phản ứng ngay, không phải sau 12 frame chuẩn bị đẹp mắt.
+- `Junior` **Muốn giữ anticipation cho có lực thì làm sao mà vẫn phản hồi nhanh?**
+  → Giữ anticipation nhưng cho **hitbox và hiệu ứng xuất hiện sớm**. Người chơi cảm nhận độ trễ qua thời điểm **kết quả** xảy ra, không qua animation. Ngưỡng cứng: phản hồi hình ảnh trong **≤ 2 frame (33 ms)**; trên 100 ms là cảm thấy lag dù game chạy 60 FPS.
+- `Junior` **Blend transition đặt bao nhiêu?**
+  → Idle → run **0,08–0,15 s**, dài hơn là cảm thấy trượt băng. Bất kỳ → **bị đánh: 0 s**, cắt thẳng, phản hồi bị đánh không được mượt. Run → idle có thể dài hơn (0,2 s) vì không ảnh hưởng phản hồi. Nguyên tắc: **transition vào trạng thái người chơi khởi xướng thì nhanh, transition ra thì thong thả được**.
+- `Mid` **Vì sao nói frame data là hợp đồng chứ không phải trang trí?**
+  → Vì với game hành động, animation **là luật chơi**. Animator kéo dài đòn đánh cho đẹp mà không sửa frame data thì người chơi thấy "trúng mà không ăn sát thương" — lỗi cảm nhận nghiêm trọng nhất trong thể loại này. Quy trình đúng là **chốt frame data trước, animate theo sau**, và hitbox là nguồn chân lý.
+- `Mid` **Animation cancel có mấy loại, và vì sao nó quan trọng?**
+  → Bốn: cancel vào **né** trong recovery (không bị khoá sau khi đánh hụt), cancel vào **combo** cuối active (combo trôi chảy), cancel khi **trúng đòn** ở bất kỳ lúc nào (phản hồi bị đánh tức thì), và **turn cancel** trong startup (xoay hướng kịp khi địch di chuyển). Nó là công cụ responsiveness mạnh nhất.
+- `Mid` **Không cho cancel gì và cho cancel mọi thứ — mỗi cái hỏng ra sao?**
+  → Không cho cancel gì thì nhân vật **nặng nề, mất kiểm soát** — người chơi bị khoá trong animation của chính mình. Cho cancel mọi thứ thì **mọi đòn mất trọng lượng** và spam trở thành lối chơi tối ưu. Nên bảng cancel phải cân từng ô, và nó nên nằm trong **file dữ liệu, không nằm trong code**.
+- `Senior` **Root motion hay code-driven movement? Chọn thế nào?**
+  → Root motion cho chuyển động tự nhiên nhưng **khó đồng bộ mạng**, khó chỉnh tốc độ mà không phá animation, và làm input phản hồi kém hơn. Với game hành động nhanh thì **code-driven movement cộng animation phụ hoạ** thường đúng hơn; root motion hợp game nhịp chậm coi trọng chân thực. Trộn hai cái mà không có luật rõ là nguồn của lỗi "nhân vật trôi một chút".
+- `Senior` **Bốn chi tiết nhỏ nào cho hiệu quả lớn?**
+  → **Lệch pha animation giữa các NPC** — mười con cùng loại idle đồng bộ trông như robot, offset ngẫu nhiên 0–1 giây là xong. **Additive layer** — thở, rung, lắc đầu chồng lên animation chính, rẻ mà sống động. **Bất đối xứng** — động tác hoàn toàn đối xứng trông giả. **Overshoot** — kết thúc vượt quá đích rồi lùi lại 1–2 frame.
+- `Senior` **Animator muốn kéo dài đòn cho đẹp, designer muốn giữ frame data. Anh xử lý thế nào?**
+  → Tách hai lớp: **frame data là hợp đồng gameplay**, animation là lớp trình bày bám theo nó. Nếu đòn cần trông dài hơn thì giữ nguyên startup/active/recovery và thêm phần **đuôi có thể cancel** ở sau — đẹp hơn mà không đổi luật. Cái không bao giờ chấp nhận là hitbox và animation nói hai chuyện khác nhau, vì người chơi tin vào cái họ thấy.
+
+**Khung trả lời 60 giây** — "Animation trong game khác gì, và anh ưu tiên cái gì?"
+
+> Ưu tiên **phản hồi trước vẻ đẹp**. Luật số một là hành động bắt đầu ở frame 1: người chơi bấm nút thì nhân vật phản ứng ngay, chứ không sau mười hai frame chuẩn bị. Nếu động tác cần anticipation để trông có lực thì tôi giữ anticipation nhưng cho **hitbox và hiệu ứng xuất hiện sớm** — người chơi cảm nhận độ trễ qua thời điểm kết quả xảy ra, không qua hình.
+>
+> Với game hành động, **frame data là hợp đồng**: startup, active, recovery quyết định luật chơi, và animation bám theo nó chứ không ngược lại. Animator kéo dài đòn mà không sửa frame data thì người chơi thấy "trúng mà không ăn sát thương", và đó là lỗi cảm nhận nặng nhất trong thể loại này.
+>
+> Thứ tôi coi là phân biệt game hay với game ức chế là **animation cancel**: cancel vào né trong recovery, cancel vào combo cuối active, cancel khi trúng đòn, và turn cancel trong startup. Không cho cancel gì thì nhân vật nặng nề; cho cancel mọi thứ thì đòn mất trọng lượng — nên bảng cancel nằm trong dữ liệu để cân được từng ô.
+
+**Họ sẽ đào tiếp**
+
+- *"Vì sao transition vào 'bị đánh' phải là 0 giây?"* → Vì bị đánh là **thông tin sống còn** và nó phải tới tức thì; blend 0,2 giây ở đây làm người chơi không biết chính xác lúc nào mình trúng đòn, nên không học được nhịp né. Đây là ví dụ rõ nhất cho nguyên tắc phản hồi thắng độ mượt.
+- *"Đo độ trễ phản hồi thế nào cho khách quan?"* → Quay video tốc độ cao rồi **đếm frame** từ lúc nút xuống tới lúc có thay đổi trên màn hình. Đó là con số khách quan duy nhất trong nhóm này, và nó thường lớn hơn mọi người nghĩ vì độ trễ tích luỹ từ nhiều lớp: input, logic, animation, hiển thị.
+- *"Lệch pha animation có thật sự đáng làm không?"* → Rất đáng, vì chi phí gần bằng không — một offset ngẫu nhiên lúc khởi tạo — còn hiệu quả thì thấy ngay: đám đông thôi trông như robot. Cùng nhóm với biến thiên cao độ âm thanh ±8%: những sửa đổi rẻ nhất thường là những sửa đổi chống lại **sự lặp lại quá hoàn hảo**.
+- *"Dùng AI ở khâu này thế nào?"* → Giao cho nó việc **đối chiếu dữ liệu**: bảng frame data có khớp độ dài clip không, đòn nào có recovery ngắn tới mức an toàn tuyệt đối, bảng cancel có ô nào tạo vòng lặp khoá đối phương không. Còn việc animation có "đã tay" hay không thì vẫn phải tự cầm tay chơi.
+
+**Cờ đỏ**
+
+- Animation dài 12 frame chuẩn bị trước khi nhân vật nhúc nhích.
+- Sửa animation mà không sửa frame data.
+- Blend 0,2 s cho trạng thái bị đánh.
+- Bảng cancel nằm trong code, không chỉnh được nếu không build lại.
+- Dùng root motion cho game hành động nhanh có netcode, rồi vật lộn với đồng bộ.
+
+**Số / ví dụ nên thuộc**
+
+- Phản hồi hình ảnh **≤ 2 frame (33 ms)**; trên **100 ms** là cảm thấy lag.
+- Blend: idle→run **0,08–0,15 s** · bất kỳ→bị đánh **0 s** · run→idle **~0,2 s**.
+- Bốn loại cancel: **né (recovery) · combo (cuối active) · khi trúng đòn · turn cancel (startup)**.
+- **Frame data chốt trước, animate theo sau**; hitbox là nguồn chân lý.
+- Chi tiết rẻ: **lệch pha 0–1 s** · additive layer · bất đối xứng · **overshoot 1–2 frame**.

@@ -85,3 +85,55 @@ Vòng lặp đánh giá ngắn quan trọng hơn code đẹp. Xem [[prototyping]
 - Prototype reset được trong dưới 1 giây chứ?
 - Đổi được giữa các biến thể cơ chế bằng một phím chứ?
 - Đã chốt Fixed Timestep trước khi làm combat chưa?
+
+## 🎤 Phỏng vấn
+
+Node con trong nhánh này đều có mục 🎤 riêng. Mục này nói về **hình dạng của vòng phỏng vấn
+game design** và những câu bắc ngang nhiều node mà không node nào một mình trả lời được.
+
+**Vòng phỏng vấn design thường có ba chặng**
+
+| Chặng | Họ đo cái gì | Node nên ôn |
+|---|---|---|
+| Nói chuyện về game bạn thích | Bạn phân tích được hay chỉ kể lại | [[mda-framework]], [[core-loop]], [[player-motivation]] |
+| Bài tập thiết kế | Bạn ra quyết định được và nói được vì sao | [[design-pillars]], [[genre-conventions]], [[prototyping]] |
+| Đào sâu theo hồ sơ | Bạn từng chịu hậu quả của một quyết định chưa | [[prototyping]], [[game-feel]] |
+
+**Câu hay gặp**
+
+- `Junior` **Kể về một game anh thích và vì sao nó hay.**
+  → Đừng kể cốt truyện. Trả lời theo ba tầng MDA: **mechanic** cụ thể nào, nó tạo ra **dynamic** gì, và dynamic đó cho **cảm xúc** nào. Rồi thêm một câu về cái giá: game đó đánh đổi gì để có được điều đó. Kể lại nội dung là câu trả lời của người chơi; tách được ba tầng là câu trả lời của người thiết kế.
+- `Junior` **Game của chúng tôi chán ở phút thứ mười. Anh nhìn vào đâu đầu tiên?**
+  → Vào **core loop**, không vào nội dung. Chạy test không phần thưởng: tắt hết điểm, XP, loot — hành động cốt lõi còn vui không. Rồi hỏi lần lặp thứ 100 có khác lần đầu không. Chán ở phút mười gần như luôn là thiếu biến số hoặc thiếu chiều sâu quyết định, chứ không phải thiếu nội dung.
+- `Mid` **Sếp muốn thêm một tính năng anh cho là sai. Anh phản hồi thế nào?**
+  → Không tranh luận về tính năng mà đưa **design pillar và danh sách loại trừ** ra, rồi hỏi: ta đổi pillar hay đổi tính năng? Câu đó biến một cuộc cãi nhau về sở thích thành một quyết định có phạm vi. Nếu vẫn làm thì ghi lại lý do — pillar bị bào mòn lặng lẽ là cách game trôi dạt thành mớ tính năng chắp vá.
+- `Mid` **Anh quyết định prototype cái gì trước?**
+  → Chấm mọi giả định hai điểm 1–5: **mình không chắc tới đâu**, và **thiệt hại nếu sai**. Nhân hai điểm, làm ba cái đầu bảng. Giả định rủi ro nhất thường không phải về gameplay mà về người chơi hoặc thị trường — loại đó sai ở tháng thứ sáu và làm lại cả dự án.
+- `Senior` **Làm sao anh biết một thiết kế đã đủ tốt để đi tiếp?**
+  → Bằng **vertical slice** chứ không bằng tài liệu: một lát cắt hoàn chỉnh có juice, rồi xem người lạ chơi mà mình im lặng. Tiêu chí kiểu mẫu là 3/5 tester tự nhận ra điều mình không dạy. Không đạt thì quay lại thiết kế — nhân rộng nội dung trên một core loop nhạt chỉ tạo ra nhiều nội dung nhạt hơn.
+- `Senior` **Anh cân bằng giữa làm theo quy ước thể loại và làm khác đi thế nào?**
+  → Xếp quy ước thành ba lớp theo chi phí dạy lại: **từ vựng · cấu trúc · kỳ vọng lõi**. Phá lớp từ vựng gần như luôn lỗ; lớp cấu trúc là chỗ đổi mới thật xảy ra. Và mỗi lần chỉ phá một thứ, kèm câu trả lời cho "tôi trả tiền ở đâu" — bù bằng gì cho thứ vừa lấy đi.
+
+**Khung trả lời 60 giây** — "Anh tiếp cận một bài toán thiết kế mới thế nào?"
+
+> Tôi bắt đầu từ **cảm xúc đích**, không từ tính năng: game này bán hai loại trải nghiệm nào trong tám loại aesthetics. Rồi mới truy ngược về dynamic và mechanic — đó là chiều thiết kế, ngược với chiều người chơi trải nghiệm.
+>
+> Từ cảm xúc đích tôi viết **hai tới ba pillar**, mỗi cái kèm **danh sách loại trừ**. Pillar mà không giết được tính năng nào thì chưa phải pillar, và phần loại trừ mới là phần được dùng tới trong các cuộc họp.
+>
+> Sau đó tôi không viết tiếp tài liệu mà đi **kiểm chứng giả định rủi ro nhất**: chấm điểm độ không chắc chắn nhân thiệt hại nếu sai, prototype ba cái đầu bảng, mỗi cái một phiếu năm dòng có **tiêu chí thất bại**. Và chốt chặn là core loop — bốn phép thử một câu, ba mươi giây, không phần thưởng, lần thứ một trăm. Qua được thì mới nói tới nội dung.
+
+**Cờ đỏ**
+
+- Kể lại nội dung game thay vì tách mechanic, dynamic, aesthetic.
+- Pillar là tính từ, không có danh sách loại trừ.
+- Chữa "game chán" bằng cách thêm hệ thống, chưa từng chạy test không phần thưởng.
+- Prototype cái dễ làm thay vì cái rủi ro nhất.
+- Muốn phá quy ước thể loại mà không nói được trả tiền ở đâu.
+
+**Số / ví dụ nên thuộc**
+
+- MDA: **mechanic → dynamic → aesthetic**; thiết kế đi **ngược chiều** người chơi trải nghiệm.
+- Tám aesthetics, **chọn 2**; ba lớp quy ước: **từ vựng · cấu trúc · kỳ vọng lõi**.
+- Bốn phép thử core loop: **một câu · 30 giây · không phần thưởng · lần thứ 100**.
+- Ba tầng lặp: micro **1–10 s** · mid **2–10 phút** · macro **nhiều giờ**.
+- Ma trận prototype: **độ không chắc chắn × thiệt hại nếu sai**; phiếu **5 dòng** có tiêu chí thất bại.

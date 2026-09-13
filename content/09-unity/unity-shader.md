@@ -521,14 +521,24 @@ public class FlashDissolveDriver : MonoBehaviour
 
 **Câu hay gặp**
 
-| Mức | Câu hỏi |
-|---|---|
-| Junior | Material hiện màu hồng. Nghĩa là gì? |
-| Junior | Shader Graph hay viết HLSL tay — anh chọn thế nào? |
-| Mid | SRP Batcher hoạt động nhờ đâu, và cái gì phá nó? |
-| Mid | Làm hit flash (nhân vật loé trắng khi trúng đòn) mà không tăng draw call? |
-| Senior | Thời gian build tăng 10 phút sau khi thêm một shader. Vì sao? |
-| Senior | Transparent bị sort sai, vật sau vẽ đè vật trước. Xử lý? |
+- `Junior` **Material hiện màu hồng. Nghĩa là gì?**
+  → Shader không biên dịch được cho pipeline hiện tại — gần như luôn là shader viết cho Built-in (`Standard`, `UnityCG.cginc`) đang chạy trên URP. Render Pipeline Converter đổi được material dùng shader Unity chuẩn; **shader tự viết của asset Store thì không**, phải viết lại. Nên trước khi mua asset hãy đọc xem nó ghi URP phiên bản nào.
+- `Junior` **Shader Graph hay viết HLSL tay — anh chọn thế nào?**
+  → Shader Graph cho phần lớn việc: nhanh, xem được kết quả tức thì, và artist sửa được. Viết tay khi cần thứ Graph không diễn đạt được — vòng lặp, thuật toán tuỳ biến, tối ưu chỉ thị cụ thể — hoặc khi cần đọc diff trong code review. Trả lời "viết tay mới chuyên nghiệp" là trả lời trượt.
+- `Junior` **`material` và `sharedMaterial` khác nhau thế nào?**
+  → `renderer.material` **tạo một bản sao** của material ngay lần gọi đầu — đổi nó chỉ ảnh hưởng object đó, nhưng bản sao là rác nếu không `Destroy`, và nó phá SRP Batcher. `sharedMaterial` trỏ thẳng vào asset dùng chung — sửa nó là sửa **mọi** object dùng material đó, và trong Editor là sửa cả file asset trên đĩa.
+- `Mid` **SRP Batcher hoạt động nhờ đâu, và cái gì phá nó?**
+  → Nó không gộp mesh như batching cũ — nó giữ **hằng số per-material trên GPU** giữa các frame, nên chỉ cần các object dùng **cùng shader variant** là CPU không phải nạp lại buffer mỗi draw. Nhiều material khác nhau vẫn nhanh. Phá nó là `renderer.material` và **`MaterialPropertyBlock`** — điểm nghịch lý, vì ở Built-in thì MPB từng là cách đúng.
+- `Mid` **Làm hit flash (nhân vật loé trắng khi trúng đòn) mà không tăng draw call?**
+  → Thêm một property `_FlashAmount` vào shader nhân vật rồi lerp màu ở fragment. Không thêm draw call, không đổi material, không phá batcher. Cách sai kinh điển là đổi `renderer.material.color` (nhân bản material) hoặc chồng thêm một mesh trắng (gấp đôi draw call **và** overdraw).
+- `Mid` **Giá trị per-instance mà không dùng MaterialPropertyBlock thì để đâu?**
+  → Vào **vertex color**, vào một kênh UV thừa, hoặc dùng `Graphics.RenderMeshInstanced` với mảng matrix và mảng property. Cả ba đều giữ object trong SRP Batcher. Đây là chỗ thói quen từ Built-in gây hại nhất: cùng một kỹ thuật, đổi pipeline là đổi từ tối ưu thành phản tối ưu.
+- `Senior` **Thời gian build tăng 10 phút sau khi thêm một shader. Vì sao?**
+  → **Shader variant nổ**: mỗi `multi_compile` nhân đôi số variant, thêm năm keyword "cho chắc" là nhân 32. Hậu quả gồm cả build lâu, build phình, và một cú khựng lúc chạy khi gặp variant lần đầu vì **compile tại chỗ**. Dùng `shader_feature` thay `multi_compile` khi có thể, và warm-up bằng **Shader Variant Collection** trước màn hình loading.
+- `Senior` **Transparent bị sort sai, vật sau vẽ đè vật trước. Xử lý?**
+  → Transparent không ghi depth nên thứ tự vẽ tính theo **khoảng cách tới camera của pivot object**, không theo hình học — một mặt phẳng lớn có pivot ở xa sẽ vẽ sai dù hình học nằm gần. Chữa bằng `Render Queue`/`Sorting Priority` thủ công, tách mesh cho pivot đúng chỗ, hoặc chuyển sang alpha-test (cutout) khi hình cho phép.
+- `Senior` **Dùng `half` thay `float` trong shader mobile — lợi và rủi ro?**
+  → Trên GPU mobile đó là khác biệt thật về băng thông và tốc độ, không phải vi chỉnh, nên dùng `half` ở nơi không cần chính xác: màu, UV local, hệ số. Nhưng **world position và thời gian tích luỹ phải để `float`** — để `half` thì hình giật nhảy khi đi xa gốc toạ độ, và lỗi đó chỉ lộ ở cuối màn rộng.
 
 **Khung trả lời 60 giây** — "SRP Batcher và cái gì phá nó?"
 

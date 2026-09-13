@@ -234,3 +234,58 @@ Với người làm client, cả nhánh backend này nên thu về **một lện
 - `docker compose down && docker compose up`: chạy đúng **ngay lần đầu**, không cần chạy lại lần hai (healthcheck có tác dụng).
 - `docker compose logs -f api` khi bấm nút trong game: thấy đúng request vừa gửi.
 - Đổi một dòng code Go rồi `docker compose build api`: build xong dưới 30 giây (layer cache còn nguyên). Lâu hơn nhiều nghĩa là thứ tự tầng hoặc `.dockerignore` sai.
+
+## 🎤 Phỏng vấn
+
+**Câu hay gặp**
+
+- `Junior` **Docker mang lại gì cho một dự án Go, khi binary Go vốn đã tĩnh?**
+  → Giá trị lớn nhất không phải deploy mà là **môi trường dev giống nhau cho cả đội**: một lệnh là có Postgres, Redis, migration đã chạy và server đang nghe, không ai phải cài gì và không ai lệch phiên bản. Ở khâu deploy thì giá trị chỉ vừa phải, vì binary Go chạy được trên mọi máy Linux — container đáng giá khi bạn đã có sẵn hạ tầng chạy container.
+- `Junior` **Vì sao build lại toàn bộ mỗi lần sửa một dòng code?**
+  → Vì `COPY . .` đứng trước `COPY go.mod`. Tầng nào thay đổi thì mọi tầng sau nó mất cache, nên copy toàn bộ source trước khi tải phụ thuộc nghĩa là mỗi lần sửa một dòng là tải lại tất cả. Copy `go.mod`/`go.sum` và `go mod download` trước, copy source sau.
+- `Mid` **Server chết ở lần chạy đầu mỗi ngày, chạy lại lần nữa thì được. Vì sao?**
+  → Vì `depends_on` trần chỉ chờ container **khởi động**, không chờ dịch vụ sẵn sàng. Server lên trước khi Postgres nhận kết nối nên chết ngay. Sửa bằng `healthcheck` cộng `condition: service_healthy`. Triệu chứng nguy hiểm ở chỗ nó tự khỏi khi chạy lại, nên cả đội học thói quen "chạy lại là được" thay vì sửa.
+- `Mid` **Vì sao migration là service riêng chứ không chạy lúc server khởi động?**
+  → Vì auto-migrate lúc khởi động nghĩa là N bản server cùng chạy migration một lúc khi scale, và bạn không kiểm soát được thời điểm nó xảy ra. Trong compose thì đặt migration thành service chạy một lần với `service_completed_successfully`; trên production thì nó là một bước riêng trong quy trình deploy.
+- `Senior` **Chọn image nền nào và vì sao?**
+  → Mặc định `gcr.io/distroless/static`, khoảng 2 MB cộng binary, không shell và chạy `nonroot` — ít thứ để khai thác nhất. Alpine khoảng 8 MB khi cần shell để soi trong container. `debian:bookworm-slim` khoảng 30 MB chỉ khi buộc phải bật CGO. Và luôn `CGO_ENABLED=0` để binary chạy được trong image trống.
+- `Senior` **Bẫy nào của Docker riêng cho repo có cả Unity?**
+  → Thiếu `.dockerignore`: thư mục `Library/` của Unity làm build context phồng lên vài GB và build chậm gấp hàng chục lần, dù không file nào trong đó được dùng. Hai bẫy vận hành nữa hay quên: không giới hạn log container thì ổ đĩa đầy sau vài tuần, và không giới hạn RAM thì một rò rỉ kéo sập cả máy thay vì chỉ một service.
+
+**Khung trả lời 60 giây** — "Vì sao đội anh dùng Docker cho backend?"
+
+> Lý do chính là **môi trường dev**, không phải deploy. Một lệnh `docker compose up` là cả đội có Postgres 16, Redis 7, migration đã chạy và server đang nghe — người mới vào việc trong nửa tiếng thay vì một ngày, và không còn chuyện "trên máy tôi chạy được".
+>
+> Hai chi tiết quyết định nó có dùng được không. Một là `depends_on` phải kèm `healthcheck` và `condition: service_healthy`, nếu không server lên trước database rồi chết, và cả đội học thói quen chạy lại lần nữa. Hai là **migration là service riêng chạy một lần**, không auto-migrate lúc server khởi động.
+>
+> Về image thì multi-stage, `CGO_ENABLED=0`, nền distroless khoảng 2 MB, chạy `nonroot`, và gắn tag theo commit chứ không dùng `latest` — để còn biết production đang chạy gì mà rollback.
+
+**Họ sẽ đào tiếp**
+
+- *"Tên host trong compose và ngoài máy khác nhau thế nào?"* → Server trong mạng compose gọi `db:5432`; Unity Editor chạy trên máy bạn phải gọi `localhost:5432` qua cổng đã map. Nhầm hai cái này là câu hỏi phổ biến nhất của người mới dùng compose.
+- *"Vì sao không dùng tag `latest`?"* → Vì bạn không biết production đang chạy gì và không rollback được về một điểm xác định. Gắn tag theo commit thì mỗi bản deploy là một mốc tra ngược được tới đúng dòng code.
+- *"Chạy container bằng root có sao không?"* → Một lỗ hổng trong app trở thành quyền root trong container, và từ đó bề mặt tấn công rộng hẳn ra. Distroless có sẵn biến thể `nonroot` nên chi phí để làm đúng gần bằng không.
+- *"Build trên máy Mac rồi deploy lên server thì sao?"* → Nếu máy là arm64 còn server là amd64 thì `exec format error` — và nó xảy ra **lúc chạy**, không phải lúc build, nên dễ lọt tới tận production. Chỉ định rõ platform khi build, hoặc build trong CI.
+- *"Docker có dùng cho room server không?"* → Được, nhưng nhớ rằng room server là stateful: container phải nhận tín hiệu dừng và drain đúng cách, chứ không phải bị `docker kill` sau thời gian chờ mặc định.
+
+**Cờ đỏ**
+
+- `depends_on` không kèm `condition`, rồi coi "chạy lại là được" là bình thường.
+- Auto-migrate lúc server khởi động.
+- Không có `.dockerignore` trong repo có Unity.
+- Dùng `latest` cho image production.
+- Chạy container bằng root vì tiện.
+- Không giới hạn log và RAM của container.
+
+**Số / ví dụ nên thuộc**
+
+- Image nền: distroless **~2 MB** · alpine **~8 MB** · debian-slim **~30 MB**.
+- `CGO_ENABLED=0` để binary tĩnh chạy được trong image trống.
+- Sửa một dòng Go, build lại phải dưới **30 giây** nếu layer cache đúng.
+- Thiếu `.dockerignore` với `Library/` của Unity: context phồng lên **vài GB**.
+
+**Kể trong dự án**
+
+- *"Ai dựng môi trường dev?"* → Nếu là bạn, nêu con số dễ tin nhất: thời gian để một người mới chạy được backend lần đầu, trước và sau.
+- *"Khó khăn gặp phải?"* → Mẫu tốt: server chết ở lần chạy đầu mỗi sáng và cả đội quen bấm chạy lại. Kể cách bạn nhận ra đó là `depends_on` thiếu điều kiện, và vì sao một lỗi "tự khỏi" lại nguy hiểm hơn một lỗi nổ thẳng.
+- *"Anh có đưa Docker vào production không?"* → Trả lời trung thực. "Chúng tôi dùng compose cho dev nhưng deploy bằng binary với systemd" là một câu trả lời hoàn toàn hợp lý ở quy mô nhỏ, và nó cho thấy bạn chọn theo nhu cầu chứ không theo xu hướng.

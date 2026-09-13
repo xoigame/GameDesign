@@ -388,14 +388,24 @@ public class TweenBootstrap : MonoBehaviour
 
 **Câu hay gặp**
 
-| Mức | Câu hỏi |
-|---|---|
-| Junior | Anh hay dùng thư viện ngoài nào? Dùng để làm gì? |
-| Junior | DOTween: tween đang chạy mà object bị destroy thì sao? |
-| Mid | Anh quyết định dùng thư viện ngoài hay tự viết dựa trên gì? |
-| Mid | Thêm một SDK vào là build Android hỏng. Anh tìm nguyên nhân ở đâu? |
-| Senior | Làm sao để sau này đổi hoặc bỏ một thư viện mà không viết lại dự án? |
-| Senior | Anh từng phải gỡ bỏ thư viện nào chưa? Vì sao và tốn bao lâu? |
+- `Junior` **Anh hay dùng thư viện ngoài nào? Dùng để làm gì?**
+  → Trả lời phải gắn tên với **việc nó thay thế**, không phải kể tên. Ví dụ: DOTween cho tween UI và hiệu ứng ngắn vì tự viết easing với chuỗi callback rất tốn; Newtonsoft khi cần đọc JSON tuỳ ý mà `JsonUtility` không làm được. Kể tên mà không nói được nó thay cho việc gì là câu trả lời trượt.
+- `Junior` **DOTween: tween đang chạy mà object bị destroy thì sao?**
+  → Tween vẫn chạy và ném `MissingReferenceException` ở một frame **ngẫu nhiên sau đó**, nên chỗ báo lỗi không phải chỗ gây lỗi — rất khó truy. Chữa bằng `.SetLink(gameObject)` trên mọi tween, hoặc `DOTween.Kill` trong `OnDestroy`. Tôi ép luật đó trong adapter, vì trông chờ cả đội nhớ là cách chắc chắn để có ngày quên.
+- `Junior` **Ba bẫy DOTween khác cần thuộc?**
+  → `timeScale = 0` làm tween dừng, nên UI menu pause phải `.SetUpdate(true)`. Safe Mode **nuốt lỗi** — tiện khi phát triển nhưng đừng coi "không thấy lỗi" là bằng chứng code đúng. Và gọi `SetTweensCapacity(500, 100)` lúc khởi động, vì vượt ngưỡng mặc định là DOTween cấp phát lại mảng nội bộ ngay giữa gameplay.
+- `Mid` **Anh quyết định dùng thư viện ngoài hay tự viết dựa trên gì?**
+  → Ba câu theo thứ tự. **Unity đã có chưa?** — `Awaitable`, Input System, Cinemachine, Localization giờ đã có sẵn. **Nó thay cho bao nhiêu ngày công?** — dưới **2 ngày** thì tự viết gần như luôn rẻ hơn, vì mỗi thư viện là món nợ phải trả lãi mỗi lần nâng Unity. **Nó có đụng native không?** — thư viện C# thuần tệ nhất là lỗi biên dịch; có `.aar` hay CocoaPods thì kéo theo Gradle và EDM4U.
+- `Mid` **Thêm một SDK vào là build Android hỏng. Anh tìm nguyên nhân ở đâu?**
+  → Theo thứ tự: **trùng thư viện** (hai bản Newtonsoft, hai bản EDM4U — giữ bản mới nhất rồi Force Resolve); template Gradle tự sửa đã cũ so với bản Unity hiện tại; `minSdk` bị SDK đẩy lên; và thư viện native chưa hỗ trợ yêu cầu page size 16 KB của Android mới — cái này rớt lúc **cài đặt**, không rớt lúc biên dịch.
+- `Mid` **Đặt thư viện ở `Packages/` hay `Assets/Plugins/`?**
+  → Ưu tiên `Packages/` qua UPM, vì nâng cấp là một dòng trong `manifest.json` và nó không lẫn vào asset của dự án. Nếu ở `Assets/Plugins/` thì nhớ: code rời trong `Plugins/` đi vào **assembly tiền định nghĩa**, mà asmdef của mình **không tham chiếu ngược vào đó được** — dự án chia asmdef sẽ gặp lỗi "type not found" trong khi mọi thứ nhìn vẫn đúng.
+- `Senior` **Làm sao để sau này đổi hoặc bỏ một thư viện mà không viết lại dự án?**
+  → **Bọc sau interface của mình**: gameplay gọi `ITweenService`, không gọi `DG.Tweening`. Ba lợi ích đo được: đổi thư viện sửa một file adapter; test logic chạy được không cần thư viện thật; và có **một chỗ duy nhất** để áp luật chung (ví dụ ép `SetLink`). Ngoại lệ là thứ đã thành ngôn ngữ của dự án như Cinemachine hay Input System — bọc lại chỉ thêm một tầng vô ích.
+- `Senior` **Anh từng phải gỡ bỏ thư viện nào chưa? Vì sao và tốn bao lâu?**
+  → Câu này đo xem bạn có từng trả nợ kỹ thuật thật chưa. Trả lời tốt nêu **lý do cụ thể** (ngừng bảo trì, vỡ khi nâng Unity, license đổi, chỉ có DLL nên không vá được) và **cái làm nó đắt**: số chỗ gọi thẳng API rải rác. Nếu đã bọc sau interface thì con số đó là một file; nếu không thì là vài trăm chỗ, và đó chính là bài học.
+- `Senior` **Tiêu chí nào khi đánh giá một thư viện mà người mới hay bỏ qua?**
+  → Bốn thứ: lần cập nhật gần nhất và số issue còn mở; **có source hay chỉ có DLL** (chỉ có DLL là không vá được khi gấp); an toàn với **IL2CPP và stripping**; và license — per-seat thì thiếu ghế khi team lớn lên, revenue share thì phải tính vào giá thành ngay từ đầu chứ không phải sau khi phát hành.
 
 **Khung trả lời 60 giây** — "Chọn thư viện ngoài hay tự viết?"
 

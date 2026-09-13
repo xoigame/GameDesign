@@ -359,14 +359,24 @@ public class CameraDirector : MonoBehaviour
 
 **Câu hay gặp**
 
-| Mức | Câu hỏi |
-|---|---|
-| Junior | Cinemachine gồm những phần nào? Brain và virtual camera khác nhau chỗ nào? |
-| Junior | Camera bám nhân vật nên viết trong `Update` hay `LateUpdate`? Vì sao? |
-| Mid | Camera chui qua tường ở góc hẹp. Anh xử lý thế nào? |
-| Mid | Camera rung nhẹ khi nhân vật chạy dù frame rate ổn. Nghi gì? |
-| Senior | Rung camera (hitstop + impulse) làm sao cho ra "lực" chứ không ra "lag"? |
-| Senior | Khi nào anh **không** dùng Cinemachine? |
+- `Junior` **Cinemachine gồm những phần nào? Brain và virtual camera khác nhau chỗ nào?**
+  → `CinemachineBrain` gắn trên Main Camera thật; nó nghe các **virtual camera** và điều khiển camera thật. Virtual camera không render gì cả, nó chỉ mô tả một góc máy mong muốn. Chuyển góc máy bằng **priority**, không bật/tắt GameObject — nhờ vậy blend giữa hai góc là việc của Brain chứ không phải việc của mình.
+- `Junior` **Camera bám nhân vật nên viết trong `Update` hay `LateUpdate`? Vì sao?**
+  → `LateUpdate`. Camera phải đọc vị trí **sau khi** nhân vật đã di chuyển trong frame đó. Đặt ở `Update` thì tuỳ thứ tự script mà camera bám vị trí của frame trước, hiện ra thành giật nhẹ và không đều — triệu chứng dễ bị nhầm với vấn đề hiệu năng.
+- `Junior` **Khi nào anh không dùng Cinemachine?**
+  → Khi camera đơn giản hơn phần cấu hình: game puzzle một màn với camera đứng yên, hoặc **2D pixel-perfect** chỉ bám hoặc khoá phòng. Cái thứ hai có lý do kỹ thuật thật: cần vị trí camera là bội số của 1/PPU, mà thêm damping vào là ra jitter — tự viết 30 dòng kiểm soát được hơn.
+- `Mid` **Camera chui qua tường ở góc hẹp. Anh xử lý thế nào?**
+  → Dùng **Deoccluder**, nhưng không để mặc định: mặc định `Collide Against` gồm cả layer Default nên camera né luôn cây cỏ, cột nhỏ và chính nhân vật, rồi nhảy phựt liên tục. Làm đúng là một layer riêng `CameraBlock` chỉ chứa tường và địa hình, cộng `IgnoreTag` cho nhân vật, `Damping When Occluded` = 0 để né tức thì và `Damping` ≈ 0,5 để trở về từ tốn.
+- `Mid` **Camera rung nhẹ khi nhân vật chạy dù frame rate ổn. Nghi gì?**
+  → Nhân vật chạy bằng physics nên vị trí chuẩn nằm ở bước physics: camera phải theo `Update Method = Fixed` hoặc `Smart` của Brain **và** rigidbody phải bật `Interpolate`. Thiếu một trong hai là rung. Đây là hai ô cài đặt, nhưng triệu chứng giống hệt vấn đề hiệu năng nên rất nhiều người đi tối ưu fps.
+- `Mid` **Pixel-perfect 2D bị jitter — kiểm tra gì?**
+  → Ba thứ. Orthographic size phải khớp PPU và chiều cao màn hình. Camera phải **snap về lưới pixel** — vị trí là bội số của 1/PPU. Và đừng để damping đẩy camera vào giữa hai pixel: cái làm camera mượt ở 3D chính là cái tạo ra jitter ở pixel art.
+- `Senior` **Rung camera (hitstop + impulse) làm sao cho ra "lực" chứ không ra "lag"?**
+  → Bẫy kinh điển: hitstop đặt `timeScale = 0` trong 90 ms trong khi `Brain.IgnoreTimeScale = false`, nên impulse **đứng hình ngay đỉnh biên độ** rồi bật về — cảm giác đúng như game khựng. Chạy thử không hitstop thì bình thường, nên lỗi chỉ xuất hiện khi ghép hai hệ thống. Thêm nữa, rung cần **ngân sách**: biên độ theo mức sự kiện và một nguồn duy nhất cộng dồn.
+- `Senior` **Co-op hai người chung một màn hình thì camera làm thế nào?**
+  → `CinemachineTargetGroup` với weight và radius theo từng người chơi, cộng **giới hạn zoom out** để hai người chạy ngược hướng không biến nhân vật thành hai chấm. Chỉ dùng cho co-op màn hình chung hoặc boss to; PvP thì nó thành cơ chế gameplay (bị kéo camera) và phải thiết kế có chủ đích.
+- `Senior` **Đổi FOV liên tục để tạo cảm giác tốc độ — rủi ro gì?**
+  → Say chuyển động. FOV thay đổi nhanh là một trong những nguyên nhân motion sickness mạnh nhất, cùng với rung camera liên tục và head bob. Nên nó phải nằm sau một **tuỳ chọn trợ năng tắt được**, chứ không phải là hiệu ứng bắt buộc — và mặc định nên nhẹ hơn mức người làm game thấy đã đủ.
 
 **Khung trả lời 60 giây** — "Anh dựng camera cho game third-person thế nào?"
 

@@ -212,14 +212,24 @@ public class GameConfig : MonoBehaviour
 
 **Câu hay gặp**
 
-| Mức | Câu hỏi |
-|---|---|
-| Junior | Remote config dùng để làm gì? Cho ví dụ trong game anh từng làm. |
-| Junior | Feature flag là gì và vì sao cần? |
-| Mid | Phát hiện giá một gói IAP bị sai lúc 9 giờ sáng. Anh làm gì? |
-| Mid | Chỉ số nào anh nhìn hằng ngày cho một game đang live? |
-| Senior | Thiết kế một A/B test cho giá gói khởi đầu — anh làm thế nào? |
-| Senior | Config mới làm game bản cũ crash. Phòng bằng cách nào? |
+- `Junior` **Remote config dùng để làm gì? Cho ví dụ.**
+  → Để đổi **số** mà không cần ra bản mới: giá gói, tỉ lệ rơi, thời lượng sự kiện, ngưỡng độ khó. Ví dụ thật: hạ giá gói khởi đầu trong cuối tuần, hoặc giảm HP một con boss mà 70% người chơi kẹt ở đó. Ranh giới cần thuộc: config đổi **số**, đổi **logic** thì vẫn phải ra bản mới.
+- `Junior` **Feature flag là gì và vì sao cần?**
+  → Là công tắc tắt/bật một tính năng từ xa. Tôi coi nó là **phanh**, không phải tiện ích: mọi thứ có rủi ro tiền bạc hay dữ liệu đều nằm sau một cờ tắt được từ xa. Và cờ đó phải được **thử tắt thật** ít nhất một lần trước khi phát hành — cờ chưa bao giờ tắt thử thì chưa phải là phanh.
+- `Junior` **Không tải được config thì game làm gì?**
+  → Chạy bằng **giá trị mặc định đóng trong build**, không bao giờ treo ở màn hình chờ. Mất mạng, server sập, người chơi ở vùng chặn — tất cả đều phải chơi được. Treo ở màn hình chờ vì không tải được một file JSON là cách tự biến sự cố nhỏ của mình thành sự cố toàn bộ người chơi.
+- `Mid` **Chỉ số nào anh nhìn hằng ngày cho một game đang live?**
+  → **Crash-free sessions** trước tiên — dưới 99% là có vấn đề, và bản hỏng làm mọi số khác vô nghĩa. Rồi D1/D7, thời lượng phiên, ARPDAU, và funnel onboarding **chia theo dòng máy**: rớt nhiều ở máy yếu thường là hiệu năng chứ không phải thiết kế.
+- `Mid` **Vì sao config sai còn nguy hơn code sai?**
+  → Vì nó tới tay mọi người trong vài phút và **không qua vòng duyệt nào**. Ba lớp bảo vệ tối thiểu: schema validate phía client (giá trị ngoài khoảng thì bỏ qua và dùng mặc định), bật dần theo phần trăm **5% → 50% → 100%** với ít nhất một giờ mỗi bậc, và nhật ký ai đổi gì lúc nào.
+- `Mid` **Sự kiện hằng tuần tốn gì mà đội hay quên tính?**
+  → Chi phí **lặp lại**: mỗi sự kiện cần nội dung, cân bằng, QA với đồng hồ tua tới đúng ngày, ảnh quảng bá, và người trực. Cộng thêm một chi phí kinh tế: mỗi sự kiện phát thêm tài nguyên, nên phải có drain tương ứng, nếu không thì sau ba tháng kinh tế lạm phát và mọi giá trong shop mất nghĩa.
+- `Senior` **Thiết kế một A/B test cho giá gói khởi đầu — anh làm thế nào?**
+  → Một biến duy nhất. Phân nhóm **ổn định theo id người chơi**, không theo phiên — nếu không cùng một người sẽ thấy hai giá. Chạy trọn chu kỳ tuần. Định trước chỉ số quyết định (conversion) **và** chỉ số bảo vệ (D7 retention), vì tăng doanh thu mà mất người chơi là thua. Và không nhìn giữa chừng rồi dừng lúc đang thắng.
+- `Senior` **Lượng người chơi không đủ để có ý nghĩa thống kê thì sao?**
+  → Nói thẳng là không đủ mẫu, rồi so theo mốc thời gian có ghi chú thay vì giả vờ có kiểm định. Cái tệ hơn cả việc không test là test rồi tin vào một kết quả nhiễu — nó khoá đội vào một quyết định sai kèm cảm giác đã có bằng chứng.
+- `Senior` **Config mới làm game bản cũ crash. Phòng bằng cách nào?**
+  → Đây là **version skew**: người chơi nằm rải ở nhiều bản app, nên config phải an toàn với bản cũ nhất còn sống. Thêm trường mới thì bản cũ bỏ qua — không sao. **Đổi ý nghĩa một trường cũ** mới là tai nạn, vì bản cũ vẫn diễn giải theo cách cũ. Luật của tôi: chỉ thêm trường, không tái sử dụng tên cũ cho nghĩa mới.
 
 **Khung trả lời 60 giây** — "Giá một gói IAP bị sai, phát hiện lúc 9 giờ sáng?"
 

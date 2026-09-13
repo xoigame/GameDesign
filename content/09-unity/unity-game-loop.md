@@ -507,14 +507,24 @@ public sealed class FlowDebugHud : MonoBehaviour
 
 **Câu hay gặp**
 
-| Mức | Câu hỏi |
-|---|---|
-| Junior | `Awake`, `OnEnable`, `Start` khác nhau chỗ nào? Khi nào dùng cái nào? |
-| Junior | `Update` / `FixedUpdate` / `LateUpdate` — code di chuyển nhân vật đặt ở đâu? |
-| Mid | Bấm Pause: game đứng yên nhưng nhạc vẫn chạy và menu vẫn animate. Giải thích. |
-| Mid | Vì sao cần Bootstrap scene? Không có thì hỏng chỗ nào? |
-| Senior | Quay về Menu rồi vào lại Level thì có **hai** GameManager. Chuyện gì xảy ra và sửa thế nào? |
-| Senior | Load một scene 200MB mà không khựng hình — anh làm gì? |
+- `Junior` **`Awake`, `OnEnable`, `Start` khác nhau chỗ nào? Khi nào dùng cái nào?**
+  → `Awake` chạy một lần khi object được tạo, kể cả khi đang tắt. `OnEnable` chạy mỗi lần bật lại. `Start` chạy một lần trước frame `Update` đầu tiên, sau khi **mọi** `Awake` đã xong. Luật thực dụng: `Awake` chỉ đụng **chính mình** (GetComponent, cấp phát), `Start` mới đụng **người khác**, `OnEnable` để đăng ký sự kiện.
+- `Junior` **`Update` / `FixedUpdate` / `LateUpdate` — code di chuyển nhân vật đặt ở đâu?**
+  → Di chuyển bằng Rigidbody đặt ở `FixedUpdate` (mặc định 0,02 s = 50 lần/giây) vì nó chạy cùng nhịp physics. **Đọc input** thì ở `Update`, nếu không sẽ mất frame bấm. Camera bám theo nhân vật thì ở `LateUpdate`, đặt ở `Update` sẽ giật vì camera có thể chạy trước khi nhân vật kịp di chuyển.
+- `Junior` **Thứ tự `Awake` giữa hai object có đảm bảo không?**
+  → **Không.** Chỉ đảm bảo mọi `Awake` chạy xong trước `Start` đầu tiên. Đó là lý do luật "`Awake` đụng mình, `Start` đụng người khác" tồn tại. Script Execution Order là phương án cuối chứ không phải phương án đầu — nó là trạng thái toàn cục ẩn, sáu tháng sau không ai nhớ vì sao nó được đặt.
+- `Mid` **Bấm Pause: game đứng yên nhưng nhạc vẫn chạy và menu vẫn animate. Giải thích.**
+  → `Time.timeScale = 0` dừng `deltaTime`, `FixedUpdate`, Animator ở `Update Mode = Normal`, `WaitForSeconds`, physics, NavMeshAgent. Nó **không** dừng `Update`/`LateUpdate` (vẫn gọi mỗi frame), `unscaledDeltaTime`, `WaitForSecondsRealtime`, và **AudioSource**. Menu pause phải để Animator sang `Unscaled Time`, nếu không nút bấm đứng hình.
+- `Mid` **Vì sao cần Bootstrap scene? Không có thì hỏng chỗ nào?**
+  → Scene 0 tên `Boot` không có gameplay, chỉ chứa `Systems`: audio, save, input, UI root, scene loader. Nó không bao giờ bị unload nên không phải rải `DontDestroyOnLoad` khắp nơi, và hệ thống khởi tạo đúng một lần theo thứ tự mình kiểm soát. Không có nó thì mở thẳng scene màn 7 trong Editor là `NullReferenceException` ở `AudioManager.Instance`.
+- `Mid` **Load async rồi mà vẫn giật. Vì sao?**
+  → `LoadSceneAsync` chỉ giải quyết phần đọc đĩa. Cái giật còn lại đến từ `Instantiate` hàng loạt ở frame kích hoạt và **compile shader lần đầu**. Chữa bằng `allowSceneActivation = false` cho tới khi màn che đã lên, warm-up shader variant, và trải việc spawn ra nhiều frame.
+- `Senior` **Quay về Menu rồi vào lại Level thì có hai GameManager. Chuyện gì xảy ra và sửa thế nào?**
+  → Scene Level có sẵn một GameManager, cộng với bản `DontDestroyOnLoad` còn sống — thành hai. Guard phải huỷ **bản mới**: `if (Instance != null) { Destroy(gameObject); return; }`. Viết ngược lại — `Destroy(Instance.gameObject)` — là huỷ bản cũ đang giữ mọi subscriber và giữ lại bản mới rỗng, nên lỗi lộ ra ở chỗ khác hoàn toàn.
+- `Senior` **Load một scene 200MB mà không khựng hình — anh làm gì?**
+  → `LoadSceneAsync` additive với `allowSceneActivation = false`, kích hoạt chỉ sau khi màn che đã lên. Warm-up shader variant trước. Trải spawn ra nhiều frame thay vì `Instantiate` cả loạt. Và quan trọng là **đo trên thiết bị đích**: thời gian nạp trên SSD của máy dev không nói gì về máy Android tầm trung.
+- `Senior` **Trên mobile, lưu game vào lúc nào là an toàn?**
+  → Ở `OnApplicationPause(true)`. Android và iOS có thể giết tiến trình mà **không gọi `OnApplicationQuit` lần nào**, nên tin vào `OnApplicationQuit` là cách mất save của người chơi mà không bao giờ tái hiện được trên máy dev. Ghi theo kiểu ghi file tạm rồi đổi tên, để không có trạng thái file ghi dở.
 
 **Khung trả lời 60 giây** — "Kiến trúc khởi động và chuyển scene của anh thế nào?"
 

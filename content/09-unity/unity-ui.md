@@ -478,14 +478,24 @@ public class PlayerHealth
 
 **Câu hay gặp**
 
-| Mức | Câu hỏi |
-|---|---|
-| Junior | Anchor và pivot khác nhau thế nào? Canvas có mấy Render Mode? |
-| Junior | `Canvas Scaler` cài sao cho UI đúng trên nhiều tỉ lệ màn hình? |
-| Mid | UI làm tụt fps. Anh bắt đầu từ đâu? |
-| Mid | UGUI hay UI Toolkit cho HUD game mobile, năm nay? |
-| Senior | Trước khi ship, anh làm gì với TextMeshPro? |
-| Senior | Game có 20 màn hình UI — kiến trúc thế nào để không thành 20 `if`? |
+- `Junior` **Anchor và pivot khác nhau thế nào? Canvas có mấy Render Mode?**
+  → **Anchor** neo RectTransform vào cha — nó quyết định phần tử co giãn ra sao khi cha đổi kích thước. **Pivot** là điểm gốc của chính phần tử, dùng cho xoay và scale. Canvas có ba Render Mode: Screen Space – Overlay (mặc định, vẽ sau cùng), Screen Space – Camera (chịu ảnh hưởng camera, chèn được hiệu ứng), và World Space (UI nằm trong thế giới).
+- `Junior` **`Canvas Scaler` cài sao cho UI đúng trên nhiều tỉ lệ màn hình?**
+  → `UI Scale Mode = Scale With Screen Size`, đặt `Reference Resolution` bằng tỉ lệ thiết kế, rồi chỉnh `Match` giữa Width và Height theo hướng game: game dọc thường Match nghiêng về Width, game ngang nghiêng về Height. Để `Constant Pixel Size` là UI sẽ bé xíu trên máy độ phân giải cao.
+- `Junior` **Safe area trên điện thoại tai thỏ xử lý thế nào?**
+  → Một component đọc `Screen.safeArea` rồi đặt anchor của một RectTransform bọc ngoài toàn bộ UI. Phải test cả xoay ngang và cả máy màn hình đục lỗ. Đây là loại lỗi **chỉ lộ trên thiết bị thật** — giả lập không thấy — nên nó hay tới tay QA ở tuần cuối.
+- `Mid` **UI làm tụt fps. Anh bắt đầu từ đâu?**
+  → Profiler, tìm hai cái tên: `Canvas.SendWillRenderCanvases` và `Canvas.BuildBatch`. Chúng nói chi phí nằm ở **rebuild**, và luật của rebuild là một phần tử đổi thì **cả Canvas** dựng lại mesh. Nên cách chữa là **tách Canvas theo tần suất đổi**, không phải giảm số UI.
+- `Mid` **Tách Canvas theo tiêu chí gì?**
+  → Theo **tần suất thay đổi**, không theo chủ đề. HUD tĩnh một Canvas, thanh máu một Canvas, số damage bay mỗi frame một Canvas riêng. Tách theo chủ đề — "combat UI chung một Canvas" — là sai, vì số damage nhảy mỗi frame sẽ kéo cả thanh máu và khung ảnh nhân vật rebuild theo.
+- `Mid` **Ba việc rẻ mà hiệu quả nhất với UI Unity là gì?**
+  → Tắt `Raycast Target` trên mọi `Image`/`Text` không bấm được — mặc định nó bật, và mỗi cái là một phép kiểm mỗi lần chạm. Bỏ Layout Group lồng nhau ở chỗ nóng, vì mỗi tầng là một lượt dirty lan xuống. Và pool item trong list thay vì `Instantiate` khi mở.
+- `Senior` **Trước khi ship, anh làm gì với TextMeshPro?**
+  → Ba việc. Dùng `label.SetText("{0}/{1}", hp, max)` thay `label.text = $"..."` — 0 byte alloc thay vì một string mới mỗi frame. Đổi atlas sang **Static** và Update Atlas Texture với toàn bộ chuỗi trong game; Dynamic render SDF lúc chạy, 0,5–2 ms mỗi glyph mới, đúng lúc người chơi mở màn hình. Và kiểm **tiếng Việt** — phần lớn font đẹp thiếu `ẳ ỡ ữ`, TMP không báo lỗi mà lặng lẽ hiện ô vuông.
+- `Senior` **UGUI hay UI Toolkit cho HUD game mobile?**
+  → Runtime HUD mobile: **UGUI**, vì UI Toolkit runtime chưa có world-space, khó gắn shader/material/particle vào UI, và không dùng Animator được. Editor tool thì ngược lại — UI Toolkit là thứ Unity khuyến nghị, và UXML/USS là text nên dễ diff, dễ để agent sửa. Trả lời "cái nào cũng được" là trả lời trượt.
+- `Senior` **Game có 20 màn hình UI — kiến trúc thế nào để không thành 20 `if`?**
+  → Mỗi màn hình là một prefab có `Show()/Hide()` async. Một `UIStack` quản lý push/pop và cả nút Back của Android. View **không biết** gameplay: nó nhận dữ liệu và bắn event lên. Lợi ích thực tế lớn nhất là mở thẳng một màn hình để test được, không phải bấm qua bốn menu mỗi lần sửa một chữ.
 
 **Khung trả lời 60 giây** — "UI tụt fps, anh debug thế nào?"
 

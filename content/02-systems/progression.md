@@ -161,3 +161,57 @@ Và luôn giữ một bản backup trước khi ghi đè — xem [[ux-flow]].
 - Bấm "Kiểm tra nhịp độ" — có cảnh báo tường nào không?
 - Grep số cứng liên quan XP/HP trong code — phải bằng 0.
 - `PlayerPrefs` chỉ dùng cho settings, không cho tiến trình?
+
+## 🎤 Phỏng vấn
+
+**Câu hay gặp**
+
+- `Junior` **Ba trục tiến trình là gì?**
+  → **Dọc** — số to hơn (HP 100 → 500): dễ làm, dễ hiểu, nhưng làm mất giá nội dung cũ và dễ bùng nổ chỉ số. **Ngang** — nhiều lựa chọn hơn (vũ khí, kỹ năng, build): giữ nội dung cũ còn giá trị, tạo autonomy, nhưng khó cân bằng. **Kỹ năng (mastery)** — người chơi giỏi lên, nhân vật không đổi: bền vững nhất vì không lạm phát.
+- `Junior` **Chỉ dùng một trục thì hỏng thế nào?**
+  → Chỉ **dọc** thì thành cày cuốc vô hồn. Chỉ **ngang** thì không có cảm giác mạnh lên. Chỉ **mastery** thì nhiều người chơi không đủ kiên nhẫn. Game tốt trộn cả ba, và câu hỏi thực sự là tỉ lệ — tỉ lệ đó nên suy ra từ động lực mình đang bán chứ không từ thể loại.
+- `Junior` **Khoảng cách giữa hai phần thưởng "cảm nhận được" nên là bao lâu?**
+  → Không quá **20 phút** ở giai đoạn đầu; sau khi người chơi đã gắn bó thì giãn ra được. Ba nhịp: micro 10 giây–2 phút (vàng rơi, thanh XP nhích), mid 5–20 phút (lên cấp, món đồ mới), macro 2–10 giờ (mở cơ chế mới, vùng đất mới).
+- `Mid` **Đường cong XP nên chọn dạng nào?**
+  → Dạng luỹ thừa `base × n^exponent` với exponent **1,5–2,2** phù hợp hơn với đa số game: nó chậm dần mà không dựng tường đột ngột. Dạng `base × growth^n` (growth 1,1–1,25) dốc hơn nhiều và rất dễ tạo tường ở giữa game. Nguyên tắc đi kèm: **thời gian lên cấp nên gần như hằng số hoặc tăng rất chậm**.
+- `Mid` **Vì sao thời gian lên cấp không được phình ra?**
+  → Vì người chơi cảm thấy **bị phạt vì đã chơi lâu**: cấp 1→2 mất 2 phút còn cấp 40→41 mất 6 tiếng là một thông điệp rất rõ. Cách giữ nó phẳng là để nguồn thu tăng cùng nhịp với chi phí — cùng đúng một luật với sink phải tăng cùng bậc với source trong kinh tế.
+- `Mid` **Phát hiện tường cày cuốc bằng cách nào?**
+  → Tính `thời_gian_tới_mốc_kế(n) = chi_phí(n) / thu_nhập_mỗi_giờ(n)` rồi **vẽ đồ thị theo n**. Nó nên khá phẳng hoặc dốc lên nhẹ; chỗ nào nhảy vọt chính là tường, và đó là nơi người chơi bỏ game. Công thức này rẻ và nó biến một cảm giác mơ hồ thành một điểm cụ thể trên trục.
+- `Senior` **Roguelike chết rồi giữ lại gì? Anh quyết định thế nào?**
+  → Nguyên tắc: **giữ lại lựa chọn, đừng giữ sức mạnh**. Hades mở thêm vũ khí và boon; Slay the Spire mở nhân vật và bài mới, không cộng HP vĩnh viễn; Dead Cells mở blueprint nhưng vẫn phải tìm được vật phẩm trong run. Giữ quá nhiều thì mỗi run mất ý nghĩa; giữ quá ít thì thất bại thành hình phạt thuần tuý.
+- `Senior` **Khi nào chấp nhận tiến trình dọc vĩnh viễn trong roguelite?**
+  → Khi dùng nó như **công cụ trợ năng** — một lượng nhỏ để người chơi kém vẫn vượt qua được — và khi có **trần rõ ràng**. Không có trần thì độ khó thật phụ thuộc số giờ đã cày chứ không phụ thuộc kỹ năng, và mọi cân bằng đường cong khó bị trôi theo thời gian chơi của từng người.
+- `Senior` **Tiến trình và core loop hay bị lẫn ở chỗ nào, và hậu quả là gì?**
+  → Core loop là thứ vui **ngay bây giờ**; tiến trình là lời hứa **ngày mai sẽ khác hôm nay**. Lẫn nhau vì cả hai đều thưởng. Hậu quả rất cụ thể: giữ chân kém thì đội đi thêm hệ thống tiến trình, trong khi vấn đề nằm ở mười giây gameplay không vui — và cái đó không bao giờ được sửa, chỉ được phủ thêm một lớp.
+
+**Khung trả lời 60 giây** — "Anh thiết kế hệ thống tiến trình thế nào?"
+
+> Tiến trình là **lời hứa rằng ngày mai sẽ khác hôm nay**, nên câu hỏi đầu tiên là khác ở chỗ nào: số to hơn (dọc), nhiều lựa chọn hơn (ngang), hay chính người chơi giỏi lên (mastery). Tôi trộn cả ba và nói rõ tỉ lệ, vì chỉ dọc là cày cuốc vô hồn, chỉ ngang là không thấy mạnh lên, chỉ mastery thì nhiều người không đủ kiên nhẫn.
+>
+> Về nhịp: micro vài chục giây, mid năm tới hai mươi phút, macro vài giờ — và khoảng cách giữa hai phần thưởng **cảm nhận được** không quá 20 phút ở giai đoạn đầu.
+>
+> Về hình dạng, tôi dùng đường cong luỹ thừa với exponent 1,5–2,2 và giữ một ràng buộc cứng: **thời gian lên cấp gần như hằng số**. Rồi vẽ `chi_phí(n) / thu_nhập_mỗi_giờ(n)` theo n — chỗ nào nhảy vọt là tường cày cuốc, và đó chính là chỗ người chơi bỏ game.
+
+**Họ sẽ đào tiếp**
+
+- *"Vì sao tiến trình dọc làm mất giá nội dung cũ?"* → Vì khi chỉ số tăng gấp năm thì mọi khu vực cũ trở nên vô hại, và toàn bộ công sức làm chúng chỉ còn dùng được một lần. Cách giảm thiệt hại là **level scaling có giới hạn** hoặc thiết kế nội dung cũ có giá trị khác ngoài thử thách — tài nguyên, cốt truyện, đường tắt.
+- *"Quá tải lựa chọn ở tiến trình ngang xử lý thế nào?"* → Mở dần thay vì mở hết, và mỗi lần mở thì giới thiệu **một** thứ trong bối cảnh nó hữu ích. Dấu hiệu quá tải: người chơi luôn chọn cái đầu tiên trong danh sách, hoặc pick rate tập trung vào ba lựa chọn trong số hai mươi.
+- *"Đo sức khoẻ của tiến trình bằng gì?"* → Thời gian giữa hai phần thưởng cảm nhận được, đường `chi_phí/thu_nhập` theo cấp, và phân bố cấp độ của người chơi đang hoạt động. Cụm dồn lại ở một cấp cụ thể là tường; đuôi dài rải đều là đường cong đang chạy đúng.
+- *"Dùng AI ở khâu này thế nào?"* → Cho nó mô phỏng **nhiều kiểu người chơi** — cày nhiều, chơi ít, chơi tối ưu — rồi in ra thời gian tới từng mốc cho từng kiểu. Chỗ ba đường lệch nhau quá xa là chỗ hệ thống đang thưởng cho thời gian thay vì thưởng cho kỹ năng, và đó là thứ khó thấy khi chỉ nhìn một bảng số.
+
+**Cờ đỏ**
+
+- Chỉ có tiến trình dọc, và gọi đó là "hệ thống tiến trình".
+- Thời gian lên cấp phình ra theo cấp mà không có nguồn thu tăng tương ứng.
+- Roguelite cộng chỉ số vĩnh viễn không trần.
+- Không tính được thời gian tới mốc kế tiếp ở từng cấp.
+- Chữa "game chán ở giờ thứ hai" bằng cách thêm một hệ thống tiến trình nữa.
+
+**Số / ví dụ nên thuộc**
+
+- Ba trục: **dọc · ngang · mastery**; game tốt trộn cả ba.
+- Nhịp thưởng: micro **10 s–2 phút** · mid **5–20 phút** · macro **2–10 giờ**; khoảng cách cảm nhận được ≤ **20 phút** giai đoạn đầu.
+- Đường cong XP: `base × n^exponent`, exponent **1,5–2,2**; dạng `growth^n` với **1,1–1,25** dốc hơn nhiều.
+- Công thức phát hiện tường: **`chi_phí(n) / thu_nhập_mỗi_giờ(n)`**, vẽ theo n, tìm đoạn nhảy vọt.
+- Roguelite: **giữ lựa chọn, không giữ sức mạnh** — Hades, Slay the Spire, Dead Cells.

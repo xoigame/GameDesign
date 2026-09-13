@@ -281,3 +281,58 @@ public static class DataValidatorMenu
 - Đổi tên file JSON đi: tool trả exit 2 và Console nói "không đọc được", không phải "dữ liệu sai".
 - Chạy `Tools/validate -in <file>` thẳng trong terminal: kết quả giống hệt trong Editor.
 - Trên CI: cố tình push một file sai — job phải đỏ ở bước validate, trước bước build Unity.
+
+## 🎤 Phỏng vấn
+
+**Câu hay gặp**
+
+- `Junior` **Tool đầu tiên đáng viết bằng Go là gì?**
+  → Validator dữ liệu. Nó kiểm bất biến của bảng cân bằng trước khi dữ liệu vào build, chạy trong CI và trả exit code khác 0 để build đỏ. Đây là cách rẻ nhất đưa Go vào dự án vì nó có ích ngay, không cần server, và không ai phải đổi quy trình đang chạy.
+- `Junior` **Vì sao Go hợp cho tool hơn script?**
+  → Vì nó cross-compile ra **một binary tĩnh** chạy được trên máy Windows của designer, máy Mac của artist và CI Linux, không cần cài runtime hay thư viện. Và với asset pipeline thì goroutine xử lý hàng nghìn file song song nhanh hơn script tuần tự nhiều lần.
+- `Mid` **Validator nên báo lỗi thế nào?**
+  → Gom hết lỗi rồi mới thoát, đừng dừng ở lỗi đầu tiên — designer sửa một lượt thay vì chạy lại mười lần. Exit code có nghĩa: `0` sạch, `1` dữ liệu sai, `2` tool hỏng, để CI và Unity đọc đúng mã mà quyết định. Lỗi in ra `stderr`, kết quả in ra `stdout`, nhờ vậy chuyển hướng kết quả ra file vẫn thấy lỗi trên màn hình.
+- `Mid` **Bot load test có gì hơn công cụ đo tải thông thường?**
+  → Nó nói chuyện bằng **chính giao thức của game bạn** — cùng handshake, cùng message, cùng nhịp — nên đo được đúng đường đi thật chứ không phải một endpoint đại diện. Mỗi bot một goroutine, 500 bot trên một laptop là bình thường, nên chi phí để có số liệu thật rất thấp.
+- `Senior` **Tool ghi đè file gốc có sao không?**
+  → Có: tool lỗi một lần là mất dữ liệu, và lỗi luôn xảy ra vào lúc tệ nhất. Ghi ra file tạm rồi `os.Rename` — đổi tên là thao tác nguyên tử trên cùng hệ thống file, nên hoặc bạn có file cũ nguyên vẹn, hoặc file mới hoàn chỉnh, không có trạng thái ở giữa.
+- `Senior` **Ranh giới nào cho việc viết tool thay vì dùng công cụ có sẵn?**
+  → Đừng viết lại thứ đã có tốt: đóng atlas, nén texture đều có công cụ chuyên dụng. Go nên làm phần **điều phối và kiểm tra** — gọi các công cụ đó theo đúng thứ tự, chạy song song, kiểm quy ước đặt tên, sinh manifest, và trả exit code cho CI. Viết lại phần xử lý nhị phân là tốn công mà chất lượng kém hơn.
+
+**Khung trả lời 60 giây** — "Anh dùng Go cho những việc gì ngoài server?"
+
+> Bốn loại tool, và tôi bắt đầu bằng loại rẻ nhất. **Validator dữ liệu** kiểm bất biến của bảng cân bằng trước khi nó vào build — id duy nhất, giá dương, tổng tỉ lệ drop bằng 100, mọi tham chiếu trỏ tới id có thật. Chạy trong CI, exit code khác 0 là build đỏ.
+>
+> Ba loại còn lại: **asset pipeline** điều phối các công cụ có sẵn và xử lý song song bằng goroutine; **tool build** gọi Unity ở chế độ batchmode rồi gắn version và sinh changelog; và **bot load test** giả lập vài trăm client nói chuyện bằng chính giao thức của game.
+>
+> Lý do chọn Go cho phần này là cross-compile: một binary tĩnh chạy giống hệt trên máy Windows của designer, máy build, và CI. Không ai phải cài gì.
+
+**Họ sẽ đào tiếp**
+
+- *"Vì sao gom lỗi thay vì dừng ở lỗi đầu?"* → Vì người dùng tool là designer, không phải lập trình viên. Dừng ở lỗi đầu nghĩa là họ sửa một dòng, chạy lại, lại thấy một lỗi khác — lặp mười lần cho một lần cập nhật bảng. Gom hết lại là khác biệt giữa công cụ có người dùng và công cụ bị bỏ.
+- *"Tool luôn trả về 0 thì sao?"* → CI xanh trong khi dữ liệu sai — tệ hơn là không có tool, vì giờ mọi người tin vào một cái lưới thủng. Đây là lỗi đáng sợ nhất trong nhóm này vì nó im lặng.
+- *"Xử lý hàng nghìn file song song cần lưu ý gì?"* → Phải giới hạn số goroutine bằng semaphore, nếu không thì hết file descriptor hoặc ăn sạch RAM với file lớn. Song song không giới hạn là cách nhanh nhất biến một tool hữu ích thành một tool làm treo máy.
+- *"Đường dẫn thì sao?"* → Nhận qua `flag`, không hardcode theo máy tác giả. Tool chỉ chạy được trên một máy thì nó không phải tool, nó là script cá nhân.
+- *"Load test hay đo sai ở đâu?"* → Quên `Close` response body nên kết nối không tái dùng được — kết quả ra số đẹp giả. Và đo trên cùng một máy với server cũng cho số vô nghĩa.
+
+**Cờ đỏ**
+
+- Tool luôn `os.Exit(0)`.
+- Hardcode đường dẫn theo máy người viết.
+- Ghi đè file gốc tại chỗ.
+- Chạy goroutine không giới hạn trên hàng nghìn file.
+- Viết lại từ đầu công cụ xử lý asset nhị phân đã có sẵn.
+- Tool chỉ có tác giả chạy được, không cross-compile cho máy designer.
+
+**Số / ví dụ nên thuộc**
+
+- Exit code: `0` sạch · `1` dữ liệu sai · `2` tool hỏng.
+- Lỗi ra `stderr`, kết quả ra `stdout`.
+- **500 bot** load test trên một laptop là bình thường với goroutine.
+- Cross-compile sẵn cho `windows/amd64` và `darwin/arm64`.
+
+**Kể trong dự án**
+
+- *"Anh viết tool nào?"* → Chọn tool **có người khác dùng hằng ngày**, không phải script chạy một lần. Việc người khác dùng nó là bằng chứng nó được thiết kế cho người dùng, không chỉ cho máy.
+- *"Khó khăn gặp phải?"* → Mẫu tốt: tool chạy đúng trên máy bạn nhưng designer không dùng nổi — đường dẫn cứng, hoặc phải mở terminal. Kể cách bạn đóng gói lại: cross-compile, nhận đường dẫn qua flag, và gắn vào menu Unity Editor để họ không phải rời môi trường quen thuộc.
+- *"Đóng góp nào còn lại sau khi anh rời dự án?"* → Tool và bước CI là loại đóng góp sống lâu nhất. Nếu validator của bạn vẫn chặn dữ liệu sai sau khi bạn đi, đó là câu trả lời mạnh hơn bất kỳ tính năng nào.

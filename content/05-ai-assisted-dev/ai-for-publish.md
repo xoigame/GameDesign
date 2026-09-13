@@ -194,3 +194,57 @@ Bước 2 là bước AI giúp được mà ít ai nghĩ tới — nó biến vi
 - Đã chạy pre-ship checklist trên bản build cuối chưa?
 - Đã xem mọi màn hình UI với chuỗi dài nhất chưa?
 - Có asset nào chưa rõ giấy phép trong build không? Xem [[ai-limits]].
+
+## 🎤 Phỏng vấn
+
+**Câu hay gặp**
+
+- `Junior` **AI giúp được gì ở khâu phát hành?**
+  → Bốn nhóm: **store page** (bản nháp mô tả nhiều phiên bản, gợi ý tag/keyword, rà lỗi và câu rườm rà), **trailer** (kịch bản và shot list, không phải bản dựng), **bản dịch** nháp, và **phân tích phản hồi**. Đây là khâu AI có ích rõ mà ít người dùng, vì phần lớn người làm indie làm khâu này một mình và làm lần đầu.
+- `Junior` **Trailer thì AI làm được gì và không làm được gì?**
+  → Làm được **kịch bản, shot list, thứ tự cảnh theo nguyên lý nhịp độ, và bản nháp caption**. Không làm được việc quan trọng nhất: **chọn được 8 giây hay nhất trong game của mình**. Đó là gu, và nó không xem được gameplay — nên phần quyết định vẫn nằm ở người đã chơi game hàng trăm giờ.
+- `Junior` **Ba lưu ý bắt buộc khi dùng AI dịch game?**
+  → **Layout vỡ** — tiếng Đức dài hơn khoảng 30%, tiếng Việt cao dòng hơn, nên UI phải co giãn được. **Thuật ngữ game cần glossary** — không đưa bảng thuật ngữ thì cùng một skill có ba tên khác nhau ở ba màn hình. Và **bản dịch nháp vẫn cần người bản ngữ đọc** trước khi ship, nhất là marketing copy.
+- `Mid` **Mảng nào ở khâu phát hành có giá trị cao nhất?**
+  → **Phân tích phản hồi**: gom review và comment, phân loại theo chủ đề, đếm tần suất; tách "bug thật" khỏi "không thích thiết kế" khỏi "chơi sai cách"; và phát hiện chủ đề mới xuất hiện sau một patch. Nó biến hàng nghìn dòng cảm tính thành một bảng có thể hành động.
+- `Mid` **Nhờ AI đọc phản hồi người chơi thì nhờ đến đâu là dừng?**
+  → Nhờ nó **gom nhóm triệu chứng**, không nhờ nó tổng hợp thành yêu cầu tính năng. Lý do là luật nền của playtest: **người chơi giỏi phát hiện vấn đề, dở đề xuất giải pháp** — nếu để AI tổng hợp thẳng thành "nên thêm nhảy đúp" thì mình vừa khuếch đại đúng phần yếu nhất của dữ liệu.
+- `Mid` **Quy định store về nội dung và công bố dùng AI thì tra ở đâu?**
+  → Ở **tài liệu chính thức của store tại thời điểm phát hành**. Quy định về độ dài, nội dung, và yêu cầu công bố nội dung AI **thay đổi theo thời gian** và khác nhau giữa các nền tảng — đây là loại thông tin tôi không hỏi AI, vì nó nằm sau thời điểm cắt dữ liệu và sai ở đây thì tốn cả một vòng duyệt.
+- `Senior` **Ranh giới nào không bước qua ở khâu này?**
+  → **Tạo review giả** (vi phạm điều khoản mọi store và bị phát hiện), **tự động đăng trả lời chưa đọc** (một câu sai giọng phá quan hệ cộng đồng lâu dài), **giả danh người khác**, và **dùng nghệ danh hay thương hiệu người khác trong marketing** (rủi ro pháp lý). Ba cái đầu đều có chung đặc điểm: lợi ích ngắn hạn nhỏ, thiệt hại dài hạn không hoàn tác được.
+- `Senior` **Patch note và devlog sinh bằng AI — quy trình an toàn là gì?**
+  → Sinh **bản nháp từ git log**, rồi người đọc và sửa trước khi đăng. Hai chỗ phải kiểm: nó có nêu thứ **chưa được phát hành** không, và nó có diễn giải sai một thay đổi kỹ thuật thành lời hứa với người chơi không. Cả hai đều là lỗi im lặng — đọc trôi chảy, sai về sự thật.
+- `Senior` **Vì sao "tự động đăng trả lời chưa đọc" lại nguy hiểm hơn nó trông?**
+  → Vì quan hệ cộng đồng là **tài sản tích luỹ chậm và mất nhanh**: một câu trả lời sai giọng trong một luồng đang bức xúc có thể thành ảnh chụp màn hình lan đi xa hơn mọi bài marketing. Và vì đây là chỗ **tốc độ không phải vấn đề cần giải quyết** — trả lời chậm hơn nửa giờ không ai để ý, trả lời sai thì có.
+
+**Khung trả lời 60 giây** — "Anh dùng AI ở khâu phát hành thế nào?"
+
+> Đây là khâu AI có ích rõ mà ít người dùng, vì phần lớn người làm indie làm nó một mình và làm lần đầu. Tôi dùng cho **bản nháp**: mô tả store nhiều phiên bản để chọn giọng, gợi ý tag, kịch bản và shot list cho trailer, patch note từ git log, và bản dịch nháp.
+>
+> Mảng giá trị cao nhất là **phân tích phản hồi** — gom review và comment, phân loại theo chủ đề, đếm tần suất, tách bug thật khỏi chuyện không thích thiết kế. Nhưng tôi chỉ nhờ nó **gom nhóm triệu chứng**, không nhờ tổng hợp thành yêu cầu tính năng, vì người chơi giỏi phát hiện vấn đề và dở đề xuất giải pháp.
+>
+> Hai ranh giới cứng. Về **sự thật**: quy định store và yêu cầu công bố nội dung AI thay đổi theo thời gian, nên tôi tra tài liệu chính thức tại thời điểm phát hành chứ không hỏi AI. Về **đạo đức và pháp lý**: không review giả, không tự động đăng trả lời chưa đọc, không giả danh, không mượn thương hiệu người khác.
+
+**Họ sẽ đào tiếp**
+
+- *"Vì sao AI không chọn được 8 giây hay nhất?"* → Vì nó không xem được gameplay, và vì "hay nhất" ở đây nghĩa là **khoảnh khắc truyền đạt được cái đặc biệt của game trong vài giây** — thứ chỉ người đã chơi hàng trăm giờ và biết game này bán cái gì mới chọn đúng. Nó dựng được khung nhịp cho trailer, nhưng nội dung từng shot thì không.
+- *"Glossary cho bản dịch gồm gì?"* → Tên riêng, tên skill và vật phẩm, thuật ngữ hệ thống, và **những từ cố ý không dịch**. Kèm theo nên có ghi chú ngữ cảnh cho các chuỗi ngắn — "Fire" là danh từ hay động từ quyết định bản dịch, và đó chính là lỗi dịch máy phổ biến nhất trong game.
+- *"Phát hiện chuỗi hardcode còn sót thế nào?"* → Giao cho nó quét mã tìm chuỗi hiển thị không đi qua hệ thống localization — việc duyệt đều tay, máy làm nhanh và không bỏ sót. Kèm theo là một bài kiểm thực dụng: chạy game với **ngôn ngữ giả** kéo dài mọi chuỗi thêm 40%, chỗ nào vỡ layout hoặc vẫn hiện tiếng gốc thì lộ ra ngay.
+- *"Đo xem khâu này có hiệu quả không bằng gì?"* → Bằng thứ vốn đã đo ở khâu phát hành: tỉ lệ chuyển đổi trên trang store, thời gian xem trailer, và **thời gian mình bỏ ra cho mỗi bản cập nhật cộng đồng**. Cái cuối là chỉ số trung thực nhất, vì lợi ích thật của AI ở đây là rút ngắn công việc một người đang làm một mình.
+
+**Cờ đỏ**
+
+- Trả lời câu hỏi về quy định store bằng trí nhớ của AI.
+- Để AI tổng hợp phản hồi người chơi thẳng thành danh sách tính năng.
+- Ship bản dịch máy cho marketing copy mà không có người bản ngữ đọc.
+- Tự động đăng trả lời cộng đồng chưa qua người đọc.
+- Không kiểm layout với ngôn ngữ dài hơn 30%.
+
+**Số / ví dụ nên thuộc**
+
+- Bốn nhóm việc: **store page · trailer (kịch bản, không phải bản dựng) · bản dịch · phân tích phản hồi**.
+- Tiếng Đức dài hơn **~30%**; tiếng Việt cao dòng hơn — UI phải co giãn.
+- Nhờ AI **gom nhóm triệu chứng**, không nhờ tổng hợp thành yêu cầu tính năng.
+- Quy định store và **công bố nội dung AI**: tra nguồn chính thức tại thời điểm phát hành.
+- Bốn ranh giới không bước qua: **review giả · đăng trả lời chưa đọc · giả danh · mượn thương hiệu người khác**.

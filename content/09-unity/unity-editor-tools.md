@@ -649,14 +649,24 @@ public class DebugConsole : MonoBehaviour
 
 **Câu hay gặp**
 
-| Mức | Câu hỏi |
-|---|---|
-| Junior | `[SerializeField] private` khác `public` chỗ nào? Vì sao nên dùng cái đầu? |
-| Junior | `OnValidate` chạy khi nào? Dùng nó để làm gì? |
-| Mid | Designer phải sửa 200 asset cùng một trường. Anh làm gì? |
-| Mid | Tắt Domain Reload để Play nhanh hơn — được gì, mất gì? |
-| Senior | Anh đã viết editor tool nào tiết kiệm được bao nhiêu thời gian cho team? |
-| Senior | Khi nào **không** nên viết tool? |
+- `Junior` **`[SerializeField] private` khác `public` chỗ nào? Vì sao nên dùng cái đầu?**
+  → Cả hai đều hiện trong Inspector, nhưng `public` còn mở field đó cho **mọi script khác** ghi vào. `[SerializeField] private` giữ được đóng gói: designer chỉnh trong Inspector, code bên ngoài không chạm được. Dùng `public` cho mọi field chỉ để hiện Inspector là cách biến mọi thứ thành trạng thái toàn cục.
+- `Junior` **`OnValidate` chạy khi nào? Dùng nó để làm gì?**
+  → Chạy **trong Editor** khi giá trị đổi hoặc script được biên dịch lại. Tốt để kiểm tra ràng buộc và cảnh báo sớm: `minDamage > maxDamage`, prefab thiếu collider. Không nên làm việc nặng hay gọi sang scene khác — và nhớ nó cũng chạy khi Unity load asset, nên code có side effect ở đây sinh ra những thay đổi git khó giải thích.
+- `Junior` **Vì sao code Editor phải nằm trong thư mục `Editor/`?**
+  → Vì `UnityEditor` **không tồn tại lúc runtime**: để ngoài thì build lỗi, và lỗi chỉ xuất hiện ở khâu build chứ không phải trong Editor. Thư mục `Editor/` (hoặc một asmdef khai platform Editor) là cách Unity tách phần code đó ra khỏi bản phát hành.
+- `Mid` **Designer phải sửa 200 asset cùng một trường. Anh làm gì?**
+  → Một `MenuItem` duyệt `AssetDatabase.FindAssets("t:EnemyData")`, sửa, rồi **`EditorUtility.SetDirty(obj)` + `AssetDatabase.SaveAssets()`**. Quên `SetDirty` là bẫy kinh điển: giá trị hiện đúng trong Inspector, đúng trong Play Mode, rồi biến mất khi mở lại project. Cách kiểm chứng duy nhất đáng tin: chạy tool → đóng Unity → mở lại → xem asset.
+- `Mid` **Tắt Domain Reload để Play nhanh hơn — được gì, mất gì?**
+  → Được: thời gian bấm Play từ 5–15 giây xuống dưới 1 giây, ở dự án trung bình là hàng chục phút mỗi ngày mỗi người. Mất: **`static` không reset** giữa các lần Play — `static int score` giữ giá trị cũ, `static event` giữ subscriber của lần trước và gọi vào object đã destroy. Muốn dùng thì mọi static có trạng thái phải reset trong `[RuntimeInitializeOnLoadMethod(SubsystemRegistration)]`.
+- `Mid` **Hai tool nào nên làm sớm vì trả lãi ngay?**
+  → **AssetPostprocessor** để import settings đúng tự động — import settings là code chứ không phải sở thích, và sửa sau khi đã có 500 asset thì rất đắt. Và **Gizmo/Handles** để nhìn thấy dữ liệu: tầm đánh, waypoint, vùng spawn vẽ thẳng trong Scene view. Nhìn thấy sai nhanh hơn đọc số sai rất nhiều.
+- `Senior` **Anh đã viết editor tool nào tiết kiệm được bao nhiêu thời gian cho team?**
+  → Trả lời phải có **con số và người dùng cụ thể**: việc gì, ai làm, trước mất bao lâu, sau mất bao lâu, dùng bao nhiêu lần một tuần. Ví dụ dễ đo nhất là **cheat console trong bản Development**: nhảy màn, cho vàng, bất tử, hiện FPS — nó rút ngắn vòng lặp QA hơn mọi thứ khác, và phải `#if DEVELOPMENT_BUILD` để tắt hoàn toàn ở Release.
+- `Senior` **Khi nào không nên viết tool?**
+  → Khi việc chỉ lặp vài lần. Khi tool sẽ cần bảo trì nhiều hơn việc nó thay thế. Và khi vấn đề thật ra là **dữ liệu thiết kế sai** — lúc đó tool chỉ làm việc sai trở nên nhanh hơn. Ước lượng thô của tôi: đáng viết khi *thời gian viết < thời gian tiết kiệm trong một tháng*.
+- `Senior` **Làm Inspector dễ dùng thì leo tầng thế nào?**
+  → **Tầng 0** là attribute có sẵn — `[SerializeField]`, `[Range]`, `[Header]`, `[Tooltip]`, `[ContextMenu]`: miễn phí và giải quyết khoảng 70% cảm giác "Inspector khó dùng". **Tầng 1** là thư viện attribute (NaughtyAttributes, Odin) cho `[Button]`, `[ShowIf]`. **Tầng 2** là custom Editor / EditorWindow, chỉ leo lên khi một việc lặp đủ nhiều để tính ra thời gian tiết kiệm.
 
 **Khung trả lời 60 giây** — "Anh làm tool cho team thế nào?"
 

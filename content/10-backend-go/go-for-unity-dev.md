@@ -247,3 +247,58 @@ Yêu cầu — theo đúng thứ tự này:
 ```
 
 **Bẫy thường gặp:** AI sinh Go trông như Java/C# — `type PlayerService interface` với đúng một implementation, getter/setter cho mọi field, DI container, `errors.New` không bọc ngữ cảnh — và code đó **biên dịch được, chạy đúng**, nên bạn không có tín hiệu nào để biết mình đang học sai. Hai cái nữa: nó hay dùng API đã lỗi thời (`ioutil`, `interface{}` thay generics) vì blog cũ chiếm phần lớn dữ liệu huấn luyện, và nó khẳng định "đã kiểm tra race" mà không chạy `-race` — trong khi race chỉ hiện ra khi chạy thật.
+
+## 🎤 Phỏng vấn
+
+**Câu hay gặp**
+
+- `Junior` **Go không có kế thừa thì tái dùng code kiểu gì?**
+  → Bằng embedding struct và bằng interface. Nhúng một struct vào struct khác để dùng lại field và method; còn hành vi chung thì tách thành interface. Kết quả là quan hệ "có một" thay vì "là một", và nó tránh được cây kế thừa sâu — thứ trong Unity hay biến thành `MonoBehaviour` gốc ôm mọi thứ.
+- `Junior` **Interface trong Go khác C# chỗ nào?**
+  → Nó **ngầm**: kiểu nào có đủ method là tự thoả interface, không khai báo `: IFoo` và không cần sửa file gốc. Nhờ vậy bạn định nghĩa được interface ở phía **người dùng** thay vì phía người cung cấp — tức là mỗi package khai đúng thứ nó cần, thay vì nhận một interface to do người khác thiết kế.
+- `Mid` **Bốn thói quen C# nào phải bỏ khi sang Go?**
+  → Dùng exception làm luồng điều khiển — trong Go lỗi là giá trị trả về và phải xử lý ngay tại chỗ. Dựng interface cho mọi thứ khi chỉ có một implementation. Cất `CancellationToken` trong struct — `context.Context` truyền qua tham số đầu tiên. Và viết getter/setter cho mọi field, thứ Go không cần vì đã có quy ước chữ hoa chữ thường.
+- `Mid` **`if err != nil` lặp đi lặp lại để làm gì?**
+  → Để mọi nhánh hỏng đều hiện ra trong code thay vì ẩn sau một `catch` ở đâu đó xa. Đổi lại là dài dòng, nhưng khi đọc một hàm bạn thấy ngay nó hỏng được ở những đâu. Cái quan trọng là **bọc ngữ cảnh** khi trả lỗi lên trên, chứ không phải trả lại nguyên lỗi trần — nếu không thì log chỉ có một dòng vô nghĩa lặp lại khắp nơi.
+- `Senior` **Lệnh nào trong bộ công cụ Go là bắt buộc trong CI?**
+  → `go vet` cho lỗi ngớ ngẩn, `staticcheck` cho code chết và API lỗi thời, và quan trọng nhất là **`go test -race`** — vì `go build` không bao giờ thấy data race, và race trong server phòng chỉ hiện ra khi đông người. Cộng thêm `go test -bench -benchmem` khi tối ưu, vì nó đo cả **số lần cấp phát**, không chỉ thời gian.
+- `Senior` **Code Go do AI sinh thường sai ở đâu mà vẫn chạy đúng?**
+  → Nó viết Go trông như Java hoặc C#: interface cho mọi thứ với đúng một implementation, getter/setter, DI container, `errors.New` không bọc ngữ cảnh. Code đó **biên dịch được và chạy đúng**, nên bạn không có tín hiệu nào để biết mình đang học sai — đó mới là phần nguy hiểm.
+
+**Khung trả lời 60 giây** — "Anh học Go từ nền C#, cái gì khó nhất?"
+
+> Cú pháp thì một tuần. Cái mất thời gian là **mô hình đồng thời**. Trong C# tôi quen chia sẻ state rồi bảo vệ bằng lock; trong Go cách đúng là để **một goroutine sở hữu state** và mọi thứ khác đi vào qua channel. Bỏ được lock thì cũng bỏ được cả lớp lỗi deadlock và race.
+>
+> Thứ hai là xử lý lỗi. `try/catch` cho phép đẩy lỗi lên chỗ khác lo; Go bắt tôi quyết định ngay tại chỗ, và bọc ngữ cảnh khi trả lên trên. Dài dòng hơn, nhưng đọc một hàm là thấy hết nhánh hỏng của nó.
+>
+> Thứ ba là bỏ thói quen dựng interface cho mọi thứ. Trong Go interface là **ngầm** và nên khai ở phía người dùng — nên tôi chỉ tạo nó khi thật sự có hai implementation, không tạo trước cho "sau này".
+
+**Họ sẽ đào tiếp**
+
+- *"Zero value có gì hay?"* → Biến luôn có giá trị dùng được ngay: chuỗi rỗng, số 0, map `nil` vẫn đọc được. Nó bỏ được phần lớn kiểm tra `null` mà C# phải làm. Cái bẫy là map `nil` đọc được nhưng **ghi vào thì panic** — đó là một trong những thứ vấp ngay tuần đầu.
+- *"`context.Context` dùng thế nào cho đúng?"* → Truyền qua tham số đầu tiên của hàm, không cất trong struct. Nó mang cả hạn chót lẫn tín hiệu huỷ, nên mọi goroutine đều có đường thoát — thiếu nó là goroutine chỉ tăng chứ không bao giờ giảm.
+- *"Vì sao Go cố ý không có LINQ?"* → Đánh đổi có chủ ý: code dài hơn nhưng đọc thẳng, không có tầng trừu tượng che mất chi phí thực. Từ Go 1.21 có `slices` và `maps` cho những thao tác phổ biến nhất, nhưng vòng `for` vẫn là cách viết bình thường chứ không phải dấu hiệu người mới.
+- *"Đặt tên package thế nào?"* → Một thư mục là một package, tên là danh từ ngắn như `room` hay `store`. Tránh `utils` — nó luôn phình thành chỗ chứa mọi thứ không thuộc về đâu, và trong Go điều đó tệ hơn vì tên package là một phần của tên hàm khi gọi.
+- *"Học bao lâu thì làm việc được?"* → Với người đã biết C#, khoảng hai tuần là viết được service nhỏ, nhưng hai tuần đó phải có **bài kiểm tra thật** — viết một API có database và một test chạy với `-race` — chứ không phải đọc tài liệu.
+
+**Cờ đỏ**
+
+- Viết Go như viết Java: interface cho mọi thứ, getter/setter, DI container.
+- Dùng `panic`/`recover` thay cho trả lỗi.
+- Cất `context.Context` trong struct.
+- Bỏ qua `err` bằng `_` cho "gọn".
+- Khẳng định không có race mà chưa bao giờ chạy `-race`.
+- Dùng `interface{}` thay generics vì đọc được blog cũ.
+
+**Số / ví dụ nên thuộc**
+
+- `go test -race` là bắt buộc trong CI — `go build` không bao giờ thấy race.
+- `go test -bench . -benchmem` đo cả **số lần cấp phát**.
+- Một thư mục = một package; tên là danh từ ngắn, không `utils`.
+- Lộ trình từ nền C#: khoảng **hai tuần** kèm một bài kiểm tra thật.
+
+**Kể trong dự án**
+
+- *"Anh học Go lúc nào?"* → Nếu học trong lúc làm dự án, nói thẳng — và kể **cái bạn làm để giảm rủi ro**: bắt đầu bằng tool thay vì bằng server production, hoặc nhờ review kỹ phần đồng thời. Người phỏng vấn đánh giá cách bạn quản lý rủi ro của chính mình.
+- *"Khó khăn gặp phải?"* → Mẫu rất thật: một data race chỉ lộ ra khi đông người, không tái hiện được ở môi trường dev. Kể cách bạn bật `-race` trong CI và tìm ra nó, và vì sao trước đó code trông hoàn toàn hợp lý.
+- *"Anh có thấy Go hạn chế không?"* → Trả lời trung thực thì tốt hơn khen một chiều: không dùng chung được code với client C#, nên struct định nghĩa hai lần và sẽ lệch — đó chính là lý do phải sinh từ protobuf. Nêu được cái giá của lựa chọn cho thấy bạn chọn có ý thức.

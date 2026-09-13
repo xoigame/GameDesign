@@ -193,3 +193,59 @@ Làm theo thứ tự, DỪNG chờ tôi duyệt sau mỗi bước:
 ```
 
 **Bẫy thường gặp:** hỏi AI "thiết kế backend cho game của tôi" mà không nêu nhịp ghi và CCU — nó sẽ trả về sơ đồ microservice + Kafka + k8s trông rất chuyên nghiệp cho một game 500 người chơi, và bạn sẽ mất ba tuần dựng hạ tầng thay vì làm game. Bẫy thứ hai: để AI quyết luôn *cái gì authoritative* — nó chọn theo cái dễ code nhất, tức là tin client.
+
+## 🎤 Phỏng vấn
+
+**Câu hay gặp**
+
+- `Junior` **Game của anh có mấy loại process ở phía server?**
+  → Ba, tách ngay từ đầu vì vòng đời khác nhau: API stateless không giữ gì trong RAM nên restart vô hại và nhân bản thoải mái; room server giữ cả trận trong RAM nên phải drain trước khi thoát; worker chạy job định kỳ và phải chạy lại được từ đầu. Luật một câu: state trong RAM chỉ được phép là thứ mất đi cũng không sao.
+- `Junior` **Vì sao chọn Go cho backend game?**
+  → Vì vận hành rẻ: goroutine nhẹ nên một VM 2 vCPU đỡ khoảng mười nghìn kết nối WebSocket, GC pause dưới 1ms đủ cho phòng tick 20–30Hz, và một binary tĩnh không kèm runtime nên không lệch phiên bản giữa máy dev và máy chủ. Không chọn vì "nhanh hơn C#" — ở tải game thường cả hai đều thừa sức.
+- `Mid` **Server netcode và backend khác nhau ở đâu?**
+  → Khác ở mọi dòng: state trong RAM so với trong database; mất một process là mất một trận so với mất tiền của người chơi; 20–60 tick mỗi giây so với vài request mỗi phút; phải drain so với rolling restart bất cứ lúc nào. Vì thế không nhét chung một process — hai lỗi kinh điển là giữ inventory trong RAM của phòng, và cho phòng ghi thẳng database mỗi tick.
+- `Mid` **Cái giá của việc chọn Go thay vì C# cho server là gì?**
+  → Không dùng chung được code với client Unity. Backend C# cho phép share nguyên file tính damage; với Go bạn định nghĩa struct hai lần và **hai bản sẽ lệch nhau** vào một ngày không ai nhớ. Hai cách sống chung: định nghĩa message một lần bằng protobuf rồi sinh cả `.go` lẫn `.cs` trong CI, hoặc chia ranh giới sao cho Go không phải mô phỏng gameplay.
+- `Senior` **Vì sao room server không được ghi thẳng vào database?**
+  → Hai lý do. Phòng là RAM nên thứ không được phép mất phải nằm trong Postgres trước khi trả về thành công; và phòng tick 20 lần mỗi giây, ghi thẳng thì database chết ở phòng thứ năm mươi. Phòng gửi kết quả qua API, API ghi một transaction — một đường ghi duy nhất nên đối soát được khi số liệu lệch.
+- `Senior` **Job nặng chạy chung với API thì hỏng thế nào?**
+  → Một job quét toàn bộ tài khoản để reset mùa sẽ ăn hết pool kết nối database, và request của người chơi bắt đầu timeout. Triệu chứng quan sát được là "game lag mỗi đầu giờ" trong khi nguyên nhân nằm ở cron — loại sự cố rất khó lần ra nếu không biết trước, vì chỗ có triệu chứng và chỗ có nguyên nhân không liên quan gì nhau trên sơ đồ.
+
+**Khung trả lời 60 giây** — "Kể kiến trúc backend của game anh làm"
+
+> Ba loại process, tách theo vòng đời chứ không theo tính năng. **API stateless** chạy nhiều bản sau cân bằng tải, nói HTTPS và JSON với client, và là nơi **duy nhất** được ghi vào nguồn chân lý. **Room server** giữ trận trong RAM, mỗi phòng một goroutine, WebSocket, tick 20Hz. **Worker** làm việc định kỳ như reset mùa và đối soát IAP.
+>
+> Dữ liệu thì Postgres là nguồn chân lý cho tài khoản, ví và inventory; Redis giữ phiên, hàng đợi ghép trận và bảng xếp hạng bằng ZSET; event analytics đẩy sang chỗ khác để Postgres không phình.
+>
+> Luật xuyên suốt: **room server gửi kết quả trận qua API thay vì tự ghi.** Một đường ghi duy nhất nên đối soát được, và database không phải chịu 20 write mỗi giây mỗi phòng.
+
+**Họ sẽ đào tiếp**
+
+- *"Quy mô nào thì cần tách ba process?"* → Tách ngay từ đầu, vì chi phí lúc đầu gần bằng không còn chi phí tách sau là viết lại phần vòng đời. Nhưng **triển khai** thì có thể gộp: ba process chạy trên cùng một VPS lúc mới phát hành hoàn toàn hợp lý, miễn là chúng là ba process thật.
+- *"Bắt đầu bằng Postgres hay thêm Redis luôn?"* → Postgres một mình đủ cho vài nghìn CCU đầu tiên: nó làm được `jsonb`, hàng đợi bằng `SELECT … FOR UPDATE SKIP LOCKED`, và khoá phân tán bằng advisory lock. Thêm Redis khi đo được điểm nghẽn thật, không phải vì sơ đồ trông chuyên nghiệp hơn.
+- *"Khi nào Go không phải lựa chọn đúng?"* → Khi cần server mô phỏng gameplay authoritative — lúc đó chạy Unity headless bằng chính code gameplay hợp lý hơn nhiều so với viết lại logic bằng Go rồi giữ hai bản đồng bộ. Và khi cần simulation xác định 120Hz có rollback thì cả Go lẫn C# đều không phải công cụ đúng.
+- *"Học Go mất bao lâu với người biết C#?"* → Khoảng hai tuần để viết được service nhỏ, nhưng phần khó không phải cú pháp mà là mô hình đồng thời: bỏ thói quen chia sẻ state rồi khoá, chuyển sang một chủ sở hữu và channel.
+- *"Bắt đầu từ đâu nếu chưa cần server?"* → Viết một tool bằng Go — validator dữ liệu chẳng hạn. Nó có ích ngay, chạy trong CI, và cho cả đội làm quen với Go mà không đặt cược gì vào nó.
+
+**Cờ đỏ**
+
+- Gộp room server và API vào một process cho "đơn giản".
+- Giữ inventory trong RAM của phòng cho nhanh.
+- Vẽ microservice, Kafka, k8s cho một game 500 CCU.
+- Chọn Go vì "nhanh hơn C#" mà không nêu được cái giá của việc không share code.
+- Chạy job nặng chung với process phục vụ người chơi.
+- Không phân biệt được thứ mất đi cũng không sao với thứ không được phép mất.
+
+**Số / ví dụ nên thuộc**
+
+- Ba loại process: API stateless · room server stateful · worker.
+- Một VM 2 vCPU: cỡ **10.000** kết nối WebSocket; goroutine stack khởi điểm **8 KB**.
+- GC pause **dưới 1ms** — đủ cho tick 20–30Hz, không đủ cho rollback 120Hz.
+- Postgres một mình đủ cho **vài nghìn CCU** đầu tiên.
+- Nhịp: backend vài request/phút/người · room **20–60 tick/giây**.
+
+**Kể trong dự án**
+
+- *"Anh phụ trách phần nào của backend?"* → Nêu ranh giới theo **process hoặc theo luồng**, không theo danh sách endpoint: "tôi sở hữu luồng kinh tế — từ endpoint mua tới transaction và sổ cái" là câu mở ra đúng chỗ bạn muốn được hỏi.
+- *"Khó khăn gặp phải?"* → Mẫu tốt cho node này: game lag đều đặn mỗi đầu giờ, mà mọi chỉ số của API đều bình thường. Kể cách bạn lần ra là một cron job ăn hết pool kết nối, và biện pháp tách nó ra process riêng có pool riêng.
+- *"Anh có tự chọn stack không?"* → Nếu stack có sẵn, kể lý do bạn **hiểu** vì sao nó được chọn và cái giá của nó. Nói được nhược điểm của công cụ mình đang dùng là dấu hiệu rõ nhất của người đã dùng nó thật.

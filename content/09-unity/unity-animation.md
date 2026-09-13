@@ -431,14 +431,24 @@ public class AttackStateBehaviour : StateMachineBehaviour
 
 **Câu hay gặp**
 
-| Mức | Câu hỏi |
-|---|---|
-| Junior | Animator Controller gồm những gì? Gọi một animation từ code thế nào? |
-| Junior | `SetTrigger` và `SetBool` khác nhau ra sao? |
-| Mid | Người chơi kêu "đánh bị chậm một nhịp". Anh chỉnh ở đâu? |
-| Mid | Animation Event có đáng tin không? Nếu không thì thay bằng gì? |
-| Senior | Hitbox của đòn đánh bật/tắt theo cái gì? |
-| Senior | Root motion hay code-driven? Chọn theo tiêu chí nào? |
+- `Junior` **Animator Controller gồm những gì? Gọi một animation từ code thế nào?**
+  → Gồm state (mỗi state phát một clip hoặc một Blend Tree), transition giữa các state, parameter (float/int/bool/trigger), và layer. Từ code thì đặt parameter — `SetBool`, `SetTrigger`, `SetFloat` — và để transition tự chạy; gọi thẳng `CrossFade` chỉ khi cần ép. Luôn dùng `Animator.StringToHash` một lần thay vì truyền string mỗi frame.
+- `Junior` **`SetTrigger` và `SetBool` khác nhau ra sao?**
+  → `SetBool` là trạng thái kéo dài, mình tự bật tắt. `SetTrigger` là xung một lần, tự tắt sau khi được tiêu thụ bởi một transition. Bẫy: gọi `SetTrigger` mỗi frame mà không `ResetTrigger` thì trigger **xếp hàng** và nhân vật đánh thêm một nhát ma sau khi người chơi đã nhả nút.
+- `Junior` **`CrossFade(hash, 0.1f)` là bao nhiêu mili giây?**
+  → **Không biết được** — đơn vị là tỉ lệ độ dài của **clip đích**: 0,1 với clip Hurt 0,25 s là 25 ms, với clip Death 2 s là 200 ms. Muốn giây thật thì dùng `CrossFadeInFixedTime`. Đây là câu hỏi phân loại rất nhanh vì nó chỉ có một câu trả lời đúng và không đoán được.
+- `Mid` **Người chơi kêu "đánh bị chậm một nhịp". Anh chỉnh ở đâu?**
+  → Gần như luôn là **hai con số trên transition**, không phải clip. `Has Exit Time` bật nghĩa là phải chờ clip hiện tại chạy hết tỉ lệ đã đặt — với đòn do người chơi khởi xướng thì phải **tắt**. Và `Transition Duration`: 0,05–0,1 s cho đòn tấn công, **0** cho Hurt/Death. Thêm `Interruption Source = Current State` để cancel được đòn đang ra.
+- `Mid` **Animation Event có đáng tin không? Nếu không thì thay bằng gì?**
+  → Không, với gameplay quan trọng. Event gắn vào clip nên **mất khi clip bị thay hoặc đổi tên**, không chạy nếu clip bị cắt bởi transition, thứ tự với `Update` không đảm bảo, và nó gọi hàm **bằng string**. Thay bằng **frame data trong ScriptableObject** — startup/active/recovery tính bằng frame — rồi tự đếm trong code. Event chỉ để lại cho bụi và tiếng bước chân.
+- `Mid` **Chân trượt trên sàn trong Blend Tree — sửa ở đâu?**
+  → Tốc độ di chuyển do code đặt không khớp tốc độ trong clip. Đo tốc độ gốc của clip run, rồi hoặc chỉnh tham số blend theo tốc độ thật, hoặc chỉnh `speed` của state theo tỉ lệ. Đây không phải lỗi animator mà là **lỗi đơn vị** — hai hệ thống nói về cùng một tốc độ bằng hai thang khác nhau.
+- `Senior` **Hitbox của đòn đánh bật/tắt theo cái gì?**
+  → Theo **frame data trong dữ liệu**, đếm trong code: startup bao nhiêu frame, active bao nhiêu, recovery bao nhiêu. Không theo Animation Event (không đáng tin) và không theo thời gian thực (lệch khi đổi tốc độ đòn). Lợi ích phụ rất lớn: startup/active/recovery là **ngôn ngữ chung với designer**, nên cân bằng đòn thành sửa số chứ không phải sửa clip.
+- `Senior` **Root motion hay code-driven? Chọn theo tiêu chí nào?**
+  → Root motion khi độ chính xác của **hình ảnh** quan trọng hơn độ chính xác của điều khiển: game hành động cận cảnh, đòn có bước lao, cutscene. Code-driven khi cần điều khiển chặt và dự đoán được: platformer, game có netcode, bất cứ thứ gì cần nhân vật dừng đúng chỗ. Trộn hai cái mà không có luật rõ ràng là nguồn của lỗi "nhân vật trôi một chút".
+- `Senior` **Đọc `GetCurrentAnimatorStateInfo` để quyết định logic — vấn đề ở đâu?**
+  → Nó **không đổi ngay** sau `SetTrigger`: state mới chỉ có ở frame sau, và trong lúc transition thì phải xem `IsInTransition(0)`. Dựa vào đó để quyết định logic là cách sinh ra bug không tái hiện được. Nguồn chân lý phải là **state machine của code**; Animator chỉ là tầng hiển thị chạy theo.
 
 **Khung trả lời 60 giây** — "Nhân vật đánh thấy chậm, sửa gì?"
 

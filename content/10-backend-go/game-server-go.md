@@ -279,3 +279,59 @@ public class GameApi : MonoBehaviour
 - Chỉnh đồng hồ máy tiến một ngày: phần thưởng offline không đổi (server tính bằng `now()` của nó).
 - Dùng proxy (Charles/Proxyman) sửa response `gold` thành 999999: lần đồng bộ kế tiếp giá trị về đúng con số của server.
 - Tắt wifi trong Editor: sau `maxRetry` lần, UI hiện lỗi tử tế trong khoảng 10 giây, không treo vô hạn.
+
+## 🎤 Phỏng vấn
+
+**Câu hay gặp**
+
+- `Junior` **Vì sao mỗi phòng một goroutine thay vì một map dùng chung có mutex?**
+  → Vì actor bỏ được cả lớp lỗi đồng thời: goroutine đó là chủ sở hữu duy nhất của state, mọi thứ khác đi vào qua channel nên không có mutex, không deadlock, không race để đi tìm. Map dùng chung với mutex rải khắp nơi chạy đúng khi test một mình và hỏng khi có hai mươi người — đúng lúc khó gỡ nhất.
+- `Junior` **Chọn giao thức nào cho phần meta như shop và inventory?**
+  → REST + JSON, độ trễ 50–200ms, và `UnityWebRequest` có sẵn nên không thêm thư viện. Đổi lấy vài mili giây bằng gRPC ở đây là lỗ: bạn mất khả năng debug bằng `curl` và đọc log proxy bằng mắt, trong khi người chơi không cảm nhận được chênh lệch ở một request mỗi phút.
+- `Mid` **Server có thẩm quyền cả khi game chỉ có một người chơi, vì sao?**
+  → Vì chỉ cần có bảng xếp hạng hoặc IAP là đã có động cơ gian lận. Cụ thể: client gửi ý định chứ không gửi nguyên inventory, server validate đủ năm thứ cho mỗi hành động — có sở hữu không, đủ nguyên liệu không, đủ cấp không, hết cooldown chưa, trạng thái hợp lệ không — random do server quay và ghi lại seed, IAP verify với Apple/Google rồi lưu transaction id `UNIQUE`.
+- `Mid` **Deploy lúc đang có người trong trận thì làm gì?**
+  → Graceful shutdown: `signal.NotifyContext`, ngừng nhận phòng mới, chờ trận đang chạy kết thúc trong tối đa hai phút, rồi mới `srv.Shutdown`. Không có nó thì mỗi lần deploy là một lần người chơi mất trận, và hệ quả tệ hơn là cả đội bắt đầu sợ deploy — rồi bản vá nằm chờ hàng tuần.
+- `Senior` **Server chạy ba ngày thì RAM lên đều rồi OOM. Anh nghi gì trước?**
+  → Hai thứ theo thứ tự: WebSocket không đặt read deadline và không xử lý pong, nên kết nối zombie tích lại; và goroutine không có đường thoát theo `ctx`, nên số goroutine chỉ đi lên. Cách xác nhận nhanh là mở `pprof` ở cổng nội bộ và so số goroutine theo thời gian — nếu nó tăng đơn điệu thì không cần đoán thêm.
+- `Senior` **Vì sao không ghi state phòng xuống database mỗi tick?**
+  → Vì 20 tick mỗi giây mỗi phòng thì database chết ở phòng thứ năm mươi. Chỉ ghi ở mốc quan trọng và khi kết thúc trận. Nguyên tắc nền là state trong RAM chỉ được phép là thứ mất đi cũng không sao; thứ không được phép mất thì phải nằm trong Postgres **trước khi** server trả về thành công.
+
+**Khung trả lời 60 giây** — "Kiến trúc server Go cho game của anh trông thế nào?"
+
+> Ba loại process, tách ngay từ đầu vì vòng đời khác nhau. **API stateless** không giữ gì trong RAM nên rolling restart vô hại và nhân bản thoải mái. **Room server** giữ cả trận trong RAM, mỗi phòng một goroutine sở hữu state, tick 20Hz, phải drain trước khi thoát. **Worker** chạy job định kỳ và phải chạy lại được từ đầu.
+>
+> Giao thức chọn theo loại dữ liệu: REST + JSON cho meta vì debug được bằng `curl`, WebSocket cho realtime. gRPC tôi chỉ dùng giữa các service backend, không nói chuyện thẳng với client vì nó khó với IL2CPP và WebGL.
+>
+> Luật xuyên suốt là **room server không ghi vào nguồn chân lý** — nó gửi kết quả trận qua API, API ghi một transaction. Một đường ghi duy nhất nên đối soát được, và database không phải chịu 20 write mỗi giây mỗi phòng.
+
+**Họ sẽ đào tiếp**
+
+- *"Vì sao Go chứ không phải C# cho server?"* → Vận hành rẻ: goroutine nhẹ, một VM 2 vCPU đỡ khoảng mười nghìn kết nối WebSocket, và một binary tĩnh không kèm runtime. Cái giá phải trả là **không dùng chung code với Unity** — struct định nghĩa hai lần và sẽ lệch, nên phải sinh từ protobuf. Không chọn Go vì "nhanh hơn C#"; ở tải game thường cả hai đều thừa sức.
+- *"GC của Go có đủ cho game không?"* → Đủ cho backend và cho phòng tick 20–30Hz vì pause dưới 1ms. **Không** đủ để thay C++/Rust ở simulation xác định 120Hz có rollback, vì ở đó mỗi allocation trong vòng lặp nóng mới là kẻ thù và Go không cho kiểm soát bố cục bộ nhớ.
+- *"Channel nên có buffer không?"* → Có, trong vòng lặp phòng thì bắt buộc. Channel không buffer nghĩa là một client mạng chậm treo cả phòng. Buffer đầy thì ngắt client đó, không bao giờ để vòng lặp bị block.
+- *"`/healthz` và `/readyz` khác nhau thế nào?"* → Cái đầu nói process còn sống, cái sau nói ping được database. Gộp làm một thì database chậm một giây là load balancer rút sạch instance — tự gây sự cố từ một cơn chậm thoáng qua.
+- *"Đo gì trước khi mở cửa?"* → Load test bằng `k6` hoặc `vegeta` ở 3–5 lần CCU dự kiến, nhìn **p99** chứ không nhìn trung bình, và đếm số kết nối database đang mở. Số trung bình luôn đẹp và luôn vô dụng.
+
+**Cờ đỏ**
+
+- "Để client tính cho nhẹ server" ở bất kỳ game nào có bảng xếp hạng hoặc IAP.
+- Lấy thời gian từ client — mời người chơi chỉnh đồng hồ máy để tua idle game.
+- Nhét `gold` hay `level` vào JWT claim: nó cũ ngay lập tức và mời người ta thử sửa.
+- Gộp API và room server vào một process cho "đơn giản".
+- Decode JSON vào `interface{}` rồi ngạc nhiên vì tiền lệch một đơn vị (số thành `float64`).
+- Khẳng định đã kiểm tra race mà chưa từng chạy với cờ `-race`.
+
+**Số / ví dụ nên thuộc**
+
+- Tick phòng **20Hz**; phòng rỗng **30 giây** thì tự dọn; drain tối đa **2 phút**.
+- JWT ngắn hạn **15 phút** + refresh token lưu trong database để thu hồi được.
+- Ghi database mỗi tick: **20–30 write/giây/phòng** — chết ở phòng thứ năm mươi.
+- Load test ở **3–5 lần** CCU dự kiến, nhìn **p99**.
+- Một VM 2 vCPU: cỡ **10.000** kết nối WebSocket bằng Go.
+
+**Kể trong dự án**
+
+- *"Anh viết phần server nào?"* → Nêu ranh giới sở hữu: "tôi viết vòng lặp phòng và luồng chốt kết quả trận" mạnh hơn "tôi làm backend". Rồi để người hỏi chọn chỗ đào tiếp.
+- *"Khó khăn gặp phải?"* → Mẫu rất thật và khó bịa: RAM tăng đều rồi OOM sau ba ngày chạy. Kể quá trình dùng `pprof` đếm goroutine, tìm ra kết nối zombie vì thiếu read deadline, và bài học là mọi goroutine phải có đường thoát theo `ctx`.
+- *"Anh học được gì khi chuyển từ C# sang Go?"* → Câu trả lời tốt nói về **mô hình đồng thời**, không phải cú pháp: bỏ thói quen dùng lock để chia sẻ state, chuyển sang một chủ sở hữu và giao tiếp bằng channel.

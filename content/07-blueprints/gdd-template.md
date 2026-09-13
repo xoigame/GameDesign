@@ -264,3 +264,57 @@ Với mỗi chỗ, nói bạn sẽ mặc định chọn gì và hậu quả nế
 - Mục 5b đã điền chưa? Layer có ghi đúng số chưa?
 - Đã nêu Input System mới hay cũ chưa?
 - Đã nêu Rigidbody hay tự viết chuyển động chưa?
+
+## 🎤 Phỏng vấn
+
+**Câu hay gặp**
+
+- `Junior` **Ba mục quan trọng nhất trong một GDD dành cho AI đọc?**
+  → **Design Pillars** — không có nó thì AI cho ra game generic, và phần *loại trừ* quan trọng ngang phần khẳng định. **Bất biến** — không có nó thì agent vô tình phá thiết kế trong lúc "giúp". **Không thuộc phạm vi** — mục ít người viết nhất và tiết kiệm nhiều thời gian nhất.
+- `Junior` **Cột "cách phát hiện" trong bảng bất biến dùng để làm gì?**
+  → Để biến một **nguyện vọng** thành một **luật kiểm tra được**. Có nó thì mình yêu cầu được: "rà thay đổi vừa rồi theo INV-01..05, báo cáo vi phạm", và nhiều dòng chuyển thẳng thành test chạy trong CI. Không có nó thì bảng bất biến chỉ là một trang tài liệu ai cũng gật đầu rồi không ai mở lại.
+- `Junior` **Chỉ agent tới tài liệu thiết kế thế nào?**
+  → Bằng một **file luật ở gốc repo game** trỏ đường tới phần còn lại: GDD ở đâu, bất biến ở đâu, bảng số ở đâu, và cái gì agent **không được chạm**. Agent đọc file trực tiếp thay vì mình dán vào chat — vừa rẻ hơn vừa luôn đúng hiện trạng.
+- `Mid` **Vì sao mục "không thuộc phạm vi" lại tiết kiệm nhiều thời gian nhất?**
+  → Vì nó chặn đúng chỗ AI mặc định về **trung bình của ngành**. Không viết ra thì mỗi vài phiên lại có một tính năng "ai cũng có" được thêm vào, và mình mất thời gian phát hiện rồi gỡ — hoặc tệ hơn, không phát hiện. Viết ra một lần thì nó là câu trả lời có sẵn cho cả người lẫn máy.
+- `Mid` **Điền GDD mà chỉ có nửa ngày thì ưu tiên gì?**
+  → Ba mục trên, theo đúng thứ tự. Chúng là ba mục **loại trừ** — pillar loại bỏ hướng thiết kế sai, bất biến loại bỏ thay đổi phá vỡ, không-thuộc-phạm-vi loại bỏ tính năng thừa. Các mục mô tả tính năng thì có thể bổ sung dần; ba mục này thiếu ngày nào là trả giá ngày đó.
+- `Mid` **Phần nào của template nên để trống có chủ đích?**
+  → Phần **chưa quyết**, và phải ghi rõ "(chưa quyết — hỏi trước khi làm)" thay vì để trắng. Ô trắng được AI và người mới hiểu là "tự quyết"; một dòng ghi chú biến nó thành một câu hỏi. Đây là khác biệt nhỏ trong cách viết nhưng đổi hẳn hành vi của người đọc tài liệu.
+- `Senior` **GDD template này khác GDD truyền thống ở đâu về mặt cấu trúc?**
+  → Ở hai mục cuối — **bất biến** và **không thuộc phạm vi** — và ở mức độ cụ thể: mọi con số ảnh hưởng cảm giác chơi đều phải viết ra dưới dạng giá trị, không phải tính từ. GDD truyền thống tối ưu cho việc **thuyết phục và truyền cảm hứng**; GDD này tối ưu cho việc **thực thi và từ chối**.
+- `Senior` **Template dùng cho một dự án thật thì sửa gì?**
+  → Bỏ mục nào không áp dụng thay vì để trống cho đẹp, và **thêm phần riêng cho ràng buộc của dự án**: nền tảng đích, ngân sách hiệu năng, và các quyết định đã chốt kèm lý do. Cái không nên sửa là hai mục bất biến và không-thuộc-phạm-vi — chúng là lý do template này tồn tại.
+- `Senior` **Giữ GDD và code không lệch nhau bằng cách nào?**
+  → Ba việc: tài liệu **nằm trong repo** và sửa trong **cùng PR** với code; bảng số **chỉ tồn tại một bản** ở file dữ liệu, còn GDD giữ ý định và khoảng chấp nhận được rồi trỏ tới đó; và một việc định kỳ cho agent **soát mâu thuẫn giữa tài liệu và code thật**. Hai bản số ở hai nơi thì bản trong tài liệu luôn là bản cũ.
+
+**Khung trả lời 60 giây** — "Một GDD dùng được với AI trông thế nào?"
+
+> Khác GDD truyền thống ở mục tiêu: GDD truyền thống tối ưu cho **thuyết phục**, còn cái này tối ưu cho **thực thi và từ chối**. Nên nó ngắn, đặc, có số, và có phần nói rõ **cái gì không làm**.
+>
+> Nếu chỉ có thời gian điền ba mục, tôi chọn: **Design Pillars** kèm danh sách loại trừ, vì thiếu nó thì kết quả luôn là game generic. **Bất biến**, mỗi dòng kèm một cột **cách phát hiện vi phạm** — cột đó là thứ biến nguyện vọng thành luật kiểm tra được, và nhiều dòng chuyển thẳng thành test trong CI. Và **không thuộc phạm vi**, mục ít người viết nhất mà tiết kiệm nhiều thời gian nhất.
+>
+> Về cách dùng: tài liệu nằm trong repo, agent **đọc file trực tiếp** chứ không dán vào chat, và một file luật ở gốc trỏ đường tới phần còn lại. Chỗ nào chưa quyết thì ghi "chưa quyết, hỏi trước khi làm" — ô trắng luôn bị hiểu là tự quyết.
+
+**Họ sẽ đào tiếp**
+
+- *"Bất biến nên có bao nhiêu dòng?"* → Ít và đắt: khoảng năm tới tám, đánh mã INV-01 trở đi, và chỉ dành cho những thứ **sai thì đắt** — kinh tế, tiến trình, save, ranh giới kiến trúc. Đặt bất biến cho mọi thứ thì không ai đọc, và lúc đó bảng bất biến thành trang trí cũng như mọi tài liệu không ai mở.
+- *"Làm sao biết một pillar đã đủ sắc để đưa vào template?"* → Nếu nó **không giết được ít nhất một tính năng mình từng muốn làm** thì chưa phải pillar. Đó cũng là lý do ô "loại trừ" bắt buộc phải điền: nó là bằng chứng cho thấy pillar có khả năng nói không.
+- *"Template này dùng cho game đã làm được nửa đường thì sao?"* → Vẫn dùng được, và thường có ích hơn: điền **bất biến và không-thuộc-phạm-vi** dựa trên những quyết định đã chốt trong thực tế. Viết ngược lại từ code đang chạy còn cho thấy chỗ nào đội đang mâu thuẫn với chính mình mà chưa ai nói ra.
+- *"Dùng AI để điền template thế nào?"* → Cho nó **phỏng vấn ngược chính mình**: nó hỏi từng câu, mình trả lời, nó viết thành mục. Phần lớn tri thức dự án nằm trong đầu người chứ không nằm trong file nào, và một loạt câu hỏi tốt moi ra nhanh hơn ngồi nhìn trang trắng. Ràng buộc bắt buộc: chỗ nào mình chưa trả lời thì ghi "(chưa quyết)", **không được tự điền**.
+
+**Cờ đỏ**
+
+- GDD không có mục bất biến và mục không thuộc phạm vi.
+- Bất biến viết ở dạng nguyện vọng, không có cách phát hiện vi phạm.
+- Bảng số chép hai bản: một trong GDD, một trong file dữ liệu.
+- Ô chưa quyết để trắng thay vì ghi rõ là chưa quyết.
+- Tài liệu nằm ngoài repo, và được dán vào chat mỗi phiên.
+
+**Số / ví dụ nên thuộc**
+
+- Ba mục ưu tiên: **Design Pillars (có loại trừ) · Bất biến (có cách phát hiện) · Không thuộc phạm vi**.
+- Bất biến: khoảng **5–8 dòng**, đánh mã **INV-01…**, chỉ cho thứ sai thì đắt.
+- Quy tắc độ cụ thể: **con số ảnh hưởng cảm giác chơi thì phải viết ra**.
+- Chỗ chưa quyết ghi **"(chưa quyết — hỏi trước khi làm)"**, không để trắng.
+- Tài liệu **trong repo**, agent **đọc file trực tiếp**, sửa trong **cùng PR** với code.

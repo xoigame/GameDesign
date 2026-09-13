@@ -188,3 +188,57 @@ void Update() => rb.linearVelocity = v;      // Unity 6 đổi tên: velocity ->
 - `grep -r "using UnityEngine" Assets/Scripts/Core/` → phải rỗng.
 - Test EditMode chạy dưới 1 giây cho toàn bộ `Core/`.
 - Không có `Instantiate`/`Destroy` nào trong code chạy mỗi frame.
+
+## 🎤 Phỏng vấn
+
+**Câu hay gặp**
+
+- `Junior` **Chọn kiến trúc theo tiêu chí nào?**
+  → Theo **quy mô thật của dự án**, không theo xu hướng. Dưới 50 thực thể và còn prototype: OOP thường, MonoBehaviour, đừng nghĩ nhiều. 50–500: component-based cộng object pool. 500–5000: ECS hoặc data-oriented cho **hệ thống nóng**. Trên 5000: ECS toàn phần, xử lý theo lô.
+- `Junior` **Vì sao composition hơn inheritance trong gamedev?**
+  → Vì **kế thừa không diễn tả được tổ hợp**. Cây `Enemy → FlyingEnemy → ...` hỏng ngay khi cần một kẻ địch vừa bay vừa bắn vừa nổ khi chết. Component ghép tự do thì mỗi khả năng là một mảnh độc lập. Lợi ích kèm theo: đây cũng là kiến trúc **agent làm việc tốt nhất** — thêm hành vi là thêm một component, không đụng code cũ.
+- `Junior` **Vì sao object pool bắt buộc với đạn và hạt?**
+  → Không chỉ vì tốc độ cấp phát. Trong môi trường có GC, cấp phát liên tục gây **giật lag định kỳ** khi GC chạy — và giật lag rõ ràng hơn nhiều so với FPS thấp đều. Pool biến một chuỗi spike thành chi phí phẳng, nên nó sửa đúng thứ người chơi cảm nhận được.
+- `Mid` **Câu hỏi kiểm tra trước khi dùng ECS là gì?**
+  → *"Tôi có thật sự có vấn đề hiệu năng **đã đo được** không?"* Chưa đo thì chưa cần ECS. Nó giải quyết hiệu năng ở quy mô lớn và đổi lại bằng độ phức tạp cùng **tốc độ thử nghiệm chậm đi** — game indie dưới 200 thực thể dùng ECS thường tự làm khó mình mà không thu được gì.
+- `Mid` **Event bus mạnh ở đâu, và nhược điểm nghiêm trọng là gì?**
+  → Mạnh ở chỗ các hệ thống **không biết nhau**, thêm bớt tự do. Nhược điểm nghiêm trọng: **luồng thực thi trở nên vô hình** — có bug thì không biết cái gì chạy khi nào và không đọc code lần ra được. Đây cũng là chỗ AI agent dễ sai nhất, vì nó không thấy các liên kết ngầm.
+- `Mid` **Vậy dùng event ở đâu, gọi hàm trực tiếp ở đâu?**
+  → Event cho **giao tiếp giữa các hệ thống lớn** — combat báo cho UI, audio, quest. Gọi hàm trực tiếp cho **giao tiếp trong một hệ thống**, nơi thứ tự và luồng cần đọc được. Và bất kể chọn gì, luôn có công cụ **log/trace mọi event** ở chế độ debug; không có nó thì event bus là một hộp đen.
+- `Senior` **Ranh giới kiến trúc nào quan trọng nhất về mặt kiểm thử?**
+  → **Tách logic khỏi biểu diễn.** Logic là luật chơi, công thức, máy trạng thái — C# thuần, không tham chiếu API engine, test được trong EditMode. Biểu diễn là thứ đọc trạng thái và vẽ ra. Dấu hiệu đi đúng: file test logic không có dòng `using UnityEngine` nào. Lợi ích phụ là đổi engine chỉ phải viết lại phần biểu diễn.
+- `Senior` **Kiến trúc nào làm việc tốt nhất với AI agent, và vì sao?**
+  → **Component + dữ liệu dạng text + ranh giới rõ**. Agent thêm một component mà không đụng code cũ; agent sửa bảng số mà mình review bằng diff; và agent không cần hiểu toàn bộ hệ thống mới làm được một việc nhỏ. Ngược lại, event bus ngầm và trạng thái toàn cục là hai thứ làm agent sai nhiều nhất — cùng lý do làm người mới vào dự án sai nhiều nhất.
+- `Senior` **Đội đề xuất viết lại sang ECS để "tối ưu". Anh phản hồi thế nào?**
+  → Hỏi hai câu: **số đo trước và sau** dự kiến là gì, và phần nào của game thật sự nóng. Rồi đề xuất hướng rẻ hơn: chuyển **chỉ vòng lặp nóng** sang mảng struct cộng job cộng Burst, giữ nguyên phần còn lại là GameObject — thường lấy được phần lớn lợi ích với một phần nhỏ chi phí. Viết lại toàn bộ chỉ đáng khi quy mô thực thể đã ở bậc mà GameObject không gánh nổi.
+
+**Khung trả lời 60 giây** — "Anh chọn kiến trúc cho một dự án game thế nào?"
+
+> Theo **quy mô thật**, không theo xu hướng. Dưới năm mươi thực thể và còn đang prototype thì OOP thường là đúng — đừng nghĩ nhiều. Năm mươi tới năm trăm thì component-based cộng object pool. Trên năm trăm thì mới tính tới data-oriented cho các hệ thống nóng, và ECS toàn phần chỉ khi đã ở bậc hàng nghìn.
+>
+> Hai nguyên tắc tôi giữ ở mọi quy mô. **Composition thay cho inheritance**, vì cây kế thừa không diễn tả được tổ hợp — một kẻ địch vừa bay vừa bắn vừa nổ khi chết là đủ làm vỡ mọi cây. Và **tách logic khỏi biểu diễn**: luật chơi là C# thuần, test được, không tham chiếu API engine.
+>
+> Event bus thì dùng có chừng mực: giữa các hệ thống lớn thì có, trong một hệ thống thì gọi hàm trực tiếp. Nhược điểm của nó rất thật — luồng thực thi thành vô hình, và khi có bug thì không đọc code lần ra được. Nên nếu dùng, tôi luôn làm kèm công cụ trace mọi event ở chế độ debug.
+
+**Họ sẽ đào tiếp**
+
+- *"ECS bị lạm dụng ở chỗ nào?"* → Ở chỗ người ta chọn nó vì hiệu năng **chưa đo** và vì nó nghe hiện đại. Cái mất cụ thể là **tốc độ thử nghiệm**: mọi thay đổi nhỏ đều phải đi qua nhiều lớp, và với game đang tìm lối chơi thì tốc độ thử nghiệm quan trọng hơn hiệu năng. Nó đáng khi số thực thể đã là vấn đề đo được.
+- *"Object pool khó ở đâu?"* → Không ở pool mà ở **reset cho đủ**: trail, particle, vận tốc rigidbody, coroutine đang chạy, animator state. Quên một cái là viên đạn thứ hai bay ra mang theo trạng thái của viên trước, và bug đó phụ thuộc thứ tự tái sử dụng nên rất khó truy.
+- *"Làm sao biết mình đang lạm dụng event?"* → Khi phải **đặt breakpoint để biết chuyện gì xảy ra tiếp theo** trong một luồng lẽ ra đọc được, và khi một hành động đơn giản kích hoạt bảy handler ở bảy file. Lúc đó event đang làm việc của một lời gọi hàm, và cái giá là toàn bộ khả năng đọc hiểu.
+- *"Kiến trúc ảnh hưởng gì tới thời gian onboard người mới?"* → Rất nhiều, và đó là chi phí ít được tính nhất. Người mới hiểu được một hệ thống khi họ **đọc được luồng**; component rõ ràng và ranh giới logic/biểu diễn rút thời gian đó xuống, còn trạng thái toàn cục và event ngầm kéo nó dài ra. Cùng đúng những thứ làm agent làm việc tốt hơn hay tệ hơn.
+
+**Cờ đỏ**
+
+- Chọn ECS trước khi có số đo hiệu năng nào.
+- Cây kế thừa bốn tầng cho kẻ địch.
+- Event bus cho mọi giao tiếp, kể cả trong cùng một hệ thống.
+- Không có công cụ trace event ở chế độ debug.
+- Logic game bám chặt API engine ở mọi lớp, nên không test được gì.
+
+**Số / ví dụ nên thuộc**
+
+- Quy mô → kiến trúc: **< 50** OOP thường · **50–500** component + pool · **500–5000** ECS/data-oriented cho hệ thống nóng · **> 5000** ECS toàn phần.
+- Câu hỏi kiểm tra trước ECS: **"đã đo được vấn đề hiệu năng chưa?"**
+- Event bus: giữa **hệ thống lớn** thì dùng, trong **một hệ thống** thì gọi trực tiếp; luôn có trace ở debug.
+- Pool bắt buộc cho: **đạn · hạt · số sát thương · kẻ địch**.
+- Dấu hiệu tách logic đúng: file test logic **không có `using UnityEngine`**.

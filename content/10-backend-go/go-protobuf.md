@@ -326,3 +326,58 @@ public class GameSocket : MonoBehaviour
 - Bật Network Profiler hoặc đếm byte trong `OnBinaryMessage`: snapshot 8 người ở 20Hz phải nhỏ hơn bản JSON tương đương vài lần.
 - Build IL2CPP (không phải Mono) rồi chạy: parse vẫn đúng, không `MissingMethodException`.
 - Cho server gửi một loại message client chưa biết: client bỏ qua và **vẫn chơi tiếp**, không ngắt kết nối.
+
+## 🎤 Phỏng vấn
+
+**Câu hay gặp**
+
+- `Junior` **Khi nào dùng protobuf, khi nào cứ JSON?**
+  → REST meta thì JSON, realtime thì protobuf. Login, shop, inventory gọi vài lần một phút — JSON ở đó đáng giá vì debug được bằng `curl` và đọc log bằng mắt. Còn 20 gói mỗi giây cho mỗi người trong phòng thì mỗi byte và mỗi lần cấp phát đều nhân lên theo số người; protobuf nhỏ hơn 2–5 lần với dữ liệu nhiều số.
+- `Junior` **Envelope để làm gì?**
+  → Vì WebSocket chỉ đưa cho bạn một mảng byte, không có chỗ nào nói "đây là message loại gì". Gói mọi message trong một `Envelope` có `oneof` giải đúng việc đó, và cho bạn thêm chỗ đặt `seq` để đánh số gói. Không có envelope thì phải tự phát minh một byte header — và nó sẽ thiếu thứ bạn cần ở tháng thứ ba.
+- `Mid` **Bốn luật đánh số field là gì?**
+  → Chỉ thêm không đổi nghĩa; không tái sử dụng số đã bỏ, đánh dấu `reserved`; field mới phải chạy đúng khi client cũ không gửi nó; và bỏ field theo ba nhịp — ngừng dùng, chờ, rồi mới xoá. Field 1 tới 15 dùng tag một byte nên để dành cho thứ gửi thường xuyên nhất.
+- `Mid` **Vì sao không commit code sinh ra từ `.proto`?**
+  → Vì có bản sinh trong repo là có người sửa nó rồi quên sửa `.proto` — và từ đó hợp đồng không còn là nguồn chân lý nữa. Sinh lại trong CI thì lệch schema thành build đỏ chứ không phải bug ở máy người chơi.
+- `Senior` **Làm sao biết một thay đổi `.proto` sẽ phá client cũ?**
+  → Chạy `buf breaking` trong CI, so với bản trên nhánh chính. Đổi số field hay đổi kiểu là build đỏ ngay. Đây là bước rẻ nhất trong toàn bộ pipeline và nó chặn đúng loại lỗi đắt nhất — loại chỉ lộ ra ở máy người chơi đã cài bản cũ.
+- `Senior` **Protobuf trên Unity có bẫy gì riêng?**
+  → IL2CPP strip code không được tham chiếu tĩnh, nên reflection trong runtime protobuf có thể ném `MissingMethodException` chỉ ở bản build, không ở Editor. Phải test trên **bản IL2CPP thật**, không phải Mono, và giữ lại thứ cần bằng `link.xml`. Thêm nữa, client phải **bỏ qua message chưa biết** thay vì ngắt kết nối, vì server luôn được nâng cấp trước client.
+
+**Khung trả lời 60 giây** — "Thêm field vào message đang chạy production?"
+
+> Lấy một số field **chưa dùng bao giờ**, không đụng số cũ. Field số 5 là `gold` thì vĩnh viễn là `gold` — cần thứ khác thì thêm field số 12. Và field mới phải chạy đúng khi client cũ không gửi nó, tức là giá trị rỗng phải có nghĩa hợp lý ở phía server.
+>
+> Cái tôi không bao giờ làm là **dùng lại số đã bỏ**. Client cũ sẽ đọc dữ liệu mới bằng nghĩa cũ, không báo lỗi gì cả — sai lặng lẽ là loại lỗi đắt nhất. Bỏ field thì đánh dấu `reserved` rồi quên số đó đi.
+>
+> Để không phụ thuộc vào trí nhớ, CI chạy `buf breaking` so với nhánh chính: đổi số hay đổi kiểu là build đỏ ngay, thay vì thành bug ở máy người chơi ba tuần sau.
+
+**Họ sẽ đào tiếp**
+
+- *"`sint32` khác `int32` chỗ nào?"* → `sint32` dùng mã zigzag nên số âm nhỏ gọn hơn nhiều. Với toạ độ hay delta — thứ thường xuyên âm và gửi 20 lần mỗi giây — chọn đúng kiểu là tiết kiệm thật, không phải tối ưu vặt.
+- *"Vì sao version nằm trong package?"* → `package game.v1` cho phép v1 và v2 sống song song trong cùng một binary. Khi buộc phải phá vỡ tương thích, bạn chạy hai bản cùng lúc cho tới khi client cũ hết, thay vì ép mọi người cập nhật trong một đêm.
+- *"Protobuf có che giấu dữ liệu không?"* → Không. Nó là mã hoá nhị phân để gọn và nhanh, không phải để bảo mật — ai bắt được gói tin đều giải mã được bằng công cụ có sẵn. Bảo mật vẫn phải là TLS cộng với việc server không tin số nào client gửi.
+- *"Chi phí ban đầu của protobuf?"* → Codegen, thêm một bước build, thêm DLL vào Unity, và mất khả năng nhìn gói tin bằng mắt. Với dự án nhỏ chỉ có meta game thì cái giá đó không đáng; lý do đáng nhất để trả nó thường **không phải băng thông** mà là để có một hợp đồng viết ra giữa hai đội.
+- *"Ai sửa `.proto`?"* → Cả hai phía cùng review trước khi merge. File này là nơi duy nhất hai đội gặp nhau, nên nó xứng đáng có quy trình riêng thay vì trôi qua như một commit bình thường.
+
+**Cờ đỏ**
+
+- Đánh số lại field khi "dọn dẹp" file contract.
+- Commit code sinh ra rồi sửa tay nó.
+- Thêm field bắt buộc và gọi đó là tương thích ngược.
+- Coi protobuf là một lớp bảo mật.
+- Chỉ test trên Mono trong Editor rồi kết luận IL2CPP cũng chạy.
+- Client ngắt kết nối khi gặp message lạ, thay vì bỏ qua.
+
+**Số / ví dụ nên thuộc**
+
+- Protobuf nhỏ hơn JSON **2–5 lần** với dữ liệu nhiều số.
+- Field **1–15** dùng tag một byte — dành cho message gửi thường xuyên.
+- `buf breaking` trong CI là cổng chặn thay đổi phá tương thích.
+- Version trong package: `game.v1` — v1 và v2 sống song song được.
+
+**Kể trong dự án**
+
+- *"Ai đề xuất dùng protobuf?"* → Nếu là bạn, nêu **lý do thật**: thường không phải băng thông mà là hết chịu nổi cảnh hai phía hiểu khác nhau về cùng một field. Lý do đó nghe đáng tin hơn nhiều so với lý do hiệu năng.
+- *"Khó khăn gặp phải?"* → Mẫu tốt: build Editor chạy ngon, build IL2CPP ném `MissingMethodException` khi parse. Kể cách bạn khoanh vùng ra là strip code và xử lý bằng `link.xml` — chi tiết này chỉ người từng build thật mới kể được.
+- *"Anh thêm gì vào quy trình?"* → Nếu bạn đưa `buf breaking` vào CI, đó là đóng góp đếm được: nêu lần vỡ tương thích trước đó đã tốn bao nhiêu, và sau khi thêm thì không lặp lại nữa.

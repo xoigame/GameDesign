@@ -280,14 +280,24 @@ public class EnemyDataValidationTests
 
 **Câu hay gặp**
 
-| Mức | Câu hỏi |
-|---|---|
-| Junior | EditMode test và PlayMode test khác nhau thế nào? |
-| Junior | Test của anh để ở đâu trong project để nó không lọt vào build? |
-| Mid | Trong một game, cái gì đáng viết unit test và cái gì không? |
-| Mid | Làm sao test được code đang nằm trong MonoBehaviour? |
-| Senior | Pipeline build/CI ở dự án gần nhất của anh tự động tới đâu? |
-| Senior | Bộ test xanh nhưng bản build vẫn hỏng trên máy thật. Thiếu tầng nào? |
+- `Junior` **EditMode test và PlayMode test khác nhau thế nào?**
+  → EditMode chạy trong Editor không vào Play Mode: nhanh, hợp cho C# thuần và cho việc validate asset. PlayMode vào Play Mode thật, có vòng đời MonoBehaviour và coroutine, chạy được trên thiết bị — chậm hơn nhiều. Phần lớn giá trị nằm ở EditMode; PlayMode để dành cho smoke test.
+- `Junior` **Test của anh để ở đâu để nó không lọt vào build?**
+  → Trong thư mục có **asmdef tick Test Assemblies**, và tham chiếu `UnityEngine.TestRunner`/`UnityEditor.TestRunner`. Không tick thì code test lọt vào build thật — kéo theo cả NUnit và cả những phương thức chỉ dùng để mở khoá trạng thái test, thứ không nên có mặt trong bản phát hành.
+- `Junior` **Loại test nào trả lãi cao nhất trong game?**
+  → **Validate asset**: một EditMode test duyệt mọi ScriptableObject và prefab để bắt enemy thiếu prefab, id trùng, `minDamage > maxDamage`, clip âm thanh đã bị xoá. Loại lỗi này làm QA mất cả buổi mà máy tìm ra trong một giây — và vì nó là lỗi **dữ liệu**, không compiler nào bắt được.
+- `Mid` **Trong một game, cái gì đáng viết unit test và cái gì không?**
+  → Đáng: thứ mà một lỗi âm thầm sẽ đắt hơn công viết test — công thức sát thương và kinh tế, máy trạng thái quest, điều kiện mở khoá, và **migration save**. Không đáng: cảm giác điều khiển, bố cục UI, "màn chơi có vui không" — đó là việc của playtest, không phải của CI.
+- `Mid` **Làm sao test được code đang nằm trong MonoBehaviour?**
+  → Không test trực tiếp mà **kéo logic ra ngoài**: hàm tĩnh thuần cho công thức, interface cho thời gian và ngẫu nhiên (`IClock`, `IRandom`), còn MonoBehaviour chỉ đọc input, gọi logic, đẩy lên hiển thị. Dấu hiệu đi đúng: file test logic **không có dòng `using UnityEngine` nào**.
+- `Mid` **Test lung lay (flaky) thì xử lý thế nào?**
+  → Coi như bug ưu tiên cao: sửa hoặc xoá ngay. Một bộ test đỏ ngẫu nhiên sẽ dạy cả đội thói quen bấm chạy lại cho tới khi xanh, và lúc đó nó **tệ hơn là không có test**. Nguyên nhân quen thuộc: `WaitForSeconds` để "đợi cho chắc", và test dùng chung `static` nên phụ thuộc thứ tự chạy.
+- `Senior` **Pipeline build/CI ở dự án gần nhất của anh tự động tới đâu?**
+  → Thang tôi dùng: script build một lệnh → test trên mỗi PR → **build đêm cho QA** → smoke test trên bản build → farm thiết bị. Ba chỗ tốn hay bị bỏ quên: kích hoạt license trên máy CI, **cache `Library/`** (không cache là 40 phút thay vì 6, và phải xoá cache khi nâng phiên bản Unity), và iOS bắt buộc runner macOS.
+- `Senior` **Bộ test xanh nhưng bản build vẫn hỏng trên máy thật. Thiếu tầng nào?**
+  → Thiếu **smoke test trên bản build**: nạp Boot, qua menu, vào màn 1, chạy 30 giây, chỉ kiểm không có exception. CI thường chỉ chạy EditMode test nên mọi lỗi chỉ tồn tại ở bản build — stripping, IL2CPP AOT, thiếu asset trong bundle — đều lọt qua. Rẻ, và bắt được phần lớn sự cố "build không mở được".
+- `Senior` **Vì sao độ phủ (coverage) là mục tiêu sai trong game?**
+  → Vì game có rất nhiều code chỉ để hiển thị và để nối engine; ép phủ nó là viết test cho những dòng không có quyết định nào bên trong. Con số phủ tăng nhưng rủi ro không giảm. Mục tiêu đúng là phủ **nơi có logic và có hậu quả lâu dài** — kinh tế, save, quest — rồi để phần còn lại cho playtest.
 
 **Khung trả lời 60 giây** — "Trong game thì test cái gì?"
 

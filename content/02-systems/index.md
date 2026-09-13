@@ -110,3 +110,55 @@ Với 5 hệ thống và 200 con số, Inspector từng asset không đủ. Mộ
 - `grep -r "using UnityEngine" Assets/Scripts/Core/` → rỗng?
 - Test EditMode cho toàn bộ `Core/` chạy dưới 1 giây?
 - Grep phép gán vào field ScriptableObject → phải bằng 0?
+
+## 🎤 Phỏng vấn
+
+Node con trong nhánh này đều có mục 🎤 riêng. Mục này gom những câu **bắc ngang nhiều hệ thống** —
+loại câu người phỏng vấn dùng để xem bạn có nhìn game như một hệ thống liên thông hay không.
+
+**Systems design được hỏi ở ba dạng**
+
+| Dạng | Họ đo cái gì | Node nên ôn |
+|---|---|---|
+| "Hệ thống này hỏng, sửa sao" | Bạn chẩn đoán theo nguyên nhân hay theo triệu chứng | [[economy-design]], [[difficulty-curve]] |
+| "Thiết kế hệ thống X cho game Y" | Bạn có khung và có số, hay chỉ có ý tưởng | [[progression]], [[combat-systems]], [[meta-systems]] |
+| "Vì sao con số này là con số này" | Bạn đo hay bạn đoán | [[balancing-math]], [[randomness]] |
+
+**Câu hay gặp**
+
+- `Junior` **Cân bằng game nghĩa là gì?**
+  → Không phải làm mọi thứ bằng nhau, mà là làm cho **mọi lựa chọn đều đáng cân nhắc trong một bối cảnh nào đó**. Ba lựa chọn giống hệt nhau về sức mạnh thì cân bằng hoàn hảo và vô nghĩa hoàn hảo — không còn gì để quyết định, tức là mất autonomy, tức là mất một trong ba nhu cầu giữ người chơi.
+- `Junior` **Kể tên một hệ thống anh sẽ bỏ khỏi một game và vì sao.**
+  → Trả lời bằng phép thử: **bỏ nó đi thì game tệ hơn hay chỉ ngắn hơn?** Chỉ ngắn hơn thì đó là nội dung kéo dài thời gian, không phải thiết kế. Thêm một tầng nữa: hệ thống đó phục vụ nhu cầu nào trong ba nhu cầu competence, autonomy, relatedness — không trả lời được thì nó là mỡ thừa.
+- `Mid` **Kinh tế trong game bị lạm phát sau ba tháng. Nguyên nhân thường gặp?**
+  → **Sink không co giãn**: sink là hằng số trong khi source tăng theo cấp. Kèm theo là các sự kiện phát thêm tài nguyên mà không có drain tương ứng. Sửa là cho sink tăng cùng bậc với source, hệ số **1,15–1,35**, và thêm sink mềm vô hạn cho người chơi lâu năm — chứ không phải thu hồi tài nguyên đã phát.
+- `Mid` **Người chơi kêu game ăn gian dù tỉ lệ đúng như công bố. Anh làm gì?**
+  → Giả định code đúng và **cảm nhận mới là thứ hỏng**, vì con người không có trực giác về chuỗi ngẫu nhiên. Sửa không phải bằng cách đổi tỉ lệ mà bằng cách **bóp đuôi phân phối**: pity, shuffle bag, PRD, hoặc trọng số kèm cấm lặp — giữ nguyên kỳ vọng, cắt chuỗi xui cực đoan.
+- `Senior` **Thiết kế hệ thống tiến trình cho game 30 giờ — anh bắt đầu từ đâu?**
+  → Từ **tỉ lệ ba trục** dọc, ngang, mastery — và nói rõ vì sao tỉ lệ đó. Rồi nhịp thưởng: khoảng cách giữa hai phần thưởng cảm nhận được **không quá 20 phút** giai đoạn đầu. Rồi hình dạng đường cong với ràng buộc **thời gian lên cấp gần như hằng số**. Cuối cùng vẽ `chi_phí(n) / thu_nhập_mỗi_giờ(n)` để tìm tường cày cuốc trước khi người chơi tìm ra.
+- `Senior` **Số liệu nói một build ổn nhưng cộng đồng gọi nó là bẫy. Anh theo bên nào?**
+  → Theo cả hai, vì **cân bằng nhận thức quan trọng ngang cân bằng thực tế**: người chơi tin thứ gì đó yếu thì nó yếu thật, vì không ai luyện nó. Tôi tìm nguyên nhân nhận thức — phản hồi kém rõ, hoặc sức mạnh dồn về cuối đường cong — rồi sửa phần truyền đạt trước khi sửa con số.
+
+**Khung trả lời 60 giây** — "Anh thiết kế và cân bằng một hệ thống mới thế nào?"
+
+> Ba bước, và bước đầu quan trọng nhất. **Dạng công thức**: giảm sát thương dùng đường cong bão hoà chứ không dùng phép trừ, chi phí mua nhiều lần dùng cấp số nhân, mọi thứ cộng dồn phải có lợi ích giảm dần. Chọn sai dạng thì không con số nào cứu được, vì trường hợp suy biến nằm ngay trong công thức.
+>
+> Rồi **luật chống bùng nổ**: cộng trong cùng một loại, nhân giữa các loại khác nhau, và trần cứng cho hút máu, giảm cooldown, tốc đánh. Gần như mọi vụ vỡ cân bằng tôi gặp đều bắt đầu từ việc nhân hai phần trăm cùng loại.
+>
+> Cuối cùng là **mô phỏng**, và nhìn **phân bố chứ không nhìn trung bình**: winrate 55% ổn định thì lành mạnh, còn 55% ghép từ 90 và 10 là đang có hard counter. Tôi soi vài ngưỡng — pick rate không quá 25%, PvP lệch không quá 5%, TTK biến thiên dưới hai lần — rồi để playtest lo phần cảm nhận, vì toán chỉ đưa tới khoảng 80%.
+
+**Cờ đỏ**
+
+- Cân bằng bằng cách chỉnh số tới khi "thấy ổn", không có mô phỏng nào.
+- Không phân biệt được ngẫu nhiên trước và sau quyết định của người chơi.
+- Đề xuất daily, streak, battle pass mà chưa hỏi game thuộc loại nào, dài bao lâu.
+- Tăng độ khó chỉ bằng nhân HP và sát thương.
+- Bỏ qua phản hồi cộng đồng vì "số liệu nói khác".
+
+**Số / ví dụ nên thuộc**
+
+- Giáp bão hoà `dmg × K/(K+armor)`; luật **cộng trong cùng loại, nhân giữa các loại**.
+- Winrate PvE **45–65%** · PvP **48–52%** · pick rate ≤ **25%**.
+- Sink tăng cùng bậc source, hệ số **1,15–1,35**; game sống lâu cần **sink mềm vô hạn**.
+- Nhịp thưởng: khoảng cách cảm nhận được ≤ **20 phút** giai đoạn đầu.
+- Phép thử meta: **"bỏ nó đi thì tệ hơn hay chỉ ngắn hơn?"**

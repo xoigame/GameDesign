@@ -385,14 +385,24 @@ Kiểm tra thêm bằng Profiler: trong lúc "quảng cáo" hiện, `Time.timeSc
 
 **Câu hay gặp**
 
-| Mức | Câu hỏi |
-|---|---|
-| Junior | Rewarded, interstitial, banner khác nhau thế nào? |
-| Junior | Tích hợp quảng cáo vào game Unity gồm những bước gì? |
-| Mid | Người chơi xem hết quảng cáo mà không nhận được thưởng. Nguyên nhân? |
-| Mid | Mediation là gì? Vì sao không dùng một mạng duy nhất? |
-| Senior | Doanh thu rewarded thấp hơn hẳn số lượt hiển thị. Anh tìm ở đâu? |
-| Senior | Xác thực hoá đơn IAP ở đâu, và vì sao? |
+- `Junior` **Rewarded, interstitial, banner khác nhau thế nào?**
+  → **Rewarded** là người chơi tự chọn xem để đổi lấy thưởng — eCPM cao nhất và ít hại retention nhất vì nó là giao dịch tự nguyện. **Interstitial** chen toàn màn hình giữa hai lượt chơi — doanh thu khá nhưng đặt sai chỗ là giết retention. **Banner** hiện thường trực, eCPM thấp nhất, đổi lại là diện tích màn hình.
+- `Junior` **Tích hợp quảng cáo vào game Unity gồm những bước gì?**
+  → Init SDK (sau form consent ở khu vực GDPR), **preload** quảng cáo, hiện khi người chơi yêu cầu, xử lý callback, và nạp lại cho lần sau. Kèm hai thứ hay quên: dừng game **và tắt tiếng** khi hiện, và một **timeout** phòng trường hợp adapter không bao giờ gọi callback đóng.
+- `Junior` **`Time.timeScale = 0` khi hiện quảng cáo — đủ chưa?**
+  → Chưa. `timeScale = 0` **không dừng audio**, phải thêm `AudioListener.pause = true`. Đây là lỗi rất hay gặp vì trong Editor người ta test bằng quảng cáo giả và không nghe thấy gì — nó chỉ lộ ra trên thiết bị thật, khi nhạc game chồng lên tiếng quảng cáo.
+- `Mid` **Người chơi xem hết quảng cáo mà không nhận được thưởng. Nguyên nhân?**
+  → Hai nguyên nhân phổ biến. Trao thưởng ở sự kiện **đóng quảng cáo** thay vì ở callback "người dùng đã nhận thưởng" — sai cả hai chiều, ai đóng sớm cũng có thưởng còn lượt hoàn tất thì lẫn lộn. Hoặc app bị kill ngay sau callback: phải **ghi phần thưởng chờ xuống đĩa** trước, rồi trao, rồi mới xoá.
+- `Mid` **Mediation là gì? Vì sao không dùng một mạng duy nhất?**
+  → Mediation là lớp đứng giữa nhiều mạng quảng cáo, cho chúng cạnh tranh từng lượt hiển thị. Một mạng duy nhất thì **fill rate** thấp ở nhiều thị trường — có lượt không có quảng cáo nào để hiện — và không có cạnh tranh nên eCPM thấp. Cái giá: mỗi mạng thêm vào là build phình **vài chục MB** và thêm một adapter có thể làm hỏng build.
+- `Mid` **Consent và ATT phải làm đúng thứ tự nào?**
+  → Form consent chạy **trước khi init SDK quảng cáo** ở khu vực áp dụng GDPR — init trước rồi mới hỏi là vi phạm. Trên iOS còn có ATT: cần `NSUserTrackingUsageDescription` trong `Info.plist`, **thiếu khoá đó là crash ngay khi gọi**. Và test consent phải ép bằng chế độ giả lập khu vực của SDK, vì máy dev không ở EU.
+- `Senior` **Doanh thu rewarded thấp hơn hẳn số lượt hiển thị. Anh tìm ở đâu?**
+  → Theo thứ tự: trao thưởng sai chỗ nên đếm lượt "hoàn tất" nhiều hơn thực tế; **eCPM theo vùng** — cùng một lượt xem ở các thị trường khác nhau chênh nhiều lần; fill rate thấp nên nhiều lượt không có quảng cáo; hoặc mediation đang chạy waterfall cũ thay vì bidding. Số cần so là **doanh thu trên mỗi DAU**, không phải số impression.
+- `Senior` **Xác thực hoá đơn IAP ở đâu, và vì sao?**
+  → **Ở server.** Kiểm ở client chỉ là gợi ý; ai sửa được bộ nhớ thì cũng "mua" được. Hai thứ hay quên đi kèm: trên Google Play, giao dịch không được **acknowledge trong 3 ngày** sẽ tự hoàn tiền — người chơi mất đồ, mình mất doanh thu, và log thì sạch sẽ; còn iOS **bắt buộc** có nút khôi phục mua hàng, thiếu là bị từ chối duyệt.
+- `Senior` **Tài khoản AdMob bị khoá vì gì, và phòng thế nào?**
+  → Vì bấm vào **quảng cáo thật** trong lúc phát triển. Luôn dùng ad unit test hoặc thiết bị test đã đăng ký, và nói cho **cả đội, kể cả QA** — khoá là khoá cả tài khoản, không chỉ một app, và quy trình khiếu nại rất chậm. Đây là rủi ro vận hành, không phải rủi ro kỹ thuật, nên nó phải nằm trong tài liệu onboarding của dự án.
 
 **Khung trả lời 60 giây** — "Luồng hiện một rewarded của anh thế nào?"
 

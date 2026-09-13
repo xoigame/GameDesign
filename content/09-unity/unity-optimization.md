@@ -482,14 +482,24 @@ public class BoidsJobDemo : MonoBehaviour
 
 **Câu hay gặp**
 
-| Mức | Câu hỏi |
-|---|---|
-| Junior | Game tụt xuống 25fps trên máy Android tầm trung. Anh làm gì **đầu tiên**? |
-| Mid | Làm sao biết đang CPU-bound hay GPU-bound? |
-| Mid | Có mấy cơ chế gom draw call? Chúng loại trừ nhau thế nào? |
-| Mid | Cứ vài giây game khựng một nhịp. Nghi gì trước? |
-| Senior | Trên mobile, giảm draw call hay giảm overdraw quan trọng hơn? |
-| Senior | Bộ nhớ vượt ngưỡng, app bị hệ điều hành kill. Anh cắt ở đâu trước? |
+- `Junior` **Game tụt xuống 25 fps trên máy Android tầm trung. Anh làm gì đầu tiên?**
+  → Không mở file code nào cả: **build Development lên đúng máy yếu nhất**, nối Profiler qua máy thật, chụp khoảng 300 frame ở cảnh đông nhất. Profiler chạy trong Editor đo cả Editor, và máy dev có GPU gấp hai chục lần điện thoại — mọi tối ưu trước bước này là đoán.
+- `Junior` **Phân biệt frame time và fps quan trọng ở chỗ nào?**
+  → Vì fps không tuyến tính. 60 → 50 fps là mất **3,3 ms**; 30 → 25 fps là mất **6,7 ms**. Cùng "mất 5 fps" nhưng khối lượng công việc phải cắt khác nhau gấp đôi. Mọi ngân sách và mọi báo cáo tối ưu nên nói bằng mili giây, chỉ quy ra fps khi nói chuyện với người ngoài kỹ thuật.
+- `Junior` **Cứ vài giây game khựng một nhịp. Nghi gì trước?**
+  → GC. Tìm cấp phát mỗi frame: LINQ, `foreach` trên `IEnumerable<T>` (boxing enumerator), closure bắt biến trong lambda, nối chuỗi trong log, `Physics.RaycastAll`. Và nhớ **`Debug.Log` vẫn chạy trong bản Release** — format chuỗi cộng lấy stack trace; bọc `[Conditional("UNITY_EDITOR")]` hoặc tắt `Debug.unityLogger.logEnabled`.
+- `Mid` **Làm sao biết đang CPU-bound hay GPU-bound?**
+  → Nhìn tên hàm trên main thread. `Gfx.WaitForPresentOnGfxThread` lớn = CPU đang đợi GPU, **GPU-bound**, sửa code C# lúc đó vô ích. `Gfx.WaitForCommands` lớn = quá nhiều draw call và state change. `WaitForTargetFPS` = đang chạm trần vsync, mọi thứ ổn. Không cái nào lớn mà main thread đầy script/physics/animation thì CPU-bound.
+- `Mid` **Có mấy cơ chế gom draw call? Chúng loại trừ nhau thế nào?**
+  → Bốn. **SRP Batcher** (mặc định URP, cùng shader variant, gần như miễn phí — nhưng `renderer.material` và `MaterialPropertyBlock` phá nó). **Static Batching** (object Static cùng material, gộp lúc build, trả giá bằng **bộ nhớ ×2**). **GPU Instancing** (cùng mesh + material). **Dynamic Batching** (mesh < 300 đỉnh, trên URP gần như vô dụng — tốn CPU transform mỗi frame, nên tắt).
+- `Mid` **Animator ăn nhiều CPU với 50 kẻ địch. Cắt ở đâu?**
+  → `Culling Mode = Cull Update Transforms` cho mọi nhân vật không phải người chơi. Bật *Optimize Game Objects* lúc import để bỏ 60 Transform con. Và để `Skin Weights` xuống 2 bone trên mobile. 50 kẻ địch × 40 bone × 4 weight chính là cái Profiler gọi tên `MeshSkinning.Update`.
+- `Senior` **Trên mobile, giảm draw call hay giảm overdraw quan trọng hơn?**
+  → Thường là **overdraw**, vì fill rate và băng thông bộ nhớ là nút thắt chính của GPU di động. Một particle system 200 hạt full-screen alpha là 200 lần vẽ toàn màn hình — GPU chết trong khi Frame Debugger chỉ hiện **1 draw call**. Nhìn bằng Rendering Debugger → Overdraw; chữa bằng hạt nhỏ hơn, ít lớp hơn, bỏ panel mờ full-screen chồng lên cảnh 3D.
+- `Senior` **Bộ nhớ vượt ngưỡng, app bị hệ điều hành kill. Anh cắt ở đâu trước?**
+  → **Texture**, vì nó thường chiếm 80% bộ nhớ: một texture 2048×2048 RGBA32 kèm mipmap tốn **21 MB**, cùng texture đó ở **ASTC 6×6 chỉ 2,5 MB**. Sau đó là audio — `Streaming` cho nhạc, `Decompress On Load` chỉ cho SFX ngắn — rồi mesh bật `Read/Write` thừa, vì nó nhân đôi một bản copy trên RAM.
+- `Senior` **Vì sao phải chụp Profiler ở cả phút 1 và phút 15?**
+  → Vì máy nóng lên thì bị **throttle**, và con số ở phút 15 mới là con số người chơi thấy. Đo hai phút đầu rồi kết luận là cách phổ biến nhất để có một bản build "60 fps" mà người chơi kêu giật. Chênh lệch giữa hai lần chụp cũng cho biết vấn đề là tải tức thời hay là nhiệt.
 
 **Khung trả lời 60 giây** — "Game tụt fps, quy trình của anh?"
 

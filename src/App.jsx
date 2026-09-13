@@ -5,6 +5,7 @@ import Sidebar from './components/Sidebar.jsx'
 import DetailPanel from './components/DetailPanel.jsx'
 import Practice from './components/Practice.jsx'
 import { buildDeck, loadProgress, masteryMap } from './lib/practice.js'
+import { useIsMobile, isMobileNow } from './lib/viewport.js'
 import { buildFullExport, buildInterviewPack, buildPromptPlaybook } from './lib/aiContext.js'
 import { t } from './lib/i18n.js'
 
@@ -37,6 +38,15 @@ function readPanelW() {
   return null
 }
 
+/** Bản đồ đang xem — id node gốc của bản đồ đó (xem graph.maps). */
+function readMap() {
+  try {
+    const v = localStorage.getItem('gdb:map')
+    if (v) return v
+  } catch { /* private mode */ }
+  return 'root'
+}
+
 /** Chế độ xem: bản đồ kiến thức hay luyện phỏng vấn. */
 function readView() {
   try {
@@ -65,7 +75,10 @@ export default function App() {
   const [error, setError] = useState(null)
   const [selectedId, setSelectedId] = useState(null)
   const [collapsed, setCollapsed] = useState(() => new Set())
-  const [mode, setMode] = useState('mindmap')
+  // Màn hẹp mặc định xem kiểu 'tree': một cột trái→phải, vừa khung dọc của điện
+  // thoại. Kiểu 'mindmap' toả hai bên cần bề ngang gấp đôi nên bị thu nhỏ tới mức
+  // không đọc được. Người dùng vẫn đổi được bằng thanh chế độ.
+  const [mode, setMode] = useState(() => (isMobileNow() ? 'tree' : 'mindmap'))
   const [query, setQuery] = useState('')
   const [activeTags, setActiveTags] = useState(() => new Set())
   const [activeLevels, setActiveLevels] = useState(() => new Set())
@@ -76,7 +89,9 @@ export default function App() {
   const [panelW, setPanelW] = useState(readPanelW)
   const [resizing, setResizing] = useState(false)
   const [view, setView] = useState(readView)
+  const [mapId, setMapId] = useState(readMap)
   const [practiceProgress, setPracticeProgress] = useState(loadProgress)
+  const isMobile = useIsMobile()
 
   useEffect(() => {
     try { localStorage.setItem('gdb:lang', lang) } catch { /* private mode */ }
@@ -133,9 +148,12 @@ export default function App() {
       .then((r) => { if (!r.ok) throw new Error('HTTP ' + r.status); return r.json() })
       .then((g) => {
         setGraph(g)
-        // mặc định: mở gốc + các nhánh lớn, thu gọn từ tầng 2 trở xuống
+        // Mặc định: mở gốc + các nhánh lớn, thu gọn từ tầng 2 trở xuống.
+        // Màn hẹp thu gọn sớm hơn một tầng — 12 node thay vì 67 — vì mức zoom khi
+        // canh khung tỉ lệ nghịch với số node đang hiện.
+        const minDepth = isMobileNow() ? 1 : 2
         const init = new Set()
-        for (const n of g.nodes) if (n.depth >= 2 && n.children.length) init.add(n.id)
+        for (const n of g.nodes) if (n.depth >= minDepth && n.children.length) init.add(n.id)
         setCollapsed(init)
       })
       .catch((e) => setError(e.message))
@@ -145,10 +163,24 @@ export default function App() {
     try { localStorage.setItem('gdb:view', view) } catch { /* private mode */ }
   }, [view])
 
+  // Bản đồ đang xem phải có thật trong graph.maps — dữ liệu đổi thì lùi về gốc.
+  useEffect(() => {
+    if (!graph) return
+    if (!(graph.maps || []).some((m) => m.id === mapId)) { setMapId(graph.root); return }
+    try { localStorage.setItem('gdb:map', mapId) } catch { /* private mode */ }
+  }, [graph, mapId])
+
   const nodesById = useMemo(() => {
     const m = new Map()
     if (graph) for (const n of graph.nodes) m.set(n.id, n)
     return m
+  }, [graph])
+
+  /* Các bản đồ tách riêng — nhánh khai `map: true` ở frontmatter. Gốc luôn đứng đầu. */
+  const maps = graph ? (graph.maps || []) : []
+  const mapRoots = useMemo(() => {
+    if (!graph) return new Set()
+    return new Set((graph.maps || []).filter((m) => m.id !== graph.root).map((m) => m.id))
   }, [graph])
 
   /* Lớp phủ "mức thuộc" trên mindmap: lấy từ tiến độ luyện phỏng vấn. */
@@ -200,6 +232,18 @@ export default function App() {
     return keep
   }, [matchSet, graph, nodesById])
 
+  /* Đang lọc thì đếm kết quả theo từng bản đồ — để thấy kết quả nằm ở bản đồ nào. */
+  const matchesPerMap = useMemo(() => {
+    if (!matchSet) return null
+    const out = new Map()
+    for (const id of matchSet) {
+      const n = nodesById.get(id)
+      if (!n) continue
+      out.set(n.mapId, (out.get(n.mapId) || 0) + 1)
+    }
+    return out
+  }, [matchSet, nodesById])
+
   /* ------------------------------- handlers ------------------------------- */
   const toggle = useCallback((id) => {
     setCollapsed((prev) => {
@@ -214,6 +258,10 @@ export default function App() {
     setSelectedId(id)
     setNavOpen(false)          // chọn xong thì đóng drawer trên mobile
     if (!id) return
+    // Node thuộc bản đồ khác (Unity / Cocos / Backend Go) thì chuyển bản đồ luôn —
+    // không thì bấm ở sidebar mà mindmap đứng im, trông như hỏng.
+    const target = nodesById.get(id)
+    if (target && target.mapId) setMapId(target.mapId)
     // mở đường dẫn tới node được chọn
     setCollapsed((prev) => {
       const next = new Set(prev)
@@ -241,6 +289,17 @@ export default function App() {
       const next = new Set(prev)
       if (next.has(lv)) next.delete(lv)
       else next.add(lv)
+      return next
+    })
+  }, [])
+
+  /** Đổi bản đồ, và mở sẵn gốc của nó để không rơi vào một node đang thu gọn. */
+  const openMap = useCallback((id) => {
+    setMapId(id)
+    setCollapsed((prev) => {
+      if (!prev.has(id)) return prev
+      const next = new Set(prev)
+      next.delete(id)
       return next
     })
   }, [])
@@ -349,6 +408,25 @@ export default function App() {
             <button className={view === 'practice' ? 'on' : ''} onClick={() => setView('practice')}
                     title="Hỏi — tự trả lời thành tiếng — tự chấm">{t('viewPractice', lang)}</button>
           </div>
+          {view === 'map' && maps.length > 1 && (
+            <div className="seg seg-maps" role="group" aria-label={t('mapPick', lang)}>
+              {maps.map((m) => {
+                const hits = matchesPerMap ? matchesPerMap.get(m.id) || 0 : 0
+                const isRootMap = m.id === graph.root
+                return (
+                  <button
+                    key={m.id}
+                    className={mapId === m.id ? 'on' : ''}
+                    onClick={() => openMap(m.id)}
+                    title={(isRootMap ? t('mapMainTitle', lang) : m.title) + ' · ' + m.nodes + ' node'}
+                  >
+                    {m.icon ? m.icon + ' ' : ''}{isRootMap ? t('mapMain', lang) : m.label}
+                    {hits > 0 && <span className="seg-count">{hits}</span>}
+                  </button>
+                )
+              })}
+            </div>
+          )}
           {view === 'map' && (
             <div className="seg">
               {MODES.map((m) => (
@@ -386,7 +464,8 @@ export default function App() {
         <ReactFlowProvider>
           <MindMap
             nodesById={nodesById}
-            rootId={graph.root}
+            rootId={mapId}
+            mapRoots={mapRoots}
             relations={graph.relations}
             collapsed={collapsed}
             onToggle={toggle}
@@ -397,6 +476,7 @@ export default function App() {
             showRelations={showRelations}
             lang={lang}
             mastery={mastery}
+            compact={isMobile}
           />
         </ReactFlowProvider>
         )}
@@ -426,6 +506,7 @@ export default function App() {
           fontScale={fontScale}
           setFontScale={setFontScale}
           lang={lang}
+          setLang={setLang}
           onSelect={select}
           onClose={() => setSelectedId(null)}
         />

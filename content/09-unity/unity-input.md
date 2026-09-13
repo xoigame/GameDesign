@@ -461,14 +461,24 @@ public class PauseToggleDemo : MonoBehaviour
 
 **Câu hay gặp**
 
-| Mức | Câu hỏi |
-|---|---|
-| Junior | Input System mới khác `Input.GetAxis` cũ ở đâu? |
-| Junior | `started` / `performed` / `canceled` trong callback nghĩa là gì? |
-| Mid | Đọc input ở `Update` hay `FixedUpdate`? Nhảy bị "ăn mất" thì vì sao? |
-| Mid | Làm rebinding cho người chơi tự đổi phím — các bước? |
-| Senior | Người chơi rút tay cầm giữa trận, cắm lại tay cầm khác. Game phải làm gì? |
-| Senior | Mở menu mà nhân vật vẫn chạy theo hướng cuối cùng. Nguyên nhân kiến trúc? |
+- `Junior` **Input System mới khác `Input.GetAxis` cũ ở đâu?**
+  → Hệ cũ là **polling toàn cục** theo tên trục, không biết thiết bị nào, không đổi phím lúc chạy được, và không có khái niệm ngữ cảnh. Hệ mới là **action-based**: action nằm trong asset, bind tới nhiều thiết bị, nhóm theo Action Map, hỗ trợ rebinding và hot-swap thiết bị. Đổi lại là thêm một lớp phải học và phải cấu hình.
+- `Junior` **`started` / `performed` / `canceled` trong callback nghĩa là gì?**
+  → `started` là vừa chạm ngưỡng — nút bắt đầu được nhấn. `performed` là thoả interaction: với nút thường thì gần như ngay lập tức, với Hold thì sau khi giữ đủ lâu. `canceled` là nhả ra, hoặc interaction bị huỷ giữa chừng. Dùng sai `started` thay cho `performed` là lý do Hold "không hoạt động".
+- `Junior` **Deadzone nên đặt ở đâu?**
+  → Bằng **processor trong asset** (Stick Deadzone, Invert, Scale), không nhét `if (Mathf.Abs(x) < 0.2f)` rải rác trong code. Lý do rất thực tế: đặt ở asset thì đổi một chỗ và áp cho mọi action, còn rải trong code thì sáu tháng sau mỗi script một ngưỡng. Mặc định của Unity thường quá nhỏ cho tay cầm cũ.
+- `Mid` **Đọc input ở `Update` hay `FixedUpdate`? Nhảy bị "ăn mất" thì vì sao?**
+  → Đọc ở `Update`, **dùng** ở `FixedUpdate`. `WasPressedThisFrame()` gọi trong `FixedUpdate` sẽ bỏ sót khi frame render nhiều hơn bước physics. Cách đúng: `Update` bắt sự kiện, set `jumpBuffered = true` kèm thời hạn (~0,1 s), `FixedUpdate` tiêu thụ cờ đó. Coyote time (~0,1 s) là cặp bài trùng.
+- `Mid` **Làm rebinding cho người chơi tự đổi phím — các bước?**
+  → `PerformInteractiveRebinding()` với `WithControlsExcluding("Mouse")`, chặn phím hệ thống, ghi `SaveBindingOverridesAsJson()` vào save, nạp lại lúc khởi động. Và **luôn có nút Reset** — người chơi tự khoá mình ra ngoài là chuyện có thật. Hiện tên phím bằng `InputControlPath.ToHumanReadableString`, đừng hiện đường dẫn thô.
+- `Mid` **Vì sao event handler không được đặt velocity trực tiếp?**
+  → Vì handler chạy khi Input System xử lý event, **ngoài nhịp `FixedUpdate`**, nên bước physics kế có thể ghi đè hoặc áp hai lần. Code vẫn biên dịch, nhảy "gần như luôn" được, và hỏng ở màn hình 144 Hz — đúng loại bug không ai tái hiện được trên máy dev. Luật: event chỉ **đặt cờ**, vận tốc luôn đặt trong `FixedUpdate`.
+- `Senior` **Người chơi rút tay cầm giữa trận, cắm lại tay cầm khác. Game phải làm gì?**
+  → Nghe `InputUser.onChange` hoặc `PlayerInput.onControlsChanged`: dừng game khi thiết bị ngắt kết nối, và đổi **glyph** trong UI ngay khi đổi thiết bị. Chơi bằng gamepad mà tooltip hiện "Nhấn E" là lỗi hay bị bỏ qua nhất trong QA, vì trên máy dev luôn có bàn phím cắm sẵn.
+- `Senior` **Mở menu mà nhân vật vẫn chạy theo hướng cuối cùng. Nguyên nhân kiến trúc?**
+  → Tắt Action Map chỉ ngừng **nghe**, còn giá trị hướng cuối cùng vẫn nằm trong biến của gameplay. Phải **xoá state về 0** khi chuyển ngữ cảnh. Gốc rễ sâu hơn là input đang được đọc rải rác: có một `InputReader` duy nhất thì việc reset là một chỗ, còn vá bằng cờ `isPaused` trong mỗi handler thì sẽ thiếu một chỗ.
+- `Senior` **Vì sao nên đọc input qua generated C# class thay vì bằng string?**
+  → Vì đổi tên action khi đó là **lỗi biên dịch**, không phải lỗi lúc chạy ở một scene nào đó. Cộng thêm luật `InputReader` là nơi **duy nhất** biết tới Input System: thêm hold-to-toggle, thêm trợ năng, hay giả lập input để test đều chỉ sửa một chỗ, và không script nào khác được gọi thẳng `ReadValue`.
 
 **Khung trả lời 60 giây** — "Anh tổ chức input thế nào?"
 

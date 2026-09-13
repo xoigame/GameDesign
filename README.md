@@ -38,6 +38,7 @@ Thêm một file `.md` → node tự xuất hiện trên mindmap, tự vào mụ
 ## Tính năng web
 
 - **Ba chế độ ngôn ngữ** — VI · EN · VI·EN (song ngữ hai cột). Node chưa dịch tự lùi về bản gốc kèm thông báo
+- **Đọc thành tiếng** — nút 🔊 trong panel đọc phần tiếng Anh bằng voice có sẵn của máy, tô sáng đoạn đang đọc, chỉnh tốc độ và giọng, đọc xong tự sang node kế tiếp. Đang ở chế độ VI thì tự bật song ngữ để nhìn được chỗ đang đọc
 - **Lộ trình đọc 1→58** — mỗi node có số thứ tự; panel có nút ← → để đi tiếp đúng thứ tự
 - **Chỉnh cỡ chữ** — nút A− / A+ (90%–150%), nhớ lựa chọn, vùng chạm 42px trên điện thoại
 - **Sơ đồ minh hoạ** — SVG nội tuyến trong markdown, tự đổi màu theo theme, cuộn ngang trên màn hẹp
@@ -171,6 +172,15 @@ Mục 🤖 luôn gồm ba phần, và mỗi phần chống một kiểu hỏng k
 - **🤖 Xuất playbook prompt** — chỉ 58 mục 🤖, nhỏ gọn, dán thẳng vào chat được.
 - **⭳ Xuất toàn bộ kho** — mọi thứ. Dùng khi AI không đọc được ổ đĩa.
 
+## Dùng Codex và Claude Code trên cùng một kho
+
+Luật chung cho mọi AI agent nằm ở [`AGENTS.md`](AGENTS.md): Codex đọc thẳng file đó,
+Claude Code đọc qua [`CLAUDE.md`](CLAUDE.md) (chỉ là một dòng import). **Sửa luật thì sửa
+một chỗ** — hai bản luật lệch nhau là cách chắc chắn nhất để hai agent làm hai kiểu.
+
+Cổng kiểm tra chung là `npm run check`. `.gitattributes` ép LF để hai máy khác hệ điều
+hành sinh ra cùng một `graph.json`, không tạo diff giả.
+
 ## Lệnh
 
 | Lệnh | Việc |
@@ -184,8 +194,9 @@ Mục 🤖 luôn gồm ba phần, và mỗi phần chống một kiểu hỏng k
 
 ```
 GameDesign/
-├── AI_CONTEXT.md          ← điểm vào cho AI agent
-├── CLAUDE.md              ← hướng dẫn cho Claude Code
+├── AGENTS.md              ← luật cho mọi AI agent (Codex, Claude Code, Cursor…)
+├── AI_CONTEXT.md          ← điểm vào: kho chứa gì, 9 nhánh
+├── CLAUDE.md              ← một dòng import trỏ về AGENTS.md
 ├── KNOWLEDGE_INDEX.md     ← mục lục tự sinh (không sửa tay)
 ├── content/               ← NGUỒN CHÂN LÝ
 │   ├── _SCHEMA.md

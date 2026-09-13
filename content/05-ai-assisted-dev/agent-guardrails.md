@@ -262,3 +262,57 @@ Chưa sửa gì.
 - Test EditMode chạy trong CI chưa?
 - `git diff --stat` sau một phiên agent: có `.prefab`/`.unity` nào không?
 - `CLAUDE.md` có khối "không được tự ý (Unity)" chưa?
+
+## 🎤 Phỏng vấn
+
+**Câu hay gặp**
+
+- `Junior` **Ba loại rào chắn cho AI agent là gì?**
+  → **Bất biến thiết kế** — luật về game. **Ràng buộc kỹ thuật** — luật về code. **Giới hạn phạm vi** — những gì agent không được tự ý làm. Loại thứ ba hay thiếu nhất, vì agent có xu hướng mở rộng phạm vi để "làm cho trọn vẹn", và đó là lúc một PR sửa ba dòng biến thành một PR sửa ba mươi file.
+- `Junior` **Một bất biến viết thế nào để nó là luật chứ không phải nguyện vọng?**
+  → Phải viết ở dạng **có thể vi phạm được**, và mỗi luật kèm một dòng **cách phát hiện vi phạm**. Dòng "Phát hiện:" là thứ biến nguyện vọng thành luật — có nó thì mình yêu cầu được: "rà toàn bộ thay đổi vừa rồi theo INV-01..05 và báo cáo vi phạm". Không có nó thì luật chỉ là một câu trong tài liệu.
+- `Junior` **Vì sao agent tự thêm "+5 HP vĩnh viễn mỗi lần mở khoá" dù không ai yêu cầu?**
+  → Vì **AI mặc định về giá trị trung bình của ngành** — đó là mẫu phổ biến nhất trong dữ liệu huấn luyện. Nó không sai về kỹ thuật nhưng có thể mâu thuẫn với thiết kế tiến trình của mình. Quy luật chung: **mọi thứ mình muốn làm khác đi đều phải nói ra tường minh**, nếu không nó bị kéo về mặc định.
+- `Mid` **Ràng buộc kỹ thuật nên đặt ở đâu, và vì sao?**
+  → Ở **file luật tại gốc repo** mà agent đọc mỗi phiên. Lý do: nó đi cùng code trong cùng một PR nên review được, nó chạy được trong CI, và nó không trôi khỏi dự án như tài liệu ở nơi khác. Ràng buộc nằm trong đầu người hoặc trong chat lịch sử thì chỉ có tác dụng tới cuối phiên đó.
+- `Mid` **Giới hạn phạm vi cụ thể gồm những gì?**
+  → Những việc agent **không được tự ý làm**: thêm dependency, đổi số cân bằng, sửa file tự sinh, đổi cấu trúc thư mục, sửa bất biến. Quan trọng là câu kèm theo: đôi khi bất biến *nên* được sửa — nhưng đó phải là quyết định **có ý thức của người**, không phải điều xảy ra âm thầm trong một lần refactor.
+- `Mid` **Guardrail mạnh nhất là loại nào?**
+  → Loại **máy tự chạy được**. Nhiều bất biến chuyển thành test được, và chạy trong CI thì chúng được thi hành **kể cả khi mình quên nhắc agent**. Đây là khoản đầu tư nhỏ với giá trị lớn khi dự án kéo dài — vì trí nhớ của người và của phiên chat đều hết hạn, còn test thì không.
+- `Senior` **Danh sách kiểm sau mỗi phiên làm việc với agent gồm gì?**
+  → Code làm **đúng thứ được yêu cầu, không hơn không kém**; không bất biến nào bị vi phạm; không dependency mới ngoài dự kiến; **số cân bằng không bị tiện tay chỉnh**; mình hiểu được toàn bộ code vừa nhận; game **vẫn chạy được** (đã chạy thử, không chỉ build được); và nếu thiết kế thay đổi thì tài liệu đã cập nhật.
+- `Senior` **"Mình hiểu được toàn bộ code vừa nhận" — vì sao đây là mục bắt buộc?**
+  → Vì code không ai hiểu là **nợ không có lãi suất công bố**: nó chạy cho tới ngày cần sửa, và lúc đó chi phí rơi vào người khác hoặc vào chính mình sáu tháng sau. Nếu không hiểu thì hai lựa chọn đúng là bắt agent giải thích và đơn giản hoá, hoặc từ chối nhận — chứ không phải merge rồi hy vọng.
+- `Senior` **Agent đề xuất sửa một bất biến vì nó cản việc. Anh xử lý thế nào?**
+  → Coi đó là **tín hiệu hữu ích**, không phải yêu cầu được duyệt. Tôi hỏi ba câu: bất biến này bảo vệ điều gì, tính năng đang cần có xứng với việc mất điều đó không, và có cách nào đạt mục tiêu mà giữ được bất biến không. Nếu vẫn sửa thì **ghi rõ lý do vào tài liệu** cùng ngày — bất biến bị bào mòn lặng lẽ là cách một game trôi dạt thành mớ tính năng chắp vá.
+
+**Khung trả lời 60 giây** — "Anh giữ cho agent không phá vỡ thiết kế bằng cách nào?"
+
+> Bằng cách biến ý định thiết kế thành **luật kiểm tra được**, chia ba loại: bất biến thiết kế, ràng buộc kỹ thuật, và giới hạn phạm vi. Loại thứ ba hay thiếu nhất — agent luôn có xu hướng mở rộng phạm vi để "làm cho trọn vẹn".
+>
+> Điểm mấu chốt ở cách viết: mỗi bất biến phải **có thể vi phạm được** và kèm một dòng **cách phát hiện**. Dòng đó biến một nguyện vọng thành một luật, vì nó cho phép tôi yêu cầu agent tự rà và báo cáo vi phạm. Còn "hãy giữ thiết kế nhất quán" thì không kiểm được gì.
+>
+> Và guardrail mạnh nhất là loại **máy tự chạy**: chuyển bất biến thành test rồi chạy trong CI, để chúng được thi hành kể cả khi tôi quên nhắc. Cuối mỗi phiên tôi chạy một danh sách kiểm ngắn: đúng phạm vi, không vi phạm bất biến, không dependency mới, **số cân bằng không bị tiện tay chỉnh**, tôi hiểu hết code vừa nhận, và game thật sự chạy chứ không chỉ build được.
+
+**Họ sẽ đào tiếp**
+
+- *"Vì sao 'số cân bằng không bị tiện tay chỉnh' lại là một mục riêng?"* → Vì nó là thay đổi **im lặng nhất** trong mọi thay đổi: không lỗi biên dịch, không test đỏ, và diff nhìn vô hại. Nhưng nó phá đúng thứ tốn nhiều công nhất để đạt được. Nên nó xứng đáng có một dòng riêng, và lý tưởng hơn là một test khoá các giá trị then chốt.
+- *"Bất biến nào chuyển thành test được?"* → Phần lớn bất biến về **dữ liệu và cấu trúc**: không có chỉ số cộng vĩnh viễn trong bảng mở khoá, mọi id tham chiếu tồn tại, không file nào trong vùng cấm bị đổi, không dependency ngoài danh sách. Bất biến về **cảm giác** thì không, và đó chính là ranh giới giữa thứ giao được cho CI và thứ phải giữ cho con người.
+- *"Agent không đọc file luật thì sao?"* → Thì file luật đang quá dài hoặc quá mơ hồ. Cách chữa thực dụng: đưa các luật cứng lên đầu ở dạng **câu lệnh ngắn**, để phần giải thích xuống dưới, và có một mục lục để agent tự chọn phần cần mở. Luật viết như một bài luận thì bị đọc lướt — đúng như với người mới vào dự án.
+- *"Rào chắn có làm chậm công việc không?"* → Có ở giai đoạn dựng, và tiết kiệm về sau — cùng dạng đánh đổi với test. Cách giữ chi phí thấp là chỉ đặt bất biến cho những thứ **đắt khi sai**: kinh tế, save, tiến trình, ranh giới kiến trúc. Đặt bất biến cho mọi thứ thì không ai đọc, và lúc đó nó thành trang trí.
+
+**Cờ đỏ**
+
+- Bất biến viết ở dạng nguyện vọng: "giữ cho game cân bằng".
+- Không có dòng "cách phát hiện vi phạm".
+- Không có giới hạn phạm vi, agent tự thêm dependency và đổi cấu trúc.
+- Không có kiểm tra tự động nào, mọi thứ dựa vào việc người nhớ nhắc.
+- Merge code mình không hiểu vì "nó chạy được".
+
+**Số / ví dụ nên thuộc**
+
+- Ba loại rào chắn: **bất biến thiết kế · ràng buộc kỹ thuật · giới hạn phạm vi**.
+- Mỗi bất biến phải có **cách phát hiện vi phạm**; đánh mã kiểu **INV-01…INV-05**.
+- Guardrail mạnh nhất = **test chạy trong CI**.
+- Quy luật nền: **AI mặc định về trung bình của ngành** — mọi thứ khác đi phải nói tường minh.
+- Danh sách kiểm cuối phiên: đúng phạm vi · không vi phạm bất biến · không dependency mới · **số cân bằng nguyên vẹn** · hiểu hết code · game chạy được.

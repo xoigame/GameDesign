@@ -277,14 +277,24 @@ public class AddressableLab : MonoBehaviour
 
 **Câu hay gặp**
 
-| Mức | Câu hỏi |
-|---|---|
-| Junior | Vì sao không nên dùng thư mục `Resources/`? |
-| Junior | Kéo prefab vào field trong Inspector thì asset của nó được nạp lúc nào? |
-| Mid | Addressables giải phóng bộ nhớ khi nào? |
-| Mid | Build phình lên sau khi chuyển sang Addressables. Nguyên nhân hay gặp nhất? |
-| Senior | Cập nhật nội dung từ xa: quy trình và giới hạn? |
-| Senior | RAM tăng dần mỗi lần mở/đóng một màn hình UI. Anh tìm ở đâu? |
+- `Junior` **Vì sao không nên dùng thư mục `Resources/`?**
+  → Vì mọi thứ trong đó **luôn vào build**, kể cả không ai dùng — nó không nằm trong đồ thị tham chiếu nên Unity không loại được. Kèm theo: thời gian khởi động tăng vì phải dựng index, không cập nhật nội dung từ xa được, và không kiểm soát được lúc nạp. Nó là di sản; không thêm mới.
+- `Junior` **Kéo prefab vào field trong Inspector thì asset của nó được nạp lúc nào?**
+  → Nạp **cùng scene chứa nó**, trước khi scene bắt đầu chạy. Đó là lý do một scene "nhẹ" vẫn có thể nạp hàng trăm MB: mọi tham chiếu trực tiếp đều bị kéo theo, kể cả prefab chỉ dùng trong một trường hợp hiếm. Thứ to, tuỳ chọn, hoặc tải về sau thì nên là Addressables.
+- `Junior` **Vì sao Editor chạy ngon mà bản build lại hỏng Addressables?**
+  → Vì Play Mode Script mặc định là *Use Asset Database*, bỏ qua bundle hoàn toàn. Mọi lỗi đóng gói — thiếu group, trùng dependency, catalog sai — chỉ lộ ở *Use Existing Build* hoặc trên thiết bị. Đổi Play Mode Script là việc nên làm ngay khi bắt đầu dùng Addressables, không phải khi đã có bug.
+- `Mid` **Addressables giải phóng bộ nhớ khi nào?**
+  → Theo **đếm tham chiếu**: `LoadAssetAsync` tăng một, `Release` giảm một, và bundle chỉ rời RAM khi **mọi asset trong nó** về 0. Nên `Release` không có nghĩa là "xoá khỏi RAM ngay". Tôi không rải `Release` khắp nơi mà gom handle theo **scope của một màn hình**: mở thì load vào scope, đóng thì trả cả cụm, kể cả handle đang tải dở.
+- `Mid` **Build phình lên sau khi chuyển sang Addressables. Nguyên nhân hay gặp nhất?**
+  → **Asset bị nhân bản**: hai group cùng tham chiếu một texture chưa đánh Addressable thì Unity chép nó vào cả hai bundle — và khi cả hai cùng nạp thì RAM giữ hai bản. Công cụ là Analyze → *Check Duplicate Bundle Dependencies*, và nó phải chạy **trước mỗi build**, không phải khi đã thấy vấn đề.
+- `Mid` **Cắt group theo tiêu chí gì?**
+  → Theo **lúc nội dung được cần**, không theo loại asset. "Tất cả texture một bundle" là cách chắc chắn để nạp 200 MB cho một màn hình cần 3 MB. Pack Together cho nhóm luôn dùng cùng nhau; Pack Separately cho thứ tuỳ chọn như skin hay gói ngôn ngữ.
+- `Senior` **Cập nhật nội dung từ xa: quy trình và giới hạn?**
+  → Build player kèm `addressables_content_state.bin`, **giữ file đó**, rồi *Update a Previous Build* để sinh catalog và bundle đã đổi, đẩy lên CDN. Ba giới hạn phải nói ra: **không cập nhật được code C#**; mất file state là mất khả năng cập nhật đúng cách cho bản đó; và catalog phải khớp phiên bản app, nếu không người chơi bản cũ kéo catalog mới sẽ crash khó hiểu.
+- `Senior` **RAM tăng dần mỗi lần mở/đóng một màn hình UI. Anh tìm ở đâu?**
+  → Event Viewer trong Play Mode: mở rồi đóng màn hình vài vòng, đường đếm tham chiếu phải trở về đáy mỗi lần — bậc thang đi lên là rò rỉ. Nghi phạm số một là `InstantiateAsync` rồi `Destroy` thường: `Destroy` xoá object mà **không giảm đếm**, nên phải `ReleaseInstance`.
+- `Senior` **`Resources.UnloadUnusedAssets()` gọi lúc nào?**
+  → Ở **màn hình loading**, không phải giữa gameplay. Nó quét toàn bộ đồ thị tham chiếu nên rất đắt — gọi giữa trận là tự tạo một cú khựng dài. Và nó không phải cách sửa rò rỉ: nếu còn tham chiếu thì asset vẫn ở lại, nên nó chỉ che triệu chứng của việc quản lý handle sai.
 
 **Khung trả lời 60 giây** — "Anh quản lý bộ nhớ asset thế nào?"
 

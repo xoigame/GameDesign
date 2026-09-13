@@ -1,4 +1,4 @@
-import { createContext, useContext, useEffect, useMemo, useState } from 'react'
+import { createContext, useContext, useEffect, useMemo, useRef, useState } from 'react'
 import ReactMarkdown from 'react-markdown'
 import remarkGfm from 'remark-gfm'
 import rehypeRaw from 'rehype-raw'
@@ -9,6 +9,7 @@ import { t, field, text as tx, hasTranslation } from '../lib/i18n.js'
 import { lookup, tableFor } from '../lib/glossary.js'
 import rehypeGlossary from '../lib/rehypeGlossary.js'
 import GlossaryTerm from './GlossaryTerm.jsx'
+import Reader from './Reader.jsx'
 
 /** Biến link `#id` (từ wiki-link [[id]]) thành nút điều hướng trong app. */
 /**
@@ -74,10 +75,13 @@ const linkify = (content, nodesById, lang) =>
   })
 
 export default function DetailPanel({
-  node, nodesById, relations, readingPath, glossary, fontScale, setFontScale, lang, onSelect, onClose,
+  node, nodesById, relations, readingPath, glossary, fontScale, setFontScale, lang, setLang,
+  onSelect, onClose,
 }) {
   const [copied, setCopied] = useState('')
   const [tab, setTab] = useState('doc')
+  // Phần đọc thành tiếng tìm vùng `data-tts="en"` bên trong panel qua ref này.
+  const panelRef = useRef(null)
 
   // Node mới có thể không có tab đang mở → lùi về tab Nội dung.
   useEffect(() => {
@@ -91,6 +95,16 @@ export default function DetailPanel({
     if (nextStep) setFontScale(nextStep)
   }
 
+  const hasEn = hasTranslation(node, 'en')
+  const en = node.i18n && node.i18n.en
+  /** Mục này đã dịch chưa — xét từng khoá, vì node có thể dịch nửa vời. */
+  const enHas = (key) => Boolean(en && en[key])
+
+  /* Tab đang mở ứng với khoá nội dung nào. Phần đọc thành tiếng cần biết để
+     bật/tắt nút và để tìm node kế tiếp cũng đã dịch. */
+  const TAB_KEY = { doc: 'body', prompt: 'aiPrompt', unity: 'unity', code: 'code', interview: 'interview' }
+  const tabKey = TAB_KEY[tab] || 'body'
+
   const { prev, next } = useMemo(() => {
     const i = readingPath.indexOf(node.id)
     if (i === -1) return { prev: null, next: null }
@@ -99,6 +113,17 @@ export default function DetailPanel({
       next: i < readingPath.length - 1 ? nodesById.get(readingPath[i + 1]) : null,
     }
   }, [node.id, readingPath, nodesById])
+
+  /** Node kế tiếp trong lộ trình CÓ bản tiếng Anh cho tab đang mở (đọc liên tục). */
+  const autoNextId = useMemo(() => {
+    const i = readingPath.indexOf(node.id)
+    if (i === -1) return null
+    for (let j = i + 1; j < readingPath.length; j++) {
+      const n = nodesById.get(readingPath[j])
+      if (n && n.i18n && n.i18n.en && n.i18n.en[tabKey]) return n.id
+    }
+    return null
+  }, [node.id, readingPath, nodesById, tabKey])
 
   const breadcrumb = useMemo(() => {
     const chain = []
@@ -111,9 +136,6 @@ export default function DetailPanel({
     }
     return chain
   }, [node, nodesById])
-
-  const hasEn = hasTranslation(node, 'en')
-  const en = node.i18n && node.i18n.en
 
   /** Lấy nội dung một mục theo chế độ ngôn ngữ hiện tại. */
   const pick = (key) => {
@@ -198,7 +220,7 @@ export default function DetailPanel({
           <div className="bi-col">
             <span className="bi-tag is-en">EN</span>
             {enText
-              ? <div className="md">{md(enText)}</div>
+              ? <div className="md" data-tts="en">{md(enText)}</div>
               : <p className="empty">{t('notTranslated', 'vi')}</p>}
           </div>
         </div>
@@ -210,13 +232,14 @@ export default function DetailPanel({
         {lang === 'en' && !hasEn && (
           <p className="lang-note">{t('notTranslated', lang)}</p>
         )}
-        <div className={'md ' + extraClass}>{md(content)}</div>
+        <div className={'md ' + extraClass}
+             data-tts={lang === 'en' && enHas(key) ? 'en' : undefined}>{md(content)}</div>
       </>
     )
   }
 
   return (
-    <aside className="panel" style={{ '--accent': node.color }}>
+    <aside className="panel" ref={panelRef} style={{ '--accent': node.color }}>
       <div className="panel-head">
         <div className="crumbs">
           {breadcrumb.map((b) => (
@@ -230,20 +253,32 @@ export default function DetailPanel({
           <button onClick={() => stepFont(1)} disabled={fsIndex >= FONT_STEPS.length - 1}
                   title={t('fontSize', lang) + ' +'} aria-label={t('fontSize', lang) + ' +'}>A+</button>
         </div>
+        <Reader
+          panelRef={panelRef}
+          node={node}
+          tab={tab}
+          lang={lang}
+          setLang={setLang}
+          hasEnText={enHas(tabKey)}
+          onAutoNext={autoNextId ? () => onSelect(autoNextId) : null}
+        />
         <button className="icon-btn" onClick={onClose} title={t('closeEsc', lang)}>✕</button>
       </div>
 
-      <h1 className="panel-title">
+      <h1 className="panel-title" data-tts={lang === 'en' && enHas('title') ? 'en' : undefined}>
         {node.icon ? <span className="panel-icon">{node.icon}</span> : null}
         {tx(node, 'title', lang === 'both' ? 'vi' : lang)}
       </h1>
 
       {lang === 'both' && field(node, 'title', 'en').translated && (
-        <p className="panel-title-en">{field(node, 'title', 'en').text}</p>
+        <p className="panel-title-en" data-tts="en">{field(node, 'title', 'en').text}</p>
       )}
 
       {tx(node, 'summary', lang === 'both' ? 'vi' : lang)
-        ? <p className="panel-summary">{tx(node, 'summary', lang === 'both' ? 'vi' : lang)}</p>
+        ? <p className="panel-summary"
+             data-tts={lang === 'en' && enHas('summary') ? 'en' : undefined}>
+            {tx(node, 'summary', lang === 'both' ? 'vi' : lang)}
+          </p>
         : null}
 
       <div className="panel-meta">

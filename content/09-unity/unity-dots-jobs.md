@@ -292,13 +292,24 @@ public class JobLab : MonoBehaviour
 
 **Câu hay gặp**
 
-| Mức | Câu hỏi |
-|---|---|
-| Junior | Job System dùng để làm gì? Trong job được đụng những kiểu dữ liệu nào? |
-| Mid | Burst làm code nhanh lên bằng cách nào? Nó có tự đa luồng không? |
-| Mid | Vì sao gom dữ liệu vào mảng struct lại nhanh hơn duyệt danh sách class? |
-| Senior | Anh đã dùng ECS chưa? Nếu chưa thì vì sao? |
-| Senior | Code "đã jobify" mà chạy chậm hơn bản cũ. Nguyên nhân? |
+- `Junior` **Job System dùng để làm gì? Trong job được đụng những kiểu dữ liệu nào?**
+  → Để đẩy vòng lặp nặng sang worker thread mà vẫn an toàn: mô phỏng, tìm đường hàng loạt, cập nhật hàng nghìn thực thể. Trong job **chỉ được** dùng struct và native container — không class, không `string`, không `List<T>`, không API Unity, trừ `TransformAccess` qua `IJobParallelForTransform`. Container chỉ đọc phải đánh `[ReadOnly]`.
+- `Junior` **Ba `Allocator` khác nhau ở chỗ nào?**
+  → `Temp` cho dữ liệu sống **một frame** (nhanh nhất, tự dọn), `TempJob` cho tối đa **4 frame** (dùng cho container truyền vào job), `Persistent` cho dữ liệu sống lâu (chậm nhất khi cấp phát, phải tự `Dispose`). Chọn sai thì hoặc Unity cảnh báo rò rỉ, hoặc dữ liệu biến mất giữa chừng.
+- `Mid` **Burst làm code nhanh lên bằng cách nào? Nó có tự đa luồng không?**
+  → **Không tự đa luồng.** Burst biên dịch code sang native tối ưu **một luồng thực thi**: SIMD, bỏ bound check, inline. Song song là việc của Job System. Hai thứ độc lập nhau nhưng hay đi cùng nên bị gộp làm một — và hiểu nhầm đó dẫn tới kỳ vọng sai về mức tăng tốc.
+- `Mid` **Vì sao gom dữ liệu vào mảng struct lại nhanh hơn duyệt danh sách class?**
+  → Vì CPU đọc theo **cache line 64 byte**. Duyệt `List<EnemyClass>` là nhảy 1000 chỗ rải rác trên heap, mỗi cache miss cỡ **100–300 chu kỳ**. Đổi sang `NativeArray<float3>` liền nhau thì đọc tuần tự và Burst xử lý được nhiều phần tử một lệnh bằng SIMD. Đây mới là nguồn tăng tốc chính, đa luồng chỉ nhân thêm lên phần đó.
+- `Mid` **Đo hiệu năng job thế nào cho đúng?**
+  → Kiểm tra Burst đang **bật** trước khi đo — tắt để debug rồi quên bật lại là chuyện thường và làm con số sai cả bậc. So **tỉ lệ** trước/sau chứ đừng so số tuyệt đối giữa hai máy. Và nhìn Profiler Timeline để xác nhận job **thật sự nằm trên worker thread**, không phải đang chạy trên main thread vì bị `Complete()` quá sớm.
+- `Senior` **Code "đã jobify" mà chạy chậm hơn bản cũ. Nguyên nhân?**
+  → Hai lý do quen thuộc. Một: `Complete()` gọi **ngay sau** `Schedule()` — main thread đứng đợi nên mất hết song song, chỉ còn lại chi phí lập lịch. Cách đúng là `Schedule()` ở `Update`, `Complete()` ở `LateUpdate`. Hai: khối lượng quá nhỏ — vài trăm phần tử thì chi phí chia việc lớn hơn công việc; ngưỡng thực tế thường là vài nghìn.
+- `Senior` **Anh đã dùng ECS chưa? Nếu chưa thì vì sao?**
+  → Tôi tách ba tầng vì chi phí rất khác nhau. **Job System** và **Burst** dùng được ngay trong dự án MonoBehaviour bình thường, chi phí thấp. **ECS** là đổi cả kiến trúc và cách nghĩ của đội, nên đó là quyết định của dự án chứ không phải của một người. Trong dự án hiện tại tôi lấy 80% lợi ích bằng 5% chi phí: chuyển đúng vòng lặp nóng sang mảng struct + job + Burst.
+- `Senior` **Khi nào ECS mới thật sự đáng?**
+  → Khi có **hàng nghìn tới hàng triệu thực thể cùng loại cập nhật cùng cách**: RTS lớn, bullet hell, mô phỏng đám đông; hoặc khi cần **determinism** cho netcode ghost prediction. Không đáng khi game dựa nặng vào Animator, UI và physics nhân vật — ở những mảng đó GameObject vẫn là đường chính và ECS phải đi vòng.
+- `Senior` **Native container bị rò rỉ thì biểu hiện thế nào?**
+  → Unity in cảnh báo "A Native Collection has not been disposed" kèm stack trace **chỗ cấp phát**, không phải chỗ quên dọn — nên đọc nhầm là đi sai hướng. Luật thực dụng: cấp phát và `Dispose` nằm trong **cùng một phạm vi**, hoặc dùng `using` với container `Temp`. Rò rỉ tích luỹ thì cuối cùng là hết bộ nhớ native, mà GC không giúp gì được.
 
 **Khung trả lời 60 giây** — "Anh có kinh nghiệm DOTS không?"
 

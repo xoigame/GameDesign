@@ -17,6 +17,8 @@ related: [fsm, goap, utility-ai]   # liên kết ngang, vẽ bằng nét đứt
 refs:                      # nguồn tham khảo, hiện ở panel
   - "Millington — AI for Games, ch.5"
 parent: game-ai            # hiếm khi cần — mặc định suy ra từ thư mục
+map: true                  # tách nhánh này thành MỘT MINDMAP RIÊNG trên web
+mapLabel: Unity            # nhãn ngắn trên nút chọn bản đồ (mặc định lấy title)
 collapsed: false
 ---
 ```
@@ -66,6 +68,24 @@ content/04-game-ai/rl/q-learning.md  -> node "q-learning", cha là "rl"
 
 Tiền tố số (`04-`) chỉ để sắp xếp thư mục trên ổ đĩa, build sẽ cắt bỏ khỏi id.
 Thư mục/file bắt đầu bằng `_` hoặc `.` bị bỏ qua.
+
+## `map: true` — tách nhánh thành mindmap riêng
+
+Nhánh lớn có thể được vẽ thành **mindmap riêng**: khai `map: true` ở frontmatter của
+`index.md` nhánh đó, kèm `mapLabel` là nhãn ngắn cho nút chọn bản đồ.
+
+Chuyện xảy ra trên web:
+
+- Thanh trên có thêm nhóm nút chọn bản đồ: **Kho chính · Unity · Cocos · Backend Go**.
+- Nhánh đó **biến mất khỏi bản đồ cha** (đỡ rối) và thành gốc của bản đồ của chính nó.
+- Bấm một node của nhánh đó ở sidebar hoặc ở kết quả tìm kiếm thì **tự chuyển bản đồ**.
+- Khi đang tìm kiếm, nút mỗi bản đồ hiện số kết quả nằm trong bản đồ đó.
+
+**Cây dữ liệu không đổi.** `parent` vẫn là `root`, nên lộ trình đọc, `[[wiki-link]]`,
+`KNOWLEDGE_INDEX.md` và mọi bản export vẫn thấy toàn kho như trước — chỉ phần *vẽ* tách ra.
+Build sinh thêm `graph.maps` và `node.mapId`; `KNOWLEDGE_INDEX.md` đánh dấu 🗺.
+
+Khai `map: true` cho node không có con thì `npm run check` cảnh báo — bản đồ sẽ rỗng.
 
 ## Mục bắt buộc: `## 🤖 Prompt cho AI`
 
@@ -252,11 +272,12 @@ Cấu trúc chuẩn **năm phần, theo thứ tự**:
 
 **Câu hay gặp**
 
-| Mức | Câu hỏi |
-|---|---|
-| Junior | <câu hỏi định nghĩa / phân biệt hai khái niệm> |
-| Mid | <câu hỏi tình huống: "X hỏng, anh làm gì"> |
-| Senior | <câu hỏi đánh đổi: "chọn A hay B, vì sao"> |
+- `Junior` **<câu hỏi định nghĩa / phân biệt hai khái niệm>**
+  → <lời giải 2–4 câu: trả lời thẳng câu hỏi, có số hoặc ví dụ, có lý do>
+- `Mid` **<câu hỏi tình huống: "X hỏng, anh làm gì">**
+  → <lời giải 2–4 câu>
+- `Senior` **<câu hỏi đánh đổi: "chọn A hay B, vì sao">**
+  → <lời giải 2–4 câu>
 
 **Khung trả lời 60 giây** — "<câu hỏi lõi của node này>"
 
@@ -276,6 +297,20 @@ Cấu trúc chuẩn **năm phần, theo thứ tự**:
 - <con số, tên hàm trong Profiler, ngưỡng — thứ phải bật ra ngay, không cần nghĩ>
 ```
 
+**Mỗi câu phải có lời giải của chính nó.** Đây là luật cứng, `npm run check` kiểm:
+gạch đầu dòng nào không có dòng `→` theo sau sẽ bị báo tên. Lý do rất thực tế — trong
+chế độ **🎤 Luyện phỏng vấn**, mỗi câu là một thẻ; câu không lời giải là một thẻ lật ra
+mặt sau trắng, và chỉ cần vài thẻ như thế là người học mất lòng tin vào cả bộ.
+
+Lời giải viết **2–4 câu**, không phải gạch đầu dòng ý chính: nó phải đọc được thành lời.
+Ngắn hơn khung 60 giây (khung dành cho câu lõi), nhưng vẫn đủ **một con số hoặc một ví
+dụ** và **một chữ "vì"**. Câu trả lời không có lý do là câu học thuộc.
+
+Ba dấu hiệu lời giải chưa đạt:
+- Chép lại định nghĩa trong thân bài. Thân bài dạy hiểu, lời giải dạy **nói**.
+- Trả lời "còn tuỳ" rồi dừng. Còn tuỳ vào cái gì — nêu ra, rồi chọn một hướng.
+- Dài quá 5 câu. Người phỏng vấn sẽ cắt lời trước khi bạn tới ý chính.
+
 **Nguyên tắc**
 - **Cụ thể cho node, không chung chung.** "Hãy nói về kinh nghiệm của bạn" là câu vô nghĩa;
   "Game tụt 25fps trên Android tầm trung, anh làm gì đầu tiên?" mới là câu hỏi thật.
@@ -287,10 +322,22 @@ Cấu trúc chuẩn **năm phần, theo thứ tự**:
 - Cờ đỏ là **câu trả lời sai mà nghe hay**, không phải lỗi ngớ ngẩn hiển nhiên.
 
 **Mục này được máy đọc lại.** Chế độ **🎤 Luyện phỏng vấn** trên web tách mục này thành
-thẻ hỏi–đáp: mỗi dòng trong bảng "Câu hay gặp" là một thẻ, và mặt sau ghép từ khung trả
-lời + đào tiếp + cờ đỏ + số nên thuộc. Parser ở `src/lib/practice.js` bám đúng năm nhãn
-in đậm ở trên — đổi tên nhãn thì thẻ của node đó biến mất khỏi bộ luyện tập mà build
-không báo gì. Nút **🎤 Xuất bộ ôn phỏng vấn** gom toàn bộ mục này thành một file markdown.
+thẻ hỏi–đáp: mỗi gạch đầu dòng trong "Câu hay gặp" là một thẻ, mặt sau là **lời giải của
+đúng câu đó**, kèm đào tiếp + cờ đỏ + số nên thuộc; khung 60 giây là mặt sau của thẻ câu
+lõi. Parser ở `src/lib/practice.js` bám đúng năm nhãn in đậm ở trên — đổi tên nhãn thì thẻ
+của node đó biến mất khỏi bộ luyện tập mà build không báo gì. `scripts/build-graph.mjs`
+import lại chính parser đó để đếm, nên con số ở dòng thống kê luôn khớp với thứ web hiện.
+Nút **🎤 Xuất bộ ôn phỏng vấn** gom toàn bộ mục này thành một file markdown.
+
+Hai chi tiết nhỏ mà sai là hỏng:
+- Mức viết trong dấu backtick và đứng **đầu dòng**: `` - `Mid` **câu hỏi?** ``. Thiếu
+  backtick thì dòng đó không được nhận là câu hỏi, nó bị nuốt vào lời giải của câu trên.
+- Lời giải **không được bắt đầu bằng `**`**. Parser coi dòng mở đầu bằng `**` là nhãn
+  phần mới (như `**Cờ đỏ**`) nên sẽ cắt ngang danh sách ngay tại đó.
+
+Bảng `| Mức | Câu hỏi |` là **dạng cũ**. Parser vẫn đọc được để node chưa chuyển đổi không
+rơi khỏi bộ luyện tập, nhưng câu lấy từ bảng không có lời giải riêng và `npm run check`
+sẽ báo tên node đó cho tới khi chuyển sang dạng danh sách.
 
 ## Bản dịch — file song song
 

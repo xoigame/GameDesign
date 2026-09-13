@@ -526,14 +526,24 @@ public class MusicScheduler : MonoBehaviour
 
 **Câu hay gặp**
 
-| Mức | Câu hỏi |
-|---|---|
-| Junior | Slider âm lượng kéo tới 0.9 mới thấy nhỏ đi. Vì sao? |
-| Junior | `PlayOneShot` và `PlayClipAtPoint` có vấn đề gì khi bắn 200 phát đạn? |
-| Mid | Import settings cho SFX, nhạc nền, ambience — khác nhau thế nào và vì sao? |
-| Mid | Nhạc phải đổi đúng nhịp khi vào combat. Anh làm thế nào? |
-| Senior | 30 kẻ địch cùng gầm một lúc, âm thanh vỡ nát. Xử lý? |
-| Senior | Khi nào đáng đưa FMOD/Wwise vào dự án? |
+- `Junior` **Slider âm lượng kéo tới 0,9 mới thấy nhỏ đi. Vì sao?**
+  → Vì volume expose trên AudioMixer là **dB, không phải 0–1**. Gán thẳng `slider.value` thì 0,5 nghĩa là +0,5 dB — gần như không đổi gì. Phải quy đổi: `Mathf.Log10(Mathf.Max(v, 0.0001f)) * 20f`. Thang dB: −80 dB coi như tắt, 0 dB là full.
+- `Junior` **`PlayOneShot` và `PlayClipAtPoint` có vấn đề gì khi bắn 200 phát đạn?**
+  → `PlayClipAtPoint` **tạo một GameObject mới mỗi lần** rồi tự huỷ — 200 lần cấp phát và huỷ. `PlayOneShot` không tạo object nhưng vẫn là 200 voice, và hệ thống sẽ tự cắt bừa cái nào cũng được, thường là cắt đúng cái quan trọng. Cách đúng là một **pool AudioSource** có voice limit và priority.
+- `Junior` **Vì sao không bao giờ dùng MP3 cho âm thanh loop?**
+  → Vì encoder MP3 chèn padding ở đầu và cuối file, nên điểm nối loop luôn có một khoảng hở nghe được. Dùng Vorbis hoặc ADPCM, và cắt đúng điểm loop ở DAW. Đây là loại lỗi mà người nghe không gọi tên được nhưng thấy nhạc "sai sai" sau vòng lặp thứ hai.
+- `Mid` **Import settings cho SFX, nhạc nền, ambience — khác nhau thế nào và vì sao?**
+  → SFX ngắn dưới 1 s: **Decompress On Load + ADPCM** — giải nén một lần lúc load, phát tức thì, CPU gần 0. Nhạc: **Streaming + Vorbis** — không nạp vào RAM, nhưng tối đa 2–4 stream cùng lúc vì mỗi stream là một luồng đọc đĩa. Ambience loop: Compressed In Memory. Sai bảng này là hoặc RAM nổ, hoặc giật mỗi lần phát.
+- `Mid` **Nhạc phải đổi đúng nhịp khi vào combat. Anh làm thế nào?**
+  → `AudioSettings.dspTime` và `PlayScheduled`, **không** dùng `Time.time`. Mọi biến thời gian nhạc phải là `double`. Lý do: `Time.time` chịu `timeScale` và trôi theo frame time, `dspTime` thì không — dùng sai thì lệch tích luỹ sau vài phút và không ai hiểu vì sao. Intro-rồi-loop làm bằng hai clip cộng `PlayScheduled(startDsp + intro.length)`.
+- `Mid` **Crossfade giữa hai bản nhạc nghe "tụt" ở giữa. Vì sao?**
+  → Vì fade tuyến tính trên `AudioSource.volume`, mà volume là **amplitude tuyến tính** — tổng năng lượng ở điểm giữa thấp hơn hai đầu. Dùng equal-power: `cos`/`sin` theo tham số chuyển. Cùng một logic với lý do slider âm lượng phải quy đổi log: tai nghe theo thang năng lượng, không theo thang biên độ.
+- `Senior` **30 kẻ địch cùng gầm một lúc, âm thanh vỡ nát. Xử lý?**
+  → Nguyên nhân là **cộng dồn biên độ**, không phải chất lượng file. Chữa bằng voice limit theo nhóm, priority, và cooldown theo từng âm thanh — "tối đa 4 tiếng gầm cùng loại, cái mới cướp chỗ cái cũ nhất". Thêm biến thiên pitch nhẹ (±5%) để không nghe ra hiệu ứng "vọng máy" khi nhiều bản cùng clip chồng lên nhau.
+- `Senior` **Khi nào đáng đưa FMOD/Wwise vào dự án?**
+  → Khi có **sound designer thật** làm việc song song và cần họ tự làm layer, RTPC, adaptive music mà không phải chờ lập trình; hoặc khi cần profiling audio nghiêm túc. Game nhỏ thì AudioMixer + snapshot là đủ, và mỗi middleware là thêm một build step, thêm một license, thêm một thứ phải nâng cấp khi đổi bản Unity.
+- `Senior` **Trạng thái audio theo ngữ cảnh (pause, dưới nước, menu) tổ chức thế nào?**
+  → **Snapshot của AudioMixer** cho từng trạng thái: Normal, Paused (lowpass 800 Hz trên Master, Music −6 dB), Underwater, Menu — chuyển bằng `TransitionTo(0.25f)`. Rẻ hơn viết một state machine audio riêng, và sound designer chỉnh được ngay trong Editor mà không cần lập trình viên đụng vào.
 
 **Khung trả lời 60 giây** — "Kiến trúc audio của anh?"
 

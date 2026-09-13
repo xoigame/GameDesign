@@ -193,3 +193,57 @@ In tên state lên đầu NPC bằng `Handles.Label` trong `OnDrawGizmosSelected
 - Chọn một NPC trong Scene view — có thấy tên state đang chạy không?
 - Đổi `tickHz` từ 10 xuống 2 — hành vi vẫn đúng, chỉ chậm hơn?
 - Profiler với 30 NPC: AI không được vượt 1ms/frame.
+
+## 🎤 Phỏng vấn
+
+**Câu hay gặp**
+
+- `Junior` **FSM là gì? Ba phương thức của một trạng thái dùng để làm gì?**
+  → NPC luôn ở **đúng một trạng thái** và chuyển sang trạng thái khác khi điều kiện thoả mãn. Ba phương thức: `Enter` bật animation và khởi tạo, `Update` chạy logic mỗi tick, `Exit` dọn dẹp. `Exit` là chỗ quan trọng nhất — quên dọn ở đó là nguồn bug phổ biến nhất của FSM.
+- `Junior` **Vì sao FSM vẫn đáng dùng dù nó "đơn giản"?**
+  → Bốn lý do thực tế: **dễ gỡ lỗi** — in tên trạng thái là biết ngay AI đang nghĩ gì, không kiến trúc nào dễ chẩn đoán bằng; **tất định** nên tái hiện bug dễ; **rẻ**, vài chục dòng không cần thư viện; và **đủ dùng** — phần lớn kẻ địch nhỏ chỉ cần 3–5 trạng thái. Nhiều game thương mại dùng FSM cho địch thường, BT cho boss.
+- `Junior` **Số chuyển tiếp tăng theo quy luật nào khi thêm trạng thái?**
+  → Theo **bình phương** số trạng thái. 5 trạng thái là tối đa 20 chuyển tiếp, còn quản được; 12 trạng thái là 132 chuyển tiếp, không ai bảo trì nổi. Đây là lý do FSM không phải lựa chọn tệ mà là lựa chọn **có ngưỡng** — biết ngưỡng ở đâu quan trọng hơn biết kiến trúc nào "tốt hơn".
+- `Mid` **Ba dấu hiệu cho thấy đã vượt giới hạn của FSM?**
+  → Thêm một trạng thái mới phải sửa sáu trạng thái cũ. Xuất hiện cờ kiểu `wasAttackingBeforeStun` để nhớ nên quay về đâu. Và cùng một logic — "kiểm tra máu thấp" — lặp lại ở nhiều trạng thái. Thấy đủ ba thì chuyển sang behavior tree; thấy một thì cân nhắc hierarchical FSM trước.
+- `Mid` **Hierarchical FSM giải quyết được gì?**
+  → Nó nhóm các trạng thái thành cụm có trạng thái cha, nên điều kiện chung — ví dụ "máu thấp thì chạy" — viết **một lần ở cha** thay vì lặp ở mọi con. Nó là bước đệm rẻ: giữ được ưu điểm dễ gỡ lỗi của FSM mà giảm bớt phần bùng nổ chuyển tiếp, và không phải viết lại toàn bộ AI.
+- `Mid` **Quên dọn trong `Exit` gây ra lỗi kiểu gì?**
+  → Loại lỗi **rò rỉ trạng thái** giữa các trạng thái: animation còn chạy, coroutine còn sống, NavMeshAgent còn đường đi cũ, hoặc một cờ `isInvulnerable` không bao giờ tắt. Triệu chứng điển hình là bug chỉ xuất hiện sau một chuỗi chuyển tiếp nhất định, nên rất khó tái hiện — và đó cũng là lý do `Exit` phải đối xứng với `Enter`.
+- `Senior` **Anh chọn FSM hay behavior tree cho một dự án mới thế nào?**
+  → Theo **số hành vi dự kiến và mức độ chúng chia sẻ điều kiện**. Dưới năm trạng thái, ít điều kiện chung: FSM, vì nó rẻ và dễ chẩn đoán. Nhiều hành vi có ưu tiên cạnh tranh nhau: BT, vì ưu tiên nằm ở cấu trúc. Và tôi không ngại dùng cả hai trong một game — địch thường FSM, boss BT là cấu hình rất phổ biến.
+- `Senior` **Chuyển một FSM đã lớn sang BT — anh làm thế nào để không phải viết lại tất cả?**
+  → Giữ nguyên phần **hành động** (các `Enter/Update/Exit` đã có) và chỉ thay phần **quyết định**: bọc mỗi trạng thái thành một node Action, rồi dựng cây ưu tiên trên đó. Chuyển từng nhánh một, để hai hệ thống cùng sống trong giai đoạn chuyển. Cái tốn thời gian thật là bóc các cờ "nhớ trạng thái trước" ra khỏi hành động.
+- `Senior` **AI kẹt trong một trạng thái không thoát ra được. Anh chẩn đoán từ đâu?**
+  → In **tên trạng thái và thời gian đã ở trong đó** — FSM mạnh đúng ở chỗ này. Rồi kiểm tra ba khả năng: điều kiện thoát không bao giờ đúng (thường do một giá trị perception đã cũ), `Exit` của trạng thái trước không dọn nên điều kiện bị khoá, hoặc hai chuyển tiếp đối nghịch nhau khiến nó nhảy qua lại mà nhìn như đứng yên. Thêm một **thời gian trần** cho mỗi trạng thái là lưới an toàn rẻ.
+
+**Khung trả lời 60 giây** — "Khi nào FSM đủ, và khi nào phải bỏ nó?"
+
+> FSM đủ khi NPC có **3–5 trạng thái** và các trạng thái ít chia sẻ điều kiện với nhau. Nó rẻ, tất định, và dễ chẩn đoán hơn mọi kiến trúc khác — in tên trạng thái ra là biết ngay AI đang nghĩ gì, thứ mà behavior tree không cho mình miễn phí.
+>
+> Giới hạn của nó là **số chuyển tiếp tăng theo bình phương số trạng thái**: 5 trạng thái là 20 cạnh, 12 trạng thái là 132 cạnh. Nên tôi không đợi tới lúc đếm cạnh mà nhìn ba triệu chứng: thêm một trạng thái phải sửa sáu cái cũ, xuất hiện cờ kiểu `wasAttackingBeforeStun`, và cùng một điều kiện lặp lại ở nhiều nơi.
+>
+> Thấy các dấu hiệu đó thì bước đệm rẻ là **hierarchical FSM** — nhóm trạng thái lại, điều kiện chung viết một lần ở cha. Nếu vẫn không đủ thì chuyển sang behavior tree, và chuyển dần: giữ nguyên phần hành động, chỉ thay phần quyết định.
+
+**Họ sẽ đào tiếp**
+
+- *"Vì sao `Exit` lại là nguồn bug phổ biến nhất?"* → Vì `Enter` luôn được viết (ai cũng nhớ bật animation) còn `Exit` thì hay bị bỏ trống. Hệ quả là trạng thái rò rỉ sang nhau: coroutine còn sống, cờ bất tử không tắt, đường đi cũ còn nguyên. Luật của tôi là `Exit` phải **đối xứng** với `Enter` — bật gì ở đây thì tắt đúng cái đó ở kia.
+- *"FSM có test được không?"* → Rất dễ, và đó là ưu điểm ít người khai thác: trạng thái là logic thuần, nên đưa một đầu vào giả rồi khẳng định trạng thái kế tiếp là xong — chạy trong EditMode, không cần scene. Điều kiện là đừng để trạng thái gọi thẳng API engine; tách phần đó ra ngoài.
+- *"Nhiều NPC cùng FSM có tốn không?"* → Không đáng kể nếu không tick mỗi frame. Cùng luật với BT: **5–10 lần/giây** là đủ, và trải đều tick giữa các agent. Phần tốn thật thường là perception (raycast) chứ không phải bản thân máy trạng thái.
+- *"Dùng AI để viết FSM thì giao gì?"* → Giao phần khung và phần lặp: sinh các lớp trạng thái, bảng chuyển tiếp, và **soát tìm trạng thái không có đường ra** hoặc cặp chuyển tiếp đối nghịch. Việc duyệt đồ thị đó máy làm đúng và nhanh, còn quyết định NPC *nên* làm gì thì vẫn là thiết kế.
+
+**Cờ đỏ**
+
+- `Exit` để trống ở mọi trạng thái.
+- Dùng cờ ngoài để nhớ "trước đó tôi đang làm gì".
+- Nói FSM lỗi thời mà không nói được ngưỡng nó vỡ ở đâu.
+- Một trạng thái không có điều kiện thoát và không có thời gian trần.
+- Trộn logic quyết định với code gọi API engine, nên không test được.
+
+**Số / ví dụ nên thuộc**
+
+- Ba phương thức: **`Enter` / `Update` / `Exit`**; `Exit` đối xứng với `Enter`.
+- Số chuyển tiếp tăng theo **bình phương**: 5 trạng thái → 20 cạnh · 12 → **132 cạnh**.
+- Ngưỡng thực dụng: **3–5 trạng thái** thì FSM đủ.
+- Ba triệu chứng vượt giới hạn: sửa 6 trạng thái cũ · cờ `wasXBeforeY` · điều kiện lặp lại.
+- Tick **5–10 lần/giây**, trải đều giữa các agent.

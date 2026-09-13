@@ -540,14 +540,24 @@ public sealed class SaveDebugMenu : MonoBehaviour
 
 **Câu hay gặp**
 
-| Mức | Câu hỏi |
-|---|---|
-| Junior | `PlayerPrefs` dùng cho việc gì? Vì sao không lưu tiến trình game vào đó? |
-| Junior | `persistentDataPath` là gì, khác `Application.dataPath` chỗ nào? |
-| Mid | `JsonUtility` hay Newtonsoft? Chọn theo tiêu chí nào? |
-| Mid | Người chơi tắt máy giữa lúc đang ghi save. Làm sao để không mất tất cả? |
-| Senior | Bản 1.3 thêm trường mới, người chơi đang ở save bản 1.0. Anh xử lý thế nào? |
-| Senior | Có nên mã hoá save không? Chống ai? |
+- `Junior` **`PlayerPrefs` dùng cho việc gì? Vì sao không lưu tiến trình game vào đó?**
+  → Chỉ cho **settings**: âm lượng, ngôn ngữ, độ phân giải. Không lưu tiến trình vì nó là key–value phẳng (chỉ int/float/string), nằm trong registry hoặc plist nên người chơi sửa được bằng vài cú bấm, không có version, không có backup, và không ghi atomic — mất điện giữa chừng là mất.
+- `Junior` **`persistentDataPath` là gì, khác `Application.dataPath` chỗ nào?**
+  → `persistentDataPath` là thư mục **ghi được** dành cho dữ liệu người dùng, tồn tại qua các lần cập nhật app. `dataPath` là thư mục cài đặt — **chỉ đọc trên mobile**, và ghi vào đó là lỗi chỉ lộ ra khi lên thiết bị thật. Trên Windows nó là `%USERPROFILE%/AppData/LocalLow/<Company>/<Product>`, nên đổi Company/Product Name sau phát hành là đổi luôn đường dẫn save.
+- `Junior` **Trong save nên lưu id hay lưu tham chiếu?**
+  → **Lưu id**: `"weapon_rusty_sword"`, không lưu đường dẫn asset hay instance ID. Lưu tham chiếu thì đổi tên prefab hoặc dời file là mọi save cũ chết. Cùng lý do đó, lưu **trạng thái logic** (màn nào, mở khoá gì, HP, inventory) rồi dựng lại scene, chứ không chụp toàn cảnh object trong scene.
+- `Mid` **`JsonUtility` hay Newtonsoft? Chọn theo tiêu chí nào?**
+  → Mặc định `JsonUtility`: nhanh, dùng serializer của engine nên an toàn với IL2CPP. Nó **không** làm được `Dictionary`, polymorphism, nullable, property. Newtonsoft làm được hết nhưng chậm hơn 3–10 lần, nhiều GC, và dựa vào reflection nên **IL2CPP stripping có thể xoá mất thứ nó cần** — phải `link.xml` hoặc `[Preserve]`. Tôi đổi sang Newtonsoft khi cần đọc JSON tuỳ ý để migrate.
+- `Mid` **Người chơi tắt máy giữa lúc đang ghi save. Làm sao để không mất tất cả?**
+  → Ghi **atomic**: ra `save.tmp`, flush, rồi `File.Replace` đè lên `save.json` và giữ `save.bak`. Ghi đè trực tiếp mà mất điện hoặc bị hệ điều hành kill giữa chừng thì file còn một nửa và người chơi mất toàn bộ tiến trình. Trên mobile ghi ở `OnApplicationPause(true)`, vì `OnApplicationQuit` có thể không bao giờ được gọi.
+- `Mid` **`Dictionary` trong class đưa cho `JsonUtility` thì sao?**
+  → `ToJson` cho ra `{}` và **không báo lỗi nào**. Tệ hơn nữa, trong Editor mọi thứ trông vẫn đúng vì dữ liệu còn trong RAM — lỗi chỉ lộ khi người chơi tắt game mở lại. Cách chữa: dùng hai `List` song song, hoặc một `List` các struct key–value, rồi dựng `Dictionary` sau khi load.
+- `Senior` **Bản 1.3 thêm trường mới, người chơi đang ở save bản 1.0. Anh xử lý thế nào?**
+  → Migration theo **chuỗi**: `v1→v2→v3`, mỗi bước là một hàm nhỏ chạy tuần tự tới version hiện tại — không viết một hàm "đọc mọi phiên bản". Và phải có **bộ save cũ trong repo để test**: lưu vài file save thật của từng bản phát hành và chạy load trong CI. Muốn làm được thế thì `version` phải có trong `SaveData` từ ngày đầu.
+- `Senior` **Có nên mã hoá save không? Chống ai?**
+  → Hỏi ngược: chống ai. Game offline thuần thì mã hoá chỉ chặn người sửa bằng Notepad — ai quyết tâm vẫn lấy được key trong binary, còn mình thì mất khả năng hỗ trợ người chơi hỏng save. Có leaderboard hoặc IAP thì **chân lý phải nằm ở server**, không phải ở mã hoá client. Tối thiểu hợp lý: một checksum để phát hiện sửa tay, kèm thông báo tử tế thay vì crash.
+- `Senior` **Cloud save xung đột giữa hai thiết bị — anh giải quyết thế nào?**
+  → Phải **chọn một luật và nói cho người chơi biết**: theo timestamp thiết bị (rủi ro lệch giờ), theo tiến trình lớn hơn, hay hỏi người chơi. Im lặng chọn một bên là cách mất tiến trình quen thuộc nhất, và nó tạo ra loại báo lỗi không bao giờ tái hiện được. Trên iOS nhớ thêm: `Documents` mặc định lên iCloud backup, cache lớn phải `SetNoBackupFlag` nếu không Apple từ chối.
 
 **Khung trả lời 60 giây** — "Hệ thống save của anh thiết kế thế nào?"
 

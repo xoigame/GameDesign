@@ -6,7 +6,7 @@ import { text as tx, field } from '../lib/i18n.js'
 function MindNode({ data }) {
   const {
     node, side, isRoot, isSelected, onPath, dimmed,
-    collapsed, childCount, onToggle, lang, mastery,
+    collapsed, childCount, onToggle, lang, mastery, compact,
   } = data
 
   // Trên mindmap luôn hiện MỘT tiêu đề cho gọn; chế độ song ngữ dùng bản gốc
@@ -24,6 +24,7 @@ function MindNode({ data }) {
     onPath ? 'on-path' : '',
     dimmed ? 'is-dimmed' : '',
     node.status === 'stub' ? 'is-stub' : '',
+    compact ? 'is-compact' : '',
   ].filter(Boolean).join(' ')
 
   const tip =

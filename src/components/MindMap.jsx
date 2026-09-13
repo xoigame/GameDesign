@@ -1,26 +1,86 @@
-import { useMemo, useEffect, useRef } from 'react'
+import { useCallback, useMemo, useEffect, useRef, useState } from 'react'
 import {
   ReactFlow, Background, Controls, MiniMap, useReactFlow, BackgroundVariant,
-  useNodesInitialized,
 } from '@xyflow/react'
 import '@xyflow/react/dist/style.css'
 import MindNode from './MindNode.jsx'
-import { computeLayout, visibleIds } from '../lib/layout.js'
+import { computeLayout, visibleIds, GAP } from '../lib/layout.js'
 
 const nodeTypes = { mind: MindNode }
 
-const widthFor = (depth) => (depth === 0 ? 250 : depth === 1 ? 228 : 206)
+/**
+ * Node mindmap có kích thước CỐ ĐỊNH — layout ở lib/layout.js dựa vào điều đó.
+ * `compact` là bộ kích thước cho màn hình hẹp: hẹp và thấp hơn, để cả bản đồ lọt
+ * vào khung ~375px ở mức zoom vẫn còn đọc được chữ.
+ */
+const widthFor = (depth, compact) => (compact
+  ? (depth === 0 ? 178 : depth === 1 ? 170 : 160)
+  : (depth === 0 ? 250 : depth === 1 ? 228 : 206))
 const HEIGHT = 46
 const ROOT_HEIGHT = 58
+const COMPACT_HEIGHT = 40
+const COMPACT_ROOT_HEIGHT = 48
+
+/**
+ * Tham số canh khung. Điểm mấu chốt của bản mobile là `minZoom`: thà để người
+ * dùng vuốt tìm còn hơn thu cả bản đồ xuống mức zoom 0,15 — chữ thành hạt vừng,
+ * đó đúng là lỗi đang phải sửa.
+ */
+const FIT = {
+  wide: { padding: 0.14, minZoom: 0.12, maxZoom: 1.3 },
+  // Trên mobile thanh công cụ nằm đè lên mép trên canvas, nên chừa chỗ cho nó —
+  // nếu không, node gốc chui xuống dưới thanh ngay khi vừa mở trang.
+  compact: {
+    padding: { top: '58px', right: '12px', bottom: '16px', left: '12px' },
+    minZoom: 0.6,
+    maxZoom: 1.15,
+  },
+}
 
 export default function MindMap({
-  nodesById, rootId, relations, collapsed, onToggle,
-  selectedId, onSelect, mode, keepSet, showRelations, lang, mastery,
+  nodesById, rootId, mapRoots, relations, collapsed, onToggle,
+  selectedId, onSelect, mode, keepSet, showRelations, lang, mastery, compact = false,
 }) {
-  const { fitView } = useReactFlow()
-  const nodesInitialized = useNodesInitialized()
+  const { fitView, getNodes } = useReactFlow()
+  /**
+   * KHÔNG chờ useNodesInitialized(): `nodes` là prop controlled và component này
+   * cố tình không có onNodesChange, nên React Flow không bao giờ ghi ngược kích
+   * thước đo được vào store — cờ đó đứng mãi ở false, và mọi effect chờ nó thì
+   * không bao giờ chạy. Bù lại, mỗi node đã khai width/height tường minh nên
+   * bounds tính được ngay; chỉ cần nhường một nhịp cho React Flow nạp danh sách
+   * node mới rồi gọi fitView.
+   */
+  // node vừa bấm bung/thu — dùng để kéo khung về đúng chỗ đó trên màn hẹp
+  const [focusId, setFocusId] = useState(null)
+
+  /**
+   * Canh khung SAU KHI React Flow đã nạp danh sách node mới.
+   * Gọi fitView quá sớm là fit vào bounding box rỗng — viewport về identity và
+   * nằm im ở đó, vì lần fit sau bị đánh dấu là "đã fit rồi". Đây đúng là lỗi
+   * làm bản đồ trên mobile trông như không canh khung bao giờ.
+   */
+  const fitTimer = useRef(0)
+  const fitSoon = useCallback((options) => {
+    clearTimeout(fitTimer.current)
+    let tries = 0
+    const tick = () => {
+      // measured được React Flow điền từ width/height tường minh của node
+      const ready = getNodes().some((n) => n.measured && n.measured.width)
+      if (ready || tries++ > 20) { fitView(options); return }
+      fitTimer.current = setTimeout(tick, 25)
+    }
+    tick()
+  }, [fitView, getNodes])
+  useEffect(() => () => clearTimeout(fitTimer.current), [])
+  const handleToggle = useCallback((id) => { setFocusId(id); onToggle(id) }, [onToggle])
   const filtering = keepSet !== null
-  const childFilter = filtering ? (id) => keepSet.has(id) : null
+  // Nhánh có bản đồ riêng (`map: true`) bị cắt khỏi bản đồ cha — nó được vẽ ở bản đồ
+  // của chính nó. Bộ lọc chỉ áp cho CON nên gốc bản đồ hiện tại vẫn luôn hiện.
+  const hasMapCut = !!(mapRoots && mapRoots.size)
+  const inThisMap = (id) => !hasMapCut || !mapRoots.has(id)
+  const childFilter = filtering
+    ? (id) => keepSet.has(id) && inThisMap(id)
+    : (hasMapCut ? inThisMap : null)
   // khi đang lọc thì bỏ qua trạng thái thu gọn để kết quả luôn hiện ra
   const effectiveCollapsed = filtering ? new Set() : collapsed
 
@@ -36,7 +96,8 @@ export default function MindMap({
   }, [selectedId, nodesById])
 
   const { rfNodes, rfEdges } = useMemo(() => {
-    const pos = computeLayout(nodesById, rootId, effectiveCollapsed, mode, childFilter)
+    const pos = computeLayout(nodesById, rootId, effectiveCollapsed, mode, childFilter,
+                              compact ? GAP.compact : GAP.wide)
     const visible = new Set(visibleIds(nodesById, rootId, effectiveCollapsed, childFilter))
 
     const rfNodes = []
@@ -45,8 +106,10 @@ export default function MindMap({
       const p = pos.get(id)
       if (!node || !p) continue
       const isRoot = id === rootId
-      const w = widthFor(node.depth)
-      const h = isRoot ? ROOT_HEIGHT : HEIGHT
+      const w = widthFor(node.depth, compact)
+      const h = isRoot
+        ? (compact ? COMPACT_ROOT_HEIGHT : ROOT_HEIGHT)
+        : (compact ? COMPACT_HEIGHT : HEIGHT)
 
       let x
       let y = p.y - h / 2
@@ -55,7 +118,7 @@ export default function MindMap({
       else if (p.side === 'left') { x = p.x - w }
       else { x = p.x }
 
-      const childCount = node.children.filter((c) => !childFilter || keepSet.has(c)).length
+      const childCount = node.children.filter((c) => !childFilter || childFilter(c)).length
 
       rfNodes.push({
         id,
@@ -78,9 +141,10 @@ export default function MindMap({
           dimmed: false,
           collapsed: collapsed.has(id) && !filtering,
           childCount,
-          onToggle,
+          onToggle: handleToggle,
           lang,
           mastery: mastery ? mastery.get(id) ?? null : null,
+          compact,
         },
       })
     }
@@ -137,19 +201,61 @@ export default function MindMap({
     return { rfNodes, rfEdges }
   }, [
     nodesById, rootId, relations, mode, selectedId, pathToRoot,
-    effectiveCollapsed, collapsed, keepSet, showRelations, onToggle, filtering, lang, mastery,
+    effectiveCollapsed, collapsed, keepSet, mapRoots, showRelations, handleToggle, filtering, lang, mastery,
+    compact,
   ])
+
+  /**
+   * Trên màn hẹp, bung một nhánh làm cả cây dịch chỗ (d3 căn cha theo đàn con),
+   * nên node vừa bấm nhảy ra khỏi khung — bấm xong không thấy gì là lỗi nặng hơn
+   * cả chuyện chữ nhỏ. Sau mỗi lần bung/thu, kéo khung về đúng nhánh vừa bấm.
+   * Màn rộng không cần: cả cây vẫn nằm trong tầm mắt.
+   */
+  // Bấm vào node cũng làm cây dịch chỗ: App.select() mở node được chọn ra.
+  // Trên mobile panel che hết màn hình, nên cú dịch chỉ lộ ra lúc đóng panel —
+  // khó hiểu hơn hẳn. Coi node vừa chọn như node vừa bấm bung.
+  useEffect(() => {
+    if (compact && selectedId) setFocusId(selectedId)
+  }, [selectedId, compact])
+
+  useEffect(() => {
+    if (!compact || !focusId) return
+    const target = [{ id: focusId }]
+    const n = nodesById.get(focusId)
+    if (n && !effectiveCollapsed.has(focusId)) {
+      for (const c of n.children) if (!childFilter || childFilter(c)) target.push({ id: c })
+    }
+    const t = setTimeout(() => {
+      fitSoon({ ...FIT.compact, nodes: target, duration: 320 })
+      setFocusId(null)
+    }, 40)
+    return () => clearTimeout(t)
+    // childFilter được tạo lại mỗi lần render nên cố tình không đưa vào deps.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [focusId, effectiveCollapsed, compact, fitSoon, nodesById])
 
   // Fit view khi đổi layout hoặc bộ lọc — chờ React Flow đo xong kích thước node,
   // nếu không sẽ fit vào bounding box rỗng và cho ra khung hình lệch.
-  const fitKey = mode + '|' + (filtering ? keepSet.size : 'all')
+  const fitKey = mode + '|' + rootId + '|' + (filtering ? keepSet.size : 'all') + '|' + (compact ? 'c' : 'w')
   const lastFit = useRef('')
   useEffect(() => {
-    if (!nodesInitialized || lastFit.current === fitKey) return
-    lastFit.current = fitKey
-    const t = setTimeout(() => fitView({ padding: 0.14, duration: 400 }), 30)
+    if (lastFit.current === fitKey) return
+    const fit = compact ? FIT.compact : FIT.wide
+    // Đánh dấu "đã fit" BÊN TRONG timeout, không phải trước nó. StrictMode gắn
+    // rồi tháo effect một lượt lúc mount: nếu đánh dấu trước, lần tháo sẽ huỷ
+    // timeout duy nhất còn lần gắn lại thì thấy đã đánh dấu và bỏ qua — kết quả
+    // là bản đồ không bao giờ được canh khung, đúng triệu chứng "mindmap nhỏ xíu".
+    const t = setTimeout(() => {
+      const first = lastFit.current === ''
+      lastFit.current = fitKey
+      // Lần canh khung đầu tiên đặt duration 0: hoạt ảnh của d3 chạy bằng
+      // requestAnimationFrame, mà rAF bị dừng khi tab ở nền — mở trang trong tab
+      // nền rồi quay lại sẽ thấy bản đồ chưa canh khung. Đổi layout thì mới cần
+      // hoạt ảnh, lúc đó chắc chắn tab đang hiện.
+      fitSoon({ ...fit, duration: first ? 0 : 400 })
+    }, 30)
     return () => clearTimeout(t)
-  }, [fitKey, fitView, nodesInitialized])
+  }, [fitKey, fitSoon, compact])
 
   return (
     <ReactFlow
@@ -157,7 +263,7 @@ export default function MindMap({
       edges={rfEdges}
       nodeTypes={nodeTypes}
       onNodeClick={(_e, n) => onSelect(n.id)}
-      onNodeDoubleClick={(_e, n) => onToggle(n.id)}
+      onNodeDoubleClick={(_e, n) => handleToggle(n.id)}
       onPaneClick={() => onSelect(null)}
       minZoom={0.08}
       maxZoom={2.2}
@@ -165,10 +271,14 @@ export default function MindMap({
       nodesConnectable={false}
       elementsSelectable
       fitView
-      fitViewOptions={{ padding: 0.18 }}
+      fitViewOptions={compact ? FIT.compact : { ...FIT.wide, padding: 0.18 }}
     >
       <Background variant={BackgroundVariant.Dots} gap={26} size={1} color="#2a3040" />
-      <Controls showInteractive={false} position="bottom-right" />
+      <Controls
+        showInteractive={false}
+        position="bottom-right"
+        fitViewOptions={compact ? FIT.compact : FIT.wide}
+      />
       <MiniMap
         pannable
         zoomable

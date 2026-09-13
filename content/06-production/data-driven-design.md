@@ -201,3 +201,57 @@ Cân bằng trên Google Sheets, export CSV, bấm một nút. Xem [[agent-guard
 - Grep code tìm phép gán vào field của ScriptableObject — phải bằng 0.
 - Sửa một giá trị lúc Play Mode: có hiệu lực ngay không?
 - `OnValidate` có bắt được giá trị vô lý không? Thử nhập `damage = -5`.
+
+## 🎤 Phỏng vấn
+
+**Câu hay gặp**
+
+- `Junior` **Data-driven design nghĩa là gì? Nguyên tắc một câu?**
+  → **Logic nằm trong code, con số nằm trong dữ liệu.** Nghe hiển nhiên nhưng nó là ranh giới quyết định mình có cân bằng được game hay không: sửa sát thương trong code là sửa → build → chạy lại, vài phút mỗi lần thử; để trong dữ liệu thì chỉnh được lúc game đang chạy, và người không biết code cũng chỉnh được.
+- `Junior` **Cái gì luôn nên đưa ra dữ liệu?**
+  → Mọi **số cân bằng** (sát thương, HP, tốc độ, chi phí, tỉ lệ); mọi **giá trị thời gian** (cooldown, thời lượng, độ trễ); **bảng nội dung** (kẻ địch, vật phẩm, kỹ năng, drop table); **đường cong** (XP, giá nâng cấp); và **tham số game feel** — hitstop, screenshake, độ giật camera.
+- `Junior` **Cái gì thì đừng đưa ra dữ liệu?**
+  → **Logic phức tạp.** Đừng tự viết một ngôn ngữ kịch bản trong JSON: tới lúc cần rẽ nhánh và vòng lặp trong dữ liệu thì dùng một ngôn ngữ nhúng thật (Lua, GDScript) thay vì phát minh lại. Dấu hiệu đã đi quá xa là file JSON bắt đầu có trường `condition` và `then`.
+- `Mid` **Chọn định dạng dữ liệu theo tiêu chí nào?**
+  → **CSV** cho bảng số lớn, vì cân bằng trên spreadsheet nhanh hơn mọi công cụ khác. **JSON** cho cấu hình có cấu trúc: dễ diff, công cụ sẵn có, và agent sửa tốt. **ScriptableObject** khi cần tích hợp editor và tham chiếu asset — đổi lại khó diff trong git. Thực tế hay kết hợp cả ba cộng một bước import.
+- `Mid` **Thứ đáng đầu tư nhất trong nhánh này là gì?**
+  → **Hot reload**: sửa file dữ liệu → game cập nhật ngay, không khởi động lại. Vòng lặp cân bằng rút từ "sửa → build 90 giây → chơi lại từ đầu" xuống "sửa → F5 → thấy ngay". Khác biệt không phải vài phút mỗi lần, mà là **số lần thử nghiệm** mình thực hiện được — chênh hàng chục lần.
+- `Mid` **Dữ liệu ra ngoài code thì mất gì, và bù thế nào?**
+  → Mất sự bảo vệ của **trình biên dịch**: không còn kiểm tra kiểu, không còn bắt lỗi chính tả tên trường. Bù bằng **validation lúc nạp và lúc build**: `damage > 0`, `critChance` trong [0,1], `cooldown ≥ 0,05`, và mọi id tham chiếu phải tồn tại. Chạy khi build và **fail build** nếu có lỗi — dữ liệu hỏng phát hiện lúc build rẻ hơn nhiều so với khi người chơi báo lỗi.
+- `Senior` **Data-driven design liên quan gì tới việc làm việc an toàn với AI agent?**
+  → Rất nhiều. Khi con số nằm trong file text, agent **sửa được và mình review được bằng diff**; khi chúng nằm trong prefab hoặc trong code rải rác thì agent hoặc không chạm tới được, hoặc chạm theo cách không kiểm soát nổi. Cộng với validation, nó biến "agent chỉnh cân bằng" từ việc rủi ro thành một PR có cổng kiểm.
+- `Senior` **Đội bắt đầu từ code cứng, giờ muốn chuyển sang data-driven. Anh làm thế nào?**
+  → Không chuyển hết một lúc. Bắt đầu từ **bảng số thay đổi nhiều nhất** — thường là cân bằng chiến đấu — vì đó là chỗ trả lãi ngay. Làm hot reload cùng lúc, vì không có nó thì lợi ích chưa thấy rõ và việc chuyển đổi dễ bị bỏ dở. Rồi mở rộng dần theo nhịp: mỗi lần sửa một bảng số lần thứ ba là đưa nó ra dữ liệu.
+- `Senior` **Validation nên chạy ở những đâu?**
+  → Ba chỗ, và mỗi chỗ bắt một lớp lỗi khác nhau: **lúc nạp trong Editor** để designer thấy ngay khi gõ sai; **lúc build** để fail build, đây là cổng quan trọng nhất; và **lúc chạy ở bản debug** để bắt dữ liệu tải từ xa. Bỏ cái giữa là chấp nhận rằng dữ liệu hỏng sẽ đi tới tay người chơi và im lặng.
+
+**Khung trả lời 60 giây** — "Vì sao tách dữ liệu khỏi code lại quan trọng đến vậy?"
+
+> Vì nó quyết định **số lần mình thử được**. Cân bằng một game là hàng trăm lần chỉnh; nếu mỗi lần là sửa code, build chín mươi giây rồi chơi lại từ đầu thì phần lớn ý tưởng sẽ không bao giờ được thử. Nguyên tắc tôi dùng là **logic trong code, con số trong dữ liệu**, và thứ tôi làm sớm nhất là **hot reload** — sửa file, bấm F5, thấy ngay.
+>
+> Cái gì ra dữ liệu thì khá rõ: mọi số cân bằng, mọi giá trị thời gian, bảng nội dung, đường cong, và cả tham số game feel. Cái gì **không** ra dữ liệu cũng rõ không kém: logic có rẽ nhánh và vòng lặp — tới đó thì dùng một ngôn ngữ nhúng thật chứ đừng phát minh một ngôn ngữ kịch bản trong JSON.
+>
+> Và vì trình biên dịch không bảo vệ mình nữa, **validation là bắt buộc**: kiểm khoảng giá trị, kiểm mọi id tham chiếu có tồn tại, chạy lúc build và fail build nếu hỏng. Lợi ích kèm theo là agent sửa được bảng số qua diff review được — đó là điều kiện để giao phần cân bằng cho công cụ.
+
+**Họ sẽ đào tiếp**
+
+- *"Vì sao CSV vẫn còn dùng được trong 2020s?"* → Vì spreadsheet là công cụ cân bằng tốt nhất từng có: sắp xếp, lọc, công thức, biểu đồ, và nhiều người sửa cùng lúc. Với một bảng 200 kẻ địch × 15 cột thì không giao diện editor tự viết nào đuổi kịp. Yếu điểm duy nhất là dữ liệu phẳng — nên nó ghép với JSON cho phần có cấu trúc.
+- *"ScriptableObject có phải là data-driven không?"* → Có, nhưng kèm một đánh đổi cụ thể: nó tích hợp editor và tham chiếu asset rất tốt, đổi lại **khó diff trong git** và khó sửa hàng loạt. Nó cũng có bẫy riêng — trong Editor, SO giữ trạng thái xuyên các lần Play, nên field runtime phải `[NonSerialized]`.
+- *"Hot reload có rủi ro gì?"* → Trạng thái đang chạy có thể không khớp dữ liệu mới: một kẻ địch đã spawn với cooldown cũ, một hệ thống đã cache giá trị. Cách gọn là mọi thứ **đọc từ config tại điểm dùng** thay vì cache lúc khởi tạo, và phát một sự kiện "config đã đổi" cho những nơi buộc phải cache.
+- *"Validation nên fail build hay chỉ cảnh báo?"* → **Fail build.** Cảnh báo trong log sẽ bị bỏ qua sau tuần thứ hai, và khi đó cổng kiểm chỉ còn là trang trí. Nếu có loại lỗi thật sự chấp nhận được thì đưa nó ra khỏi danh sách kiểm chứ đừng hạ mọi thứ xuống mức cảnh báo.
+
+**Cờ đỏ**
+
+- Số cân bằng nằm rải trong code, và không thấy vấn đề ở đó.
+- Tự phát minh ngôn ngữ kịch bản trong JSON.
+- Dữ liệu ngoài code mà không có validation nào.
+- Validation chỉ cảnh báo, không fail build.
+- Không có hot reload, rồi than rằng cân bằng mất quá nhiều thời gian.
+
+**Số / ví dụ nên thuộc**
+
+- Nguyên tắc: **logic trong code, con số trong dữ liệu**.
+- Vòng lặp: "sửa → build **90 s** → chơi lại" so với "sửa → **F5** → thấy ngay".
+- Định dạng: **CSV** cho bảng số lớn · **JSON** cho cấu hình có cấu trúc · **ScriptableObject** khi cần tham chiếu asset.
+- Validation mẫu: `damage > 0` · `critChance ∈ [0,1]` · `cooldown ≥ 0,05` · mọi id tham chiếu **phải tồn tại**.
+- Validation chạy **lúc build** và **fail build**; đừng để ở mức cảnh báo.

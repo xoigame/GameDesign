@@ -271,3 +271,57 @@ Nêu `Collision Detection: Discrete` là chi tiết agent không thấy được
 **Bẫy thường gặp**
 - **Không nêu phiên bản** → agent dùng API đã đổi tên (`rb.velocity` → `rb.linearVelocity` từ Unity 6).
 - **Không nói agent phải báo việc cần làm trong Editor** → code đúng, chạy `NullReferenceException` vì field chưa gán.
+
+## 🎤 Phỏng vấn
+
+**Câu hay gặp**
+
+- `Junior` **Một prompt gamedev hiệu quả gồm mấy phần?**
+  → Năm: **bối cảnh** (engine, phiên bản, quy mô), **mục tiêu** cụ thể, **ràng buộc**, **định dạng kết quả mong muốn**, và **tiêu chí nghiệm thu**. Thiếu phần **ràng buộc** là nguyên nhân số một khiến kết quả "đúng mà không dùng được" — vì không có ràng buộc thì model rơi về mặc định của ngành.
+- `Junior` **Vì sao không nên hỏi "cách nào tốt nhất?"**
+  → Vì sẽ nhận về **câu trả lời trung bình hoá** — thứ phổ biến nhất trong dữ liệu, không phải thứ đúng cho dự án của mình. Hỏi đúng là: "So sánh A và B cho trường hợp cụ thể của tôi với ràng buộc X, Y; khuyến nghị một cái và nói rõ đánh đổi." Câu đó buộc nó chọn và buộc nó nêu cái giá.
+- `Junior` **Khi nhờ cân bằng số, điểm mấu chốt là gì?**
+  → **Bắt AI chạy mô phỏng, đừng nhận số nó đưa ra trực tiếp.** Và chi tiết quan trọng không kém: yêu cầu **chạy lại sau khi điều chỉnh**. Không có bước chạy lại thì "đề xuất" chỉ là phỏng đoán có vẻ khoa học — nó nghe như kết quả thí nghiệm nhưng chưa có thí nghiệm nào diễn ra.
+- `Mid` **Mẫu prompt để debug nên viết thế nào?**
+  → Đưa **bằng chứng, đừng đưa kết luận của mình**: log, hành vi quan sát được, các bước tái hiện. Rồi yêu cầu **liệt kê giả thuyết kèm cách kiểm chứng từng cái** trước khi sửa. Bước đó quan trọng vì agent sửa ngay thường "sửa" **triệu chứng** chứ không sửa nguyên nhân — và cái sửa đó sẽ trôi vào code.
+- `Mid` **Dùng AI làm người phản biện thiết kế thế nào cho có ích?**
+  → Đặt nó vào vai phản biện tường minh và yêu cầu **tìm điểm yếu, không tìm điểm mạnh**; kèm câu "đừng mở đầu bằng lời khen". Câu đó có tác dụng thật — không có nó, phản hồi thường bắt đầu bằng một đoạn khen ngợi vô ích rồi mới tới phần dùng được, và phần dùng được bị làm nhẹ đi.
+- `Mid` **Refactor an toàn thì yêu cầu gì trong prompt?**
+  → Nêu rõ **hành vi không được đổi**, phạm vi file được phép chạm, và **tiêu chí xác minh** — test nào phải xanh sau khi xong. Refactor là loại việc AI làm nhanh và cũng là loại việc nó dễ âm thầm đổi hành vi nhất, nên ranh giới "không đổi gì ngoài cấu trúc" phải được viết ra chứ không ngầm hiểu.
+- `Senior` **Ba điều nên tránh khi làm việc với agent?**
+  → Hỏi "cách nào tốt nhất" và nhận câu trả lời trung bình hoá. **Chấp nhận code không đọc** — code mình không hiểu là nợ kỹ thuật ngay từ ngày đầu. Và **để agent tự ý mở rộng phạm vi** — nếu nó thêm tính năng không yêu cầu thì chỉ ra và yêu cầu gỡ, chứ đừng giữ lại vì "cũng tiện".
+- `Senior` **Tiêu chí nghiệm thu trong prompt nên viết thế nào?**
+  → Ở dạng **máy kiểm được**: lệnh test nào phải xanh, file nào không được chạm, con số nào phải nằm trong khoảng nào. "Code sạch, dễ bảo trì" không so sánh được giữa hai lần chạy nên nó không phải tiêu chí. Viết được tiêu chí máy kiểm được cũng là dấu hiệu mình đã đặc tả đủ rõ để giao việc.
+- `Senior` **Anh đánh giá một mẫu prompt có tốt hơn mẫu cũ không bằng cách nào?**
+  → Bằng eval chứ không bằng cảm giác: một bộ **golden task lấy từ lịch sử repo**, chạy mỗi task ít nhất **ba lần** vì agent không tất định, đổi **một** thứ mỗi lần, và so theo cặp trên cùng task. Chỉ số đáng nhìn nhất là **tỉ lệ xong trong một vòng** và **phần diff bị người sửa lại** — cái thứ hai hay bị bỏ quên nhất.
+
+**Khung trả lời 60 giây** — "Anh viết prompt cho việc kỹ thuật trong gamedev thế nào?"
+
+> Tôi dùng một bộ khung năm phần: **bối cảnh, mục tiêu, ràng buộc, định dạng kết quả, tiêu chí nghiệm thu**. Phần hay thiếu nhất là **ràng buộc**, và đó cũng là nguyên nhân số một khiến kết quả "đúng mà không dùng được" — thiếu ràng buộc thì model rơi về mặc định của ngành, tức là về một game giống mọi game khác.
+>
+> Tuỳ loại việc thì có mẫu riêng. Cân bằng số: **bắt nó chạy mô phỏng và chạy lại sau khi chỉnh**, đừng nhận con số. Debug: đưa **bằng chứng chứ không đưa kết luận của mình**, và yêu cầu liệt kê giả thuyết kèm cách kiểm chứng **trước khi** sửa — vì sửa ngay thường là sửa triệu chứng. Phản biện thiết kế: đặt vai phản biện và nói rõ đừng mở đầu bằng lời khen.
+>
+> Và ba thứ tôi tránh: hỏi "cách nào tốt nhất", chấp nhận code mình không đọc, và để agent tự mở rộng phạm vi. Tiêu chí nghiệm thu thì luôn viết ở dạng **máy kiểm được** — lệnh test nào phải xanh, file nào không được chạm.
+
+**Họ sẽ đào tiếp**
+
+- *"Vì sao ràng buộc quan trọng hơn mô tả mục tiêu?"* → Vì mục tiêu thường là thứ AI đoán đúng, còn ràng buộc là thứ nó **không thể suy ra**: engine nào, phiên bản nào, không được dùng thư viện gì, không được đụng file nào, ngân sách hiệu năng bao nhiêu. Mọi thứ mình muốn khác với mặc định đều nằm ở phần ràng buộc.
+- *"Đưa bằng chứng thay vì kết luận — vì sao?"* → Vì kết luận của mình **thu hẹp không gian tìm kiếm ngay từ đầu**, và nếu kết luận sai thì agent sẽ đi tìm bằng chứng ủng hộ nó. Đưa log và các bước tái hiện thì nó còn khả năng chỉ ra một nguyên nhân mình chưa nghĩ tới — đó là lý do chính để nhờ.
+- *"Yêu cầu chạy lại sau khi chỉnh — chi tiết này đắt không?"* → Không đắt mà là khác biệt giữa có dữ liệu và không. Một đề xuất "giảm tỉ lệ crit xuống 15%" mà chưa chạy lại mô phỏng thì chỉ là phỏng đoán trình bày đẹp. Một dòng trong prompt biến nó thành kết quả kiểm chứng được, và nó cũng buộc agent phát hiện khi đề xuất của chính nó không đạt.
+- *"Prompt dài có tốt hơn không?"* → Không tỉ lệ thuận. Cái quan trọng là **đủ ràng buộc và đủ tiêu chí**, còn phần giải thích dài dòng làm loãng. Tôi thà đưa một file luật ngắn cộng một mục lục để agent tự mở phần cần, hơn là dán một bức tường chữ vào mỗi lần hỏi.
+
+**Cờ đỏ**
+
+- Prompt chỉ có mục tiêu, không có ràng buộc.
+- Nhận số cân bằng từ AI mà không có mô phỏng.
+- Đưa kết luận của mình khi nhờ debug.
+- Tiêu chí nghiệm thu viết là "code sạch, dễ bảo trì".
+- Giữ lại tính năng agent tự thêm vì "cũng tiện".
+
+**Số / ví dụ nên thuộc**
+
+- Khung năm phần: **bối cảnh · mục tiêu · ràng buộc · định dạng · tiêu chí nghiệm thu**.
+- Cân bằng: **bắt chạy mô phỏng**, và **chạy lại sau khi chỉnh**.
+- Debug: **bằng chứng, không kết luận**; liệt kê giả thuyết **trước khi** sửa.
+- Phản biện: yêu cầu tìm điểm yếu, **đừng mở đầu bằng lời khen**.
+- Đánh giá prompt mới: golden task, **n = 3**, đổi một thứ mỗi lần, nhìn **% diff bị sửa lại**.

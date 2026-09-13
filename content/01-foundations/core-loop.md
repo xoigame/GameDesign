@@ -153,3 +153,58 @@ Chi tiết ở [[unity-game-loop]]. Điểm quan trọng: **đừng `DontDestroy
 - Chạy ở 240 FPS (tắt vsync): bấm tấn công nhanh có mất input không?
 - Load lại scene gameplay: có manager nào bị nhân đôi không?
 - `Time.fixedDeltaTime` dùng đúng trong `FixedUpdate` chứ?
+
+## 🎤 Phỏng vấn
+
+**Câu hay gặp**
+
+- `Junior` **Core loop là gì? Mô tả core loop của một game anh thích.**
+  → Là chuỗi hành động **ngắn nhất** người chơi lặp đi lặp lại — đơn vị vui nhỏ nhất của game. Mô tả phải gọn trong một câu không có chữ "và": Hades là "vào phòng → chiến đấu → nhận boon → mạnh hơn → phòng khó hơn". Điểm mấu chốt là vòng lặp **kết thúc bằng năng lực tăng lên**, không phải bằng điểm số.
+- `Junior` **Ba tầng lặp micro / mid / macro là gì?**
+  → Micro **1–10 giây** (một cú đánh, một lượt bài) — nơi game feel sống. Mid **2–10 phút** (một trận, một tầng hầm) — có mở đầu, cao trào, kết thúc. Macro **nhiều giờ** (mở khoá, lên cấp). Micro giữ người chơi trong phiên hiện tại, macro kéo họ quay lại ngày mai.
+- `Junior` **Test 30 giây nghĩa là gì?**
+  → Trong 30 giây đầu, người chơi phải thực hiện trọn vẹn vòng lặp **ít nhất một lần**. Không đạt thì có thứ gì đó đang chen vào giữa người chơi và câu trả lời cho "tôi làm gì ở đây" — thường là logo, cutscene, hoặc màn chọn nhân vật. Đây cũng là con số dễ đo nhất khi xem người lạ chơi.
+- `Mid` **Thiếu vòng micro và thiếu vòng macro khác nhau ra sao trong dữ liệu?**
+  → Thiếu **micro** thì người chơi bỏ trong phiên đầu — tỉ lệ rơi tập trung ở 5 phút đầu, thời lượng phiên rất ngắn. Thiếu **macro** thì phiên đầu đẹp nhưng D7 tụt: chơi vài hôm rồi không có lý do mở lại. Hai triệu chứng khác nhau nên cách chữa cũng khác — thêm daily quest không cứu được một vòng micro nhạt.
+- `Mid` **"Test không phần thưởng" dùng để làm gì?**
+  → Tắt hết điểm, XP, loot rồi hỏi: hành động cốt lõi còn vui không? Không còn thì mình đang dùng phần thưởng để **che một cơ chế nhạt**. Phần thưởng khuếch đại niềm vui chứ không tạo ra nó — nhận ra điều này sớm rẻ hơn nhiều so với nhận ra sau khi đã xây xong ba tầng meta lên trên.
+- `Mid` **Lần lặp thứ 100 giống hệt lần thứ nhất. Anh sửa thế nào?**
+  → Đó là thiếu **biến số** hoặc thiếu **chiều sâu quyết định**. Biến số là ngẫu nhiên có kiểm soát: bố cục, vật phẩm, thứ tự gặp. Chiều sâu quyết định là mỗi lần lặp người chơi phải chọn khác đi vì thế trận khác. Thêm nội dung mà không thêm một trong hai thứ đó chỉ kéo dài thời gian tới lúc chán.
+- `Senior` **Core loop và progression khác nhau chỗ nào? Vì sao hay bị lẫn?**
+  → Core loop là thứ **vui ngay bây giờ**; progression là thứ **giữ người chơi quay lại**. Lẫn nhau vì cả hai đều "thưởng". Hệ quả của lẫn rất cụ thể: đội thấy giữ chân kém thì đi thêm battle pass, trong khi vấn đề nằm ở việc mười giây gameplay không vui — và cái thứ hai không bao giờ được sửa.
+- `Senior` **Đánh giá một pitch mới, anh hỏi gì đầu tiên về core loop?**
+  → "Người chơi làm gì trong ba mươi giây, và vì sao họ muốn làm lại lần thứ hai?" Nếu câu trả lời phải dùng tới hệ thống meta hoặc cốt truyện để biện minh thì vòng lặp chưa đứng được một mình. Câu hỏi kiểm tra thứ hai: mô tả nó trong một câu không có chữ "và".
+- `Senior` **Khi nào nên đổi core loop, và khi nào chỉ nên đổi tham số?**
+  → Đổi tham số khi playtest cho thấy nhịp sai nhưng người chơi **vẫn muốn lặp lại**. Đổi loop khi họ lặp lại vì nghĩa vụ chứ không vì muốn — dấu hiệu là tester chơi đúng số vòng mình yêu cầu rồi dừng. Đổi loop sau tháng thứ sáu gần như luôn là làm lại dự án, nên đây là câu hỏi phải trả lời ở giai đoạn prototype.
+
+**Khung trả lời 60 giây** — "Anh kiểm tra một core loop bằng cách nào?"
+
+> Tôi có bốn phép thử, và chúng rẻ nên tôi chạy hết. **Test một câu**: mô tả vòng lặp trong một câu không có chữ "và" — không làm được nghĩa là loop chưa rõ, và mọi tranh cãi sau đó sẽ là tranh cãi về hai game khác nhau.
+>
+> **Test 30 giây**: người chơi phải chạy trọn vòng lặp ít nhất một lần trong 30 giây đầu. **Test không phần thưởng**: tắt hết điểm, XP, loot; hành động cốt lõi còn vui không? Đây là phép thử tôi tin nhất, vì phần thưởng khuếch đại niềm vui chứ không tạo ra nó. Và **test lần thứ 100**: lần lặp thứ 100 có khác lần thứ nhất không — không khác thì thiếu biến số hoặc thiếu chiều sâu quyết định.
+>
+> Bốn phép thử này chạy được trên giấy và trên prototype greybox, tức là trước khi tiêu tiền. Đó mới là điểm của chúng.
+
+**Họ sẽ đào tiếp**
+
+- *"Vì sao vòng lặp phải kết thúc bằng năng lực, không phải điểm số?"* → Vì năng lực đổi **cách chơi vòng sau**, còn điểm số chỉ đổi con số. Vampire Survivors: nhặt gem → lên cấp → chọn skill → **né được nhiều hơn** — vòng sau chơi khác thật. Nếu bỏ mũi tên quay về đó thì cái còn lại là một bảng điểm, và người chơi hết lý do lặp lại sau vài phút.
+- *"Làm sao biết vòng micro đang hỏng chứ không phải vòng macro?"* → Nhìn chỗ người chơi rơi. Rơi trong 5 phút đầu và thời lượng phiên ngắn là micro; phiên đầu bình thường mà D7 tụt là macro. Và test không phần thưởng phân biệt hai thứ này nhanh hơn mọi biểu đồ.
+- *"Game không có tiến trình năng lực thì sao — cờ vua, Tetris?"* → Năng lực tăng nằm ở **người chơi**, không nằm trong game. Loại này đánh đổi: không cần hệ thống meta, nhưng đường cong học phải rất sạch vì không có gì bù cho người chơi khi họ chưa giỏi. Đó cũng là lý do chúng thường có nhiều chế độ độ khó hoặc matchmaking.
+- *"Ba tầng lặp có bắt buộc đủ ba không?"* → Không, nhưng thiếu tầng nào thì phải biết mình đang đổi lấy gì. Game premium 6 giờ bỏ hẳn tầng macro là lựa chọn đúng; game dịch vụ bỏ tầng macro là tự sát. Điều không được phép là **không biết** mình đang thiếu tầng nào.
+- *"Dùng AI ở khâu này thế nào?"* → Việc nó làm tốt là đóng vai người chơi lần thứ 100: đưa mô tả vòng lặp và bắt nó liệt kê những gì lặp lại y hệt sau 100 lần. Việc nó làm dở là nói vòng lặp có vui không — cái đó chỉ playtest trả lời được, và tin vào đánh giá của AI ở đây là tự lừa mình bằng một câu văn trôi chảy.
+
+**Cờ đỏ**
+
+- Mô tả core loop bằng một đoạn văn, hoặc bằng một câu đầy chữ "và".
+- Vòng lặp kết thúc ở phần thưởng, không có mũi tên quay về năng lực.
+- Chữa "game chán" bằng cách thêm hệ thống meta, chưa từng chạy test không phần thưởng.
+- Chỉ có một tầng lặp và không biết mình đang thiếu hai tầng kia.
+- Thêm nội dung để chữa lần lặp thứ 100 giống lần thứ nhất.
+
+**Số / ví dụ nên thuộc**
+
+- Ba tầng: micro **1–10 giây** · mid **2–10 phút** · macro **nhiều giờ**.
+- Bốn phép thử: **một câu · 30 giây · không phần thưởng · lần thứ 100**.
+- Ví dụ mô tả một câu: Slay the Spire — "rút bài → đánh giá thế trận → chơi bài → dọn phòng → thêm bài vào deck".
+- Vampire Survivors: vòng lặp kết thúc bằng **né được nhiều hơn**, không phải bằng điểm.
+- Dấu hiệu trong dữ liệu: rơi ở **5 phút đầu** = micro · **D7 tụt** = macro.

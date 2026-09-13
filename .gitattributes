@@ -1,0 +1,10 @@
+# Xuống dòng: LF ở mọi nơi, kể cả trên Windows.
+#
+# VÌ SAO BẮT BUỘC: scripts/build-graph.mjs tách các mục 🤖 / 🎮 / 💻 bằng regex
+# neo cuối dòng ($). Git trên Windows với core.autocrlf=true checkout ra CRLF;
+# ký tự CR còn sót làm "## 🤖 Prompt cho AI" không khớp nữa — build vẫn chạy,
+# không báo lỗi, chỉ là MỌI mục đó biến mất khỏi graph.json trên đúng máy đó.
+#
+# Chuẩn hoá về LF để mọi máy và mọi agent (Codex / Claude Code / CI) sinh ra
+# cùng một graph.json, không tạo diff giả chỉ vì khác hệ điều hành.
+* text=auto eol=lf
