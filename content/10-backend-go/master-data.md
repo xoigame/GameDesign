@@ -76,6 +76,8 @@ Từ bảng này suy ra hai quyết định kỹ thuật quan trọng nhất c�
 
 **Vì sao không đọc thẳng Sheets API từ server:** Google có rate limit và có lúc lỗi (game bạn chết theo); không có version nên không rollback được; một designer sửa nhầm một ô là production đổi ngay lập tức không qua ai duyệt; và độ trễ mỗi lần đọc tính bằng trăm mili giây. Sheet để *soạn*, database để *phục vụ*.
 
+**Cổng kiểm dữ liệu nên có nấc.** Một hệ thống đang vận hành thật chia kết quả kiểm làm ba mức — sai tham chiếu và sai ràng buộc thì **chặn** đợt nhập, lệch thời gian của sự kiện sắp diễn ra thì **chặn**, lệch của sự kiện còn xa thì chỉ **báo**. Họ chia ba sau khi một cảnh báo về nội dung của 26 ngày sau chặn đứng đợt nhập gần tám tiếng. Cổng chỉ có một nấc sớm muộn cũng bị tắt hẳn — xem [[go-production-arch]].
+
 ## Quy ước Google Sheet
 
 Một sheet = một bảng. Tên sheet = tên bảng (`item`, `level`, `shop`).

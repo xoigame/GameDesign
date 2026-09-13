@@ -181,6 +181,7 @@ default:
 Hai điều dễ hiểu nhầm về protobuf, cùng ở đoạn trên:
 
 - **Protobuf bảo đảm kiểu, không bảo đảm luật chơi.** `dx` là số nguyên hợp lệ không có nghĩa là người chơi được phép đi 500 ô một tick. Mọi kiểm tra quyền, khoảng cách, cooldown ở [[game-server-go]] vẫn nguyên giá trị.
+- **Envelope không phải cách duy nhất.** Có hệ thống đặt loại message vào *khung tin* thay vì vào payload: vài byte header trước dữ liệu protobuf cho WebSocket, hoặc một header HTTP mang tên message cho REST. Đổi lại: payload sạch hơn và không phải sửa `.proto` mỗi lần thêm loại message, nhưng bạn tự cầm phần định tuyến và tự chịu trách nhiệm đồng bộ bảng mã giữa hai phía. Một bản đã chạy thật ở [[go-production-arch]].
 - **Message lạ thì bỏ qua, đừng ngắt kết nối.** Trong lúc deploy dần, client mới gửi loại message server cũ chưa biết là chuyện bình thường. Còn gói tin *giải mã hỏng* thì mới ngắt — đó là dấu hiệu sai giao thức hoặc có người thử tay.
 
 ## Bẫy thường gặp

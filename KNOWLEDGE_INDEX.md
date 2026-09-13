@@ -4,9 +4,9 @@
 > Đây là mục lục phẳng của toàn bộ kho kiến thức, dành cho AI agent (Codex / Claude Code)
 > đọc nhanh trước khi mở từng file `content/**/*.md` chi tiết.
 
-Cập nhật: `2026-09-13T01:52:26.945Z` · 103 node · 103 deep · 0 stub · 203512 từ
+Cập nhật: `2026-09-13T05:06:58.564Z` · 110 node · 110 deep · 0 stub · 221179 từ
 
-Mức độ: **29 cơ bản** · 47 trung cấp · 27 chuyên sâu
+Mức độ: **33 cơ bản** · 49 trung cấp · 28 chuyên sâu
 
 ## Lộ trình đọc
 
@@ -92,32 +92,39 @@ thức cơ bản (ai cũng nên đọc), trung cấp (cần nền), hay chuyên 
 | 75 | **Sinh Asset bằng AI** `#asset-generation` | Chuyên sâu | deep | `content/05-ai-assisted-dev/asset-generation.md` |
 | 76 | **Master Data & Master User** `#master-data` | Trung cấp | deep | `content/10-backend-go/master-data.md` |
 | 77 | **Docker cho server game** `#go-docker` | Trung cấp | deep | `content/10-backend-go/go-docker.md` |
-| 78 | **Unity thực chiến** `#unity` | Cơ bản | deep | `content/09-unity/index.md` |
-| 79 | **Vòng đời game & Scene flow** `#unity-game-loop` | Cơ bản | deep | `content/09-unity/unity-game-loop.md` |
-| 80 | **Tổ chức dự án & Assembly** `#unity-project-structure` | Trung cấp | deep | `content/09-unity/unity-project-structure.md` |
-| 81 | **Design Pattern trong Unity** `#unity-design-patterns` | Trung cấp | deep | `content/09-unity/unity-design-patterns.md` |
-| 82 | **C#, GC và bộ nhớ trong Unity** `#unity-csharp-memory` | Trung cấp | deep | `content/09-unity/unity-csharp-memory.md` |
-| 83 | **Vật lý trong Unity** `#unity-physics` | Trung cấp | deep | `content/09-unity/unity-physics.md` |
-| 84 | **Animation trong Unity** `#unity-animation` | Trung cấp | deep | `content/09-unity/unity-animation.md` |
-| 85 | **Input System** `#unity-input` | Cơ bản | deep | `content/09-unity/unity-input.md` |
-| 86 | **Camera & Cinemachine** `#unity-camera` | Trung cấp | deep | `content/09-unity/unity-camera.md` |
-| 87 | **UI trong Unity** `#unity-ui` | Trung cấp | deep | `content/09-unity/unity-ui.md` |
-| 88 | **Audio trong Unity** `#unity-audio` | Trung cấp | deep | `content/09-unity/unity-audio.md` |
-| 89 | **VFX & Hiệu ứng** `#unity-vfx` | Trung cấp | deep | `content/09-unity/unity-vfx.md` |
-| 90 | **Shader trong URP** `#unity-shader` | Chuyên sâu | deep | `content/09-unity/unity-shader.md` |
-| 91 | **Ánh sáng & Post-processing** `#unity-lighting` | Trung cấp | deep | `content/09-unity/unity-lighting.md` |
-| 92 | **Lưu game & dữ liệu** `#unity-save-data` | Trung cấp | deep | `content/09-unity/unity-save-data.md` |
-| 93 | **Tối ưu hoá Unity** `#unity-optimization` | Chuyên sâu | deep | `content/09-unity/unity-optimization.md` |
-| 94 | **Job System, Burst và DOTS** `#unity-dots-jobs` | Chuyên sâu | deep | `content/09-unity/unity-dots-jobs.md` |
-| 95 | **Build & nền tảng** `#unity-build-platform` | Chuyên sâu | deep | `content/09-unity/unity-build-platform.md` |
-| 96 | **Addressables và bộ nhớ asset** `#unity-addressables` | Chuyên sâu | deep | `content/09-unity/unity-addressables.md` |
-| 97 | **Multiplayer & Netcode** `#unity-multiplayer` | Chuyên sâu | deep | `content/09-unity/unity-multiplayer.md` |
-| 98 | **Thư viện ngoài — chọn, cách ly, tích hợp** `#unity-third-party` | Trung cấp | deep | `content/09-unity/unity-third-party.md` |
-| 99 | **Editor Tools tự viết** `#unity-editor-tools` | Trung cấp | deep | `content/09-unity/unity-editor-tools.md` |
-| 100 | **Test và CI/CD cho Unity** `#unity-testing-ci` | Trung cấp | deep | `content/09-unity/unity-testing-ci.md` |
-| 101 | **Debug hiện trường — crash, ANR, log** `#unity-debug-crash` | Chuyên sâu | deep | `content/09-unity/unity-debug-crash.md` |
-| 102 | **SDK kiếm tiền — quảng cáo, IAP, đo lường** `#unity-monetization-sdk` | Trung cấp | deep | `content/09-unity/unity-monetization-sdk.md` |
-| 103 | **Cocos Creator** `#cocos-creator` | Trung cấp | deep | `content/11-cocos-creator/index.md` |
+| 78 | **Mổ xẻ một server Go đã phát hành** `#go-production-arch` | Chuyên sâu | deep | `content/10-backend-go/go-production-arch.md` |
+| 79 | **Unity thực chiến** `#unity` | Cơ bản | deep | `content/09-unity/index.md` |
+| 80 | **Vòng đời game & Scene flow** `#unity-game-loop` | Cơ bản | deep | `content/09-unity/unity-game-loop.md` |
+| 81 | **Tổ chức dự án & Assembly** `#unity-project-structure` | Trung cấp | deep | `content/09-unity/unity-project-structure.md` |
+| 82 | **Design Pattern trong Unity** `#unity-design-patterns` | Trung cấp | deep | `content/09-unity/unity-design-patterns.md` |
+| 83 | **C#, GC và bộ nhớ trong Unity** `#unity-csharp-memory` | Trung cấp | deep | `content/09-unity/unity-csharp-memory.md` |
+| 84 | **Vật lý trong Unity** `#unity-physics` | Trung cấp | deep | `content/09-unity/unity-physics.md` |
+| 85 | **Animation trong Unity** `#unity-animation` | Trung cấp | deep | `content/09-unity/unity-animation.md` |
+| 86 | **Input System** `#unity-input` | Cơ bản | deep | `content/09-unity/unity-input.md` |
+| 87 | **Camera & Cinemachine** `#unity-camera` | Trung cấp | deep | `content/09-unity/unity-camera.md` |
+| 88 | **UI trong Unity** `#unity-ui` | Trung cấp | deep | `content/09-unity/unity-ui.md` |
+| 89 | **Audio trong Unity** `#unity-audio` | Trung cấp | deep | `content/09-unity/unity-audio.md` |
+| 90 | **VFX & Hiệu ứng** `#unity-vfx` | Trung cấp | deep | `content/09-unity/unity-vfx.md` |
+| 91 | **Shader trong URP** `#unity-shader` | Chuyên sâu | deep | `content/09-unity/unity-shader.md` |
+| 92 | **Ánh sáng & Post-processing** `#unity-lighting` | Trung cấp | deep | `content/09-unity/unity-lighting.md` |
+| 93 | **Lưu game & dữ liệu** `#unity-save-data` | Trung cấp | deep | `content/09-unity/unity-save-data.md` |
+| 94 | **Tối ưu hoá Unity** `#unity-optimization` | Chuyên sâu | deep | `content/09-unity/unity-optimization.md` |
+| 95 | **Job System, Burst và DOTS** `#unity-dots-jobs` | Chuyên sâu | deep | `content/09-unity/unity-dots-jobs.md` |
+| 96 | **Build & nền tảng** `#unity-build-platform` | Chuyên sâu | deep | `content/09-unity/unity-build-platform.md` |
+| 97 | **Addressables và bộ nhớ asset** `#unity-addressables` | Chuyên sâu | deep | `content/09-unity/unity-addressables.md` |
+| 98 | **Multiplayer & Netcode** `#unity-multiplayer` | Chuyên sâu | deep | `content/09-unity/unity-multiplayer.md` |
+| 99 | **Thư viện ngoài — chọn, cách ly, tích hợp** `#unity-third-party` | Trung cấp | deep | `content/09-unity/unity-third-party.md` |
+| 100 | **Editor Tools tự viết** `#unity-editor-tools` | Trung cấp | deep | `content/09-unity/unity-editor-tools.md` |
+| 101 | **Test và CI/CD cho Unity** `#unity-testing-ci` | Trung cấp | deep | `content/09-unity/unity-testing-ci.md` |
+| 102 | **Debug hiện trường — crash, ANR, log** `#unity-debug-crash` | Chuyên sâu | deep | `content/09-unity/unity-debug-crash.md` |
+| 103 | **SDK kiếm tiền — quảng cáo, IAP, đo lường** `#unity-monetization-sdk` | Trung cấp | deep | `content/09-unity/unity-monetization-sdk.md` |
+| 104 | **Cocos Creator** `#cocos-creator` | Trung cấp | deep | `content/11-cocos-creator/index.md` |
+| 105 | **Dự án & pipeline asset** `#cocos-project-structure` | Cơ bản | deep | `content/11-cocos-creator/cocos-project-structure.md` |
+| 106 | **Node, Component & vòng đời** `#cocos-scene-component` | Cơ bản | deep | `content/11-cocos-creator/cocos-scene-component.md` |
+| 107 | **UI & đa tỉ lệ màn hình** `#cocos-ui` | Cơ bản | deep | `content/11-cocos-creator/cocos-ui.md` |
+| 108 | **Dựng một dự án game** `#project` | Trung cấp | deep | `content/12-project/index.md` |
+| 109 | **Chốt phạm vi trước khi viết code** `#project-kickoff` | Cơ bản | deep | `content/12-project/project-kickoff.md` |
+| 110 | **Chia ranh giới client và server** `#project-architecture` | Trung cấp | deep | `content/12-project/project-architecture.md` |
 
 ## Cây kiến thức
 
@@ -186,32 +193,35 @@ thức cơ bản (ai cũng nên đọc), trung cấp (cần nền), hay chuyên 
     - ◐ `#64` **LiveOps — vận hành game sau khi phát hành** `#liveops` 🤖 🎮 🎤 — Remote config, feature flag, sự kiện theo lịch và A/B test — bộ máy cho phép sửa số, tắt tính năng hỏng và đổi nội dung mà không chờ store duyệt. → `content/06-production/liveops.md`
     - ◐ `#65` **Chọn Tech Stack** `#tech-stack` 🤖 🎮 🎤 — Engine, ngôn ngữ, công cụ — chọn theo dự án và theo mức độ AI hỗ trợ được. → `content/06-production/tech-stack.md`
     - ○ `#66` **Performance** `#performance` 🤖 🎮 🎤 — Ngân sách frame, profiling, và những nguyên nhân giật lag phổ biến nhất. → `content/06-production/performance.md`
-  - ● `#78` **Unity thực chiến** `#unity` 🤖 🎤 🇬🇧 🗺 — Kinh nghiệm hiện thực hoá game trong Unity — vật lý, animation, pattern, UI, audio, shader, ánh sáng, tối ưu, multiplayer. Không phải docs, là những gì lộ ra khi làm thật. → `content/09-unity/index.md`
-    - ● `#79` **Vòng đời game & Scene flow** `#unity-game-loop` 🤖 💻 🎤 — Bootstrap scene, state machine cấp ứng dụng, thứ tự Awake/Start, Time.timeScale và mọi thứ hỏng theo nó — xương sống mà mọi hệ thống khác móc vào. → `content/09-unity/unity-game-loop.md`
-    - ◐ `#80` **Tổ chức dự án & Assembly** `#unity-project-structure` 🤖 💻 🎤 — Thư mục theo feature, Assembly Definition đúng liều, prefab variant thay kế thừa, scene additive để 4 người không giẫm chân, và Git không phá project. → `content/09-unity/unity-project-structure.md`
-    - ◐ `#81` **Design Pattern trong Unity** `#unity-design-patterns` 🤖 💻 🎤 — ScriptableObject ba vai, singleton có giới hạn, service locator có kỷ luật, FSM bằng class thường, pool có sẵn — pattern nào sống được trong MonoBehaviour và bẫy Unity của từng cái. → `content/09-unity/unity-design-patterns.md`
-    - ◐ `#82` **C#, GC và bộ nhớ trong Unity** `#unity-csharp-memory` 🤖 💻 🎤 — Vì sao game khựng đều đặn mỗi vài giây, cái gì cấp phát mà nhìn code không ra, và chọn giữa Coroutine, async/await, UniTask và Awaitable — phần C# mà Unity trả lời khác .NET thường. → `content/09-unity/unity-csharp-memory.md`
-    - ◐ `#92` **Lưu game & dữ liệu** `#unity-save-data` 🤖 💻 🎤 — Một class SaveData phẳng có version, ghi atomic, migration theo chuỗi, lưu id thay tham chiếu — và vì sao PlayerPrefs chỉ dành cho âm lượng. → `content/09-unity/unity-save-data.md`
-    - ◐ `#83` **Vật lý trong Unity** `#unity-physics` 🤖 💻 🎤 — Rigidbody hay tự viết, FixedUpdate và interpolation, collision matrix, raycast không cấp phát — và vì sao platformer tốt gần như không dùng physics engine. → `content/09-unity/unity-physics.md`
-    - ◐ `#84` **Animation trong Unity** `#unity-animation` 🤖 💻 🎤 — Animator Controller là bảng điều khiển hiển thị, không phải bộ não — giữ nó dưới 30 state, tắt Has Exit Time, và biết lúc nào nên bỏ nó mà điều khiển bằng code. → `content/09-unity/unity-animation.md`
-    - ● `#85` **Input System** `#unity-input` 🤖 💻 🎤 — Chọn Input System mới từ ngày đầu, gom mọi cách đọc về một InputReader duy nhất, và đừng đọc nút bấm trong FixedUpdate — phần lớn "input bị nuốt" là ở đó. → `content/09-unity/unity-input.md`
-    - ◐ `#86` **Camera & Cinemachine** `#unity-camera` 🤖 💻 🎤 — Camera là hệ gameplay, không phải trang trí — dùng Cinemachine 3 thay vì tự viết follow, nhưng hiểu Brain, dead zone, impulse và pixel perfect đủ để biết nó đang làm gì. → `content/09-unity/unity-camera.md`
-    - ◐ `#87` **UI trong Unity** `#unity-ui` 🤖 💻 🎤 — UGUI vẫn là lựa chọn cho UI in-game năm 2026; cái giết frame không phải số phần tử mà là Canvas rebuild — tách Canvas theo tần suất đổi, tắt Raycast Target, và đừng lồng Layout Group. → `content/09-unity/unity-ui.md`
-    - ◐ `#88` **Audio trong Unity** `#unity-audio` 🤖 💻 🎤 — Import settings quyết định RAM và CPU nhiều hơn code; pool AudioSource thay PlayOneShot; nhạc đúng nhịp chỉ có một cách là PlayScheduled trên dspTime. → `content/09-unity/unity-audio.md`
-    - ◐ `#89` **VFX & Hiệu ứng** `#unity-vfx` 🤖 💻 🎤 — Shuriken cho gameplay và mobile, VFX Graph cho số lượng; kẻ giết frame là overdraw chứ không phải số hạt; và mọi hiệu ứng nổ đều phải đi qua pool. → `content/09-unity/unity-vfx.md`
-    - ○ `#90` **Shader trong URP** `#unity-shader` 🤖 💻 🎤 — Shader Graph lo 80% material, HLSL tay cho phần còn lại — nhưng thứ quyết định frame rate không phải shader đẹp hay xấu, mà là nó có phá SRP Batcher hay không. → `content/09-unity/unity-shader.md`
-    - ◐ `#91` **Ánh sáng & Post-processing** `#unity-lighting` 🤖 💻 🎤 — Linear color space từ ngày đầu, baked cho mọi thứ đứng yên, realtime chỉ cho thứ thật sự đổi — và post-processing là nơi mobile mất frame nhiều nhất mà không ai để ý. → `content/09-unity/unity-lighting.md`
-    - ○ `#93` **Tối ưu hoá Unity** `#unity-optimization` 🤖 💻 🎤 — Đo trên máy đích với build thật, xác định CPU hay GPU trước khi chạm code — và nhận ra rằng import settings quyết định hiệu năng nhiều hơn mọi thuật toán bạn viết. → `content/09-unity/unity-optimization.md`
-    - ○ `#94` **Job System, Burst và DOTS** `#unity-dots-jobs` 🤖 💻 🎤 — Ba tầng tách biệt — Job System, Burst, ECS — và lý do hầu hết dự án chỉ nên leo hai tầng đầu. Tư duy data-oriented, luật an toàn của job, và khi nào ECS đáng giá thật. → `content/09-unity/unity-dots-jobs.md`
-    - ○ `#95` **Build & nền tảng** `#unity-build-platform` 🤖 💻 🎤 — Build ra máy thật từ tuần đầu và build hàng đêm trên CI — vì IL2CPP, stripping, bộ nhớ và driver GPU là những lỗi chỉ tồn tại ngoài Editor, và chúng tích luỹ âm thầm. → `content/09-unity/unity-build-platform.md`
-    - ○ `#96` **Addressables và bộ nhớ asset** `#unity-addressables` 🤖 💻 🎤 — Ba cách tham chiếu asset và hậu quả bộ nhớ của từng cách, đếm tham chiếu của Addressables, asset bị nhân bản trong nhiều bundle, và quy trình cập nhật nội dung từ xa mà không phải nộp lại store. → `content/09-unity/unity-addressables.md`
-    - ○ `#97` **Multiplayer & Netcode** `#unity-multiplayer` 🤖 💻 🎤 — Multiplayer làm từ ngày đầu hoặc không bao giờ — retrofit gần như là viết lại. Chọn stack theo thể loại và ngân sách, không tin client, và test với lag giả từ tuần đầu. → `content/09-unity/unity-multiplayer.md`
-    - ◐ `#98` **Thư viện ngoài — chọn, cách ly, tích hợp** `#unity-third-party` 🤖 💻 🎤 — Bản đồ built-in trước / thư viện ngoài sau, bảy tiêu chí chọn, luật bọc sau interface của mình, và bẫy tích hợp thật — asmdef, EDM4U, Gradle, stripping, DOTween. → `content/09-unity/unity-third-party.md`
-    - ◐ `#99` **Editor Tools tự viết** `#unity-editor-tools` 🤖 💻 🎤 — Một giờ viết tool tiết kiệm mười giờ của team; tool là thứ để designer không phải gọi lập trình viên — và là việc AI agent làm tốt nhất trong toàn bộ dự án Unity. → `content/09-unity/unity-editor-tools.md`
-    - ◐ `#100` **Test và CI/CD cho Unity** `#unity-testing-ci` 🤖 💻 🎤 — Cái gì trong game đáng viết test và cái gì không, cách tách logic khỏi MonoBehaviour để test được, và thang CI năm bậc — từ build đêm cho QA tới farm thiết bị. → `content/09-unity/unity-testing-ci.md`
-    - ○ `#101` **Debug hiện trường — crash, ANR, log** `#unity-debug-crash` 🤖 💻 🎤 — Bug ở máy người chơi mà bạn không cầm được máy: phân biệt crash / ANR / bị kill vì hết RAM, symbolicate stack native, và breadcrumb — thứ rẻ nhất biến "không tái hiện được" thành "sửa được". → `content/09-unity/unity-debug-crash.md`
-    - ◐ `#102` **SDK kiếm tiền — quảng cáo, IAP, đo lường** `#unity-monetization-sdk` 🤖 💻 🎤 — Mediation, vòng đời một lần hiện rewarded, consent GDPR/ATT, acknowledge hoá đơn trong 3 ngày, và build hell do EDM4U — nhóm SDK mà một lỗi nhỏ làm mất tiền thật hoặc khoá tài khoản. → `content/09-unity/unity-monetization-sdk.md`
-  - ◐ `#103` **Cocos Creator** `#cocos-creator` 🤖 🎤 🗺 — Engine thứ hai trong kho — chọn Cocos hay Unity theo nơi phát hành, bản đồ khái niệm Unity → Cocos 3.x, và những bẫy chỉ lộ ra khi build ra web hoặc mini game. → `content/11-cocos-creator/index.md`
+  - ● `#79` **Unity thực chiến** `#unity` 🤖 🎤 🇬🇧 🗺 — Kinh nghiệm hiện thực hoá game trong Unity — vật lý, animation, pattern, UI, audio, shader, ánh sáng, tối ưu, multiplayer. Không phải docs, là những gì lộ ra khi làm thật. → `content/09-unity/index.md`
+    - ● `#80` **Vòng đời game & Scene flow** `#unity-game-loop` 🤖 💻 🎤 — Bootstrap scene, state machine cấp ứng dụng, thứ tự Awake/Start, Time.timeScale và mọi thứ hỏng theo nó — xương sống mà mọi hệ thống khác móc vào. → `content/09-unity/unity-game-loop.md`
+    - ◐ `#81` **Tổ chức dự án & Assembly** `#unity-project-structure` 🤖 💻 🎤 — Thư mục theo feature, Assembly Definition đúng liều, prefab variant thay kế thừa, scene additive để 4 người không giẫm chân, và Git không phá project. → `content/09-unity/unity-project-structure.md`
+    - ◐ `#82` **Design Pattern trong Unity** `#unity-design-patterns` 🤖 💻 🎤 — ScriptableObject ba vai, singleton có giới hạn, service locator có kỷ luật, FSM bằng class thường, pool có sẵn — pattern nào sống được trong MonoBehaviour và bẫy Unity của từng cái. → `content/09-unity/unity-design-patterns.md`
+    - ◐ `#83` **C#, GC và bộ nhớ trong Unity** `#unity-csharp-memory` 🤖 💻 🎤 — Vì sao game khựng đều đặn mỗi vài giây, cái gì cấp phát mà nhìn code không ra, và chọn giữa Coroutine, async/await, UniTask và Awaitable — phần C# mà Unity trả lời khác .NET thường. → `content/09-unity/unity-csharp-memory.md`
+    - ◐ `#93` **Lưu game & dữ liệu** `#unity-save-data` 🤖 💻 🎤 — Một class SaveData phẳng có version, ghi atomic, migration theo chuỗi, lưu id thay tham chiếu — và vì sao PlayerPrefs chỉ dành cho âm lượng. → `content/09-unity/unity-save-data.md`
+    - ◐ `#84` **Vật lý trong Unity** `#unity-physics` 🤖 💻 🎤 — Rigidbody hay tự viết, FixedUpdate và interpolation, collision matrix, raycast không cấp phát — và vì sao platformer tốt gần như không dùng physics engine. → `content/09-unity/unity-physics.md`
+    - ◐ `#85` **Animation trong Unity** `#unity-animation` 🤖 💻 🎤 — Animator Controller là bảng điều khiển hiển thị, không phải bộ não — giữ nó dưới 30 state, tắt Has Exit Time, và biết lúc nào nên bỏ nó mà điều khiển bằng code. → `content/09-unity/unity-animation.md`
+    - ● `#86` **Input System** `#unity-input` 🤖 💻 🎤 — Chọn Input System mới từ ngày đầu, gom mọi cách đọc về một InputReader duy nhất, và đừng đọc nút bấm trong FixedUpdate — phần lớn "input bị nuốt" là ở đó. → `content/09-unity/unity-input.md`
+    - ◐ `#87` **Camera & Cinemachine** `#unity-camera` 🤖 💻 🎤 — Camera là hệ gameplay, không phải trang trí — dùng Cinemachine 3 thay vì tự viết follow, nhưng hiểu Brain, dead zone, impulse và pixel perfect đủ để biết nó đang làm gì. → `content/09-unity/unity-camera.md`
+    - ◐ `#88` **UI trong Unity** `#unity-ui` 🤖 💻 🎤 — UGUI vẫn là lựa chọn cho UI in-game năm 2026; cái giết frame không phải số phần tử mà là Canvas rebuild — tách Canvas theo tần suất đổi, tắt Raycast Target, và đừng lồng Layout Group. → `content/09-unity/unity-ui.md`
+    - ◐ `#89` **Audio trong Unity** `#unity-audio` 🤖 💻 🎤 — Import settings quyết định RAM và CPU nhiều hơn code; pool AudioSource thay PlayOneShot; nhạc đúng nhịp chỉ có một cách là PlayScheduled trên dspTime. → `content/09-unity/unity-audio.md`
+    - ◐ `#90` **VFX & Hiệu ứng** `#unity-vfx` 🤖 💻 🎤 — Shuriken cho gameplay và mobile, VFX Graph cho số lượng; kẻ giết frame là overdraw chứ không phải số hạt; và mọi hiệu ứng nổ đều phải đi qua pool. → `content/09-unity/unity-vfx.md`
+    - ○ `#91` **Shader trong URP** `#unity-shader` 🤖 💻 🎤 — Shader Graph lo 80% material, HLSL tay cho phần còn lại — nhưng thứ quyết định frame rate không phải shader đẹp hay xấu, mà là nó có phá SRP Batcher hay không. → `content/09-unity/unity-shader.md`
+    - ◐ `#92` **Ánh sáng & Post-processing** `#unity-lighting` 🤖 💻 🎤 — Linear color space từ ngày đầu, baked cho mọi thứ đứng yên, realtime chỉ cho thứ thật sự đổi — và post-processing là nơi mobile mất frame nhiều nhất mà không ai để ý. → `content/09-unity/unity-lighting.md`
+    - ○ `#94` **Tối ưu hoá Unity** `#unity-optimization` 🤖 💻 🎤 — Đo trên máy đích với build thật, xác định CPU hay GPU trước khi chạm code — và nhận ra rằng import settings quyết định hiệu năng nhiều hơn mọi thuật toán bạn viết. → `content/09-unity/unity-optimization.md`
+    - ○ `#95` **Job System, Burst và DOTS** `#unity-dots-jobs` 🤖 💻 🎤 — Ba tầng tách biệt — Job System, Burst, ECS — và lý do hầu hết dự án chỉ nên leo hai tầng đầu. Tư duy data-oriented, luật an toàn của job, và khi nào ECS đáng giá thật. → `content/09-unity/unity-dots-jobs.md`
+    - ○ `#96` **Build & nền tảng** `#unity-build-platform` 🤖 💻 🎤 — Build ra máy thật từ tuần đầu và build hàng đêm trên CI — vì IL2CPP, stripping, bộ nhớ và driver GPU là những lỗi chỉ tồn tại ngoài Editor, và chúng tích luỹ âm thầm. → `content/09-unity/unity-build-platform.md`
+    - ○ `#97` **Addressables và bộ nhớ asset** `#unity-addressables` 🤖 💻 🎤 — Ba cách tham chiếu asset và hậu quả bộ nhớ của từng cách, đếm tham chiếu của Addressables, asset bị nhân bản trong nhiều bundle, và quy trình cập nhật nội dung từ xa mà không phải nộp lại store. → `content/09-unity/unity-addressables.md`
+    - ○ `#98` **Multiplayer & Netcode** `#unity-multiplayer` 🤖 💻 🎤 — Multiplayer làm từ ngày đầu hoặc không bao giờ — retrofit gần như là viết lại. Chọn stack theo thể loại và ngân sách, không tin client, và test với lag giả từ tuần đầu. → `content/09-unity/unity-multiplayer.md`
+    - ◐ `#99` **Thư viện ngoài — chọn, cách ly, tích hợp** `#unity-third-party` 🤖 💻 🎤 — Bản đồ built-in trước / thư viện ngoài sau, bảy tiêu chí chọn, luật bọc sau interface của mình, và bẫy tích hợp thật — asmdef, EDM4U, Gradle, stripping, DOTween. → `content/09-unity/unity-third-party.md`
+    - ◐ `#100` **Editor Tools tự viết** `#unity-editor-tools` 🤖 💻 🎤 — Một giờ viết tool tiết kiệm mười giờ của team; tool là thứ để designer không phải gọi lập trình viên — và là việc AI agent làm tốt nhất trong toàn bộ dự án Unity. → `content/09-unity/unity-editor-tools.md`
+    - ◐ `#101` **Test và CI/CD cho Unity** `#unity-testing-ci` 🤖 💻 🎤 — Cái gì trong game đáng viết test và cái gì không, cách tách logic khỏi MonoBehaviour để test được, và thang CI năm bậc — từ build đêm cho QA tới farm thiết bị. → `content/09-unity/unity-testing-ci.md`
+    - ○ `#102` **Debug hiện trường — crash, ANR, log** `#unity-debug-crash` 🤖 💻 🎤 — Bug ở máy người chơi mà bạn không cầm được máy: phân biệt crash / ANR / bị kill vì hết RAM, symbolicate stack native, và breadcrumb — thứ rẻ nhất biến "không tái hiện được" thành "sửa được". → `content/09-unity/unity-debug-crash.md`
+    - ◐ `#103` **SDK kiếm tiền — quảng cáo, IAP, đo lường** `#unity-monetization-sdk` 🤖 💻 🎤 — Mediation, vòng đời một lần hiện rewarded, consent GDPR/ATT, acknowledge hoá đơn trong 3 ngày, và build hell do EDM4U — nhóm SDK mà một lỗi nhỏ làm mất tiền thật hoặc khoá tài khoản. → `content/09-unity/unity-monetization-sdk.md`
+  - ◐ `#104` **Cocos Creator** `#cocos-creator` 🤖 🎤 🗺 — Engine thứ hai trong kho — chọn Cocos hay Unity theo nơi phát hành, bản đồ khái niệm Unity → Cocos 3.x, và những bẫy chỉ lộ ra khi build ra web hoặc mini game. → `content/11-cocos-creator/index.md`
+    - ● `#105` **Dự án & pipeline asset** `#cocos-project-structure` 🤖 💻 🎤 🇬🇧 — Thư mục dự án Cocos, file .meta và uuid, cái gì commit cái gì bỏ, và vì sao scene/prefab là thứ khó merge nhất trong đời làm nhóm. → `content/11-cocos-creator/cocos-project-structure.md`
+    - ● `#106` **Node, Component & vòng đời** `#cocos-scene-component` 🤖 💻 🎤 🇬🇧 — Mô hình Node/Component của Cocos 3.x, thứ tự vòng đời, boot scene, prefab, event, và pool — bộ xương mà mọi thứ khác móc vào. → `content/11-cocos-creator/cocos-scene-component.md`
+    - ● `#107` **UI & đa tỉ lệ màn hình** `#cocos-ui` 🤖 💻 🎤 🇬🇧 — Canvas và design resolution, Widget neo mép thật, Layout, Label và bẫy chữ tiếng Việt, ScrollView danh sách dài, và chỗ UI ăn draw call. → `content/11-cocos-creator/cocos-ui.md`
   - ○ `#67` **Backend Go & Database** `#backend-go` 🤖 🗺 — Toàn bộ phần Go của một game — học Go từ nền C#, viết tool, dựng server và database, ghép trận, rồi đưa lên máy thật và giữ nó sống. → `content/10-backend-go/index.md`
     - ◐ `#68` **Go cho lập trình viên Unity** `#go-for-unity-dev` 🤖 — Học Go khi đã biết C# — cái gì ánh xạ thẳng, bốn thói quen phải bỏ, bảy thứ vấp ngay tuần đầu, và lộ trình hai tuần có bài kiểm tra. → `content/10-backend-go/go-for-unity-dev.md`
     - ◐ `#69` **Công cụ gamedev bằng Go** `#go-gamedev-tools` 🤖 🎮 — Go ngoài phần server — validator dữ liệu, asset pipeline, tool build, bot load test: một binary tĩnh chạy được trên máy mọi người trong team. → `content/10-backend-go/go-gamedev-tools.md`
@@ -222,8 +232,12 @@ thức cơ bản (ai cũng nên đọc), trung cấp (cần nền), hay chuyên 
     - ○ `#73` **Matchmaking & phòng chờ** `#go-matchmaking` 🤖 🎮 — Ghép trận bằng Go và Redis — dải MMR nới theo thời gian chờ, chốt cặp nguyên tử, ready check, và ba tham số không bao giờ cùng tốt được. → `content/10-backend-go/go-matchmaking.md`
     - ○ `#74` **Triển khai & vận hành server Go** `#go-deploy-ops` 🤖 🎮 — Đưa binary Go lên máy thật và giữ nó sống — ba mức hạ tầng theo quy mô, deploy không rớt người chơi, bốn chỉ số phải theo dõi, và runbook năm sự cố hay gặp. → `content/10-backend-go/go-deploy-ops.md`
     - ◐ `#77` **Docker cho server game** `#go-docker` 🤖 🎮 — Một lệnh là cả team có Postgres, Redis, migration và server giống hệt nhau — compose cho môi trường dev, layer cache, và những chỗ Docker cắn trong dự án game. → `content/10-backend-go/go-docker.md`
+    - ○ `#78` **Mổ xẻ một server Go đã phát hành** `#go-production-arch` 🤖 🎮 — Một backend Go đang vận hành thật — một binary nhiều mode, config nhúng theo môi trường và region, HTTP + protobuf với ba tầng kiểm phiên bản, và codegen chạy từ schema database ra tận DLL cho client Unity. → `content/10-backend-go/go-production-arch.md`
   - ● `#22` **Blueprints** `#blueprints` 🤖 🎮 🇬🇧 — Nơi chứa GDD của game thật bạn đang làm — lớp mà AI agent trực tiếp thực thi. → `content/07-blueprints/index.md`
     - ● `#23` **GDD Template** `#gdd-template` 🤖 🎮 — Mẫu tài liệu thiết kế sẵn sàng cho AI đọc — sao chép, điền vào, chỉ agent tới đó. → `content/07-blueprints/gdd-template.md`
+  - ◐ `#108` **Dựng một dự án game** `#project` 🤖 🎤 🗺 — Tuyến xuyên suốt của một dự án game có client và server — từ lúc chốt phạm vi, chia ranh giới hai phía, ký hợp đồng message, tới lúc soft launch và kể lại nó trong phòng phỏng vấn. → `content/12-project/index.md`
+    - ● `#109` **Chốt phạm vi trước khi viết code** `#project-kickoff` 🤖 🎤 — Hai tuần đầu quyết định chi phí của cả dự án — bảy câu phải trả lời xong, cách cắt phạm vi cho đúng, và ba thứ luôn bị quên cho tới khi quá muộn. → `content/12-project/project-kickoff.md`
+    - ◐ `#110` **Chia ranh giới client và server** `#project-architecture` 🤖 🎤 — Một câu hỏi quyết định mọi thứ nằm ở đâu, bảng ranh giới state cho game thật, và vì sao đổi ranh giới ở tháng thứ tư là viết lại chứ không phải sửa. → `content/12-project/project-architecture.md`
 
 > **Ký hiệu:** ● cơ bản · ◐ trung cấp · ○ chuyên sâu · `#N` = thứ tự trong lộ trình đọc
 >
@@ -531,6 +545,10 @@ thức cơ bản (ai cũng nên đọc), trung cấp (cần nền), hay chuyên 
 - `#go-matchmaking` ↔ `#game-database` (related)
 - `#go-matchmaking` ↔ `#unity-multiplayer` (related)
 - `#go-matchmaking` ↔ `#balancing-math` (related)
+- `#go-production-arch` ↔ `#game-server-go` (related)
+- `#go-production-arch` ↔ `#go-protobuf` (related)
+- `#go-production-arch` ↔ `#master-data` (related)
+- `#go-production-arch` ↔ `#go-deploy-ops` (related)
 - `#go-protobuf` ↔ `#game-server-go` (related)
 - `#go-protobuf` ↔ `#unity-multiplayer` (related)
 - `#go-protobuf` ↔ `#go-gamedev-tools` (related)
@@ -541,9 +559,30 @@ thức cơ bản (ai cũng nên đọc), trung cấp (cần nền), hay chuyên 
 - `#master-data` ↔ `#data-driven-design` (related)
 - `#master-data` ↔ `#go-gamedev-tools` (related)
 - `#master-data` ↔ `#liveops` (related)
+- `#cocos-project-structure` ↔ `#cocos-creator` (related)
+- `#cocos-project-structure` ↔ `#unity-project-structure` (related)
+- `#cocos-scene-component` ↔ `#cocos-creator` (related)
+- `#cocos-scene-component` ↔ `#cocos-project-structure` (related)
+- `#cocos-scene-component` ↔ `#unity-game-loop` (related)
+- `#cocos-scene-component` ↔ `#architecture-patterns` (related)
+- `#cocos-ui` ↔ `#cocos-creator` (related)
+- `#cocos-ui` ↔ `#ui-design` (related)
+- `#cocos-ui` ↔ `#ux-hud` (related)
 - `#cocos-creator` ↔ `#unity` (related)
 - `#cocos-creator` ↔ `#production` (related)
 - `#cocos-creator` ↔ `#performance` (related)
+- `#project` ↔ `#backend-go` (related)
+- `#project` ↔ `#unity` (related)
+- `#project` ↔ `#production` (related)
+- `#project` ↔ `#blueprints` (related)
+- `#project-architecture` ↔ `#game-server-go` (related)
+- `#project-architecture` ↔ `#architecture-patterns` (related)
+- `#project-architecture` ↔ `#unity-multiplayer` (related)
+- `#project-architecture` ↔ `#game-database` (related)
+- `#project-kickoff` ↔ `#design-pillars` (related)
+- `#project-kickoff` ↔ `#tech-stack` (related)
+- `#project-kickoff` ↔ `#gdd-template` (related)
+- `#project-kickoff` ↔ `#prototyping` (related)
 - `#core-loop` ↔ `#randomness` (mention)
 - `#core-loop` ↔ `#gdd-for-ai` (mention)
 - `#core-loop` ↔ `#prompt-patterns` (mention)
@@ -755,6 +794,7 @@ thức cơ bản (ai cũng nên đọc), trung cấp (cần nền), hay chuyên 
 - `#game-server-go` ↔ `#backend-go` (mention)
 - `#game-server-go` ↔ `#randomness` (mention)
 - `#go-for-unity-dev` ↔ `#go-deploy-ops` (mention)
+- `#go-production-arch` ↔ `#game-database` (mention)
 - `#go-protobuf` ↔ `#game-database` (mention)
 - `#backend-go` ↔ `#unity-save-data` (mention)
 - `#backend-go` ↔ `#go-for-unity-dev` (mention)
@@ -765,8 +805,10 @@ thức cơ bản (ai cũng nên đọc), trung cấp (cần nền), hay chuyên 
 - `#backend-go` ↔ `#go-matchmaking` (mention)
 - `#backend-go` ↔ `#go-deploy-ops` (mention)
 - `#backend-go` ↔ `#go-docker` (mention)
+- `#backend-go` ↔ `#go-production-arch` (mention)
 - `#backend-go` ↔ `#unity-multiplayer` (mention)
 - `#backend-go` ↔ `#performance` (mention)
+- `#cocos-project-structure` ↔ `#data-driven-design` (mention)
 - `#cocos-creator` ↔ `#unity-third-party` (mention)
 - `#cocos-creator` ↔ `#data-driven-design` (mention)
 - `#cocos-creator` ↔ `#backend-go` (mention)
@@ -780,6 +822,21 @@ thức cơ bản (ai cũng nên đọc), trung cấp (cần nền), hay chuyên 
 - `#cocos-creator` ↔ `#game-feel` (mention)
 - `#cocos-creator` ↔ `#liveops` (mention)
 - `#cocos-creator` ↔ `#ai-limits` (mention)
+- `#project` ↔ `#project-kickoff` (mention)
+- `#project` ↔ `#project-architecture` (mention)
+- `#project` ↔ `#unity-multiplayer` (mention)
+- `#project` ↔ `#tech-stack` (mention)
+- `#project` ↔ `#go-docker` (mention)
+- `#project` ↔ `#game-database` (mention)
+- `#project` ↔ `#go-matchmaking` (mention)
+- `#project` ↔ `#go-deploy-ops` (mention)
+- `#project-architecture` ↔ `#master-data` (mention)
+- `#project-architecture` ↔ `#backend-go` (mention)
+- `#project-architecture` ↔ `#unity-save-data` (mention)
+- `#project-kickoff` ↔ `#go-deploy-ops` (mention)
+- `#project-kickoff` ↔ `#master-data` (mention)
+- `#project-kickoff` ↔ `#cocos-creator` (mention)
+- `#project-kickoff` ↔ `#backend-go` (mention)
 - `#root` ↔ `#blueprints` (mention)
 - `#root` ↔ `#foundations` (mention)
 - `#root` ↔ `#systems` (mention)
@@ -796,4 +853,4 @@ thức cơ bản (ai cũng nên đọc), trung cấp (cần nền), hay chuyên 
 
 ## Tag
 
-`accessibility` · `addressables` · `ads` · `advanced` · `agent` · `ai` · `ai-dev` · `algorithm` · `analysis` · `analytics` · `animation` · `architecture` · `art` · `asset` · `audio` · `automation` · `backend` · `blueprint` · `build` · `burst` · `camera` · `ci` · `cocos` · `code` · `combat` · `content` · `core` · `crash` · `csharp` · `data` · `database` · `debug` · `decision-making` · `design` · `design-system` · `devops` · `difficulty` · `docker` · `documentation` · `dots` · `economy` · `ecs` · `editor` · `engine` · `eval` · `experimental` · `feel` · `flow` · `foundations` · `fundamentals` · `gameplay` · `gc` · `genre` · `go` · `hud` · `iap` · `implementation` · `industry-standard` · `input` · `jobs` · `key` · `knowledge-base` · `learning` · `level` · `lifecycle` · `lighting` · `limits` · `live-ops` · `liveops` · `llm` · `marketing` · `master-data` · `matchmaking` · `math` · `memory` · `meta` · `metrics` · `mini-game` · `ml` · `mobile` · `monetization` · `monitoring` · `movement` · `multiplayer` · `music` · `narrative` · `navigation` · `netcode` · `npc` · `onboarding` · `operations` · `optimization` · `pacing` · `pattern` · `performance` · `persistence` · `physics` · `pillar` · `pipeline` · `planning` · `platform` · `plugin` · `polish` · `postgres` · `practical` · `presentation` · `process` · `procgen` · `production` · `progression` · `project` · `prompt` · `protobuf` · `protocol` · `psychology` · `publish` · `realtime` · `redis` · `rendering` · `retention` · `rng` · `safety` · `save` · `scene` · `server` · `shader` · `simulation` · `spec` · `systems` · `team` · `tech` · `template` · `testing` · `theory` · `third-party` · `tooling` · `typescript` · `ui` · `unity` · `urp` · `ux` · `vfx` · `visual` · `web` · `workflow`
+`accessibility` · `addressables` · `ads` · `advanced` · `agent` · `ai` · `ai-dev` · `algorithm` · `analysis` · `analytics` · `animation` · `architecture` · `art` · `asset` · `audio` · `authority` · `automation` · `backend` · `blueprint` · `build` · `burst` · `camera` · `case-study` · `ci` · `client-server` · `cocos` · `code` · `combat` · `component` · `content` · `core` · `crash` · `csharp` · `data` · `database` · `debug` · `decision-making` · `design` · `design-system` · `devops` · `difficulty` · `docker` · `documentation` · `dots` · `economy` · `ecs` · `editor` · `engine` · `eval` · `experimental` · `feel` · `flow` · `foundations` · `fundamentals` · `gameplay` · `gc` · `genre` · `git` · `go` · `hud` · `iap` · `implementation` · `industry-standard` · `input` · `interview` · `jobs` · `key` · `kickoff` · `knowledge-base` · `label` · `layout` · `learning` · `level` · `lifecycle` · `lighting` · `limits` · `live-ops` · `liveops` · `llm` · `marketing` · `master-data` · `matchmaking` · `math` · `memory` · `meta` · `metrics` · `mini-game` · `ml` · `mobile` · `monetization` · `monitoring` · `movement` · `multiplayer` · `music` · `narrative` · `navigation` · `netcode` · `npc` · `onboarding` · `operations` · `optimization` · `pacing` · `pattern` · `performance` · `persistence` · `physics` · `pillar` · `pipeline` · `planning` · `platform` · `plugin` · `polish` · `pool` · `postgres` · `practical` · `prefab` · `presentation` · `process` · `procgen` · `production` · `progression` · `project` · `prompt` · `protobuf` · `protocol` · `psychology` · `publish` · `realtime` · `redis` · `rendering` · `retention` · `rng` · `safety` · `save` · `scene` · `scope` · `scrollview` · `security` · `server` · `shader` · `simulation` · `spec` · `systems` · `team` · `tech` · `template` · `testing` · `theory` · `third-party` · `tooling` · `typescript` · `ui` · `unity` · `urp` · `ux` · `vfx` · `visual` · `web` · `workflow`

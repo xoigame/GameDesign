@@ -27,10 +27,11 @@ Game của bạn có cần nhánh này không? Một câu hỏi là đủ: **có
 - **[[go-matchmaking]]** — ghép trận: dải MMR nới theo thời gian chờ, chốt cặp nguyên tử bằng Lua, ready check, ticket TTL.
 - **[[go-deploy-ops]]** — đưa lên máy thật và giữ nó sống: ba mức hạ tầng, deploy không rớt người chơi, bốn chỉ số vàng, runbook sự cố.
 - **[[go-docker]]** — một lệnh là cả team có Postgres, Redis, migration và server: compose cho môi trường dev, layer cache, bẫy trong repo có cả Unity.
+- **[[go-production-arch]]** — mổ xẻ một backend Go đã phát hành: một binary nhiều mode, config nhúng trong binary, HTTP + protobuf với ba tầng kiểm phiên bản, codegen từ schema ra tận DLL cho client.
 
 ## Học theo thứ tự nào
 
-Chín node trên không phải để đọc tuần tự từ đầu tới cuối. Vào đúng chỗ bạn đang đứng:
+Mười node trên không phải để đọc tuần tự từ đầu tới cuối. Vào đúng chỗ bạn đang đứng:
 
 | Bạn đang ở đâu | Đọc gì |
 |---|---|
@@ -41,10 +42,11 @@ Chín node trên không phải để đọc tuần tự từ đầu tới cuối
 | Designer muốn sửa số mà không cần build lại | [[master-data]] |
 | Gói tin realtime quá nặng, hoặc client và server hiểu khác nhau về message | [[go-protobuf]] |
 | Muốn cả team chạy được backend bằng một lệnh | [[go-docker]] |
+| Muốn xem một hệ thống thật đã ráp mọi thứ trên lại ra sao | [[go-production-arch]] |
 | Sắp mở cho người chơi thật | [[go-deploy-ops]] và mục "Vận hành" của [[game-server-go]] |
 | Cần netcode trong trận | Không ở nhánh này — sang [[unity-multiplayer]] |
 
-**Đường ngắn nhất từ con số 0 tới một tính năng online chạy thật** (khoảng hai tuần với 2–3 giờ mỗi ngày): học cú pháp và đồng thời → viết một validator bằng Go → thiết kế bảng cho *một* tính năng (bảng xếp hạng hoặc điểm danh hàng ngày) → viết ba endpoint có test → deploy lên một VPS → cho Unity gọi. Làm trọn một vòng như vậy dạy nhiều hơn đọc hết cả chín node.
+**Đường ngắn nhất từ con số 0 tới một tính năng online chạy thật** (khoảng hai tuần với 2–3 giờ mỗi ngày): học cú pháp và đồng thời → viết một validator bằng Go → thiết kế bảng cho *một* tính năng (bảng xếp hạng hoặc điểm danh hàng ngày) → viết ba endpoint có test → deploy lên một VPS → cho Unity gọi. Làm trọn một vòng như vậy dạy nhiều hơn đọc hết cả mười node.
 
 Phần netcode *trong trận* (tick, prediction, lag compensation) **không** nằm ở đây mà ở [[unity-multiplayer]]. Bảng ngay dưới nói vì sao hai thứ đó phải tách nhau.
 
