@@ -1,11 +1,13 @@
 ---
 title: Backend Go & Database
 icon: 🐹
-summary: Phần game chạy trên máy chủ — Go cho API và phòng realtime, Postgres/Redis cho dữ liệu, và ranh giới giữa thứ client được quyết và thứ chỉ server mới được quyết.
+summary: Toàn bộ phần Go của một game — học Go từ nền C#, viết tool, dựng server và database, ghép trận, rồi đưa lên máy thật và giữ nó sống.
 status: deep
 read: 582
 level: advanced
 order: 67
+map: true
+mapLabel: Backend Go
 tags: [backend, server, database, go]
 related: [production, unity]
 ---
@@ -16,8 +18,27 @@ Game của bạn có cần nhánh này không? Một câu hỏi là đủ: **có
 
 ## Các node
 
+- **[[go-for-unity-dev]]** — học Go khi đã biết C#: cái gì ánh xạ thẳng, bốn thói quen phải bỏ, bảy thứ vấp tuần đầu, bộ công cụ, lộ trình hai tuần có bài kiểm tra.
+- **[[go-gamedev-tools]]** — Go ngoài phần server: validator dữ liệu, asset pipeline, tool build, bot load test. Cách rẻ nhất để đưa Go vào dự án.
 - **[[game-server-go]]** — viết process Go: một goroutine sở hữu một phòng, chọn giao thức theo loại dữ liệu, server có thẩm quyền, vận hành. Kèm lớp client Unity gọi API có retry.
 - **[[game-database]]** — dữ liệu: Postgres/Redis cho đúng loại, sáu luật cho dữ liệu kinh tế, transaction idempotent và sổ cái append-only.
+- **[[go-matchmaking]]** — ghép trận: dải MMR nới theo thời gian chờ, chốt cặp nguyên tử bằng Lua, ready check, ticket TTL.
+- **[[go-deploy-ops]]** — đưa lên máy thật và giữ nó sống: ba mức hạ tầng, deploy không rớt người chơi, bốn chỉ số vàng, runbook sự cố.
+
+## Học theo thứ tự nào
+
+Sáu node trên không phải để đọc tuần tự từ đầu tới cuối. Vào đúng chỗ bạn đang đứng:
+
+| Bạn đang ở đâu | Đọc gì |
+|---|---|
+| Chưa viết Go bao giờ, chỉ biết C# | [[go-for-unity-dev]] — chặng 1 và 2 của lộ trình hai tuần |
+| Muốn dùng Go nhưng chưa cần server | [[go-gamedev-tools]] — viết một validator, có ích ngay |
+| Sắp viết API đầu tiên | [[game-database]] **trước** [[game-server-go]]: schema và ràng buộc trước handler |
+| Đã có API, cần trận PvP | [[go-matchmaking]] |
+| Sắp mở cho người chơi thật | [[go-deploy-ops]] và mục "Vận hành" của [[game-server-go]] |
+| Cần netcode trong trận | Không ở nhánh này — sang [[unity-multiplayer]] |
+
+**Đường ngắn nhất từ con số 0 tới một tính năng online chạy thật** (khoảng hai tuần với 2–3 giờ mỗi ngày): học cú pháp và đồng thời → viết một validator bằng Go → thiết kế bảng cho *một* tính năng (bảng xếp hạng hoặc điểm danh hàng ngày) → viết ba endpoint có test → deploy lên một VPS → cho Unity gọi. Làm trọn một vòng như vậy dạy nhiều hơn đọc hết cả sáu node.
 
 Phần netcode *trong trận* (tick, prediction, lag compensation) **không** nằm ở đây mà ở [[unity-multiplayer]]. Bảng ngay dưới nói vì sao hai thứ đó phải tách nhau.
 
