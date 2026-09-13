@@ -81,7 +81,7 @@ Ba lỗi đồng thời hay gặp, theo thứ tự mức độ phổ biến:
 |---|---|---|---|
 | REST + JSON | 50–200ms | `UnityWebRequest` có sẵn | Mọi thứ meta: login, shop, inventory, quest |
 | WebSocket + JSON | 30–80ms | cần thư viện (NativeWebSocket) | Chat, phòng chờ, turn-based, thông báo đẩy |
-| WebSocket + nhị phân | 20–60ms | thêm codegen protobuf | Realtime 10–30Hz, nhiều người một phòng |
+| WebSocket + nhị phân | 20–60ms | thêm codegen protobuf | Realtime 10–30Hz, nhiều người một phòng — xem [[go-protobuf]] |
 | UDP / KCP / QUIC | 10–40ms | thư viện riêng, WebGL không chạy | Action realtime, FPS |
 | gRPC | thấp | khó với IL2CPP và WebGL | **Giữa các service backend**, không nói chuyện thẳng với client |
 

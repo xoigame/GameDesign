@@ -51,6 +51,8 @@ USER nonroot:nonroot
 ENTRYPOINT ["/api"]
 ```
 
+Chi tiết về layer cache, `.dockerignore` trong repo có cả Unity, và `compose.yml` cho môi trường dev nằm ở [[go-docker]].
+
 Bốn quy tắc đi kèm:
 
 - **Cấu hình qua biến môi trường**, không qua file trong image. Cùng một image chạy được ở staging và production — khác nhau chỉ ở biến.

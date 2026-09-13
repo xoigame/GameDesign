@@ -21,6 +21,7 @@ Phần lớn thiệt hại thật của một game online không đến từ hac
 | Bảng xếp hạng | Redis ZSET, cuối mùa chốt xuống Postgres | `ZREVRANK` là O(log N); `ORDER BY` trên một triệu dòng mỗi request thì không |
 | Hàng đợi matchmaking, presence | Redis | Sống vài giây, tốc độ quan trọng hơn độ bền |
 | Save state đơn, client tự sở hữu | Cột `jsonb` trong Postgres | Không cần quan hệ, chỉ cần lưu và trả nguyên khối |
+| Bảng cân bằng: vật phẩm, level, giá | Bảng `master_*` có version, nạp vào RAM | Chỉ đọc, phát hành theo đợt — xem [[master-data]] |
 | Event analytics | ClickHouse / BigQuery / file | Postgres sẽ phình và chậm dần. Xem [[playtesting-metrics]] |
 | Replay, ảnh người chơi tạo | Object storage (S3/R2) | Đừng nhét binary lớn vào database |
 
