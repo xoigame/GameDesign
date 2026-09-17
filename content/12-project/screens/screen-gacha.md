@@ -3,7 +3,7 @@ id: screen-gacha
 title: Màn hình Gacha
 summary: Quay số đổi tiền lấy kỳ vọng — pity và tỉ lệ công bố, server quay chứ không phải client, luật pháp lý theo thị trường, và vì sao animation bỏ qua được là bắt buộc.
 status: deep
-read: 1120
+read: 984
 level: advanced
 order: 20
 tags: [screens, gacha, monetization, randomness, legal]

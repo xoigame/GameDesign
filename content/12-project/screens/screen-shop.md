@@ -3,7 +3,7 @@ id: screen-shop
 title: Màn hình Shop & IAP
 summary: Bán mà không phá cảm giác công bằng — ba loại hàng, luồng IAP sáu bước với verify phía server, đối soát biên nhận, và xử lý mua hụt khi mạng rớt giữa chừng.
 status: deep
-read: 1130
+read: 985
 level: advanced
 order: 30
 tags: [screens, shop, iap, monetization, payment]

@@ -65,9 +65,9 @@ function readFontScale() {
 }
 
 const MODES = [
-  { id: 'mindmap', key: 'modeMindmap', hint: 'Toả hai bên quanh gốc' },
-  { id: 'tree', key: 'modeTree', hint: 'Trái sang phải' },
-  { id: 'radial', key: 'modeRadial', hint: 'Vòng tròn quanh gốc' },
+  { id: 'mindmap', key: 'modeMindmap', hint: 'modeMindmapHint' },
+  { id: 'tree', key: 'modeTree', hint: 'modeTreeHint' },
+  { id: 'radial', key: 'modeRadial', hint: 'modeRadialHint' },
 ]
 
 export default function App() {
@@ -354,9 +354,9 @@ export default function App() {
   if (error) {
     return (
       <div className="boot boot-error">
-        <h2>Không nạp được dữ liệu</h2>
+        <h2>{t('bootFail', 'vi')}</h2>
         <p><code>{error}</code></p>
-        <p>Chạy <code>npm run graph</code> để sinh <code>public/data/graph.json</code>, rồi <code>npm run dev</code>.</p>
+        <p>{t('bootRun', 'vi')} <code>npm run graph</code> {t('bootThen', 'vi')} <code>npm run dev</code>.</p>
       </div>
     )
   }
@@ -367,7 +367,7 @@ export default function App() {
   return (
     <div className={'app' + (selected ? ' has-panel' : '') + (navOpen ? ' nav-open' : '') + (lang === 'both' ? ' lang-both' : '') + (resizing ? ' is-resizing' : '')}>
       {navOpen && (
-        <button className="scrim" onClick={() => setNavOpen(false)} aria-label="Đóng menu" />
+        <button className="scrim" onClick={() => setNavOpen(false)} aria-label={t('closeMenu', lang)} />
       )}
 
       <Sidebar
@@ -397,16 +397,16 @@ export default function App() {
         <button
           className="nav-toggle"
           onClick={() => setNavOpen((v) => !v)}
-          aria-label="Mở danh mục"
+          aria-label={t('openMenu', lang)}
           title={t('openMenu', lang)}
         >☰</button>
 
         <div className="topbar">
           <div className="seg">
             <button className={view === 'map' ? 'on' : ''} onClick={() => setView('map')}
-                    title="Bản đồ kiến thức">{t('viewMap', lang)}</button>
+                    title={t('viewMapTitle', lang)}>{t('viewMap', lang)}</button>
             <button className={view === 'practice' ? 'on' : ''} onClick={() => setView('practice')}
-                    title="Hỏi — tự trả lời thành tiếng — tự chấm">{t('viewPractice', lang)}</button>
+                    title={t('viewPracticeTitle', lang)}>{t('viewPractice', lang)}</button>
           </div>
           {view === 'map' && maps.length > 1 && (
             <div className="seg seg-maps" role="group" aria-label={t('mapPick', lang)}>
@@ -434,19 +434,19 @@ export default function App() {
                   key={m.id}
                   className={mode === m.id ? 'on' : ''}
                   onClick={() => setMode(m.id)}
-                  title={m.hint}
+                  title={t(m.hint, lang)}
                 >{t(m.key, lang)}</button>
               ))}
             </div>
           )}
           {view === 'map' && (
           <div className="topbar-right">
-            <button className="tbtn" onClick={expandAll} title="Mở hết">{t('expandAll', lang)}</button>
-            <button className="tbtn" onClick={collapseAll} title="Thu gọn hết">{t('collapseAll', lang)}</button>
+            <button className="tbtn" onClick={expandAll} title={t('expandAllTitle', lang)}>{t('expandAll', lang)}</button>
+            <button className="tbtn" onClick={collapseAll} title={t('collapseAllTitle', lang)}>{t('collapseAll', lang)}</button>
             <button
               className={'tbtn' + (showRelations ? ' on' : '')}
               onClick={() => setShowRelations((v) => !v)}
-              title="Hiện TẤT CẢ liên kết ngang. Mặc định chỉ hiện liên kết của node đang chọn."
+              title={t('allRelationsTitle', lang)}
             >{t('allRelations', lang)}</button>
           </div>
           )}

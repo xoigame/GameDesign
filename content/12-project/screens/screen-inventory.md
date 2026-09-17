@@ -3,7 +3,7 @@ id: screen-inventory
 title: Màn hình Túi đồ & Nâng cấp
 summary: Xem và nâng cấp thứ mình có mà không lạc trong bốn trăm món — lọc và sắp xếp trước khi cần, khoá chống bán nhầm, nâng cấp là một transaction, và phân trang thay vì tải hết.
 status: deep
-read: 1170
+read: 989
 level: intermediate
 order: 70
 tags: [screens, inventory, upgrade, ui, progression]

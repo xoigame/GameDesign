@@ -1,5 +1,5 @@
 import { useMemo, useState } from 'react'
-import { LEVELS, LEVEL_VI, LEVEL_GLYPH, LEVEL_HINT } from '../lib/levels.js'
+import { LEVELS, LEVEL_GLYPH, levelHint, levelLabel } from '../lib/levels.js'
 import { LANG_MODES, t, text as tx } from '../lib/i18n.js'
 
 export default function Sidebar({
@@ -100,10 +100,10 @@ export default function Sidebar({
             key={lv}
             className={'lvchip lv-' + lv + (activeLevels.has(lv) ? ' is-on' : '')}
             onClick={() => toggleLevel(lv)}
-            title={LEVEL_HINT[lv]}
+            title={levelHint(lv, lang)}
           >
             <span className="lvglyph">{LEVEL_GLYPH[lv]}</span>
-            {LEVEL_VI[lv]}
+            {levelLabel(lv, lang)}
             <b>{graph.stats[lv]}</b>
           </button>
         ))}
@@ -146,7 +146,7 @@ export default function Sidebar({
                   title={tx(n, 'summary', lang)}
                 >
                   <span className="path-num">{n.readIndex}</span>
-                  <span className="path-glyph" title={LEVEL_VI[n.level]}>
+                  <span className="path-glyph" title={levelLabel(n.level, lang)}>
                     {LEVEL_GLYPH[n.level] || '·'}
                   </span>
                   <span className="path-label">{n.icon ? n.icon + ' ' : ''}{tx(n, 'title', lang)}</span>

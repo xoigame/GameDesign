@@ -79,7 +79,10 @@ Nhánh này cắt **theo thời gian của một dự án thật**. Cùng một 
 | 7 | [[project-milestones]] | Mốc nào phải xong cái gì, và cách nhận ra dự án đang trượt |
 | 8 | [[project-teamwork]] | Hai người hai phía làm song song mà không chặn nhau |
 | 9 | [[project-launch]] | Soft launch: mở cho ai, đo cái gì, hỏng thì làm gì trong 15 phút đầu |
-| 10 | [[project-postmortem]] | Kể lại dự án trong phòng phỏng vấn — vai trò, khó khăn, đánh đổi |
+| 10 | [[screens]] | **Cụm màn hình** — Home, gacha, shop, nhiệm vụ, hộp quà, piggy bank, túi đồ, kết quả, xếp hạng |
+| 11 | [[project-postmortem]] | Kể lại dự án trong phòng phỏng vấn — vai trò, khó khăn, đánh đổi |
+
+Node 10 là **một cụm con có mục lục riêng**: chín màn hình meta, mỗi màn theo cùng khuôn mẫu tám ô (mục tiêu · bố cục · dữ liệu · API · vòng đời · trạng thái rỗng · số liệu · vận hành). Chín chặng kia nói *dựng dự án thế nào*; cụm đó nói *dựng từng màn hình thế nào*.
 
 **Tám mảnh của một dự án** — client Unity · server Go · hợp đồng protobuf · master data · migration · Master User · Docker · tools. [[project-anatomy]] là node ráp cả tám lại và chỉ ra mảnh nào sinh ra mảnh nào; các node còn lại đi sâu vào từng chặng.
 

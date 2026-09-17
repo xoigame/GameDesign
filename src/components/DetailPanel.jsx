@@ -3,7 +3,7 @@ import ReactMarkdown from 'react-markdown'
 import remarkGfm from 'remark-gfm'
 import rehypeRaw from 'rehype-raw'
 import { buildAiContext } from '../lib/aiContext.js'
-import { LEVEL_VI, LEVEL_GLYPH, LEVEL_HINT } from '../lib/levels.js'
+import { LEVEL_GLYPH, levelHint, levelLabel } from '../lib/levels.js'
 import { FONT_STEPS } from '../App.jsx'
 import { t, field, text as tx, hasTranslation } from '../lib/i18n.js'
 import { lookup, tableFor } from '../lib/glossary.js'
@@ -215,7 +215,7 @@ export default function DetailPanel({
         <div className={'bi ' + extraClass}>
           <div className="bi-col">
             <span className="bi-tag">VI</span>
-            <div className="md">{md(pickVi(key))}</div>
+            <div className="md" data-tts="vi">{md(pickVi(key))}</div>
           </div>
           <div className="bi-col">
             <span className="bi-tag is-en">EN</span>
@@ -232,8 +232,10 @@ export default function DetailPanel({
         {lang === 'en' && !hasEn && (
           <p className="lang-note">{t('notTranslated', lang)}</p>
         )}
+        {/* Đánh dấu theo ngôn ngữ ĐANG HIỆN, không theo chế độ: ở chế độ EN mà node
+            chưa dịch thì thứ trên màn hình vẫn là tiếng Việt, và bộ đọc phải biết. */}
         <div className={'md ' + extraClass}
-             data-tts={lang === 'en' && enHas(key) ? 'en' : undefined}>{md(content)}</div>
+             data-tts={lang === 'en' && enHas(key) ? 'en' : 'vi'}>{md(content)}</div>
       </>
     )
   }
@@ -258,14 +260,13 @@ export default function DetailPanel({
           node={node}
           tab={tab}
           lang={lang}
-          setLang={setLang}
           hasEnText={enHas(tabKey)}
           onAutoNext={autoNextId ? () => onSelect(autoNextId) : null}
         />
         <button className="icon-btn" onClick={onClose} title={t('closeEsc', lang)}>✕</button>
       </div>
 
-      <h1 className="panel-title" data-tts={lang === 'en' && enHas('title') ? 'en' : undefined}>
+      <h1 className="panel-title" data-tts={lang === 'en' && enHas('title') ? 'en' : 'vi'}>
         {node.icon ? <span className="panel-icon">{node.icon}</span> : null}
         {tx(node, 'title', lang === 'both' ? 'vi' : lang)}
       </h1>
@@ -276,15 +277,15 @@ export default function DetailPanel({
 
       {tx(node, 'summary', lang === 'both' ? 'vi' : lang)
         ? <p className="panel-summary"
-             data-tts={lang === 'en' && enHas('summary') ? 'en' : undefined}>
+             data-tts={lang === 'en' && enHas('summary') ? 'en' : 'vi'}>
             {tx(node, 'summary', lang === 'both' ? 'vi' : lang)}
           </p>
         : null}
 
       <div className="panel-meta">
-        <span className="chip read" title="Thứ tự trong lộ trình đọc">#{node.readIndex}</span>
-        <span className={'chip lv lv-' + (node.level || 'none')} title={LEVEL_HINT[node.level]}>
-          {LEVEL_GLYPH[node.level] || '·'} {LEVEL_VI[node.level] || 'chưa phân loại'}
+        <span className="chip read" title={t('readOrder', lang)}>#{node.readIndex}</span>
+        <span className={'chip lv lv-' + (node.level || 'none')} title={levelHint(node.level, lang)}>
+          {LEVEL_GLYPH[node.level] || '·'} {levelLabel(node.level, lang)}
         </span>
         <span className={'chip status-' + node.status}>
           {node.status === 'deep' ? t('statusDeep', lang) : t('statusStub', lang)}
@@ -347,7 +348,7 @@ export default function DetailPanel({
           {aiPrompt
             ? renderPane('aiPrompt', 'ai-md')
             : <p className="empty">
-                Chưa có. Thêm mục <code>## 🤖 Prompt cho AI</code> vào cuối
+                {t('noPromptStart', lang)} <code>## 🤖 Prompt cho AI</code> {t('noPromptEnd', lang)}
                 <code> content/{node.path}</code>.
               </p>}
         </section>

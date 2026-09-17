@@ -1,7 +1,7 @@
 import { memo } from 'react'
 import { Handle, Position } from '@xyflow/react'
-import { LEVEL_VI, LEVEL_GLYPH } from '../lib/levels.js'
-import { text as tx, field } from '../lib/i18n.js'
+import { LEVEL_GLYPH, levelLabel } from '../lib/levels.js'
+import { t, text as tx, field } from '../lib/i18n.js'
 
 function MindNode({ data }) {
   const {
@@ -28,7 +28,7 @@ function MindNode({ data }) {
   ].filter(Boolean).join(' ')
 
   const tip =
-    '#' + node.readIndex + ' · ' + LEVEL_VI[node.level] +
+    '#' + node.readIndex + ' · ' + levelLabel(node.level, lang) +
     (alt && alt.translated ? '\n' + alt.text : '') +
     (node.summary ? '\n' + tx(node, 'summary', primary) : '')
 
@@ -42,14 +42,14 @@ function MindNode({ data }) {
       <span className="mn-bar" />
       {mastery != null && mastery > 0 && (
         <span className="mn-mastery" style={{ '--m': mastery }}
-              title={'Đã thuộc ' + Math.round(mastery * 100) + '% số câu phỏng vấn của node này'} />
+              title={t('masteryTitle', lang).replace('{p}', Math.round(mastery * 100))} />
       )}
-      <span className="mn-num" title={'Thứ tự đọc: ' + node.readIndex}>{node.readIndex}</span>
+      <span className="mn-num" title={t('readOrder', lang)}>{node.readIndex}</span>
       {node.icon ? <span className="mn-icon">{node.icon}</span> : null}
       <span className="mn-title">{title}</span>
 
-      <span className="mn-lv" title={LEVEL_VI[node.level]}>{LEVEL_GLYPH[node.level] || '·'}</span>
-      {node.status === 'stub' && <span className="mn-dot" title="Stub — chưa viết sâu" />}
+      <span className="mn-lv" title={levelLabel(node.level, lang)}>{LEVEL_GLYPH[node.level] || '·'}</span>
+      {node.status === 'stub' && <span className="mn-dot" title={t('stubTitle', lang)} />}
 
       {childCount > 0 && (
         <button
@@ -57,7 +57,8 @@ function MindNode({ data }) {
           className={'mn-toggle' + (collapsed ? ' is-collapsed' : '')}
           data-side={side}
           onClick={(e) => { e.stopPropagation(); onToggle(node.id) }}
-          title={collapsed ? `Mở ${childCount} node con` : `Thu gọn ${childCount} node con`}
+          title={t(collapsed ? 'expandChildren' : 'collapseChildren', lang)
+            .replace('{n}', childCount)}
         >
           {collapsed ? childCount : '−'}
         </button>

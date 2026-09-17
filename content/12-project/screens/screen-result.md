@@ -3,7 +3,7 @@ id: screen-result
 title: Màn hình Kết quả trận
 summary: Khoảnh khắc thoả mãn sau trận và cây cầu về vòng lặp tiếp theo — thứ tự tiết lộ phần thưởng, bỏ qua được, chốt kết quả ở server, và vì sao nút chơi tiếp quan trọng hơn nút về nhà.
 status: deep
-read: 1180
+read: 990
 level: intermediate
 order: 80
 tags: [screens, result, reward, retention, loop]

@@ -4,20 +4,18 @@ title: Màn hình & tính năng meta
 icon: 📱
 summary: Bản đồ mọi màn hình ngoài gameplay của một game mobile F2P, và khuôn mẫu tám ô để tổ chức một màn hình — bố cục, dữ liệu, API, vòng đời, trạng thái rỗng.
 status: deep
-read: 1100
+read: 982
 level: intermediate
-order: 80
-map: true
-mapLabel: Màn hình
+order: 75
 tags: [screens, meta, ui, f2p, monetization]
 related: [meta-systems, ux-flow, project, unity-ui]
 ---
 
 Gameplay chiếm phần lớn thời gian **nói về** game, nhưng chiếm phần nhỏ số màn hình **phải xây**. Một game mobile F2P điển hình có 3–5 màn gameplay và **hai mươi màn meta** — và nhóm thứ hai mới là nơi tiền đi qua, nơi người chơi quay lại mỗi ngày, và nơi phần lớn bug sống.
 
-Nhánh này liệt kê từng màn hình: nó tồn tại để làm gì, bố cục ra sao, dữ liệu lấy từ đâu, và bẫy riêng của nó.
+Cụm này liệt kê từng màn hình: nó tồn tại để làm gì, bố cục ra sao, dữ liệu lấy từ đâu, và bẫy riêng của nó.
 
-[[ui-design]] và [[ux-flow]] nói **nguyên lý** giao diện. Nhánh này nói **màn hình cụ thể** — thứ bạn thật sự phải làm, với API và trạng thái đi kèm.
+[[ui-design]] và [[ux-flow]] nói **nguyên lý** giao diện. Cụm này nói **màn hình cụ thể** — thứ bạn thật sự phải làm, với API và trạng thái đi kèm.
 
 ## Bản đồ điều hướng
 
@@ -87,7 +85,7 @@ Nhánh này liệt kê từng màn hình: nó tồn tại để làm gì, bố c
 
 ## Khuôn mẫu tám ô — tổ chức một màn hình
 
-Mỗi node trong nhánh này đi theo cùng tám ô. Dùng nó cho **bất kỳ** màn hình nào bạn thêm sau này, kể cả màn không có trong danh sách trên.
+Mỗi node trong cụm này đi theo cùng tám ô. Dùng nó cho **bất kỳ** màn hình nào bạn thêm sau này, kể cả màn không có trong danh sách trên.
 
 | # | Ô | Câu phải trả lời | Sai thì |
 |---|---|---|---|

@@ -4,7 +4,7 @@
 > Đây là mục lục phẳng của toàn bộ kho kiến thức, dành cho AI agent (Codex / Claude Code)
 > đọc nhanh trước khi mở từng file `content/**/*.md` chi tiết.
 
-Cập nhật: `2026-09-13T08:30:38.766Z` · 167 node · 167 deep · 0 stub · 489950 từ
+Cập nhật: `2026-09-17T08:37:28.787Z` · 167 node · 167 deep · 0 stub · 490038 từ
 
 Mức độ: **37 cơ bản** · 82 trung cấp · 48 chuyên sâu
 
@@ -164,24 +164,24 @@ thức cơ bản (ai cũng nên đọc), trung cấp (cần nền), hay chuyên 
 | 147 | **Mốc bàn giao và dấu hiệu trượt** `#project-milestones` | Trung cấp | deep | `content/12-project/project-milestones.md` |
 | 148 | **Hai phía làm song song** `#project-teamwork` | Trung cấp | deep | `content/12-project/project-teamwork.md` |
 | 149 | **Soft launch và ngày đầu tiên** `#project-launch` | Chuyên sâu | deep | `content/12-project/project-launch.md` |
-| 150 | **Kể lại dự án trong phòng phỏng vấn** `#project-postmortem` | Trung cấp | deep | `content/12-project/project-postmortem.md` |
-| 151 | **Làm Team Lead** `#team-lead` | Trung cấp | deep | `content/13-team-lead/index.md` |
-| 152 | **30 ngày đầu làm lead** `#lead-transition` | Trung cấp | deep | `content/13-team-lead/lead-transition.md` |
-| 153 | **Ước lượng và lịch** `#lead-estimation` | Trung cấp | deep | `content/13-team-lead/lead-estimation.md` |
-| 154 | **Giao việc và review** `#lead-delegation` | Trung cấp | deep | `content/13-team-lead/lead-delegation.md` |
-| 155 | **1:1, kèm cặp và người đang chìm** `#lead-one-on-one` | Trung cấp | deep | `content/13-team-lead/lead-one-on-one.md` |
-| 156 | **Báo cáo lên và đỡ cho đội** `#lead-upward` | Chuyên sâu | deep | `content/13-team-lead/lead-upward.md` |
-| 157 | **Trượt tiến độ, crunch và sự cố** `#lead-crisis` | Chuyên sâu | deep | `content/13-team-lead/lead-crisis.md` |
-| 158 | **Màn hình & tính năng meta** `#screens` | Trung cấp | deep | `content/14-screens/index.md` |
-| 159 | **Màn hình Home** `#screen-home` | Trung cấp | deep | `content/14-screens/screen-home.md` |
-| 160 | **Màn hình Gacha** `#screen-gacha` | Chuyên sâu | deep | `content/14-screens/screen-gacha.md` |
-| 161 | **Màn hình Shop & IAP** `#screen-shop` | Chuyên sâu | deep | `content/14-screens/screen-shop.md` |
-| 162 | **Màn hình Nhiệm vụ & Battle Pass** `#screen-mission` | Trung cấp | deep | `content/14-screens/screen-mission.md` |
-| 163 | **Màn hình Hộp quà** `#screen-presentbox` | Trung cấp | deep | `content/14-screens/screen-presentbox.md` |
-| 164 | **Màn hình Piggy Bank & gói ưu đãi** `#screen-piggybank` | Chuyên sâu | deep | `content/14-screens/screen-piggybank.md` |
-| 165 | **Màn hình Túi đồ & Nâng cấp** `#screen-inventory` | Trung cấp | deep | `content/14-screens/screen-inventory.md` |
-| 166 | **Màn hình Kết quả trận** `#screen-result` | Trung cấp | deep | `content/14-screens/screen-result.md` |
-| 167 | **Màn hình Bảng xếp hạng & Mùa giải** `#screen-ranking` | Chuyên sâu | deep | `content/14-screens/screen-ranking.md` |
+| 150 | **Màn hình & tính năng meta** `#screens` | Trung cấp | deep | `content/12-project/screens/index.md` |
+| 151 | **Màn hình Home** `#screen-home` | Trung cấp | deep | `content/12-project/screens/screen-home.md` |
+| 152 | **Màn hình Gacha** `#screen-gacha` | Chuyên sâu | deep | `content/12-project/screens/screen-gacha.md` |
+| 153 | **Màn hình Shop & IAP** `#screen-shop` | Chuyên sâu | deep | `content/12-project/screens/screen-shop.md` |
+| 154 | **Màn hình Nhiệm vụ & Battle Pass** `#screen-mission` | Trung cấp | deep | `content/12-project/screens/screen-mission.md` |
+| 155 | **Màn hình Hộp quà** `#screen-presentbox` | Trung cấp | deep | `content/12-project/screens/screen-presentbox.md` |
+| 156 | **Màn hình Piggy Bank & gói ưu đãi** `#screen-piggybank` | Chuyên sâu | deep | `content/12-project/screens/screen-piggybank.md` |
+| 157 | **Màn hình Túi đồ & Nâng cấp** `#screen-inventory` | Trung cấp | deep | `content/12-project/screens/screen-inventory.md` |
+| 158 | **Màn hình Kết quả trận** `#screen-result` | Trung cấp | deep | `content/12-project/screens/screen-result.md` |
+| 159 | **Màn hình Bảng xếp hạng & Mùa giải** `#screen-ranking` | Chuyên sâu | deep | `content/12-project/screens/screen-ranking.md` |
+| 160 | **Kể lại dự án trong phòng phỏng vấn** `#project-postmortem` | Trung cấp | deep | `content/12-project/project-postmortem.md` |
+| 161 | **Làm Team Lead** `#team-lead` | Trung cấp | deep | `content/13-team-lead/index.md` |
+| 162 | **30 ngày đầu làm lead** `#lead-transition` | Trung cấp | deep | `content/13-team-lead/lead-transition.md` |
+| 163 | **Ước lượng và lịch** `#lead-estimation` | Trung cấp | deep | `content/13-team-lead/lead-estimation.md` |
+| 164 | **Giao việc và review** `#lead-delegation` | Trung cấp | deep | `content/13-team-lead/lead-delegation.md` |
+| 165 | **1:1, kèm cặp và người đang chìm** `#lead-one-on-one` | Trung cấp | deep | `content/13-team-lead/lead-one-on-one.md` |
+| 166 | **Báo cáo lên và đỡ cho đội** `#lead-upward` | Chuyên sâu | deep | `content/13-team-lead/lead-upward.md` |
+| 167 | **Trượt tiến độ, crunch và sự cố** `#lead-crisis` | Chuyên sâu | deep | `content/13-team-lead/lead-crisis.md` |
 
 ## Cây kiến thức
 
@@ -334,24 +334,24 @@ thức cơ bản (ai cũng nên đọc), trung cấp (cần nền), hay chuyên 
     - ◐ `#147` **Mốc bàn giao và dấu hiệu trượt** `#project-milestones` 🤖 🎤 — Bốn mốc từ vertical slice tới soft launch, tiêu chí ra mốc viết thành câu kiểm được, và năm dấu hiệu dự án đang trượt mà bảng kế hoạch không hiện ra. → `content/12-project/project-milestones.md`
     - ◐ `#148` **Hai phía làm song song** `#project-teamwork` 🤖 🎤 — Contract-first, mock server dựng từ chính hợp đồng, ba môi trường, và cách nối hai phía hằng ngày thay vì dồn tích hợp vào tháng cuối. → `content/12-project/project-teamwork.md`
     - ○ `#149` **Soft launch và ngày đầu tiên** `#project-launch` 🤖 🎤 — Mở cho ai trước, bốn chỉ số phải nhìn trong 24 giờ đầu, runbook 15 phút đầu khi có sự cố, và thứ tự tắt tính năng khi hệ thống quá tải. → `content/12-project/project-launch.md`
-    - ◐ `#150` **Kể lại dự án trong phòng phỏng vấn** `#project-postmortem` 🤖 🎤 — Bộ ba câu chuyện phải chuẩn bị sẵn, khung sáu ô để kể một dự án trong hai phút, cách nói về khó khăn và thất bại mà không tự hạ mình, và cách trả lời khi dự án bị huỷ. → `content/12-project/project-postmortem.md`
-  - ◐ `#151` **Làm Team Lead** `#team-lead` 🤖 🎤 🗺 — Lên lead một đội game 5–15 người mà vẫn phải code — ba vòng lặp phải quay đều, cái giá của việc tự ôm việc, và sáu tình huống mà lead mới luôn xử sai lần đầu. → `content/13-team-lead/index.md`
-    - ◐ `#152` **30 ngày đầu làm lead** `#lead-transition` 🤖 🎤 — Bốn tuần đầu làm gì theo thứ tự nào, toán học của câu "tôi tự làm cho nhanh", và cách xử lý việc hôm qua còn là đồng nghiệp ngang hàng hôm nay đã là người đánh giá. → `content/13-team-lead/lead-transition.md`
-    - ◐ `#153` **Ước lượng và lịch** `#lead-estimation` 🤖 🎤 — Vì sao ước lượng game sai nhiều hơn phần mềm thường, cách chia task theo độ bất định thay vì ước lượng đều tay, hệ số lịch sử của chính đội bạn, và bốn tín hiệu trượt mốc lộ ra từ giữa chặng. → `content/13-team-lead/lead-estimation.md`
-    - ◐ `#154` **Giao việc và review** `#lead-delegation` 🤖 🎤 — Năm mức uỷ quyền và cách chọn mức, brief giao việc đủ sáu dòng, luật review phân biệt cái chặn merge với cái chỉ là gợi ý, và cách review đổi thế nào khi code do AI sinh ra. → `content/13-team-lead/lead-delegation.md`
-    - ◐ `#155` **1:1, kèm cặp và người đang chìm** `#lead-one-on-one` 🤖 🎤 — 1:1 30 phút hai tuần một lần mà không biến thành họp status, phản hồi nói trong 48 giờ, bốn nguyên nhân khiến một người chìm và bốn cách can thiệp khác hẳn nhau. → `content/13-team-lead/lead-one-on-one.md`
-    - ○ `#156` **Báo cáo lên và đỡ cho đội** `#lead-upward` 🤖 🎤 — Trả lời đúng câu hỏi thật sau câu "bao giờ xong", báo cáo ba dòng thay vì kể task, công thức báo tin xấu có lựa chọn kèm theo, và cách nói "được, vậy đổi cái gì ra" thay vì nói không. → `content/13-team-lead/lead-upward.md`
-    - ○ `#157` **Trượt tiến độ, crunch và sự cố** `#lead-crisis` 🤖 🎤 — Năm đòn bẩy khi mốc sắp trượt và thứ tự phải thử chúng, vì sao thêm người làm dự án trễ thêm, cái giá đo được của crunch, và vai thật của lead trong 15 phút đầu một sự cố production. → `content/13-team-lead/lead-crisis.md`
-  - ◐ `#158` **Màn hình & tính năng meta** `#screens` 🤖 🎤 🗺 — Bản đồ mọi màn hình ngoài gameplay của một game mobile F2P, và khuôn mẫu tám ô để tổ chức một màn hình — bố cục, dữ liệu, API, vòng đời, trạng thái rỗng. → `content/14-screens/index.md`
-    - ◐ `#159` **Màn hình Home** `#screen-home` 🤖 🎤 — Trung tâm điều hướng phải trả lời "giờ tôi nên làm gì" trong hai giây — ba vùng bố cục, một hành động chính, luật chấm đỏ, và vì sao Home là nơi mọi tính năng tranh chỗ. → `content/14-screens/screen-home.md`
-    - ○ `#160` **Màn hình Gacha** `#screen-gacha` 🤖 🎤 — Quay số đổi tiền lấy kỳ vọng — pity và tỉ lệ công bố, server quay chứ không phải client, luật pháp lý theo thị trường, và vì sao animation bỏ qua được là bắt buộc. → `content/14-screens/screen-gacha.md`
-    - ○ `#161` **Màn hình Shop & IAP** `#screen-shop` 🤖 🎤 — Bán mà không phá cảm giác công bằng — ba loại hàng, luồng IAP sáu bước với verify phía server, đối soát biên nhận, và xử lý mua hụt khi mạng rớt giữa chừng. → `content/14-screens/screen-shop.md`
-    - ◐ `#162` **Màn hình Nhiệm vụ & Battle Pass** `#screen-mission` 🤖 🎤 — Cho lý do quay lại hôm nay mà không biến game thành nghĩa vụ — ba tầng nhiệm vụ, tiến độ tính ở server theo sự kiện, mốc reset theo giờ server, và luật nhận thưởng không mất. → `content/14-screens/screen-mission.md`
-    - ◐ `#163` **Màn hình Hộp quà** `#screen-presentbox` 🤖 🎤 — Kênh một chiều từ vận hành tới người chơi — đền bù khi có sự cố, phần thưởng không nhét được vào túi, hạn nhận và luật không bao giờ mất, cùng lý do phải làm nó rất sớm. → `content/14-screens/screen-presentbox.md`
-    - ○ `#164` **Màn hình Piggy Bank & gói ưu đãi** `#screen-piggybank` 🤖 🎤 — Biến việc chơi nhiều thành lý do mua đúng một lần — luật tích luỹ, trần heo, giá trị hiển thị trung thực, và ranh giới giữa ưu đãi có sức thuyết phục và ưu đãi gây áp lực. → `content/14-screens/screen-piggybank.md`
-    - ◐ `#165` **Màn hình Túi đồ & Nâng cấp** `#screen-inventory` 🤖 🎤 — Xem và nâng cấp thứ mình có mà không lạc trong bốn trăm món — lọc và sắp xếp trước khi cần, khoá chống bán nhầm, nâng cấp là một transaction, và phân trang thay vì tải hết. → `content/14-screens/screen-inventory.md`
-    - ◐ `#166` **Màn hình Kết quả trận** `#screen-result` 🤖 🎤 — Khoảnh khắc thoả mãn sau trận và cây cầu về vòng lặp tiếp theo — thứ tự tiết lộ phần thưởng, bỏ qua được, chốt kết quả ở server, và vì sao nút chơi tiếp quan trọng hơn nút về nhà. → `content/14-screens/screen-result.md`
-    - ○ `#167` **Màn hình Bảng xếp hạng & Mùa giải** `#screen-ranking` 🤖 🎤 — So sánh xã hội có kiểm soát — ZSET và cái bẫy của nó, hiển thị quanh vị trí người chơi thay vì top 100, chốt mùa ở worker, và cách chia hạng để đa số vẫn thấy mình đang tiến. → `content/14-screens/screen-ranking.md`
+    - ◐ `#150` **Màn hình & tính năng meta** `#screens` 🤖 🎤 — Bản đồ mọi màn hình ngoài gameplay của một game mobile F2P, và khuôn mẫu tám ô để tổ chức một màn hình — bố cục, dữ liệu, API, vòng đời, trạng thái rỗng. → `content/12-project/screens/index.md`
+      - ◐ `#151` **Màn hình Home** `#screen-home` 🤖 🎤 — Trung tâm điều hướng phải trả lời "giờ tôi nên làm gì" trong hai giây — ba vùng bố cục, một hành động chính, luật chấm đỏ, và vì sao Home là nơi mọi tính năng tranh chỗ. → `content/12-project/screens/screen-home.md`
+      - ○ `#152` **Màn hình Gacha** `#screen-gacha` 🤖 🎤 — Quay số đổi tiền lấy kỳ vọng — pity và tỉ lệ công bố, server quay chứ không phải client, luật pháp lý theo thị trường, và vì sao animation bỏ qua được là bắt buộc. → `content/12-project/screens/screen-gacha.md`
+      - ○ `#153` **Màn hình Shop & IAP** `#screen-shop` 🤖 🎤 — Bán mà không phá cảm giác công bằng — ba loại hàng, luồng IAP sáu bước với verify phía server, đối soát biên nhận, và xử lý mua hụt khi mạng rớt giữa chừng. → `content/12-project/screens/screen-shop.md`
+      - ◐ `#154` **Màn hình Nhiệm vụ & Battle Pass** `#screen-mission` 🤖 🎤 — Cho lý do quay lại hôm nay mà không biến game thành nghĩa vụ — ba tầng nhiệm vụ, tiến độ tính ở server theo sự kiện, mốc reset theo giờ server, và luật nhận thưởng không mất. → `content/12-project/screens/screen-mission.md`
+      - ◐ `#155` **Màn hình Hộp quà** `#screen-presentbox` 🤖 🎤 — Kênh một chiều từ vận hành tới người chơi — đền bù khi có sự cố, phần thưởng không nhét được vào túi, hạn nhận và luật không bao giờ mất, cùng lý do phải làm nó rất sớm. → `content/12-project/screens/screen-presentbox.md`
+      - ○ `#156` **Màn hình Piggy Bank & gói ưu đãi** `#screen-piggybank` 🤖 🎤 — Biến việc chơi nhiều thành lý do mua đúng một lần — luật tích luỹ, trần heo, giá trị hiển thị trung thực, và ranh giới giữa ưu đãi có sức thuyết phục và ưu đãi gây áp lực. → `content/12-project/screens/screen-piggybank.md`
+      - ◐ `#157` **Màn hình Túi đồ & Nâng cấp** `#screen-inventory` 🤖 🎤 — Xem và nâng cấp thứ mình có mà không lạc trong bốn trăm món — lọc và sắp xếp trước khi cần, khoá chống bán nhầm, nâng cấp là một transaction, và phân trang thay vì tải hết. → `content/12-project/screens/screen-inventory.md`
+      - ◐ `#158` **Màn hình Kết quả trận** `#screen-result` 🤖 🎤 — Khoảnh khắc thoả mãn sau trận và cây cầu về vòng lặp tiếp theo — thứ tự tiết lộ phần thưởng, bỏ qua được, chốt kết quả ở server, và vì sao nút chơi tiếp quan trọng hơn nút về nhà. → `content/12-project/screens/screen-result.md`
+      - ○ `#159` **Màn hình Bảng xếp hạng & Mùa giải** `#screen-ranking` 🤖 🎤 — So sánh xã hội có kiểm soát — ZSET và cái bẫy của nó, hiển thị quanh vị trí người chơi thay vì top 100, chốt mùa ở worker, và cách chia hạng để đa số vẫn thấy mình đang tiến. → `content/12-project/screens/screen-ranking.md`
+    - ◐ `#160` **Kể lại dự án trong phòng phỏng vấn** `#project-postmortem` 🤖 🎤 — Bộ ba câu chuyện phải chuẩn bị sẵn, khung sáu ô để kể một dự án trong hai phút, cách nói về khó khăn và thất bại mà không tự hạ mình, và cách trả lời khi dự án bị huỷ. → `content/12-project/project-postmortem.md`
+  - ◐ `#161` **Làm Team Lead** `#team-lead` 🤖 🎤 🗺 — Lên lead một đội game 5–15 người mà vẫn phải code — ba vòng lặp phải quay đều, cái giá của việc tự ôm việc, và sáu tình huống mà lead mới luôn xử sai lần đầu. → `content/13-team-lead/index.md`
+    - ◐ `#162` **30 ngày đầu làm lead** `#lead-transition` 🤖 🎤 — Bốn tuần đầu làm gì theo thứ tự nào, toán học của câu "tôi tự làm cho nhanh", và cách xử lý việc hôm qua còn là đồng nghiệp ngang hàng hôm nay đã là người đánh giá. → `content/13-team-lead/lead-transition.md`
+    - ◐ `#163` **Ước lượng và lịch** `#lead-estimation` 🤖 🎤 — Vì sao ước lượng game sai nhiều hơn phần mềm thường, cách chia task theo độ bất định thay vì ước lượng đều tay, hệ số lịch sử của chính đội bạn, và bốn tín hiệu trượt mốc lộ ra từ giữa chặng. → `content/13-team-lead/lead-estimation.md`
+    - ◐ `#164` **Giao việc và review** `#lead-delegation` 🤖 🎤 — Năm mức uỷ quyền và cách chọn mức, brief giao việc đủ sáu dòng, luật review phân biệt cái chặn merge với cái chỉ là gợi ý, và cách review đổi thế nào khi code do AI sinh ra. → `content/13-team-lead/lead-delegation.md`
+    - ◐ `#165` **1:1, kèm cặp và người đang chìm** `#lead-one-on-one` 🤖 🎤 — 1:1 30 phút hai tuần một lần mà không biến thành họp status, phản hồi nói trong 48 giờ, bốn nguyên nhân khiến một người chìm và bốn cách can thiệp khác hẳn nhau. → `content/13-team-lead/lead-one-on-one.md`
+    - ○ `#166` **Báo cáo lên và đỡ cho đội** `#lead-upward` 🤖 🎤 — Trả lời đúng câu hỏi thật sau câu "bao giờ xong", báo cáo ba dòng thay vì kể task, công thức báo tin xấu có lựa chọn kèm theo, và cách nói "được, vậy đổi cái gì ra" thay vì nói không. → `content/13-team-lead/lead-upward.md`
+    - ○ `#167` **Trượt tiến độ, crunch và sự cố** `#lead-crisis` 🤖 🎤 — Năm đòn bẩy khi mốc sắp trượt và thứ tự phải thử chúng, vì sao thêm người làm dự án trễ thêm, cái giá đo được của crunch, và vai thật của lead trong 15 phút đầu một sự cố production. → `content/13-team-lead/lead-crisis.md`
 
 > **Ký hiệu:** ● cơ bản · ◐ trung cấp · ○ chuyên sâu · `#N` = thứ tự trong lộ trình đọc
 >
@@ -804,6 +804,44 @@ thức cơ bản (ai cũng nên đọc), trung cấp (cần nền), hay chuyên 
 - `#project-teamwork` ↔ `#go-docker` (related)
 - `#project-teamwork` ↔ `#unity-testing-ci` (related)
 - `#project-teamwork` ↔ `#go-gamedev-tools` (related)
+- `#screens` ↔ `#meta-systems` (related)
+- `#screens` ↔ `#ux-flow` (related)
+- `#screens` ↔ `#project` (related)
+- `#screens` ↔ `#unity-ui` (related)
+- `#screen-gacha` ↔ `#screens` (related)
+- `#screen-gacha` ↔ `#randomness` (related)
+- `#screen-gacha` ↔ `#economy-design` (related)
+- `#screen-gacha` ↔ `#game-database` (related)
+- `#screen-home` ↔ `#screens` (related)
+- `#screen-home` ↔ `#ux-flow` (related)
+- `#screen-home` ↔ `#screen-mission` (related)
+- `#screen-home` ↔ `#onboarding` (related)
+- `#screen-inventory` ↔ `#screens` (related)
+- `#screen-inventory` ↔ `#progression` (related)
+- `#screen-inventory` ↔ `#master-data` (related)
+- `#screen-inventory` ↔ `#game-database` (related)
+- `#screen-mission` ↔ `#screens` (related)
+- `#screen-mission` ↔ `#meta-systems` (related)
+- `#screen-mission` ↔ `#game-database` (related)
+- `#screen-piggybank` ↔ `#screens` (related)
+- `#screen-piggybank` ↔ `#screen-shop` (related)
+- `#screen-piggybank` ↔ `#economy-design` (related)
+- `#screen-piggybank` ↔ `#liveops` (related)
+- `#screen-presentbox` ↔ `#screens` (related)
+- `#screen-presentbox` ↔ `#liveops` (related)
+- `#screen-presentbox` ↔ `#game-database` (related)
+- `#screen-presentbox` ↔ `#screen-mission` (related)
+- `#screen-ranking` ↔ `#screens` (related)
+- `#screen-ranking` ↔ `#game-database` (related)
+- `#screen-ranking` ↔ `#go-matchmaking` (related)
+- `#screen-ranking` ↔ `#screen-presentbox` (related)
+- `#screen-result` ↔ `#screens` (related)
+- `#screen-result` ↔ `#client-server-flow` (related)
+- `#screen-result` ↔ `#game-feel` (related)
+- `#screen-result` ↔ `#screen-home` (related)
+- `#screen-shop` ↔ `#screens` (related)
+- `#screen-shop` ↔ `#economy-design` (related)
+- `#screen-shop` ↔ `#game-database` (related)
 - `#team-lead` ↔ `#project` (related)
 - `#team-lead` ↔ `#project-milestones` (related)
 - `#team-lead` ↔ `#project-teamwork` (related)
@@ -872,44 +910,6 @@ thức cơ bản (ai cũng nên đọc), trung cấp (cần nền), hay chuyên 
 - `#csharp` ↔ `#unity-csharp-memory` (related)
 - `#csharp` ↔ `#unity-design-patterns` (related)
 - `#csharp` ↔ `#go-for-unity-dev` (related)
-- `#screens` ↔ `#meta-systems` (related)
-- `#screens` ↔ `#ux-flow` (related)
-- `#screens` ↔ `#project` (related)
-- `#screens` ↔ `#unity-ui` (related)
-- `#screen-gacha` ↔ `#screens` (related)
-- `#screen-gacha` ↔ `#randomness` (related)
-- `#screen-gacha` ↔ `#economy-design` (related)
-- `#screen-gacha` ↔ `#game-database` (related)
-- `#screen-home` ↔ `#screens` (related)
-- `#screen-home` ↔ `#ux-flow` (related)
-- `#screen-home` ↔ `#screen-mission` (related)
-- `#screen-home` ↔ `#onboarding` (related)
-- `#screen-inventory` ↔ `#screens` (related)
-- `#screen-inventory` ↔ `#progression` (related)
-- `#screen-inventory` ↔ `#master-data` (related)
-- `#screen-inventory` ↔ `#game-database` (related)
-- `#screen-mission` ↔ `#screens` (related)
-- `#screen-mission` ↔ `#meta-systems` (related)
-- `#screen-mission` ↔ `#game-database` (related)
-- `#screen-piggybank` ↔ `#screens` (related)
-- `#screen-piggybank` ↔ `#screen-shop` (related)
-- `#screen-piggybank` ↔ `#economy-design` (related)
-- `#screen-piggybank` ↔ `#liveops` (related)
-- `#screen-presentbox` ↔ `#screens` (related)
-- `#screen-presentbox` ↔ `#liveops` (related)
-- `#screen-presentbox` ↔ `#game-database` (related)
-- `#screen-presentbox` ↔ `#screen-mission` (related)
-- `#screen-ranking` ↔ `#screens` (related)
-- `#screen-ranking` ↔ `#game-database` (related)
-- `#screen-ranking` ↔ `#go-matchmaking` (related)
-- `#screen-ranking` ↔ `#screen-presentbox` (related)
-- `#screen-result` ↔ `#screens` (related)
-- `#screen-result` ↔ `#client-server-flow` (related)
-- `#screen-result` ↔ `#game-feel` (related)
-- `#screen-result` ↔ `#screen-home` (related)
-- `#screen-shop` ↔ `#screens` (related)
-- `#screen-shop` ↔ `#economy-design` (related)
-- `#screen-shop` ↔ `#game-database` (related)
 - `#core-loop` ↔ `#randomness` (mention)
 - `#core-loop` ↔ `#gdd-for-ai` (mention)
 - `#core-loop` ↔ `#prompt-patterns` (mention)
@@ -1243,6 +1243,29 @@ thức cơ bản (ai cũng nên đọc), trung cấp (cần nền), hay chuyên 
 - `#project-milestones` ↔ `#project-teamwork` (mention)
 - `#project-milestones` ↔ `#balancing-math` (mention)
 - `#project-postmortem` ↔ `#master-data` (mention)
+- `#screens` ↔ `#ui-design` (mention)
+- `#screens` ↔ `#project-architecture` (mention)
+- `#screens` ↔ `#unity-network-client` (mention)
+- `#screens` ↔ `#master-data` (mention)
+- `#screens` ↔ `#project-launch` (mention)
+- `#screen-gacha` ↔ `#screen-shop` (mention)
+- `#screen-gacha` ↔ `#screen-presentbox` (mention)
+- `#screen-home` ↔ `#screen-inventory` (mention)
+- `#screen-home` ↔ `#project-contract` (mention)
+- `#screen-home` ↔ `#client-server-flow` (mention)
+- `#screen-home` ↔ `#project-launch` (mention)
+- `#screen-inventory` ↔ `#screen-presentbox` (mention)
+- `#screen-piggybank` ↔ `#screen-home` (mention)
+- `#screen-piggybank` ↔ `#screen-mission` (mention)
+- `#screen-presentbox` ↔ `#go-deploy-ops` (mention)
+- `#screen-presentbox` ↔ `#project-migration` (mention)
+- `#screen-ranking` ↔ `#go-deploy-ops` (mention)
+- `#screen-ranking` ↔ `#project-identity` (mention)
+- `#screen-ranking` ↔ `#project-launch` (mention)
+- `#screen-result` ↔ `#screen-gacha` (mention)
+- `#screen-result` ↔ `#screen-presentbox` (mention)
+- `#screen-shop` ↔ `#unity-network-client` (mention)
+- `#screen-shop` ↔ `#project-launch` (mention)
 - `#team-lead` ↔ `#project-postmortem` (mention)
 - `#lead-crisis` ↔ `#design-pillars` (mention)
 - `#lead-crisis` ↔ `#go-deploy-ops` (mention)
@@ -1290,29 +1313,6 @@ thức cơ bản (ai cũng nên đọc), trung cấp (cần nền), hay chuyên 
 - `#csharp` ↔ `#csharp-exception-null` (mention)
 - `#csharp` ↔ `#csharp-modern` (mention)
 - `#csharp` ↔ `#csharp-interview-kit` (mention)
-- `#screens` ↔ `#ui-design` (mention)
-- `#screens` ↔ `#project-architecture` (mention)
-- `#screens` ↔ `#unity-network-client` (mention)
-- `#screens` ↔ `#master-data` (mention)
-- `#screens` ↔ `#project-launch` (mention)
-- `#screen-gacha` ↔ `#screen-shop` (mention)
-- `#screen-gacha` ↔ `#screen-presentbox` (mention)
-- `#screen-home` ↔ `#screen-inventory` (mention)
-- `#screen-home` ↔ `#project-contract` (mention)
-- `#screen-home` ↔ `#client-server-flow` (mention)
-- `#screen-home` ↔ `#project-launch` (mention)
-- `#screen-inventory` ↔ `#screen-presentbox` (mention)
-- `#screen-piggybank` ↔ `#screen-home` (mention)
-- `#screen-piggybank` ↔ `#screen-mission` (mention)
-- `#screen-presentbox` ↔ `#go-deploy-ops` (mention)
-- `#screen-presentbox` ↔ `#project-migration` (mention)
-- `#screen-ranking` ↔ `#go-deploy-ops` (mention)
-- `#screen-ranking` ↔ `#project-identity` (mention)
-- `#screen-ranking` ↔ `#project-launch` (mention)
-- `#screen-result` ↔ `#screen-gacha` (mention)
-- `#screen-result` ↔ `#screen-presentbox` (mention)
-- `#screen-shop` ↔ `#unity-network-client` (mention)
-- `#screen-shop` ↔ `#project-launch` (mention)
 - `#root` ↔ `#blueprints` (mention)
 - `#root` ↔ `#foundations` (mention)
 - `#root` ↔ `#systems` (mention)

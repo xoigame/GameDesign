@@ -2,24 +2,36 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { t } from '../lib/i18n.js'
 import {
   RATES, collectBlocks, createSpeaker, onVoices, pickVoice, ttsSupported,
-  readAuto, readRate, readVoiceUri, writeAuto, writeRate, writeVoiceUri,
+  readAuto, readRate, readTtsLang, readVoiceUri, writeAuto, writeRate,
+  writeTtsLang, writeVoiceUri,
 } from '../lib/tts.js'
 
 /**
  * Thanh đọc thành tiếng cho panel nội dung.
  *
- * Chỉ đọc phần tiếng Anh — voice tiếng Anh đọc tiếng Việt nghe không ra gì.
- * Vùng đọc được DetailPanel đánh dấu bằng `data-tts="en"`; ở chế độ song ngữ
- * đó là cột EN, ở chế độ EN là cả khung nội dung. Đang ở chế độ VI thì bấm đọc
- * sẽ bật sang song ngữ trước — để vừa nghe vừa nhìn thấy đoạn đang được đọc.
+ * Đọc được CẢ tiếng Việt lẫn tiếng Anh. Vùng đọc được DetailPanel đánh dấu bằng
+ * `data-tts="vi"` / `data-tts="en"`, và bộ đọc luôn đọc **thứ đang hiện trên màn
+ * hình**: chế độ VI đọc tiếng Việt, chế độ EN đọc tiếng Anh (lùi về tiếng Việt
+ * nếu node chưa dịch), chế độ song ngữ thì người dùng chọn bằng nút VI/EN.
+ *
+ * Voice là của hệ điều hành, không phải của web: máy chưa cài giọng tiếng Việt
+ * thì phải nói thẳng ra chứ không im lặng đọc bằng giọng tiếng Anh — giọng Anh
+ * đọc tiếng Việt nghe không ra gì.
  *
  * Nút bấm nằm trong `.panel-head`; thanh điều khiển là dòng thứ hai của chính
  * cái head đó (flex-wrap), nên nó dính theo khi cuộn.
  */
-export default function Reader({ panelRef, node, tab, lang, setLang, hasEnText, onAutoNext }) {
+export default function Reader({ panelRef, node, tab, lang, hasEnText, onAutoNext }) {
   const supported = useMemo(ttsSupported, [])
+  const [pickedLang, setPickedLang] = useState(readTtsLang)
+
+  /* Ngôn ngữ đọc = ngôn ngữ đang hiện. Chỉ chế độ song ngữ mới có hai lựa chọn. */
+  const readLang = lang === 'vi' ? 'vi'
+    : lang === 'en' ? (hasEnText ? 'en' : 'vi')
+    : pickedLang
+
   const [voices, setVoices] = useState([])
-  const [voiceUri, setVoiceUri] = useState(readVoiceUri)
+  const [voiceUri, setVoiceUri] = useState(() => readVoiceUri(readLang))
   const [rate, setRate] = useState(readRate)
   const [auto, setAuto] = useState(readAuto)
   const [st, setSt] = useState({ phase: 'idle', index: 0, total: 0, el: null })
@@ -32,7 +44,13 @@ export default function Reader({ panelRef, node, tab, lang, setLang, hasEnText, 
   autoRef.current = auto
   nextRef.current = onAutoNext
 
-  const voice = useMemo(() => pickVoice(voices, voiceUri), [voices, voiceUri])
+  const voice = useMemo(() => pickVoice(voices, voiceUri, readLang), [voices, voiceUri, readLang])
+
+  /* Đổi ngôn ngữ đọc = đổi cả danh sách voice lẫn voice đã nhớ của ngôn ngữ đó. */
+  useEffect(() => {
+    setVoiceUri(readVoiceUri(readLang))
+    if (speakerRef.current) speakerRef.current.setLang(readLang)
+  }, [readLang])
 
   /* ------------------------------- bộ đọc -------------------------------- */
   useEffect(() => {
@@ -50,18 +68,19 @@ export default function Reader({ panelRef, node, tab, lang, setLang, hasEnText, 
     return () => { sp.dispose(); speakerRef.current = null }
   }, [supported])
 
-  useEffect(() => onVoices(setVoices), [])
+  useEffect(() => onVoices(setVoices, readLang), [readLang])
   useEffect(() => { if (speakerRef.current) speakerRef.current.setVoice(voice) }, [voice])
   useEffect(() => { if (speakerRef.current) speakerRef.current.setRate(rate) }, [rate])
 
-  /** Gom khối trong các vùng đã đánh dấu EN rồi đọc từ đầu. */
+  /** Gom khối trong các vùng đã đánh dấu đúng ngôn ngữ đang đọc rồi đọc từ đầu. */
   const startNow = useCallback(() => {
     const sp = speakerRef.current
     const box = panelRef.current
     if (!sp || !box) return
-    const roots = [...box.querySelectorAll('[data-tts="en"]')]
-    sp.start(collectBlocks(roots))
-  }, [panelRef])
+    sp.setLang(readLang)
+    const roots = [...box.querySelectorAll('[data-tts="' + readLang + '"]')]
+    sp.start(collectBlocks(roots, readLang))
+  }, [panelRef, readLang])
 
   /* Đổi node, đổi tab hay đổi chế độ ngôn ngữ đều thay DOM dưới chân bộ đọc →
      dừng hẳn. Chỉ đọc tiếp khi chính mình vừa yêu cầu (pendingRef). */
@@ -72,7 +91,7 @@ export default function Reader({ panelRef, node, tab, lang, setLang, hasEnText, 
     if (!pendingRef.current) return undefined
     const id = setTimeout(() => { pendingRef.current = false; startNow() }, 90)
     return () => clearTimeout(id)
-  }, [node.id, tab, lang, startNow])
+  }, [node.id, tab, lang, readLang, startNow])
 
   /* ------------------------------ tô sáng -------------------------------- */
   useEffect(() => {
@@ -99,12 +118,9 @@ export default function Reader({ panelRef, node, tab, lang, setLang, hasEnText, 
   }, [])
 
   /* ------------------------------ điều khiển ----------------------------- */
-  const play = () => {
-    if (!hasEnText) return
-    // Chế độ VI không vẽ chữ tiếng Anh ra màn hình → bật song ngữ rồi mới đọc.
-    if (lang === 'vi') { pendingRef.current = true; setLang('both'); return }
-    startNow()
-  }
+  // Luôn có chữ để đọc: tiếng Việt là bản gốc, còn tiếng Anh chỉ được chọn khi
+  // node đã dịch (xem cách suy ra readLang ở trên).
+  const play = () => startNow()
 
   const toggle = () => {
     const sp = speakerRef.current
@@ -115,17 +131,18 @@ export default function Reader({ panelRef, node, tab, lang, setLang, hasEnText, 
   }
 
   const changeRate = (v) => { setRate(v); writeRate(v) }
-  const changeVoice = (uri) => { setVoiceUri(uri); writeVoiceUri(uri) }
+  const changeVoice = (uri) => { setVoiceUri(uri); writeVoiceUri(readLang, uri) }
   const changeAuto = () => setAuto((v) => { writeAuto(!v); return !v })
+  const changeLang = (code) => { setPickedLang(code); writeTtsLang(code) }
 
   /* -------------------------------- giao diện ---------------------------- */
   const engaged = st.phase !== 'idle'
+  const noVoice = supported && voices.length === 0
   const title = !supported ? t('ttsUnsupported', lang)
-    : !hasEnText ? t('ttsNoEn', lang)
+    : noVoice ? t(readLang === 'vi' ? 'ttsNoVoiceVi' : 'ttsNoVoiceEn', lang)
     : st.phase === 'playing' ? t('ttsPause', lang)
     : st.phase === 'paused' ? t('ttsResume', lang)
-    : lang === 'vi' ? t('ttsSwitch', lang)
-    : t('ttsRead', lang)
+    : t(readLang === 'vi' ? 'ttsReadVi' : 'ttsReadEn', lang)
 
   const pct = st.total ? Math.round(((st.index + 1) / st.total) * 100) : 0
 
@@ -134,10 +151,26 @@ export default function Reader({ panelRef, node, tab, lang, setLang, hasEnText, 
       <button
         className={'icon-btn tts-btn' + (engaged ? ' on' : '')}
         onClick={toggle}
-        disabled={!supported || (!hasEnText && !engaged)}
+        /* Không có giọng đúng ngôn ngữ thì tắt hẳn nút, đừng đọc bằng giọng
+           ngôn ngữ khác — giọng Anh đọc tiếng Việt nghe không ra gì, và người
+           dùng sẽ tưởng tính năng hỏng chứ không biết là thiếu gói giọng nói. */
+        disabled={!supported || (noVoice && !engaged)}
         title={title}
         aria-label={title}
       >{st.phase === 'playing' ? '❚❚' : '🔊'}</button>
+
+      {/* Chọn ngôn ngữ đọc — chỉ có nghĩa ở chế độ song ngữ, vì hai chế độ đơn ngữ
+          đã tự quyết theo thứ đang hiện trên màn hình. Đặt NGOÀI thanh điều khiển
+          vì thanh đó chỉ hiện khi đang đọc: máy thiếu giọng tiếng Việt thì nút đọc
+          bị tắt, và người dùng sẽ không còn đường nào để đổi sang tiếng Anh. */}
+      {supported && lang === 'both' && hasEnText && (
+        <div className="tts-lang" role="group" aria-label={t('ttsLang', lang)}>
+          <button className={readLang === 'vi' ? 'on' : ''}
+                  onClick={() => changeLang('vi')} title={t('ttsLang', lang)}>VI</button>
+          <button className={readLang === 'en' ? 'on' : ''}
+                  onClick={() => changeLang('en')} title={t('ttsLang', lang)}>EN</button>
+        </div>
+      )}
 
       {engaged && (
         <div className="tts-bar" role="group" aria-label={t('ttsRead', lang)}>
@@ -170,7 +203,9 @@ export default function Reader({ panelRef, node, tab, lang, setLang, hasEnText, 
               ))}
             </select>
           ) : (
-            <span className="tts-warn">{t('ttsNoVoice', lang)}</span>
+            <span className="tts-warn">
+              {t(readLang === 'vi' ? 'ttsNoVoiceVi' : 'ttsNoVoiceEn', lang)}
+            </span>
           )}
 
           <button className={'tts-auto' + (auto ? ' on' : '')} onClick={changeAuto}

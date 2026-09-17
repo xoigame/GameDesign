@@ -1,7 +1,8 @@
-import { useCallback, useEffect, useMemo, useState } from 'react'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import ReactMarkdown from 'react-markdown'
 import remarkGfm from 'remark-gfm'
 import { t, text as tx } from '../lib/i18n.js'
+import SpeakButton from './SpeakButton.jsx'
 import {
   buildDeck, deckStats, grade, loadProgress, pickSession, saveProgress, BOX_DAYS,
 } from '../lib/practice.js'
@@ -29,6 +30,7 @@ export default function Practice({ graph, nodesById, lang, onSelect, onProgress 
   const [idx, setIdx] = useState(0)
   const [revealed, setRevealed] = useState(false)
   const [done, setDone] = useState(0)
+  const cardRef = useRef(null)
 
   const fullDeck = useMemo(() => buildDeck(graph, nodesById), [graph, nodesById])
 
@@ -147,7 +149,7 @@ export default function Practice({ graph, nodesById, lang, onSelect, onProgress 
           )}
         </div>
       ) : (
-        <div className="pr-card">
+        <div className="pr-card" ref={cardRef}>
           <div className="pr-bar">
             <span className="pr-progress" style={{ width: ((idx / session.length) * 100) + '%' }} />
           </div>
@@ -160,10 +162,13 @@ export default function Practice({ graph, nodesById, lang, onSelect, onProgress 
               en ? (LEVELS.find((l) => l.id === card.level)?.en || card.level)
                  : (LEVELS.find((l) => l.id === card.level)?.vi || card.level)
             }</span>
+            {/* Nghe câu hỏi — và sau khi lật thì nghe luôn lời giải. Luyện phỏng
+                vấn là luyện tai lẫn miệng, nên đọc được là phần thiếu rõ nhất. */}
+            <SpeakButton boxRef={cardRef} watch={card.id + (revealed ? ':a' : ':q')} lang={lang} />
             <span className="pr-count">{idx + 1} / {session.length}</span>
           </div>
 
-          <div className="pr-question md">{md(card.question)}</div>
+          <div className="pr-question md" data-tts="vi">{md(card.question)}</div>
 
           {!revealed ? (
             <div className="pr-actions">
@@ -174,7 +179,7 @@ export default function Practice({ graph, nodesById, lang, onSelect, onProgress 
               </button>
             </div>
           ) : (
-            <div className="pr-answer">
+            <div className="pr-answer" data-tts="vi">
               {/* Lời giải của ĐÚNG câu vừa hỏi. Thẻ câu lõi lấy luôn khung 60 giây
                   làm lời giải — khung đó vốn được viết cho chính câu đó. */}
               <section>

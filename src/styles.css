@@ -1213,9 +1213,12 @@ button { font-family: inherit; font-size: inherit; cursor: pointer; }
   /* Số thứ tự đọc cỡ 9,5px ở zoom 0,7 là 6,6px — chỉ còn là nhiễu.
      Nó vẫn nằm ở sidebar và ở panel chi tiết. */
   .mind-node.is-compact .mn-num { display: none; }
-  .mind-node.is-compact .mn-icon { font-size: 13px; }
+  .mind-node.is-compact .mn-icon { font-size: 15px; }
+  .mind-node.is-compact .mn-lv { font-size: 9px; }
+  /* Chữ to hơn bản desktop một cách có chủ ý: node compact được xem ở mức zoom
+     ~0,85–0,95, nên 15px thật ra hiện ra cỡ 13px — bằng chữ desktop. */
   .mind-node.is-compact .mn-title {
-    font-size: 13px; line-height: 1.16;
+    font-size: 15px; line-height: 1.18; font-weight: 500;
     white-space: normal; overflow: hidden;
     display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical;
   }
@@ -1286,7 +1289,7 @@ button { font-family: inherit; font-size: inherit; cursor: pointer; }
 .pr-more > summary:hover { color: var(--fg-2); }
 .pr-more .pr-frame { margin-top: 6px; }
 
-/* ----------------------- đọc thành tiếng (voice EN) ---------------------- */
+/* ------------------- đọc thành tiếng (giọng VI và EN) -------------------- */
 
 /* Nút bật/tắt nằm cạnh cỡ chữ trong .panel-head */
 .tts-btn.on {
@@ -1330,6 +1333,35 @@ button { font-family: inherit; font-size: inherit; cursor: pointer; }
 }
 .tts-voice { max-width: 124px; }
 .tts-warn { font-size: 10px; color: #ffa94d; }
+
+/* Chọn ngôn ngữ đọc — chỉ hiện ở chế độ song ngữ */
+.tts-lang { display: flex; gap: 1px; flex: none; background: var(--bg-2);
+  border: 1px solid var(--line); border-radius: 6px; padding: 1px; }
+.tts-lang button {
+  background: none; border: none; color: var(--fg-3);
+  padding: 2px 7px; border-radius: 5px; font-size: 10.5px; font-weight: 600;
+}
+.tts-lang button:hover { color: var(--fg-2); }
+.tts-lang button.on { background: var(--accent); color: #0b0e15; }
+
+/* Nút đọc gọn cho thẻ luyện phỏng vấn — không có thanh điều khiển đi kèm */
+.speak-btn {
+  flex: none; margin-left: 2px;
+  background: var(--bg-3); border: 1px solid var(--bd); color: var(--fg-3);
+  width: 28px; height: 28px; border-radius: 7px; font-size: 12px; line-height: 1;
+  display: inline-flex; align-items: center; justify-content: center;
+}
+.speak-btn:hover:not(:disabled) { color: var(--fg); border-color: var(--line-2); }
+.speak-btn:disabled { opacity: .38; cursor: default; }
+.speak-btn.on {
+  color: #ffd08a;
+  border-color: rgba(240, 168, 60, .5);
+  background: rgba(240, 168, 60, .14);
+}
+/* Vùng chạm 40px trên mobile — ngón tay không bấm trúng nút 28px */
+@media (max-width: 900px) {
+  .speak-btn { width: 38px; height: 38px; font-size: 15px; }
+}
 
 .tts-auto {
   flex: none;

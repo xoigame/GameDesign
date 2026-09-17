@@ -3,7 +3,7 @@ id: screen-ranking
 title: Màn hình Bảng xếp hạng & Mùa giải
 summary: So sánh xã hội có kiểm soát — ZSET và cái bẫy của nó, hiển thị quanh vị trí người chơi thay vì top 100, chốt mùa ở worker, và cách chia hạng để đa số vẫn thấy mình đang tiến.
 status: deep
-read: 1190
+read: 991
 level: advanced
 order: 90
 tags: [screens, ranking, leaderboard, season, social]

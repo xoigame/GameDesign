@@ -3,7 +3,7 @@ id: project-postmortem
 title: Kể lại dự án trong phòng phỏng vấn
 summary: Bộ ba câu chuyện phải chuẩn bị sẵn, khung sáu ô để kể một dự án trong hai phút, cách nói về khó khăn và thất bại mà không tự hạ mình, và cách trả lời khi dự án bị huỷ.
 status: deep
-read: 980
+read: 999
 level: intermediate
 order: 80
 tags: [project, interview, career, storytelling, postmortem]

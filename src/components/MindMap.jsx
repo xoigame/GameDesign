@@ -14,12 +14,14 @@ const nodeTypes = { mind: MindNode }
  * vào khung ~375px ở mức zoom vẫn còn đọc được chữ.
  */
 const widthFor = (depth, compact) => (compact
-  ? (depth === 0 ? 178 : depth === 1 ? 170 : 160)
+  ? (depth === 0 ? 172 : depth === 1 ? 166 : 156)
   : (depth === 0 ? 250 : depth === 1 ? 228 : 206))
 const HEIGHT = 46
 const ROOT_HEIGHT = 58
-const COMPACT_HEIGHT = 40
-const COMPACT_ROOT_HEIGHT = 48
+// Cao hơn bản cũ vì chữ trên node compact được phóng to cho đọc được ở mức zoom
+// thật — xem .mind-node.is-compact trong styles.css. Hai dòng tiêu đề phải lọt.
+const COMPACT_HEIGHT = 46
+const COMPACT_ROOT_HEIGHT = 52
 
 /**
  * Tham số canh khung. Điểm mấu chốt của bản mobile là `minZoom`: thà để người
@@ -30,9 +32,14 @@ const FIT = {
   wide: { padding: 0.14, minZoom: 0.12, maxZoom: 1.3 },
   // Trên mobile thanh công cụ nằm đè lên mép trên canvas, nên chừa chỗ cho nó —
   // nếu không, node gốc chui xuống dưới thanh ngay khi vừa mở trang.
+  //
+  // `minZoom` cao là quyết định có chủ ý: canh khung cho VỪA HẾT bản đồ trên màn
+  // 375px đồng nghĩa với chữ 8–9px. Thà cắt bớt phần rìa và để người dùng vuốt —
+  // vuốt thì ai cũng biết làm, còn chữ nhỏ thì không cứu được. Nút ⛶ ở góc dưới
+  // phải vẫn cho xem toàn cảnh khi cần.
   compact: {
-    padding: { top: '58px', right: '12px', bottom: '16px', left: '12px' },
-    minZoom: 0.6,
+    padding: { top: '58px', right: '10px', bottom: '14px', left: '10px' },
+    minZoom: 0.85,
     maxZoom: 1.15,
   },
 }
@@ -113,7 +120,13 @@ export default function MindMap({
 
       let x
       let y = p.y - h / 2
-      if (isRoot) { x = -w / 2; y = -h / 2 }
+      // Kiểu 'tree' trên màn hẹp: dồn gốc sát mép trái thay vì căn giữa quanh x=0.
+      // Nửa node gốc thò sang trái là ~90px bề ngang chết, và trên khung 375px thì
+      // 90px đó đổi thẳng thành ~20% mức zoom.
+      if (isRoot) {
+        x = (compact && mode === 'tree') ? 0 : -w / 2
+        y = -h / 2
+      }
       else if (mode === 'radial') { x = p.x - w / 2 }
       else if (p.side === 'left') { x = p.x - w }
       else { x = p.x }

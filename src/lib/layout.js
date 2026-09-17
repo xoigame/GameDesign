@@ -17,7 +17,7 @@ import { hierarchy, tree } from 'd3-hierarchy'
  */
 export const GAP = {
   wide:    { y: 58, x: 300 },   // y = dọc giữa 2 node anh em, x = ngang giữa 2 tầng
-  compact: { y: 50, x: 196 },
+  compact: { y: 56, x: 205 },
 }
 
 function buildTree(nodesById, rootId, isCollapsed, childFilter) {

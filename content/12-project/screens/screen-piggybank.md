@@ -3,7 +3,7 @@ id: screen-piggybank
 title: Màn hình Piggy Bank & gói ưu đãi
 summary: Biến việc chơi nhiều thành lý do mua đúng một lần — luật tích luỹ, trần heo, giá trị hiển thị trung thực, và ranh giới giữa ưu đãi có sức thuyết phục và ưu đãi gây áp lực.
 status: deep
-read: 1160
+read: 988
 level: advanced
 order: 60
 tags: [screens, piggybank, offer, monetization, retention]

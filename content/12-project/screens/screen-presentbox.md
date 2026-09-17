@@ -3,7 +3,7 @@ id: screen-presentbox
 title: Màn hình Hộp quà
 summary: Kênh một chiều từ vận hành tới người chơi — đền bù khi có sự cố, phần thưởng không nhét được vào túi, hạn nhận và luật không bao giờ mất, cùng lý do phải làm nó rất sớm.
 status: deep
-read: 1150
+read: 987
 level: intermediate
 order: 50
 tags: [screens, mailbox, present, liveops, compensation]

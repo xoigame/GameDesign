@@ -3,7 +3,7 @@ id: screen-mission
 title: Màn hình Nhiệm vụ & Battle Pass
 summary: Cho lý do quay lại hôm nay mà không biến game thành nghĩa vụ — ba tầng nhiệm vụ, tiến độ tính ở server theo sự kiện, mốc reset theo giờ server, và luật nhận thưởng không mất.
 status: deep
-read: 1140
+read: 986
 level: intermediate
 order: 40
 tags: [screens, mission, quest, battle-pass, retention]

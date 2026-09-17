@@ -3,7 +3,7 @@ id: screen-home
 title: Màn hình Home
 summary: Trung tâm điều hướng phải trả lời "giờ tôi nên làm gì" trong hai giây — ba vùng bố cục, một hành động chính, luật chấm đỏ, và vì sao Home là nơi mọi tính năng tranh chỗ.
 status: deep
-read: 1110
+read: 983
 level: intermediate
 order: 10
 tags: [screens, home, navigation, ux, retention]
