@@ -154,6 +154,7 @@ Chi tiết ở [[unity-save-data]]. Điểm nối với node này: nếu dữ li
 - **Backfill dựa trên offset.** Worker chết giữa chừng là bỏ sót hoặc làm trùng.
 - **Save không có version.** Bản thứ hai đã kẹt và không có đường ra sạch.
 - **Chỉ test migration trên bảng rỗng.** Thứ chết người là thời gian khoá trên dữ liệu thật.
+- **Cột mốc thời gian dùng độ chính xác giây trên MySQL.** `DATETIME(0)` bị làm tròn khi ghi: `UPDATE` đúng lúc `23:59:59.6` bị làm tròn lên `00:00:00` hôm sau, và một cột như "lần đăng nhập cuối" âm thầm nhảy sang ngày kế tiếp — người chơi đăng nhập hôm nay lại được tính là đăng nhập ngày mai. Quy tắc thực dụng: cột bị `UPDATE` nhiều lần dùng `DATETIME(6)`; chỉ cột ghi đúng một lần lúc tạo dòng (`created_at`) mới an toàn ở độ chính xác giây.
 
 ## 🤖 Prompt cho AI
 

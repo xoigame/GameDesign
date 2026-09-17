@@ -100,6 +100,8 @@ Hai kiểu gộp sai kinh điển: giữ inventory trong RAM của phòng cho nh
 
 Luật: **room server không được ghi vào nguồn chân lý.** Nó gửi kết quả trận qua API, API ghi trong transaction. Một đường ghi duy nhất, dễ đối soát, dễ tìm thủ phạm khi số liệu lệch.
 
+**Một biến thể hay gặp trong dự án thật: một service đẩy thông báo riêng.** Nó không thuộc hẳn vào ba loại trên — không giữ state nghiệp vụ như room server, nhưng cũng không stateless hoàn toàn như API vì phải giữ kết nối sống tới từng client (WebSocket hoặc stream gRPC) để đẩy được. Việc của nó: nhận sự kiện nội bộ từ API, room server, hay chat server — "có thư mới", "trận đã ghép xong", "bạn bè online" — rồi đẩy xuống đúng client đang mở kết nối, hoặc gọi push provider nếu app đang đóng. Tách nó ra khỏi API mang lại một lợi ích cụ thể: thêm một backend mới muốn báo cho người chơi (ví dụ hệ thống guild) chỉ cần gọi vào service này, không phải sửa lại tầng kết nối client đã có ở mọi nơi khác. Cái giá là thêm một process phải vận hành, và một giao thức nội bộ phải version cùng lúc với phần còn lại.
+
 ## Ranh giới đổi được và không đổi được
 
 | Đổi sau này | Chi phí | Vì sao chịu được |

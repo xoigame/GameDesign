@@ -4,7 +4,7 @@
 > Đây là mục lục phẳng của toàn bộ kho kiến thức, dành cho AI agent (Codex / Claude Code)
 > đọc nhanh trước khi mở từng file `content/**/*.md` chi tiết.
 
-Cập nhật: `2026-09-17T08:37:28.787Z` · 167 node · 167 deep · 0 stub · 490038 từ
+Cập nhật: `2026-09-17T08:57:08.812Z` · 167 node · 167 deep · 0 stub · 490392 từ
 
 Mức độ: **37 cơ bản** · 82 trung cấp · 48 chuyên sâu
 
@@ -1257,6 +1257,7 @@ thức cơ bản (ai cũng nên đọc), trung cấp (cần nền), hay chuyên 
 - `#screen-inventory` ↔ `#screen-presentbox` (mention)
 - `#screen-piggybank` ↔ `#screen-home` (mention)
 - `#screen-piggybank` ↔ `#screen-mission` (mention)
+- `#screen-presentbox` ↔ `#project-architecture` (mention)
 - `#screen-presentbox` ↔ `#go-deploy-ops` (mention)
 - `#screen-presentbox` ↔ `#project-migration` (mention)
 - `#screen-ranking` ↔ `#go-deploy-ops` (mention)

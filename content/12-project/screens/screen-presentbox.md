@@ -59,6 +59,8 @@ Nhưng hạn nhận cũng là chỗ dễ làm người chơi tức giận nhất
 3. **Cảnh báo trước khi hết hạn**, ít nhất một lần, qua chấm đỏ và thông báo đẩy nếu có.
 4. **Đừng đặt hạn cho thứ đã trả tiền.** Vật phẩm mua bằng tiền thật mà hết hạn trong hộp quà là chuyện không giải thích được với ai.
 
+Về mặt kỹ thuật, chấm đỏ và thông báo đẩy ở luật 3 thường không đến thẳng từ chính service ghi hộp quà. Trong dự án thật, việc này hay tách thành một service đẩy thông báo riêng (xem [[project-architecture]]): service ghi thư chỉ ghi vào database rồi bắn một sự kiện nội bộ "có thư mới", service kia nhận sự kiện đó và lo việc đẩy xuống client đang mở kết nối hoặc gọi push provider. Tách hai việc này nghĩa là ghi thư không bao giờ chậm hay lỗi vì một lần gọi push timeout.
+
 ## Ô 5 — API và chống nhận hai lần
 
 ```
