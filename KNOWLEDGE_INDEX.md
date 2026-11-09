@@ -4,9 +4,9 @@
 > Đây là mục lục phẳng của toàn bộ kho kiến thức, dành cho AI agent (Codex / Claude Code)
 > đọc nhanh trước khi mở từng file `content/**/*.md` chi tiết.
 
-Cập nhật: `2026-11-09T03:07:00.628Z` · 185 node · 185 deep · 0 stub · 595596 từ
+Cập nhật: `2026-11-09T09:00:27.488Z` · 189 node · 189 deep · 0 stub · 618240 từ
 
-Mức độ: **38 cơ bản** · 94 trung cấp · 53 chuyên sâu
+Mức độ: **38 cơ bản** · 96 trung cấp · 55 chuyên sâu
 
 ## Lộ trình đọc
 
@@ -186,20 +186,24 @@ thức cơ bản (ai cũng nên đọc), trung cấp (cần nền), hay chuyên 
 | 169 | **Vòng 1 — Giải thuật code 3 câu** `#interview-algorithm` | Trung cấp | deep | `content/15-interview/interview-algorithm.md` |
 | 170 | **Đề thi thử vòng 1 — 15 bài có lời giải** `#interview-algorithm-set2` | Trung cấp | deep | `content/15-interview/interview-algorithm-set2.md` |
 | 171 | **OOP, design pattern và toán 2D/3D** `#interview-oop-math` | Trung cấp | deep | `content/15-interview/interview-oop-math.md` |
-| 172 | **Vòng 2 — Phỏng vấn theo CV** `#interview-cv` | Trung cấp | deep | `content/15-interview/interview-cv.md` |
-| 173 | **Ngân hàng câu hỏi kỹ thuật Unity** `#interview-unity-tech` | Trung cấp | deep | `content/15-interview/interview-unity-tech.md` |
-| 174 | **Đồ hoạ, shader và render pipeline** `#interview-graphics` | Chuyên sâu | deep | `content/15-interview/interview-graphics.md` |
-| 175 | **Client game live-service — câu hỏi phỏng vấn** `#interview-live-service` | Chuyên sâu | deep | `content/15-interview/interview-live-service.md` |
-| 176 | **Nền tảng mobile Android và iOS** `#interview-mobile-platform` | Trung cấp | deep | `content/15-interview/interview-mobile-platform.md` |
-| 177 | **Thiết kế hệ thống phía client** `#interview-system-design` | Chuyên sâu | deep | `content/15-interview/interview-system-design.md` |
-| 178 | **Mạng và multiplayer realtime** `#interview-multiplayer` | Chuyên sâu | deep | `content/15-interview/interview-multiplayer.md` |
-| 179 | **Vòng 3 — Xử lý công việc và tình huống** `#interview-situations` | Trung cấp | deep | `content/15-interview/interview-situations.md` |
-| 180 | **Tình huống debug và tối ưu — "game bị X, anh làm gì?** `#interview-debug-cases` | Chuyên sâu | deep | `content/15-interview/interview-debug-cases.md` |
-| 181 | **Git, quy trình làm việc và testing** `#interview-process` | Trung cấp | deep | `content/15-interview/interview-process.md` |
-| 182 | **Vòng 4 — Tính cách, thành công, thất bại và game của họ** `#interview-personality` | Cơ bản | deep | `content/15-interview/interview-personality.md` |
-| 183 | **Cảm quan sản phẩm — nói về game như người làm game** `#interview-game-sense` | Trung cấp | deep | `content/15-interview/interview-game-sense.md` |
-| 184 | **Dùng AI để làm game — câu hỏi phỏng vấn** `#interview-ai-gamedev` | Trung cấp | deep | `content/15-interview/interview-ai-gamedev.md` |
-| 185 | **Anh có biết Cocos Creator không?** `#interview-cocos` | Trung cấp | deep | `content/15-interview/interview-cocos.md` |
+| 172 | **Ngân hàng câu hỏi C# cho game developer** `#interview-csharp-bank` | Trung cấp | deep | `content/15-interview/interview-csharp-bank.md` |
+| 173 | **Vòng 2 — Phỏng vấn theo CV** `#interview-cv` | Trung cấp | deep | `content/15-interview/interview-cv.md` |
+| 174 | **Unity scripting chuyên sâu** `#interview-unity-scripting` | Trung cấp | deep | `content/15-interview/interview-unity-scripting.md` |
+| 175 | **Bẫy ở chỗ Unity gặp C#** `#interview-unity-csharp-traps` | Chuyên sâu | deep | `content/15-interview/interview-unity-csharp-traps.md` |
+| 176 | **Ngân hàng câu hỏi kỹ thuật Unity** `#interview-unity-tech` | Trung cấp | deep | `content/15-interview/interview-unity-tech.md` |
+| 177 | **Đồ hoạ, shader và render pipeline** `#interview-graphics` | Chuyên sâu | deep | `content/15-interview/interview-graphics.md` |
+| 178 | **Client game live-service — câu hỏi phỏng vấn** `#interview-live-service` | Chuyên sâu | deep | `content/15-interview/interview-live-service.md` |
+| 179 | **Nền tảng mobile Android và iOS** `#interview-mobile-platform` | Trung cấp | deep | `content/15-interview/interview-mobile-platform.md` |
+| 180 | **Thiết kế hệ thống phía client** `#interview-system-design` | Chuyên sâu | deep | `content/15-interview/interview-system-design.md` |
+| 181 | **Mạng và multiplayer realtime** `#interview-multiplayer` | Chuyên sâu | deep | `content/15-interview/interview-multiplayer.md` |
+| 182 | **Vòng 3 — Xử lý công việc và tình huống** `#interview-situations` | Trung cấp | deep | `content/15-interview/interview-situations.md` |
+| 183 | **Đoán output C# — 30 câu đố "in ra gì, vì sao** `#interview-csharp-output` | Chuyên sâu | deep | `content/15-interview/interview-csharp-output.md` |
+| 184 | **Tình huống debug và tối ưu — "game bị X, anh làm gì?** `#interview-debug-cases` | Chuyên sâu | deep | `content/15-interview/interview-debug-cases.md` |
+| 185 | **Git, quy trình làm việc và testing** `#interview-process` | Trung cấp | deep | `content/15-interview/interview-process.md` |
+| 186 | **Vòng 4 — Tính cách, thành công, thất bại và game của họ** `#interview-personality` | Cơ bản | deep | `content/15-interview/interview-personality.md` |
+| 187 | **Cảm quan sản phẩm — nói về game như người làm game** `#interview-game-sense` | Trung cấp | deep | `content/15-interview/interview-game-sense.md` |
+| 188 | **Dùng AI để làm game — câu hỏi phỏng vấn** `#interview-ai-gamedev` | Trung cấp | deep | `content/15-interview/interview-ai-gamedev.md` |
+| 189 | **Anh có biết Cocos Creator không?** `#interview-cocos` | Trung cấp | deep | `content/15-interview/interview-cocos.md` |
 
 ## Cây kiến thức
 
@@ -373,21 +377,25 @@ thức cơ bản (ai cũng nên đọc), trung cấp (cần nền), hay chuyên 
   - ◐ `#168` **Phỏng vấn game developer** `#interview` 🤖 🎤 🗺 — Nhánh ôn phỏng vấn theo đúng lịch bốn vòng của một studio game Nhật — giải thuật, CV, tình huống công việc, tính cách — kèm câu "có biết Cocos Creator không". Mỗi node có bộ thẻ 🎤 để luyện nói ra miệng. → `content/15-interview/index.md`
     - ◐ `#169` **Vòng 1 — Giải thuật code 3 câu** `#interview-algorithm` 🤖 💻 🎤 — Đề thi giải thuật ba câu (dễ–vừa–khó, 60–90 phút) thường ra những dạng nào, cách phân giờ, mười dạng lõi cộng thêm các dạng mở rộng (heap, union-find, topo sort, Dijkstra, DP chuỗi, bit, mô phỏng), bài mang màu game, mẹo C# cho thi online, lộ trình ôn 5–7 ngày và 19 lời giải C# chạy được. → `content/15-interview/interview-algorithm.md`
     - ◐ `#170` **Đề thi thử vòng 1 — 15 bài có lời giải** `#interview-algorithm-set2` 🤖 💻 🎤 — Bộ đề luyện bấm giờ cho vòng giải thuật ba câu — ba đề thi thử (dễ–vừa–khó) cộng sáu bài lẻ, phát biểu như đề thật với input/output/ràng buộc, mang màu game (túi đồ, bảng xếp hạng, hầm ngục, quest phụ thuộc, đếm đường đi), mỗi bài có gợi ý, lời giải, độ phức tạp, bẫy biên và một file C# chạy kiểm cả 15 bài. → `content/15-interview/interview-algorithm-set2.md`
+    - ◐ `#172` **Ngân hàng câu hỏi C# cho game developer** `#interview-csharp-bank` 🤖 🎤 — Bảng ôn nhanh 12 chủ đề C# và khoảng 48 câu hỏi có lời giải, trộn Junior/Mid/Senior, viết cho vòng phỏng vấn hỏi sâu ngôn ngữ của một Mobile Game Developer dùng Unity. → `content/15-interview/interview-csharp-bank.md`
     - ◐ `#171` **OOP, design pattern và toán 2D/3D** `#interview-oop-math` 🤖 💻 🎤 — Ngân hàng câu hỏi và kiến thức cô đọng cho ba mảng studio game hay hỏi ngoài giải thuật — OOP và SOLID, các design pattern dùng thật trong game, toán vector/quaternion/va chạm — kèm demo C# console chạy được và 33 câu hỏi đáp có lời giải. → `content/15-interview/interview-oop-math.md`
-    - ◐ `#172` **Vòng 2 — Phỏng vấn theo CV** `#interview-cv` 🤖 🎤 — Người phỏng vấn đào từng dòng trong CV để xem bạn thật sự làm tới đâu. Cách biến mỗi dòng CV thành một câu chuyện STAR có số, bốn câu chuyện bắt buộc phải chuẩn bị, và các câu kỹ thuật Unity live-service sẽ bị hỏi theo đúng những gì CV ghi. → `content/15-interview/interview-cv.md`
-    - ◐ `#173` **Ngân hàng câu hỏi kỹ thuật Unity** `#interview-unity-tech` 🤖 🎤 — Mười hai chủ đề kỹ thuật Unity mà vòng phỏng vấn theo CV hay đào — vòng đời, GC, rendering, bộ nhớ, asset, uGUI, vật lý, animation, shader, build mobile, debug và kiến trúc — mỗi chủ đề có bảng câu hỏi kèm ý bắt buộc phải chạm, cuối node là bộ thẻ luyện nói. → `content/15-interview/interview-unity-tech.md`
-    - ○ `#174` **Đồ hoạ, shader và render pipeline** `#interview-graphics` 🤖 💻 🎤 — Mười hai chủ đề đồ hoạ realtime cho vòng phỏng vấn studio game anime — pipeline GPU, URP, shader, ánh sáng, toon shading, trong suốt, post-process, Render Graph, 2D/Spine, texture, GPU profiling trên mobile TBDR, VFX — kèm một shader toon URP chạy được và bộ thẻ luyện nói. → `content/15-interview/interview-graphics.md`
-    - ○ `#175` **Client game live-service — câu hỏi phỏng vấn** `#interview-live-service` 🤖 🎤 — Ngân hàng câu hỏi và kiến thức cô đọng về client game live-service — ranh giới client/server, boot và master data, mạng, gacha, IAP, event/collab, màn hình meta, save, co-op realtime, vận hành, kiến trúc client — cho vòng phỏng vấn hỏi theo CV. → `content/15-interview/interview-live-service.md`
-    - ◐ `#176` **Nền tảng mobile Android và iOS** `#interview-mobile-platform` 🤖 🎤 — Mười hai mảng nền tảng mà game dev Unity bị hỏi khi vị trí ghi điểm cộng "app native" — vòng đời app, bộ nhớ và nhiệt, build Android/iOS, native plugin, push, IAP, store review, crash native — kèm cách nói trung thực về mức native của mình. → `content/15-interview/interview-mobile-platform.md`
-    - ○ `#177` **Thiết kế hệ thống phía client** `#interview-system-design` 🤖 🎤 — Phương pháp trả lời năm bước và mười ba bài thiết kế hệ thống client game có lời giải mẫu (inventory, quest, buff, save, UI stack, tutorial, combat turn-based, red dot, tải asset, localization, input, event bus, replay) cho vòng phỏng vấn senior. → `content/15-interview/interview-system-design.md`
-    - ○ `#178` **Mạng và multiplayer realtime** `#interview-multiplayer` 🤖 🎤 — Ngân hàng câu hỏi và kiến thức cô đọng về mạng và multiplayer realtime cho phỏng vấn client — giao thức, topology, đồng bộ, che độ trễ, chống gian lận, deterministic, matchmaking, co-op raid, băng thông, test mạng, chat/guild. → `content/15-interview/interview-multiplayer.md`
-    - ◐ `#179` **Vòng 3 — Xử lý công việc và tình huống** `#interview-situations` 🤖 🎤 — Vòng hỏi "nếu… thì anh làm gì": deadline không kịp, bug nóng trên production, spec mơ hồ, bất đồng với đồng nghiệp, việc bị giao chồng. Khung trả lời bốn bước và mười tình huống hay gặp ở studio game làm với đối tác Nhật. → `content/15-interview/interview-situations.md`
-    - ○ `#180` **Tình huống debug và tối ưu — "game bị X, anh làm gì?** `#interview-debug-cases` 🤖 🎤 — Hai mươi tình huống sự cố kỹ thuật hay được hỏi khi phỏng vấn Unity mobile — tụt fps, giật khi mở màn, crash vì bộ nhớ, máy nóng, lỗi chỉ có trên build, bug không tái hiện được — mỗi cái có giả thuyết, công cụ đo, nguyên nhân hay gặp và cách sửa. → `content/15-interview/interview-debug-cases.md`
-    - ◐ `#181` **Git, quy trình làm việc và testing** `#interview-process` 🤖 🎤 — Câu hỏi về cách làm việc trong đội game — Git và xung đột scene/prefab, nhánh và release, code review, CI build, test tự động trong Unity, QA, ước lượng và sprint. Thứ người phỏng vấn dùng để biết bạn có vào đội là chạy được ngay không. → `content/15-interview/interview-process.md`
-    - ● `#182` **Vòng 4 — Tính cách, thành công, thất bại và game của họ** `#interview-personality` 🤖 🎤 — Vòng cuối hỏi con người: kể một thành công và một thất bại, đã chơi game của công ty chưa, game nào ấn tượng nhất và ấn tượng ở điểm nào. Cách chuẩn bị câu chuyện thất bại không tự bắn vào chân, và cách phân tích một game để nói như người làm game chứ không như người chơi. → `content/15-interview/interview-personality.md`
-    - ◐ `#183` **Cảm quan sản phẩm — nói về game như người làm game** `#interview-game-sense` 🤖 🎤 — Từ vựng chỉ số (retention, ARPDAU, LTV, funnel), kinh tế gacha, live-ops, game feel và onboarding dưới góc nhìn developer — để trả lời "ấn tượng điểm nào, anh sẽ cải thiện gì" bằng cơ chế và số đo, không bằng cảm giác. → `content/15-interview/interview-game-sense.md`
-    - ◐ `#184` **Dùng AI để làm game — câu hỏi phỏng vấn** `#interview-ai-gamedev` 🤖 🎤 — Câu hỏi về việc dùng AI trong chính công việc làm game — agent viết code Unity, Unity MCP, hệ nhiều agent có vai kiểm tra, asset do AI tạo và rủi ro bản quyền với game IP, AI cho localization, test và tài liệu — cách kể kinh nghiệm thật mà không làm người phỏng vấn lo. → `content/15-interview/interview-ai-gamedev.md`
-    - ◐ `#185` **Anh có biết Cocos Creator không?** `#interview-cocos` 🤖 🎤 — Cách trả lời trung thực mà mạnh khi nhà tuyển dụng hỏi về Cocos Creator lúc mình chủ yếu là Unity — kinh nghiệm thật nhưng cũ (2.x), TypeScript cho người viết C#, vòng đời, sự kiện, asset, UI, Spine, build, hot update, cocos2d-x, bảng Unity → Cocos, khác biệt 2.x → 3.x và kế hoạch ôn 3 ngày kèm mini project. → `content/15-interview/interview-cocos.md`
+    - ◐ `#173` **Vòng 2 — Phỏng vấn theo CV** `#interview-cv` 🤖 🎤 — Người phỏng vấn đào từng dòng trong CV để xem bạn thật sự làm tới đâu. Cách biến mỗi dòng CV thành một câu chuyện STAR có số, bốn câu chuyện bắt buộc phải chuẩn bị, và các câu kỹ thuật Unity live-service sẽ bị hỏi theo đúng những gì CV ghi. → `content/15-interview/interview-cv.md`
+    - ◐ `#174` **Unity scripting chuyên sâu** `#interview-unity-scripting` 🤖 🎤 — Phần engine API dev Unity dùng hằng ngày nhưng hay bị hỏi sâu - vòng đời, serialization, ScriptableObject, prefab, coroutine, Time, scene, Job System, Editor scripting, Enter Play Mode Options. → `content/15-interview/interview-unity-scripting.md`
+    - ○ `#175` **Bẫy ở chỗ Unity gặp C#** `#interview-unity-csharp-traps` 🤖 🎤 — Những chỗ C# trong Unity hành xử khác C# thuần mà người phỏng vấn rất thích hỏi — null giả và toán tử ?., Destroy cuối frame, async/await với object đã huỷ, IL2CPP và AOT, bẫy serialization, static không reset khi tắt domain reload, struct trả về qua property, chuỗi trong API. → `content/15-interview/interview-unity-csharp-traps.md`
+    - ◐ `#176` **Ngân hàng câu hỏi kỹ thuật Unity** `#interview-unity-tech` 🤖 🎤 — Mười hai chủ đề kỹ thuật Unity mà vòng phỏng vấn theo CV hay đào — vòng đời, GC, rendering, bộ nhớ, asset, uGUI, vật lý, animation, shader, build mobile, debug và kiến trúc — mỗi chủ đề có bảng câu hỏi kèm ý bắt buộc phải chạm, cuối node là bộ thẻ luyện nói. → `content/15-interview/interview-unity-tech.md`
+    - ○ `#177` **Đồ hoạ, shader và render pipeline** `#interview-graphics` 🤖 💻 🎤 — Mười hai chủ đề đồ hoạ realtime cho vòng phỏng vấn studio game anime — pipeline GPU, URP, shader, ánh sáng, toon shading, trong suốt, post-process, Render Graph, 2D/Spine, texture, GPU profiling trên mobile TBDR, VFX — kèm một shader toon URP chạy được và bộ thẻ luyện nói. → `content/15-interview/interview-graphics.md`
+    - ○ `#178` **Client game live-service — câu hỏi phỏng vấn** `#interview-live-service` 🤖 🎤 — Ngân hàng câu hỏi và kiến thức cô đọng về client game live-service — ranh giới client/server, boot và master data, mạng, gacha, IAP, event/collab, màn hình meta, save, co-op realtime, vận hành, kiến trúc client — cho vòng phỏng vấn hỏi theo CV. → `content/15-interview/interview-live-service.md`
+    - ◐ `#179` **Nền tảng mobile Android và iOS** `#interview-mobile-platform` 🤖 🎤 — Mười hai mảng nền tảng mà game dev Unity bị hỏi khi vị trí ghi điểm cộng "app native" — vòng đời app, bộ nhớ và nhiệt, build Android/iOS, native plugin, push, IAP, store review, crash native — kèm cách nói trung thực về mức native của mình. → `content/15-interview/interview-mobile-platform.md`
+    - ○ `#180` **Thiết kế hệ thống phía client** `#interview-system-design` 🤖 🎤 — Phương pháp trả lời năm bước và mười ba bài thiết kế hệ thống client game có lời giải mẫu (inventory, quest, buff, save, UI stack, tutorial, combat turn-based, red dot, tải asset, localization, input, event bus, replay) cho vòng phỏng vấn senior. → `content/15-interview/interview-system-design.md`
+    - ○ `#181` **Mạng và multiplayer realtime** `#interview-multiplayer` 🤖 🎤 — Ngân hàng câu hỏi và kiến thức cô đọng về mạng và multiplayer realtime cho phỏng vấn client — giao thức, topology, đồng bộ, che độ trễ, chống gian lận, deterministic, matchmaking, co-op raid, băng thông, test mạng, chat/guild. → `content/15-interview/interview-multiplayer.md`
+    - ◐ `#182` **Vòng 3 — Xử lý công việc và tình huống** `#interview-situations` 🤖 🎤 — Vòng hỏi "nếu… thì anh làm gì": deadline không kịp, bug nóng trên production, spec mơ hồ, bất đồng với đồng nghiệp, việc bị giao chồng. Khung trả lời bốn bước và mười tình huống hay gặp ở studio game làm với đối tác Nhật. → `content/15-interview/interview-situations.md`
+    - ○ `#184` **Tình huống debug và tối ưu — "game bị X, anh làm gì?** `#interview-debug-cases` 🤖 🎤 — Hai mươi tình huống sự cố kỹ thuật hay được hỏi khi phỏng vấn Unity mobile — tụt fps, giật khi mở màn, crash vì bộ nhớ, máy nóng, lỗi chỉ có trên build, bug không tái hiện được — mỗi cái có giả thuyết, công cụ đo, nguyên nhân hay gặp và cách sửa. → `content/15-interview/interview-debug-cases.md`
+    - ○ `#183` **Đoán output C# — 30 câu đố "in ra gì, vì sao** `#interview-csharp-output` 🤖 💻 🎤 — Ba mươi đoạn C# ngắn kiểu vòng 1 code — closure trong vòng lặp, struct copy, string interning, boxing, thứ tự khởi tạo, deferred execution, finally, async, overflow, làm tròn, delegate, record — mỗi câu có đáp án đã chạy thật trên .NET 10, lý do, và chỗ bẫy này cắn vào game Unity. → `content/15-interview/interview-csharp-output.md`
+    - ◐ `#185` **Git, quy trình làm việc và testing** `#interview-process` 🤖 🎤 — Câu hỏi về cách làm việc trong đội game — Git và xung đột scene/prefab, nhánh và release, code review, CI build, test tự động trong Unity, QA, ước lượng và sprint. Thứ người phỏng vấn dùng để biết bạn có vào đội là chạy được ngay không. → `content/15-interview/interview-process.md`
+    - ● `#186` **Vòng 4 — Tính cách, thành công, thất bại và game của họ** `#interview-personality` 🤖 🎤 — Vòng cuối hỏi con người: kể một thành công và một thất bại, đã chơi game của công ty chưa, game nào ấn tượng nhất và ấn tượng ở điểm nào. Cách chuẩn bị câu chuyện thất bại không tự bắn vào chân, và cách phân tích một game để nói như người làm game chứ không như người chơi. → `content/15-interview/interview-personality.md`
+    - ◐ `#187` **Cảm quan sản phẩm — nói về game như người làm game** `#interview-game-sense` 🤖 🎤 — Từ vựng chỉ số (retention, ARPDAU, LTV, funnel), kinh tế gacha, live-ops, game feel và onboarding dưới góc nhìn developer — để trả lời "ấn tượng điểm nào, anh sẽ cải thiện gì" bằng cơ chế và số đo, không bằng cảm giác. → `content/15-interview/interview-game-sense.md`
+    - ◐ `#188` **Dùng AI để làm game — câu hỏi phỏng vấn** `#interview-ai-gamedev` 🤖 🎤 — Câu hỏi về việc dùng AI trong chính công việc làm game — agent viết code Unity, Unity MCP, hệ nhiều agent có vai kiểm tra, asset do AI tạo và rủi ro bản quyền với game IP, AI cho localization, test và tài liệu — cách kể kinh nghiệm thật mà không làm người phỏng vấn lo. → `content/15-interview/interview-ai-gamedev.md`
+    - ◐ `#189` **Anh có biết Cocos Creator không?** `#interview-cocos` 🤖 🎤 — Cách trả lời trung thực mà mạnh khi nhà tuyển dụng hỏi về Cocos Creator lúc mình chủ yếu là Unity — kinh nghiệm thật nhưng cũ (2.x), TypeScript cho người viết C#, vòng đời, sự kiện, asset, UI, Spine, build, hot update, cocos2d-x, bảng Unity → Cocos, khác biệt 2.x → 3.x và kế hoạch ôn 3 ngày kèm mini project. → `content/15-interview/interview-cocos.md`
 
 > **Ký hiệu:** ● cơ bản · ◐ trung cấp · ○ chuyên sâu · `#N` = thứ tự trong lộ trình đọc
 >
@@ -965,6 +973,18 @@ thức cơ bản (ai cũng nên đọc), trung cấp (cần nền), hay chuyên 
 - `#interview-cocos` ↔ `#cocos-scene-component` (related)
 - `#interview-cocos` ↔ `#cocos-assets-bundle` (related)
 - `#interview-cocos` ↔ `#cocos-optimization` (related)
+- `#interview-csharp-bank` ↔ `#csharp-interview-kit` (related)
+- `#interview-csharp-bank` ↔ `#csharp-type-system` (related)
+- `#interview-csharp-bank` ↔ `#csharp-memory` (related)
+- `#interview-csharp-bank` ↔ `#interview-oop-math` (related)
+- `#interview-csharp-output` ↔ `#interview-unity-tech` (related)
+- `#interview-csharp-output` ↔ `#interview-oop-math` (related)
+- `#interview-csharp-output` ↔ `#csharp-type-system` (related)
+- `#interview-csharp-output` ↔ `#csharp-delegate-event` (related)
+- `#interview-csharp-output` ↔ `#csharp-linq` (related)
+- `#interview-csharp-output` ↔ `#csharp-exception-null` (related)
+- `#interview-csharp-output` ↔ `#csharp-async` (related)
+- `#interview-csharp-output` ↔ `#csharp-collections` (related)
 - `#interview-cv` ↔ `#interview` (related)
 - `#interview-cv` ↔ `#project-postmortem` (related)
 - `#interview-cv` ↔ `#csharp-interview-kit` (related)
@@ -1022,6 +1042,15 @@ thức cơ bản (ai cũng nên đọc), trung cấp (cần nền), hay chuyên 
 - `#interview-system-design` ↔ `#interview-oop-math` (related)
 - `#interview-system-design` ↔ `#architecture-patterns` (related)
 - `#interview-system-design` ↔ `#data-driven-design` (related)
+- `#interview-unity-csharp-traps` ↔ `#interview-unity-tech` (related)
+- `#interview-unity-csharp-traps` ↔ `#csharp-exception-null` (related)
+- `#interview-unity-csharp-traps` ↔ `#csharp-async` (related)
+- `#interview-unity-csharp-traps` ↔ `#unity-csharp-memory` (related)
+- `#interview-unity-csharp-traps` ↔ `#unity-build-platform` (related)
+- `#interview-unity-scripting` ↔ `#interview-unity-tech` (related)
+- `#interview-unity-scripting` ↔ `#unity-game-loop` (related)
+- `#interview-unity-scripting` ↔ `#unity-design-patterns` (related)
+- `#interview-unity-scripting` ↔ `#unity-save-data` (related)
 - `#interview-unity-tech` ↔ `#interview-cv` (related)
 - `#interview-unity-tech` ↔ `#csharp-interview-kit` (related)
 - `#interview-unity-tech` ↔ `#unity-optimization` (related)
@@ -1433,6 +1462,10 @@ thức cơ bản (ai cũng nên đọc), trung cấp (cần nền), hay chuyên 
 - `#interview` ↔ `#interview-algorithm` (mention)
 - `#interview` ↔ `#interview-algorithm-set2` (mention)
 - `#interview` ↔ `#interview-oop-math` (mention)
+- `#interview` ↔ `#interview-csharp-output` (mention)
+- `#interview` ↔ `#interview-csharp-bank` (mention)
+- `#interview` ↔ `#interview-unity-scripting` (mention)
+- `#interview` ↔ `#interview-unity-csharp-traps` (mention)
 - `#interview` ↔ `#interview-unity-tech` (mention)
 - `#interview` ↔ `#interview-live-service` (mention)
 - `#interview` ↔ `#interview-multiplayer` (mention)
@@ -1457,6 +1490,15 @@ thức cơ bản (ai cũng nên đọc), trung cấp (cần nền), hay chuyên 
 - `#interview-cocos` ↔ `#cocos-animation-audio` (mention)
 - `#interview-cocos` ↔ `#cocos-ui` (mention)
 - `#interview-cocos` ↔ `#cocos-minigame` (mention)
+- `#interview-csharp-bank` ↔ `#csharp-modern` (mention)
+- `#interview-csharp-bank` ↔ `#csharp-collections` (mention)
+- `#interview-csharp-bank` ↔ `#csharp-oop-interface` (mention)
+- `#interview-csharp-bank` ↔ `#csharp-generic` (mention)
+- `#interview-csharp-bank` ↔ `#csharp-delegate-event` (mention)
+- `#interview-csharp-bank` ↔ `#csharp-linq` (mention)
+- `#interview-csharp-bank` ↔ `#csharp-exception-null` (mention)
+- `#interview-csharp-bank` ↔ `#csharp-async` (mention)
+- `#interview-csharp-bank` ↔ `#csharp-threading` (mention)
 - `#interview-cv` ↔ `#unity-optimization` (mention)
 - `#interview-cv` ↔ `#unity-gpu-optimization` (mention)
 - `#interview-cv` ↔ `#unity-memory-optimization` (mention)
@@ -1527,6 +1569,10 @@ thức cơ bản (ai cũng nên đọc), trung cấp (cần nền), hay chuyên 
 - `#interview-system-design` ↔ `#unity-patterns-in-practice` (mention)
 - `#interview-system-design` ↔ `#fsm` (mention)
 - `#interview-system-design` ↔ `#behavior-tree` (mention)
+- `#interview-unity-scripting` ↔ `#unity-input` (mention)
+- `#interview-unity-scripting` ↔ `#unity-physics` (mention)
+- `#interview-unity-scripting` ↔ `#unity-dots-jobs` (mention)
+- `#interview-unity-scripting` ↔ `#unity-editor-tools` (mention)
 - `#interview-unity-tech` ↔ `#unity-memory-optimization` (mention)
 - `#interview-unity-tech` ↔ `#unity-build-platform` (mention)
 - `#interview-unity-tech` ↔ `#unity-game-loop` (mention)
@@ -1562,4 +1608,4 @@ thức cơ bản (ai cũng nên đọc), trung cấp (cần nền), hay chuyên 
 
 ## Tag
 
-`accessibility` · `account` · `addressables` · `ads` · `advanced` · `agent` · `ai` · `ai-dev` · `algorithm` · `analysis` · `analytics` · `android` · `animation` · `aot` · `api` · `architecture` · `art` · `asset` · `async` · `audio` · `auth` · `authority` · `automation` · `await` · `backend` · `battle-pass` · `blueprint` · `boxing` · `build` · `bundle` · `burst` · `camera` · `cancellation` · `career` · `case-study` · `casino` · `cdn` · `checklist` · `ci` · `class` · `client` · `client-server` · `closure` · `cocos` · `code` · `collections` · `collision` · `combat` · `communication` · `compensation` · `component` · `composition` · `concurrency` · `content` · `context` · `contract` · `core` · `cost` · `cpu` · `crash` · `csharp` · `culture` · `data` · `data-driven` · `data-structures` · `database` · `debug` · `debugging` · `decision-making` · `delegate` · `demo` · `design` · `design-system` · `devops` · `difficulty` · `docker` · `documentation` · `dotnet` · `dots` · `draw-call` · `economy` · `ecs` · `editor` · `engine` · `environment` · `eval` · `event` · `exception` · `experimental` · `f2p` · `feedback` · `feel` · `flow` · `foundations` · `fundamentals` · `gacha` · `game-design` · `game-feel` · `gameplay` · `gc` · `generic` · `genre` · `git` · `go` · `gpu` · `home` · `hot-update` · `hud` · `iap` · `identity` · `idisposable` · `il2cpp` · `implementation` · `incident` · `industry-standard` · `input` · `interface` · `interview` · `inventory` · `ios` · `iterator` · `jobs` · `key` · `kickoff` · `knowledge-base` · `label` · `language` · `language-version` · `launch` · `layout` · `leaderboard` · `leadership` · `learning` · `legal` · `level` · `lifecycle` · `lighting` · `limits` · `linq` · `live-coding` · `live-ops` · `liveops` · `llm` · `loading` · `loop` · `mailbox` · `marketing` · `master-data` · `master-user` · `matchmaking` · `math` · `memory` · `memory-leak` · `mentoring` · `meta` · `metrics` · `migration` · `milestone` · `mini-game` · `mission` · `ml` · `mobile` · `mock` · `monetization` · `monitoring` · `movement` · `multiplayer` · `music` · `narrative` · `navigation` · `netcode` · `network` · `npc` · `null` · `offer` · `onboarding` · `oop` · `operations` · `optimization` · `overview` · `pacing` · `pattern` · `pattern-matching` · `payment` · `performance` · `persistence` · `physics` · `piggybank` · `pillar` · `pipeline` · `planning` · `platform` · `plugin` · `polish` · `pool` · `postgres` · `postmortem` · `practical` · `practice` · `prefab` · `present` · `presentation` · `process` · `procgen` · `product` · `production` · `profiling` · `progression` · `project` · `prompt` · `protobuf` · `protocol` · `psychology` · `publish` · `publishing` · `pvp` · `qa` · `quest` · `race-condition` · `randomness` · `ranking` · `realtime` · `record` · `redis` · `reference` · `release` · `rendering` · `repo` · `result` · `retention` · `retry` · `review` · `reward` · `rng` · `safety` · `save` · `scene` · `schema` · `scope` · `screens` · `scrollview` · `season` · `security` · `senior` · `sequence` · `server` · `server-authoritative` · `shader` · `shooter` · `shop` · `simulation` · `slot` · `social` · `solid` · `span` · `spec` · `spine` · `stakeholder` · `storytelling` · `string` · `struct` · `structure` · `systems` · `task` · `team` · `teamwork` · `tech` · `template` · `testing` · `theory` · `third-party` · `threading` · `token` · `tooling` · `touch` · `tween` · `typescript` · `ui` · `unity` · `upgrade` · `urp` · `ux` · `vector` · `versioning` · `vfx` · `visual` · `web` · `wechat` · `workflow`
+`accessibility` · `account` · `addressables` · `ads` · `advanced` · `agent` · `ai` · `ai-dev` · `algorithm` · `analysis` · `analytics` · `android` · `animation` · `aot` · `api` · `architecture` · `art` · `asset` · `async` · `audio` · `auth` · `authority` · `automation` · `await` · `backend` · `battle-pass` · `blueprint` · `boxing` · `build` · `bundle` · `burst` · `camera` · `cancellation` · `career` · `case-study` · `casino` · `cdn` · `checklist` · `ci` · `class` · `client` · `client-server` · `closure` · `cocos` · `code` · `collections` · `collision` · `combat` · `communication` · `compensation` · `component` · `composition` · `concurrency` · `content` · `context` · `contract` · `core` · `cost` · `cpu` · `crash` · `csharp` · `culture` · `data` · `data-driven` · `data-structures` · `database` · `debug` · `debugging` · `decision-making` · `delegate` · `demo` · `design` · `design-system` · `devops` · `difficulty` · `docker` · `documentation` · `dotnet` · `dots` · `draw-call` · `economy` · `ecs` · `editor` · `engine` · `environment` · `eval` · `event` · `exception` · `experimental` · `f2p` · `feedback` · `feel` · `flow` · `foundations` · `fundamentals` · `gacha` · `game-design` · `game-feel` · `gameplay` · `gc` · `generic` · `genre` · `git` · `go` · `gpu` · `home` · `hot-update` · `hud` · `iap` · `identity` · `idisposable` · `il2cpp` · `implementation` · `incident` · `industry-standard` · `input` · `interface` · `interview` · `inventory` · `ios` · `iterator` · `jobs` · `key` · `kickoff` · `knowledge-base` · `label` · `language` · `language-version` · `launch` · `layout` · `leaderboard` · `leadership` · `learning` · `legal` · `level` · `lifecycle` · `lighting` · `limits` · `linq` · `live-coding` · `live-ops` · `liveops` · `llm` · `loading` · `loop` · `mailbox` · `marketing` · `master-data` · `master-user` · `matchmaking` · `math` · `memory` · `memory-leak` · `mentoring` · `meta` · `metrics` · `migration` · `milestone` · `mini-game` · `mission` · `ml` · `mobile` · `mock` · `monetization` · `monitoring` · `movement` · `multiplayer` · `music` · `narrative` · `navigation` · `netcode` · `network` · `npc` · `null` · `offer` · `onboarding` · `oop` · `operations` · `optimization` · `output` · `overview` · `pacing` · `pattern` · `pattern-matching` · `payment` · `performance` · `persistence` · `physics` · `piggybank` · `pillar` · `pipeline` · `planning` · `platform` · `plugin` · `polish` · `pool` · `postgres` · `postmortem` · `practical` · `practice` · `prefab` · `present` · `presentation` · `process` · `procgen` · `product` · `production` · `profiling` · `progression` · `project` · `prompt` · `protobuf` · `protocol` · `psychology` · `publish` · `publishing` · `pvp` · `qa` · `quest` · `race-condition` · `randomness` · `ranking` · `realtime` · `record` · `redis` · `reference` · `release` · `rendering` · `repo` · `result` · `retention` · `retry` · `review` · `reward` · `rng` · `safety` · `save` · `scene` · `schema` · `scope` · `screens` · `scripting` · `scrollview` · `season` · `security` · `senior` · `sequence` · `serialization` · `server` · `server-authoritative` · `shader` · `shooter` · `shop` · `simulation` · `slot` · `social` · `solid` · `span` · `spec` · `spine` · `stakeholder` · `storytelling` · `string` · `struct` · `structure` · `systems` · `task` · `team` · `teamwork` · `tech` · `template` · `testing` · `theory` · `third-party` · `threading` · `token` · `tooling` · `touch` · `tween` · `typescript` · `ui` · `unity` · `upgrade` · `urp` · `ux` · `vector` · `versioning` · `vfx` · `visual` · `web` · `wechat` · `workflow`
