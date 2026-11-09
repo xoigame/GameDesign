@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-09-17T08:57:08.812Z",
+  "generatedAt": "2026-11-09T02:26:15.931Z",
   "root": "root",
   "maps": [
     {
@@ -57,30 +57,38 @@
       "icon": "🔷",
       "color": "#4dd4e0",
       "nodes": 13
+    },
+    {
+      "id": "interview",
+      "title": "Phỏng vấn game developer",
+      "label": "Phỏng vấn",
+      "icon": "🎤",
+      "color": "#b197fc",
+      "nodes": 6
     }
   ],
   "stats": {
-    "nodes": 167,
-    "branches": 14,
-    "maps": 7,
-    "deep": 167,
+    "nodes": 173,
+    "branches": 15,
+    "maps": 8,
+    "deep": 173,
     "stub": 0,
-    "relations": 957,
-    "withPrompt": 167,
+    "relations": 1004,
+    "withPrompt": 173,
     "withUnity": 74,
-    "withAiHowto": 117,
+    "withAiHowto": 123,
     "glossaryTerms": 183,
-    "withCode": 53,
-    "withInterview": 167,
-    "interviewQuestions": 1255,
-    "interviewAnswered": 1255,
+    "withCode": 54,
+    "withInterview": 173,
+    "interviewQuestions": 1310,
+    "interviewAnswered": 1310,
     "translated": {
       "en": 24
     },
-    "basic": 37,
-    "intermediate": 82,
+    "basic": 38,
+    "intermediate": 87,
     "advanced": 48,
-    "words": 490392
+    "words": 505521
   },
   "tags": [
     "accessibility",
@@ -142,6 +150,7 @@
     "cpu",
     "crash",
     "csharp",
+    "culture",
     "data",
     "data-driven",
     "data-structures",
@@ -1873,7 +1882,13 @@
     "lead-delegation",
     "lead-one-on-one",
     "lead-upward",
-    "lead-crisis"
+    "lead-crisis",
+    "interview",
+    "interview-algorithm",
+    "interview-cv",
+    "interview-situations",
+    "interview-personality",
+    "interview-cocos"
   ],
   "nodes": [
     {
@@ -9255,6 +9270,271 @@
       "mapId": "csharp"
     },
     {
+      "id": "interview",
+      "title": "Phỏng vấn game developer",
+      "summary": "Nhánh ôn phỏng vấn theo đúng lịch bốn vòng của một studio game Nhật — giải thuật, CV, tình huống công việc, tính cách — kèm câu \"có biết Cocos Creator không\". Mỗi node có bộ thẻ 🎤 để luyện nói ra miệng.",
+      "icon": "🎤",
+      "parent": "root",
+      "children": [
+        "interview-algorithm",
+        "interview-cv",
+        "interview-situations",
+        "interview-personality",
+        "interview-cocos"
+      ],
+      "depth": 1,
+      "branch": "interview",
+      "tags": [
+        "interview",
+        "career",
+        "checklist"
+      ],
+      "related": [
+        "csharp-interview-kit",
+        "project-postmortem",
+        "cocos-creator",
+        "team-lead"
+      ],
+      "status": "deep",
+      "read": 1100,
+      "readIndex": 168,
+      "level": "intermediate",
+      "refs": [],
+      "order": 90,
+      "collapsed": false,
+      "map": true,
+      "mapLabel": "Phỏng vấn",
+      "path": "15-interview/index.md",
+      "words": 1694,
+      "body": "Các nhánh khác dạy **biết**. Nhánh này dạy **nói ra được, đúng lúc, trong đúng vòng** — vì mỗi vòng phỏng vấn chấm một thứ khác nhau, và câu trả lời hay ở vòng này có thể là câu trả lời dở ở vòng kia.\n\nNhánh được dựng quanh một lịch phỏng vấn có thật (Ateam Việt Nam, vị trí Mobile Game Developer, cuối 2026), nhưng khung bốn vòng này phổ biến ở hầu hết studio game có gốc Nhật tại Việt Nam.\n\n## Lịch bốn vòng và mỗi vòng chấm gì\n\n| Vòng | Hình thức | Họ thật sự chấm | Node ôn |\n|---|---|---|---|\n| **1. Giải thuật** | Code 3 câu, có giờ | Nhận diện dạng bài, độ phức tạp, code chạy đúng biên | [[interview-algorithm]] |\n| **2. Theo CV** | Hỏi đào từng dòng trong CV | Bạn có **thật sự làm** những gì đã ghi, và hiểu nó tới đâu | [[interview-cv]] |\n| **3. Xử lý công việc** | Tình huống giả định | Cách bạn làm việc trong đội: ưu tiên, báo cáo, bất đồng, sự cố | [[interview-situations]] |\n| **4. Tính cách** | Trò chuyện | Thành công/thất bại, có hiểu sản phẩm của họ không, có hợp văn hoá không | [[interview-personality]] |\n| Câu phụ | \"Có biết Cocos Creator không?\" | Trung thực về mức độ + tốc độ bắt nhịp | [[interview-cocos]] |\n\nBa điều đúng với **cả bốn vòng**:\n\n1. **Có số.** \"Tối ưu được game\" không phải câu trả lời; \"frame time từ X ms xuống Y ms trên máy Z\" mới là câu trả lời.\n2. **Nói \"tôi\", không nói \"chúng tôi\".** Người phỏng vấn tuyển bạn, không tuyển đội cũ của bạn.\n3. **Không biết thì nói không biết, rồi nói cách sẽ tìm ra.** Bịa một lần là mọi câu sau bị nghe với thái độ nghi ngờ.\n\n## Về công ty (tra ngày 2026-11-09)\n\nAteam là tập đoàn Nhật, mảng game tách thành **Ateam Entertainment**. Các game đang vận hành để chuẩn bị cho vòng 4:\n\n| Game | Thể loại | Điểm đáng nói |\n|---|---|---|\n| **Valkyrie Connect** | RPG fantasy, đội hình, auto/real-time | Kỷ niệm **10 năm** (6/2026), hơn 30 triệu lượt tải; sống bằng collab (hololive, Fate, Overlord, Konosuba) |\n| **Unison League** | RPG nhiều người chơi real-time | Chơi cùng bạn theo nhóm; collab Persona 3/4/5 (3/2026) |\n| **FRAGARIAMEMORIES** | RPG, hợp tác Sanrio | Ra mắt khoảng cuối 2025 |\n\nLast Cloudia **không phải** của Ateam (của AIDIS) — nhầm chỗ này ở vòng 4 là mất điểm ngay. Văn phòng Việt Nam làm gì cụ thể cho các game trên thì chưa xác minh được từ nguồn công khai: hỏi lại ở vòng 2 hoặc cuối buổi.\n\n**Trước vòng 4, cài và chơi thật ít nhất một game ở trên trong 2–3 ngày** — đủ để nói được core loop, hệ gacha, nhịp event và một chỗ bạn muốn cải thiện. Xem [[interview-personality]].\n\n## Lộ trình ôn\n\n| Ngày | Việc | Node |\n|---|---|---|\n| 1–3 | Mỗi ngày 3 bài giải thuật, bấm giờ 25 phút/bài | [[interview-algorithm]] |\n| 2 | Cài Valkyrie Connect hoặc Unison League, chơi mỗi tối 30 phút | [[interview-personality]] |\n| 3 | Viết ra 4 câu chuyện STAR, đọc to mỗi câu dưới 2 phút | [[interview-cv]] |\n| 4 | Luyện 10 tình huống, trả lời theo khung 4 bước | [[interview-situations]] |\n| 5 | Ôn Cocos 3.x, sửa một demo nhỏ | [[interview-cocos]], [[cocos-creator]] |\n| 6 | Chế độ **🎤 Luyện phỏng vấn** trên web cho cả nhánh, bật đọc to | — |\n\nPhần kỹ thuật C#/Unity sâu hơn (struct/class, GC, async, live-coding pool/LRU) đã có ở [[csharp-interview-kit]] — vòng 2 rất dễ rẽ sang đó.",
+      "aiPrompt": "**Dùng AI thế nào để ôn theo lịch nhiều vòng**\n\nĐừng nhờ AI \"soạn câu hỏi phỏng vấn game developer\" chung chung — kết quả là danh sách 50 câu mà vòng nào cũng hỏi được, nên không vòng nào thực sự được ôn. Hãy cho AI **lịch vòng cụ thể** và bắt nó đóng vai đúng người phỏng vấn của từng vòng: vòng 2 là lead kỹ thuật đọc CV của bạn, vòng 3 là quản lý dự án, vòng 4 là giám đốc hoặc HR người Nhật.\n\n**Phải nêu rõ**\n- Vòng nào, hình thức nào, người hỏi là vai gì (lead, PM, giám đốc).\n- Dán CV thật hoặc tóm tắt dự án — không có CV thì vòng 2 AI sẽ hỏi chung chung.\n- Tên công ty và game của họ, để AI hỏi câu \"game nào của chúng tôi bạn đã chơi\".\n- Ngôn ngữ phỏng vấn (Việt/Anh/Nhật) và thời lượng mỗi câu trả lời.\n\n**Mẫu prompt**\n\n```\nTôi sắp phỏng vấn vị trí Mobile Game Developer (Unity) ở một studio game Nhật.\nLịch: V1 giải thuật 3 câu; V2 hỏi theo CV; V3 tình huống công việc; V4 tính cách.\nCV của tôi: <dán>.\n\nHôm nay luyện VÒNG <số>. Đóng vai <lead kỹ thuật / PM / giám đốc>.\nLuật:\n- Hỏi TỪNG câu một rồi DỪNG chờ tôi trả lời.\n- Sau mỗi câu trả lời: chấm 1–5, chỉ ra chỗ thiếu số liệu, chỗ nói \"chúng tôi\"\n  thay vì \"tôi\", chỗ nghe như học thuộc; rồi hỏi một câu đào sâu.\n- Chấm gắt, không khen xã giao. Hết 8 câu thì tổng kết 3 điểm yếu nhất.\n```\n\n**Bẫy thường gặp:** AI tự bịa con số cho câu chuyện của bạn (\"giảm 40% crash\") — trong phòng phỏng vấn họ đào đúng con số đó, và bạn không trả lời được. Mọi số phải là số thật của bạn. Bẫy thứ hai: AI trộn câu của các vòng với nhau nên bạn không biết mình yếu vòng nào — luyện từng vòng một. Bẫy thứ ba: AI nói sai thông tin về công ty (nhầm game của studio khác) — kiểm lại trên trang chính thức trước khi mang vào phòng.",
+      "unity": "",
+      "code": "",
+      "interview": "**Câu hay gặp**\n\n- `Junior` **Anh giới thiệu bản thân trong hai phút.**\n  → Theo ba nhịp: tôi là ai (Unity developer hơn 10 năm, phần lớn là game anime live-service cho đối tác Nhật), tôi giỏi gì nhất có bằng chứng (client live-service, tối ưu mobile, tự phát hành 5 game), và vì sao tôi ở đây (sản phẩm của công ty khớp đúng mảng tôi đã làm). Dừng ở đó, để họ chọn chỗ đào — kể hết mọi thứ là lấy mất câu hỏi của họ.\n- `Junior` **Vì sao anh ứng tuyển vào công ty chúng tôi?**\n  → Nói một lý do về **sản phẩm** (đã chơi game của họ, thích điểm gì cụ thể), một lý do về **cách làm** (đội làm việc với Nhật, quy trình rõ), một lý do về **bản thân** (kinh nghiệm live-service của tôi dùng được ngay). Tránh \"vì công ty lớn, lương tốt\" — đúng, nhưng không phân biệt được bạn với ai khác.\n- `Mid` **Vì sao anh nghỉ công ty cũ?**\n  → Trả lời ngắn, thật, hướng về phía trước: dự án/hợp đồng kết thúc hoặc muốn một bước khác, và điều tôi tìm ở công việc tiếp theo. Không chê công ty cũ, vì người nghe sẽ tự hỏi bạn sẽ nói gì về họ sau này.\n- `Mid` **Điểm mạnh và điểm yếu của anh?**\n  → Điểm mạnh nói kèm bằng chứng, không nói tính từ. Điểm yếu chọn một cái **thật** và đang sửa, kèm cách sửa: ví dụ \"tôi hay ôm việc tự làm cho nhanh, giờ tôi tách task và giao rõ đầu ra từ đầu\". Điểm yếu kiểu \"tôi quá cầu toàn\" bị nghe là né câu hỏi.\n- `Senior` **Anh mong muốn mức lương bao nhiêu?**\n  → Đưa một khoảng có cơ sở, không đưa một con số đơn lẻ, và hỏi lại tổng gói (thưởng, review lương, remote). Nếu tin tuyển đã ghi trần thì nói rõ mình biết trần đó và nằm ở đâu trong khoảng, vì trả lời lệch hẳn khỏi trần làm hồ sơ bị loại trước khi ai kịp đàm phán.\n- `Senior` **Anh có câu hỏi gì cho chúng tôi không?**\n  → Luôn có hai câu: một về sản phẩm (\"đội Việt Nam đang phụ trách phần nào của game nào\"), một về cách làm (\"ba tháng đầu người ở vị trí này được giao gì, đo thành công bằng gì\"). Không hỏi gì bị hiểu là không quan tâm.\n\n**Khung trả lời 60 giây** — \"Giới thiệu về bản thân anh\"\n\n> Tôi là Nhân, làm Unity hơn mười năm, trong đó khoảng sáu năm làm client cho game anime live-service của đối tác Nhật — gacha, guild, chat, xếp hạng, IAP, kết nối server bằng gRPC.\n>\n> Ba thứ tôi làm tốt nhất: dựng tính năng live-service chạy ổn định trên cả Android lẫn iOS, tối ưu bộ nhớ và render cho máy tầm trung, và làm việc theo spec tiếng Nhật với đội Nhật.\n>\n> Ngoài giờ tôi tự phát hành năm game mobile lên Google Play và App Store, nên tôi hiểu cả phần sau khi code xong: build, store, quảng cáo, đo chỉ số. Tôi ứng tuyển vì sản phẩm của công ty là đúng mảng RPG live-service tôi đã làm nhiều năm.\n\n**Họ sẽ đào tiếp**\n\n- *\"Sáu năm live-service, anh sở hữu hệ thống nào?\"* → Nêu tên hệ thống cụ thể bạn chịu trách nhiệm đầu-cuối, không liệt kê mọi thứ đội làm; xem [[interview-cv]].\n- *\"Tự phát hành 5 game, có game nào thành công không?\"* → Nói số thật (lượt tải, doanh thu, rating) kể cả khi nhỏ, và bài học rút ra; con số nhỏ nói thật mạnh hơn con số to nói mập mờ.\n- *\"Anh có dự định lâu dài với công ty không?\"* → Nói điều làm bạn muốn ở lại (sản phẩm, đội, hướng phát triển), vì họ đang tính chi phí đào tạo bạn.\n\n**Cờ đỏ**\n\n- Giới thiệu bản thân bằng cách đọc lại CV từ năm đầu tiên.\n- Không nói tên được một game nào của công ty.\n- Nói \"chúng tôi làm…\" suốt buổi, không rõ phần của mình.\n- Chê công ty cũ hoặc đồng nghiệp cũ.\n- Không có câu hỏi nào khi được mời hỏi lại.\n\n**Số / ví dụ nên thuộc**\n\n- **10+ năm** làm game, **6+ năm** client live-service cho đối tác Nhật, **5 game** tự phát hành.\n- Bốn vòng: **giải thuật 3 câu → CV → tình huống → tính cách**.\n- Game Ateam: **Valkyrie Connect** (10 năm, 30 triệu+ lượt tải), **Unison League**, **FRAGARIAMEMORIES**.\n- Câu chuyện nào cũng có **vai trò của tôi + con số + bài học**.",
+      "hasAiHowto": true,
+      "i18n": {},
+      "color": "#b197fc",
+      "mapId": "interview"
+    },
+    {
+      "id": "interview-algorithm",
+      "title": "Vòng 1 — Giải thuật code 3 câu",
+      "summary": "Đề thi giải thuật ba câu (dễ–vừa–khó, 60–90 phút) thường ra những dạng nào, cách phân giờ, mười dạng bài kèm kỹ thuật và độ phức tạp, lộ trình ôn 5–7 ngày và chín lời giải C# chạy được.",
+      "icon": "🧮",
+      "parent": "interview",
+      "children": [],
+      "depth": 2,
+      "branch": "interview",
+      "tags": [
+        "interview",
+        "algorithm",
+        "data-structures",
+        "csharp",
+        "live-coding"
+      ],
+      "related": [
+        "csharp-interview-kit",
+        "csharp-collections",
+        "pathfinding"
+      ],
+      "status": "deep",
+      "read": 1110,
+      "readIndex": 169,
+      "level": "intermediate",
+      "refs": [],
+      "order": 10,
+      "collapsed": false,
+      "map": false,
+      "mapLabel": "",
+      "path": "15-interview/interview-algorithm.md",
+      "words": 3714,
+      "body": "Vòng 1 của nhiều studio game (kể cả studio Nhật tuyển Mobile Game Developer) không hỏi Unity mà **thi giải thuật**: ba đề, code trong một khung giờ cố định. Người làm Unity lâu năm hay chủ quan ở đây — mười năm viết gameplay không làm tay quen với `Dictionary`, BFS hay DP. Node này ôn đúng vòng đó. Sáu bài live-coding hướng engine (pool, event bus, LRU, heap…) nằm ở [[csharp-interview-kit]], đừng ôn lặp; về chỗ ngồi của node này trong cả nhánh xem [[interview]].\n\n## Đề ba câu thường ra thế nào\n\n| Câu | Mức | Thường là | Điểm tương đối |\n|---|---|---|---|\n| 1 | Dễ | Hash map đếm/ghép cặp, xử lý chuỗi, mảng cơ bản, mô phỏng | Chắc chắn phải xong |\n| 2 | Vừa | Two pointers, sliding window, sort + greedy, BFS/DFS trên lưới, binary search | Quyết định đậu rớt |\n| 3 | Khó | DP, đồ thị, backtracking có cắt tỉa, hoặc bài vừa nhưng test lớn bắt O(n log n) | Phần thưởng; làm được một phần vẫn có điểm |\n\nThời lượng 60–90 phút nghĩa là mỗi câu trung bình 20–30 phút **gồm cả đọc đề, code và tự test**. Nền tảng chưa rõ: nếu là HackerRank/Codility thì có test ẩn, chấm tự động theo từng test case; nếu là giấy thì chấm cách nghĩ, tên biến, xử lý biên.\n\n### Chiến lược phân giờ (90 phút)\n\n| Phút | Việc |\n|---|---|\n| 0–5 | **Đọc hết cả ba đề** trước khi gõ gì. Xếp thứ tự theo độ chắc, không theo số thứ tự |\n| 5–25 | Câu chắc ăn nhất. Nộp bản chạy được |\n| 25–55 | Câu thứ hai. Quá 35 phút mà chưa ra hướng thì dừng, nộp bản brute force đang có |\n| 55–80 | Câu khó. Mục tiêu là điểm một phần: brute force đúng ăn test nhỏ |\n| 80–90 | Rà lại cả ba: biên, tràn số, đọc input |\n\nThói quen nên có trên từng câu:\n\n1. **Viết ngay độ phức tạp mục tiêu** dựa vào giới hạn đề (bảng ở dưới). Giới hạn là gợi ý đề đang đòi gì.\n2. **Nộp bản brute force chạy được trước**, tối ưu sau. Bản đúng-nhưng-chậm vẫn ăn điểm test nhỏ; bản tối ưu dở dang ăn 0.\n3. **Tự test biên bằng tay** trước khi nộp: mảng rỗng, một phần tử, tất cả giống nhau, giá trị lớn nhất, đáp án không tồn tại.\n4. **Ghi độ phức tạp** thành comment trên đầu hàm — trên giấy đó là điểm cộng rõ ràng.\n\n### Ba bẫy ăn điểm vô lý\n\n- **Đọc input.** Nền tảng có stdin thì dùng `Console.ReadLine()` và `Split(' ')`; đừng viết parser cầu kỳ. Với n cỡ 10^5–10^6 dòng thì tránh gọi `Console.Write` từng dòng — gom vào `StringBuilder` rồi in một lần. Hỏi (hoặc đọc kỹ) định dạng: có dòng đầu là n không, ngăn cách bằng dấu cách hay xuống dòng.\n- **Tràn `int`.** `int` dừng ở khoảng 2,1 tỉ. Tổng 10^5 số mỗi số 10^5 là 10^10 — tràn. Thấy tổng, tích, hoặc `n*(n+1)/2` thì dùng `long` ngay từ biến đầu tiên, và nhớ ép kiểu **trước** khi nhân: `(long)a * b`, không phải `(long)(a * b)`.\n- **Off-by-one.** Binary search `lo < hi` hay `lo <= hi`, `mid = lo + (hi - lo) / 2` (không phải `(lo + hi) / 2` khi giá trị lớn), cửa sổ `[left, right]` đóng hay nửa mở. Chọn một quy ước, ghi comment, giữ nguyên cho cả hàm.\n\n## Mười dạng bài hay gặp\n\nCột \"nhận diện\" là câu trong đề báo hiệu dạng bài. Cột game là chỗ bạn đã gặp cùng cấu trúc đó trong công việc.\n\n| # | Dạng | Nhận diện trong đề | Kỹ thuật | Độ phức tạp | Liên hệ game |\n|---|---|---|---|---|---|\n| 1 | **Hash map** | \"tìm cặp tổng = k\", \"đếm số lần xuất hiện\", \"có trùng không\" | `Dictionary<giá trị, chỉ số/đếm>`, kiểm phần tử bù trước khi thêm | O(n) thời gian, O(n) bộ nhớ | Đếm vật phẩm trong inventory, tìm hai món ghép được thành công thức |\n| 2 | **Two pointers** | Mảng đã sắp xếp, \"cặp/bộ ba\", đảo ngược, bỏ trùng tại chỗ | Hai chỉ số từ hai đầu (hoặc cùng chiều), dịch theo so sánh | O(n) sau khi sort | Ghép cặp matchmaking theo điểm sức mạnh |\n| 3 | **Sliding window** | \"đoạn con liên tiếp\", \"dài nhất/ngắn nhất thoả điều kiện\" | Cửa sổ `[left, right]`, mở rộng `right`, thu `left` khi vi phạm | O(n) | Cửa sổ thời gian của combo: chuỗi đòn trong 1,5 giây |\n| 4 | **Prefix sum** | \"tổng đoạn [l, r]\" nhiều truy vấn, \"số đoạn có tổng = k\" | `pre[i]` = tổng i phần tử đầu; đoạn = `pre[r+1] - pre[l]`; kết hợp hash map đếm | O(n) dựng, O(1) mỗi truy vấn | Tổng sát thương theo từng giây trong log trận |\n| 5 | **Stack** | Ngoặc/thẻ lồng nhau, \"phần tử lớn hơn kế tiếp\", undo | Đẩy khi mở; với \"next greater\" giữ stack giảm dần | O(n) | Undo/redo; kiểm cú pháp skill script |\n| 6 | **Binary search (trên đáp án)** | \"giá trị nhỏ nhất/lớn nhất sao cho…\", tính khả thi đơn điệu | Đoán đáp án `mid`, hàm `Feasible(mid)`, thu hẹp nửa | O(n log M) | Tốc độ tối thiểu để kịp qua hết checkpoint trong thời gian cho trước |\n| 7 | **BFS trên lưới/đồ thị** | \"đường đi ngắn nhất\" khi mọi bước giá như nhau, \"số bước tối thiểu\" | Queue, mảng `dist`, đánh dấu lúc đẩy vào hàng đợi | O(V+E), lưới O(R·C) | Pathfinding trên tilemap — xem [[pathfinding]] |\n| 8 | **DFS / backtracking** | \"đếm vùng liên thông\", \"liệt kê mọi tổ hợp/hoán vị\", \"có tồn tại cách…\" | DFS đánh dấu đã thăm; backtracking: chọn → đệ quy → bỏ chọn, cắt tỉa sớm | Vùng liên thông O(V+E); liệt kê tổ hợp luỹ thừa | Đếm đảo/phòng trên map; thử mọi cách xếp đội hình |\n| 9 | **Sort + greedy** | \"khoảng thời gian chồng nhau\", \"xếp lịch\", \"ít … nhất\" | Sort theo đầu mút, quét một lượt, giữ trạng thái hiện tại | O(n log n) | Gộp các khoảng buff chồng thời gian; lên lịch spawn |\n| 10 | **DP 1 chiều / 2 chiều** | \"số cách\", \"tối thiểu/tối đa\", bài toán con lặp lại | Định nghĩa `dp[i]`, công thức chuyển, khởi tạo, thứ tự điền | Coin change O(n·k); LIS O(n log n); knapsack O(n·W) | Chọn vật phẩm tối đa giá trị trong giới hạn ô túi đồ (knapsack) |\n\n### Nhìn giới hạn đề mà đoán độ phức tạp\n\n| n trong đề | Cần | Gợi ý |\n|---|---|---|\n| ≤ 10–12 | O(n!) hoặc O(2^n·n) | Backtracking, bitmask |\n| ≤ 20–25 | O(2^n) | Duyệt tập con |\n| ≤ 500 | O(n³) | DP 2 chiều có vòng thứ ba, Floyd–Warshall |\n| ≤ 5 000 | O(n²) | DP 2 chiều, hai vòng lồng |\n| ≤ 10^5 | O(n log n) | Sort, heap, binary search, `Dictionary` |\n| ≤ 10^6–10^7 | O(n) | Hai con trỏ, sliding window, prefix sum, đếm |\n| ≤ 10^18 | O(log n) | Binary search, luỹ thừa nhanh |\n\n### Lưới và hướng đi — đoạn code viết tay trôi chảy\n\nBốn hướng gõ ra mà không nghĩ, vì BFS/DFS lưới chiếm gần nửa số bài khó:\n\n```csharp\nint[] dr = { 1, -1, 0, 0 };\nint[] dc = { 0, 0, 1, -1 };\nfor (int k = 0; k < 4; k++)\n{\n    int nr = r + dr[k], nc = c + dc[k];\n    if (nr < 0 || nc < 0 || nr >= R || nc >= C) continue;   // kiểm biên TRƯỚC khi chạm mảng\n}\n```\n\n## Lộ trình ôn 5–7 ngày\n\nGiả định bạn đã biết khái niệm, cần **tay quen lại**. Mỗi bài tự bấm giờ, không nhìn lời giải trong 25 phút đầu; kẹt quá 25 phút thì đọc gợi ý, không đọc code.\n\n| Ngày | Chủ đề | Bài luyện (bấm giờ) | Mục tiêu |\n|---|---|---|---|\n| 1 | Hash map + mảng | Two Sum (10'), tìm phần tử trùng (10'), nhóm anagram (20') | Phản xạ `Dictionary.TryGetValue`; đọc/ghi stdin trơn tru |\n| 2 | Two pointers + sliding window | Chuỗi con dài nhất không lặp (20'), gộp hai mảng đã sắp xếp (10'), mảng con tổng ≥ s ngắn nhất (20') | Phân biệt khi nào thu cửa sổ |\n| 3 | Stack + prefix sum + sort/greedy | Ngoặc hợp lệ (10'), next greater (20'), gộp khoảng (20'), số mảng con có tổng = k (25') | Nhận ra \"sort trước thì dễ\" |\n| 4 | Binary search + đồ thị lưới | Binary search biên trái/phải (15'), tốc độ ăn chuối (25'), đường đi ngắn nhất có tường (25'), đếm đảo (20') | Viết BFS không tra cứu; tránh off-by-one |\n| 5 | DP | Fibonacci/leo cầu thang (10'), coin change (25'), LIS (25'), knapsack 0/1 (30'), đường đi lưới có chướng ngại (20') | Nói được `dp[i]` nghĩa là gì trước khi viết |\n| 6 | Backtracking + thi thử | Sinh tập con/hoán vị (25'), rồi **thi thử đủ 3 câu trong 90 phút**, lấy đề trộn dạng | Thực hành chiến lược phân giờ |\n| 7 | Sửa điểm yếu | Làm lại đúng dạng rớt ở ngày 6; ôn bảng nhận diện và bảng giới hạn | Nhớ dạng, không nhớ lời giải |\n\nChỉ có 5 ngày: gộp ngày 1 với 2, ngày 3 với 4, và bỏ ngày 7. Ưu tiên theo xác suất xuất hiện: hash map, sliding window, BFS lưới, DP cơ bản, binary search. Cấu trúc dữ liệu nền (`List`, `Dictionary`, `HashSet`, `Queue`, `Stack`) xem [[csharp-collections]]; nếu bài cho phép LINQ để gọn, đọc [[csharp-linq]] trước để biết cái gì tốn.",
+      "aiPrompt": "**Dùng AI thế nào cho luyện giải thuật**\n\nAI ở đây là **người ra đề và người chấm**, không phải người giải hộ. Giao được: sinh đề đúng dạng, đúng giới hạn, kèm test ẩn và test biên; chấm bản của bạn bằng cách chạy thật; chỉ ra test nào làm hỏng và vì sao. Không giao: đưa lời giải ngay khi bạn kẹt — đọc lời giải làm bạn *tưởng* mình biết, đến lúc thi tay vẫn trống. Quy trình ba bước: (1) AI ra đề, giấu lời giải; (2) bạn code và nộp trong thời gian bấm giờ; (3) AI chạy test, báo kết quả, rồi mới gợi ý từng nấc (hướng → cấu trúc dữ liệu → pseudo-code → code).\n\n| Chế độ | Khi nào | Câu mở đầu |\n|---|---|---|\n| Ra đề đơn | Luyện một dạng yếu | \"Ra 1 đề dạng sliding window mức vừa, chưa đưa lời giải\" |\n| Thi thử | Ngày 6 của lộ trình | \"Mô phỏng vòng thi 3 câu dễ–vừa–khó, 90 phút, chấm cuối giờ\" |\n| Chấm bài | Sau khi bạn nộp | \"Đây là code của tôi, chạy với test biên và báo test nào fail\" |\n| Gợi ý có nấc | Kẹt quá 25 phút | \"Gợi ý nấc 1, chỉ hướng, không nêu cấu trúc dữ liệu\" |\n\n**Phải nêu rõ** (thiếu là AI tự bịa):\n- Ngôn ngữ và phiên bản (C# .NET 6+), có cho dùng LINQ và `PriorityQueue` không (nhiều nền tảng cũ chưa có).\n- Giới hạn n và giá trị lớn nhất — nếu không nói, AI sẽ ra đề n = 10 mà thật ra thi n = 10^5, brute force vẫn qua.\n- Nền tảng giả lập: đọc stdin/in stdout kiểu HackerRank, hay hàm cho sẵn chữ ký kiểu Codility, hay viết giấy.\n- Dạng bài cần luyện và mức độ; dạng nào đã vững để khỏi lặp lại.\n- Thời gian bấm giờ và cách chấm: đúng/sai theo test ẩn, hay có chấm cả độ phức tạp.\n\n**Mẫu prompt**\n\n```\nBạn là người ra đề và chấm bài thi giải thuật. Tôi luyện cho vòng thi 3 câu\n(dễ–vừa–khó, 90 phút), ngôn ngữ C# .NET 6, KHÔNG dùng thư viện ngoài.\n\nRa 1 đề dạng: <sliding window | BFS lưới | DP 1 chiều>, mức <vừa>.\nRàng buộc đề: n tối đa 10^5, giá trị tối đa 10^9, nhập từ stdin (dòng 1 là n).\n\nCẤM đưa lời giải hay gợi ý cấu trúc dữ liệu cho tới khi tôi nộp code.\nCẤM nói tên dạng bài trong đề (tôi phải tự nhận diện).\nĐề gồm: mô tả, định dạng input/output, 2 ví dụ, 5 test biên bạn giữ kín\n(rỗng, 1 phần tử, toàn giống nhau, giá trị lớn nhất gây tràn int, vô nghiệm).\n\nKhi tôi nộp code: chạy nó thật với các test (không phỏng đoán bằng mắt), báo\ntest nào đúng/sai, độ phức tạp thực tế, rồi chỉ MỘT lỗi quan trọng nhất.\nNếu tôi xin gợi ý: cho từng nấc (hướng -> cấu trúc dữ liệu -> pseudo-code),\nmỗi nấc chờ tôi xin tiếp.\n```\n\n**Bẫy thường gặp:** AI ra đề \"vừa\" nhưng thật ra là bài nổi tiếng nên nó nhớ lời giải mà không kiểm — hỏi nó tự giải và chạy test trước khi giao đề. AI chấm bằng cách *đọc* code rồi khẳng định đúng; bắt nó chạy thật. AI hay để lộ tên dạng bài ngay trong đề (\"cho mảng và cửa sổ…\"), mất bước nhận diện — vốn là kỹ năng chính của vòng thi. Lời giải AI viết thường dùng `int` ở chỗ cần `long` hoặc `PriorityQueue` mà nền tảng thi chưa có; luôn hỏi lại hai điểm đó.",
+      "unity": "",
+      "code": "Một file C# console gồm chín lời giải tiêu biểu, phủ tám trong mười dạng ở bảng trên (two pointers và prefix sum chưa có bài mẫu riêng — luyện ở ngày 2–3 của lộ trình). Mỗi bài có comment độ phức tạp; `Main` in `OK`/`FAIL` cho từng ca kiểm.\n\n**Setup**\n\n```\ndotnet new console -n Algo\ncd Algo\n# thay Program.cs bằng file bên dưới, rồi:\ndotnet run\n```\n\n**Script**\n\n```csharp\n// Program.cs — dotnet new console -n Algo ; thay Program.cs bằng file này ; dotnet run\nusing System;\nusing System.Collections.Generic;\nusing System.Linq;\n\npublic static class Program\n{\n    // 1) Two Sum — hash map. Thời gian O(n), bộ nhớ O(n).\n    static int[] TwoSum(int[] a, int target)\n    {\n        var seen = new Dictionary<int, int>(); // giá trị -> chỉ số\n        for (int i = 0; i < a.Length; i++)\n        {\n            if (seen.TryGetValue(target - a[i], out int j)) return new[] { j, i };\n            seen[a[i]] = i; // thêm SAU khi kiểm, để không ghép phần tử với chính nó\n        }\n        return Array.Empty<int>();\n    }\n\n    // 2) Chuỗi con dài nhất không lặp ký tự — sliding window. O(n) thời gian, O(k) bộ nhớ (k = bảng chữ).\n    static int LongestUnique(string s)\n    {\n        var last = new Dictionary<char, int>(); // ký tự -> vị trí xuất hiện gần nhất\n        int best = 0, left = 0;\n        for (int right = 0; right < s.Length; right++)\n        {\n            if (last.TryGetValue(s[right], out int p) && p >= left) left = p + 1; // thu cửa sổ\n            last[s[right]] = right;\n            best = Math.Max(best, right - left + 1);\n        }\n        return best;\n    }\n\n    // 3) Ngoặc hợp lệ — stack. O(n) thời gian, O(n) bộ nhớ.\n    static bool ValidParentheses(string s)\n    {\n        var st = new Stack<char>();\n        foreach (char c in s)\n        {\n            if (c == '(' || c == '[' || c == '{') st.Push(c);\n            else\n            {\n                if (st.Count == 0) return false; // đóng thừa\n                char o = st.Pop();\n                if ((c == ')' && o != '(') || (c == ']' && o != '[') || (c == '}' && o != '{')) return false;\n            }\n        }\n        return st.Count == 0; // mở thừa\n    }\n\n    // 4) Binary search trên đáp án — tốc độ ăn chuối tối thiểu để xong trong h giờ.\n    // O(n log M) với M = max(piles), O(1) bộ nhớ. Điều kiện: \"đủ nhanh\" đơn điệu theo tốc độ.\n    static int MinEatingSpeed(int[] piles, int h)\n    {\n        int lo = 1, hi = piles.Max();\n        while (lo < hi)\n        {\n            int mid = lo + (hi - lo) / 2;\n            long hours = 0; // long: n lớn + pile lớn dễ tràn int\n            foreach (int p in piles) hours += (p + mid - 1) / mid; // làm tròn lên\n            if (hours <= h) hi = mid; else lo = mid + 1;\n        }\n        return lo;\n    }\n\n    // 5) BFS lưới — đường ngắn nhất từ (0,0) tới góc đối diện, '#' là tường. O(R*C) thời gian và bộ nhớ.\n    static int ShortestPath(string[] grid)\n    {\n        int R = grid.Length, C = grid[0].Length;\n        if (grid[0][0] == '#' || grid[R - 1][C - 1] == '#') return -1;\n        var dist = new int[R, C];\n        for (int r = 0; r < R; r++) for (int c = 0; c < C; c++) dist[r, c] = -1;\n        var q = new Queue<(int r, int c)>();\n        dist[0, 0] = 0; q.Enqueue((0, 0));\n        int[] dr = { 1, -1, 0, 0 }, dc = { 0, 0, 1, -1 };\n        while (q.Count > 0)\n        {\n            var (r, c) = q.Dequeue();\n            if (r == R - 1 && c == C - 1) return dist[r, c];\n            for (int k = 0; k < 4; k++)\n            {\n                int nr = r + dr[k], nc = c + dc[k];\n                if (nr < 0 || nc < 0 || nr >= R || nc >= C) continue;\n                if (grid[nr][nc] == '#' || dist[nr, nc] != -1) continue;\n                dist[nr, nc] = dist[r, c] + 1; // đánh dấu lúc ĐẨY vào hàng đợi, không phải lúc lấy ra\n                q.Enqueue((nr, nc));\n            }\n        }\n        return -1;\n    }\n\n    // 6) Đếm đảo — DFS bằng stack tường minh (tránh tràn call stack trên lưới lớn). O(R*C).\n    static int CountIslands(string[] grid)\n    {\n        int R = grid.Length, C = grid[0].Length, count = 0;\n        var seen = new bool[R, C];\n        int[] dr = { 1, -1, 0, 0 }, dc = { 0, 0, 1, -1 };\n        for (int r0 = 0; r0 < R; r0++)\n            for (int c0 = 0; c0 < C; c0++)\n            {\n                if (grid[r0][c0] != '1' || seen[r0, c0]) continue;\n                count++;\n                var st = new Stack<(int, int)>();\n                st.Push((r0, c0)); seen[r0, c0] = true;\n                while (st.Count > 0)\n                {\n                    var (r, c) = st.Pop();\n                    for (int k = 0; k < 4; k++)\n                    {\n                        int nr = r + dr[k], nc = c + dc[k];\n                        if (nr < 0 || nc < 0 || nr >= R || nc >= C) continue;\n                        if (grid[nr][nc] != '1' || seen[nr, nc]) continue;\n                        seen[nr, nc] = true; st.Push((nr, nc));\n                    }\n                }\n            }\n        return count;\n    }\n\n    // 7) Gộp khoảng — sort + greedy. O(n log n) thời gian (do sort), O(n) bộ nhớ.\n    static List<(int s, int e)> MergeIntervals(List<(int s, int e)> a)\n    {\n        var res = new List<(int s, int e)>();\n        foreach (var iv in a.OrderBy(x => x.s))\n        {\n            if (res.Count > 0 && iv.s <= res[^1].e) // chạm nhau tính là gộp\n                res[^1] = (res[^1].s, Math.Max(res[^1].e, iv.e));\n            else res.Add(iv);\n        }\n        return res;\n    }\n\n    // 8) Coin change — DP 1 chiều, số xu ít nhất. O(amount * số loại xu), O(amount) bộ nhớ.\n    static int CoinChange(int[] coins, int amount)\n    {\n        const int INF = int.MaxValue / 2; // /2 để INF + 1 không tràn\n        var dp = new int[amount + 1];\n        Array.Fill(dp, INF); dp[0] = 0;\n        for (int x = 1; x <= amount; x++)\n            foreach (int c in coins)\n                if (c <= x && dp[x - c] + 1 < dp[x]) dp[x] = dp[x - c] + 1;\n        return dp[amount] >= INF ? -1 : dp[amount];\n    }\n\n    // 9) LIS — dãy con tăng dài nhất, patience sorting. O(n log n) thời gian, O(n) bộ nhớ.\n    static int Lis(int[] a)\n    {\n        var tails = new List<int>(); // tails[i] = đuôi nhỏ nhất của dãy tăng độ dài i+1\n        foreach (int x in a)\n        {\n            int lo = 0, hi = tails.Count; // lower_bound: vị trí đầu tiên >= x (tăng nghiêm ngặt)\n            while (lo < hi) { int m = (lo + hi) / 2; if (tails[m] < x) lo = m + 1; else hi = m; }\n            if (lo == tails.Count) tails.Add(x); else tails[lo] = x;\n        }\n        return tails.Count;\n    }\n\n    static void Check(string name, object got, object want)\n    {\n        bool ok = got.ToString() == want.ToString();\n        Console.WriteLine($\"{(ok ? \"OK  \" : \"FAIL\")} {name}: {got}\");\n    }\n\n    public static void Main()\n    {\n        Check(\"TwoSum [2,7,11,15] t=9\", string.Join(\",\", TwoSum(new[] { 2, 7, 11, 15 }, 9)), \"0,1\");\n        Check(\"LongestUnique abcabcbb\", LongestUnique(\"abcabcbb\"), 3);\n        Check(\"LongestUnique abba\", LongestUnique(\"abba\"), 2);\n        Check(\"Parentheses ([]{})\", ValidParentheses(\"([]{})\"), true);\n        Check(\"Parentheses (]\", ValidParentheses(\"(]\"), false);\n        Check(\"MinEatingSpeed [3,6,7,11] h=8\", MinEatingSpeed(new[] { 3, 6, 7, 11 }, 8), 4);\n        Check(\"ShortestPath 3x3\", ShortestPath(new[] { \"..#\", \"#..\", \"...\" }), 4);\n        Check(\"ShortestPath bị chặn\", ShortestPath(new[] { \".#\", \"#.\" }), -1);\n        Check(\"CountIslands\", CountIslands(new[] { \"11000\", \"11000\", \"00100\", \"00011\" }), 3);\n        var merged = MergeIntervals(new List<(int, int)> { (1, 3), (8, 10), (2, 6), (15, 18), (17, 20) });\n        Check(\"MergeIntervals\", string.Join(\" \", merged.Select(x => $\"[{x.s},{x.e}]\")), \"[1,6] [8,10] [15,20]\");\n        Check(\"CoinChange [1,2,5] 11\", CoinChange(new[] { 1, 2, 5 }, 11), 3);\n        Check(\"CoinChange [2] 3\", CoinChange(new[] { 2 }, 3), -1);\n        Check(\"LIS [10,9,2,5,3,7,101,18]\", Lis(new[] { 10, 9, 2, 5, 3, 7, 101, 18 }), 4);\n    }\n}\n```\n\n**Chạy thử**\n- Chạy `dotnet run` (nếu console hiện sai dấu tiếng Việt thì đặt `chcp 65001` trước). Phải ra đúng 13 dòng, tất cả bắt đầu bằng `OK`:\n\n```\nOK   TwoSum [2,7,11,15] t=9: 0,1\nOK   LongestUnique abcabcbb: 3\nOK   LongestUnique abba: 2\nOK   Parentheses ([]{}): True\nOK   Parentheses (]: False\nOK   MinEatingSpeed [3,6,7,11] h=8: 4\nOK   ShortestPath 3x3: 4\nOK   ShortestPath bị chặn: -1\nOK   CountIslands: 3\nOK   MergeIntervals: [1,6] [8,10] [15,20]\nOK   CoinChange [1,2,5] 11: 3\nOK   CoinChange [2] 3: -1\nOK   LIS [10,9,2,5,3,7,101,18]: 4\n```\n\n- Phá thử để thấy vì sao có comment: trong `TwoSum` đảo hai dòng (thêm vào `seen` trước khi kiểm) rồi chạy `TwoSum([3,2,4], 6)` — nó sẽ ghép `3` với chính nó. Trong `LongestUnique` bỏ điều kiện `p >= left` thì ca `abba` trả 3 thay vì 2.\n- Tự viết lại từng hàm không nhìn, rồi so với bản này; bài nào quá 25 phút thì đánh dấu để ôn lại ở ngày 7.",
+      "interview": "**Câu hay gặp**\n\n- `Junior` **Tìm hai số trong mảng có tổng bằng k. Làm sao tránh O(n²)?**\n  → Dùng `Dictionary` ghi các giá trị đã gặp, mỗi phần tử tra xem `k - x` có trong đó chưa; được O(n) thời gian, đổi lại O(n) bộ nhớ. Vì kiểm trước rồi mới thêm nên không ghép một phần tử với chính nó. Nếu mảng đã sắp xếp thì two pointers cho O(n) mà không cần bộ nhớ phụ.\n- `Junior` **Kiểm tra chuỗi ngoặc `([]{})` hợp lệ. Dùng cấu trúc gì, vì sao?**\n  → Dùng stack: gặp ngoặc mở thì đẩy, gặp ngoặc đóng thì lấy ra và so khớp loại. Stack hợp vì ngoặc mở gần nhất phải đóng trước (vào sau ra trước). Cuối cùng stack phải rỗng, vì còn dư là có ngoặc mở chưa đóng; và đóng khi stack rỗng cũng là sai.\n- `Junior` **Sliding window khác two pointers ở chỗ nào?**\n  → Sliding window là hai con trỏ cùng chiều tạo thành một đoạn liên tiếp, mở rộng bên phải và thu bên trái khi vi phạm điều kiện, dùng cho bài \"đoạn con dài/ngắn nhất\". Two pointers tổng quát thường xuất phát hai đầu mảng đã sắp xếp và tiến vào giữa. Cả hai đều O(n) vì mỗi con trỏ chỉ đi một chiều, không bao giờ lùi.\n- `Mid` **Đường đi ngắn nhất trên lưới có tường: vì sao BFS mà không DFS?**\n  → Mọi bước có giá như nhau nên BFS duyệt theo từng lớp khoảng cách, lần đầu chạm đích chính là đường ngắn nhất. DFS đi sâu một nhánh và có thể tới đích bằng đường dài trước. Độ phức tạp O(R·C); chú ý đánh dấu đã thăm lúc đẩy vào hàng đợi, không phải lúc lấy ra, nếu không một ô bị đẩy nhiều lần.\n- `Mid` **Binary search trên đáp án là gì? Cho ví dụ.**\n  → Khi đáp án là một số và có hàm kiểm \"với giá trị x thì đủ chưa\" đơn điệu, ta chặt nhị phân trên chính x thay vì trên mảng. Ví dụ tốc độ ăn chuối tối thiểu để xong trong h giờ: tốc độ càng cao càng dễ xong, nên thử mid rồi thu một nửa, tổng O(n log M). Điều kiện bắt buộc là tính đơn điệu; không có nó thì chặt nhị phân sai.\n- `Mid` **Bài nhận n = 10^5 mà bạn đang có lời giải O(n²). Làm gì?**\n  → 10^5 bình phương là 10^10 phép, quá giới hạn khoảng 10^8–10^9 phép mỗi giây của một bài thi, nên phải xuống O(n log n) hoặc O(n). Tôi tìm xem vòng lồng bên trong có thay được bằng tra cứu hash, con trỏ thứ hai, binary search hoặc prefix sum không. Nếu chưa nghĩ ra, tôi nộp bản O(n²) để ăn test nhỏ rồi quay lại sau.\n- `Mid` **Coin change: định nghĩa `dp[x]` và công thức chuyển là gì?**\n  → `dp[x]` là số xu ít nhất để đổi đúng số tiền x; `dp[0] = 0`, còn lại khởi tạo vô cực. Với mỗi loại xu c ≤ x thì `dp[x] = min(dp[x], dp[x - c] + 1)`. Độ phức tạp O(amount · số loại xu). Khởi tạo vô cực bằng `int.MaxValue / 2` để cộng một không tràn, và cuối cùng còn vô cực thì trả -1.\n- `Senior` **LIS làm O(n²) được rồi, sao còn cần O(n log n)?**\n  → Bản O(n²) với `dp[i]` là độ dài dãy tăng dài nhất kết thúc ở i, chạy được tới n khoảng 5 000. Với n = 10^5 phải dùng mảng `tails`, trong đó `tails[k]` là đuôi nhỏ nhất của mọi dãy tăng độ dài k+1; mỗi phần tử tìm vị trí bằng binary search nên O(n log n). Mảng `tails` không phải dãy con thật, chỉ cho đúng độ dài.\n- `Senior` **Backtracking bị chậm thì cải thiện bằng cách nào?**\n  → Cắt tỉa sớm: bỏ nhánh khi biết chắc không thể tốt hơn đáp án hiện có, hoặc sort đầu vào để dừng khi tổng đã vượt. Nếu các bài toán con lặp lại thì thêm memo thành DP, vì khi đó số trạng thái thật sự đếm được. Còn không, tôi ước lượng số nhánh (ví dụ 2^n) để biết n tối đa mà cách này chịu nổi.\n- `Senior` **Gộp các khoảng chồng nhau: cách làm và độ phức tạp?**\n  → Sort theo đầu mút trái, rồi quét một lượt: nếu khoảng mới bắt đầu không vượt quá đầu mút phải của khoảng cuối trong kết quả thì kéo dài khoảng cuối, ngược lại thêm khoảng mới. Sort quyết định O(n log n), phần quét chỉ O(n). Phải chốt với đề xem hai khoảng chỉ chạm tại một điểm như `[1,3]` và `[3,5]` có tính là chồng nhau không.\n\n**Khung trả lời 60 giây** — \"Anh tiếp cận một bài thuật toán lạ thế nào?\"\n\n> Việc đầu tiên tôi đọc kỹ đề và nhìn giới hạn n, vì giới hạn cho biết độ phức tạp tối đa: n tới 10^5 thì tôi cần O(n log n) trở xuống. Tiếp đó tôi thử một ví dụ nhỏ bằng tay và viết bản brute force trước, để chắc mình hiểu đề và có bản đúng để đối chiếu. Rồi tôi tự hỏi bài giống dạng nào đã biết: có chuỗi liên tiếp thì sliding window, có \"ngắn nhất\" trên lưới thì BFS, có \"số cách\" hay \"tối thiểu\" với bài toán con lặp thì DP. Tôi nói ra cấu trúc dữ liệu định dùng và độ phức tạp trước khi gõ. Gõ xong, tôi tự chạy các ca biên: rỗng, một phần tử, tràn int, vô nghiệm, vì phần lớn điểm mất ở đó chứ không ở ý tưởng chính.\n\n**Họ sẽ đào tiếp**\n\n- *\"Độ phức tạp thời gian và bộ nhớ của lời giải là bao nhiêu?\"* → Phải nêu cả hai, chỉ ra vòng nào đóng góp bậc cao nhất, và nói được cái gì bị đổi lấy cái gì (hash đổi bộ nhớ lấy thời gian).\n- *\"Có cách nào dùng ít bộ nhớ hơn không?\"* → Thường là two pointers sau khi sort, hoặc DP cuộn (chỉ giữ hàng trước); nêu cái giá là mất thứ tự gốc hoặc không dựng lại được đường đi.\n- *\"Test nào làm lời giải của anh sai?\"* → Tự liệt kê: rỗng, một phần tử, trùng nhau, giá trị cực đại gây tràn, vô nghiệm; chứng tỏ bạn nghĩ tới biên trước khi bị hỏi.\n- *\"Tại sao BFS chứ không phải Dijkstra?\"* → BFS đúng khi mọi cạnh cùng giá; có trọng số khác nhau thì cần Dijkstra hoặc A* (xem [[pathfinding]]), cái giá là thêm heap và O(E log V).\n- *\"Giải recursion này thành vòng lặp được không?\"* → Được bằng stack tường minh; lý do cần là call stack có hạn và lưới lớn dễ gây stack overflow.\n\n**Cờ đỏ**\n\n- Gõ code ngay không đọc hết đề, không hỏi lại giới hạn. Nghe nhanh nhưng thường làm sai bài.\n- Chỉ có lời giải brute force rồi nói \"chạy được là đủ\" mà không nhắc tới n lớn; hoặc ngược lại, sa vào tối ưu non mà không có bản chạy được.\n- Dùng `int` cho tổng/tích mà không nghĩ tới tràn, hoặc viết `(long)(a * b)` thay vì `(long)a * b`.\n- Không nói được độ phức tạp, hoặc nói \"O(n)\" cho vòng lặp có `List.Contains`/`Insert(0, x)` bên trong (thực chất O(n²)).\n- Nhét LINQ vào chỗ nóng (`OrderBy().First()` thay cho một lần quét) rồi nói đó là \"cho gọn\".\n- Kẹt thì im lặng thay vì nói ra hướng đang nghĩ; người chấm không biết bạn nghĩ gì thì không cho điểm cách nghĩ.\n\n**Số / ví dụ nên thuộc**\n\n- Giới hạn → độ phức tạp: n ≤ 10^5 cần O(n log n); n ≤ 5 000 chịu được O(n²); n ≤ 20 thì O(2^n); n ≤ 10^6 trở lên cần O(n). Tham chiếu: khoảng 10^8 phép đơn giản mỗi giây.\n- `int` tràn ở khoảng 2,1 · 10^9 (2^31 − 1); `long` tới khoảng 9,2 · 10^18. Tổng của 10^5 số cỡ 10^5 là 10^10, đã tràn `int`.\n- Sort là O(n log n); `Dictionary` tra cứu trung bình O(1); `List.Contains` và `List.Remove` là O(n); `Queue`/`Stack` thao tác O(1).\n- BFS/DFS trên lưới R×C: O(R·C) thời gian và bộ nhớ. Binary search trên đáp án: O(n log M).\n- Mẫu cố định cần gõ không nghĩ: mảng hướng `dr/dc` bốn hướng, `mid = lo + (hi - lo) / 2`, `(p + mid - 1) / mid` làm tròn lên, `int.MaxValue / 2` làm vô cực cho DP.",
+      "hasAiHowto": true,
+      "i18n": {},
+      "color": "#b197fc",
+      "mapId": "interview"
+    },
+    {
+      "id": "interview-cocos",
+      "title": "Anh có biết Cocos Creator không?",
+      "summary": "Cách trả lời trung thực mà mạnh khi nhà tuyển dụng hỏi về Cocos Creator lúc mình chủ yếu là Unity — có kinh nghiệm thật nhưng cũ (2.x), bản đồ Unity → Cocos 3.x, khác biệt 2.x → 3.x, và kế hoạch ôn 3 ngày kèm mini project làm bằng chứng.",
+      "icon": "🥥",
+      "parent": "interview",
+      "children": [],
+      "depth": 2,
+      "branch": "interview",
+      "tags": [
+        "interview",
+        "cocos",
+        "unity",
+        "typescript",
+        "engine"
+      ],
+      "related": [
+        "cocos-creator",
+        "cocos-scene-component",
+        "cocos-assets-bundle",
+        "cocos-optimization"
+      ],
+      "status": "deep",
+      "read": 1160,
+      "readIndex": 173,
+      "level": "intermediate",
+      "refs": [],
+      "order": 60,
+      "collapsed": false,
+      "map": false,
+      "mapLabel": "",
+      "path": "15-interview/interview-cocos.md",
+      "words": 3302,
+      "body": "Câu hỏi \"anh có biết Cocos Creator không?\" nghe như câu có/không, nhưng người hỏi đang đo ba thứ cùng lúc: **có thật hay nói chơi**, **có trung thực về giới hạn không**, và **học nhanh tới đâu**. Trả lời \"biết\" trống không là rủi ro (bị đào một câu là lộ). Trả lời \"không rành\" là bỏ phí một lợi thế có thật. Node này dựng câu trả lời ở giữa: nói đúng những gì đã làm, nói đúng cái gì đã cũ, và cam kết bằng hành động.\n\nKiến thức kỹ thuật không chép lại ở đây — nó nằm ở nhánh [[cocos-creator]]. Node này chỉ làm hai việc: biến nó thành lời nói, và chỉ ra chỗ người từ Unity sang hay bị hỏi. Bối cảnh chung của nhánh phỏng vấn xem [[interview]].\n\n## 1. Công thức trả lời câu hỏi mở\n\nSáu mảnh, theo thứ tự, mỗi mảnh một vế câu:\n\n| # | Mảnh | Vì sao phải có |\n|---|---|---|\n| 1 | **Có** — nói thẳng, không rào đón | Người hỏi cần câu trả lời trước, giải thích sau |\n| 2 | **Ở đâu** — công ty, khoảng thời gian | Kiểm chứng được; mơ hồ nghe như bịa |\n| 3 | **Làm gì** — một việc cụ thể, không phải \"tham gia dự án\" | Cho thấy đã chạm vào code thật |\n| 4 | **Phiên bản nào** — nói luôn là bản cũ (2.x) | Tự nói trước thì là trung thực; để họ khui ra thì là che giấu |\n| 5 | **Đã cập nhật gì** — 3.x, ôn lại phần nào, làm gì để chứng minh | Biến điểm yếu thành bằng chứng chủ động |\n| 6 | **Bắt nhịp bao lâu** — một con số và điều kiện | Họ cần biết rủi ro tuyển dụng là bao nhiêu tuần |\n\nHai thứ cấm: **bịa số liệu kinh doanh** (doanh thu, số người chơi của game cũ — nếu không nhớ chính xác thì để trống hoặc nói \"cỡ\"), và **chê một engine** để nâng engine kia. Studio tuyển \"Unity hoặc Cocos2d-x\" thường dùng cả hai; chê Cocos là chê chính đội của họ.\n\n### Ví dụ câu trả lời mẫu theo hồ sơ này\n\n> Có. Từ 2018 đến giữa 2019 ở ME CORP, tôi làm cả Unity lẫn Cocos Creator cho game casino và slot, nối với SmartFoxServer. Phần Cocos tôi làm là [điền: màn hình/tính năng cụ thể, ví dụ lobby, hiệu ứng quay slot, lớp kết nối server]. Lúc đó là bản 1.x–2.x viết JavaScript rồi TypeScript, nên tôi nói thẳng là kinh nghiệm thực chiến của tôi dừng ở 2.x. Mấy tuần nay tôi đã ôn lại 3.8: đọc lại mô hình Node và Component, phần import từ `cc`, UITransform tách khỏi Node, và dựng lại một mini game nhỏ để chắc tay. Với nền Unity 10 năm, phần khó nhất không phải engine mà là quen API, nên tôi ước tính cỡ [điền: 2–3] tuần để làm việc độc lập trên codebase của anh, và tuần đầu tôi muốn được review code chặt.\n\nChỗ đặt `[điền]` là chỗ chỉ người dùng biết; đừng để AI hay ai khác điền hộ. Nếu không nhớ chính xác, câu \"tôi không nhớ tên tính năng, nhưng nhớ rõ phần nối socket với SmartFoxServer\" vẫn tốt hơn một cái tên bịa.\n\n## 2. Ánh xạ Unity → Cocos Creator 3.8\n\nChỉ những dòng chắc chắn đúng với 3.8. Bản đầy đủ và chỗ khác tinh tế nằm ở bảng của [[cocos-creator]].\n\n| Unity | Cocos Creator 3.8 | Điều cần nói ra miệng |\n|---|---|---|\n| `GameObject` | `Node` | UI cũng là node, không có hệ cây riêng |\n| `MonoBehaviour` | `Component` + `@ccclass('Ten')` | Class `export`, `@property` thay cho `[SerializeField]` |\n| `Awake` / `Start` / `Update` / `LateUpdate` | `onLoad` / `start` / `update(dt)` / `lateUpdate(dt)` | `dt` là tham số, không có `Time.deltaTime` toàn cục |\n| `OnEnable` / `OnDisable` / `OnDestroy` | `onEnable` / `onDisable` / `onDestroy` | Gỡ listener ở `onDisable` — không ai gỡ hộ |\n| Prefab, `Instantiate`, `Destroy` | Prefab, `instantiate()`, `node.destroy()` | `destroy()` chạy cuối frame, không tức thì; sinh nhiều thì phải pool |\n| ScriptableObject | Không có tương đương | Dữ liệu cấu hình thành JSON + `interface` TS; kênh sự kiện thành `EventTarget` |\n| Coroutine | `async/await`, `scheduleOnce`, `schedule`, `tween()` | Không có `yield return`; `tween` dựng sẵn thay DOTween |\n| Addressables | Asset Bundle (`assetManager.loadBundle`) | Là cơ chế chính, không phải tuỳ chọn nâng cao; xem [[cocos-assets-bundle]] |\n| `Resources.Load` | `resources.load(path, Type, cb)` | Bất đồng bộ, không có bản đồng bộ |\n| Canvas + RectTransform | Canvas + `UITransform` + `Widget` | Neo là component `Widget` riêng, phải gắn thêm |\n| Sprite Atlas | Auto Atlas | Gom sprite cùng atlas cạnh nhau để batch |\n| Batching / SRP Batcher | Gộp draw call theo atlas và thứ tự node | Sprite khác atlas chen giữa là vỡ batch; xem [[cocos-optimization]] |\n| Physics2D (Box2D) | Physics 2D (Box2D hoặc builtin) | Có group và sensor; đôi khi không cần engine vật lý |\n| `SceneManager.LoadScene` | `director.loadScene` / `preloadScene` | |\n| `DontDestroyOnLoad` | `game.addPersistRootNode(node)` | Node phải là root của scene |\n\nTrọng tâm khi nói về mô hình: Cocos giống Unity ở \"mọi thứ là node mang component\" và vòng đời gần như một-một, nên người từ Unity sang mất ít thời gian ở phần khái niệm. Chỗ thật sự phải học lại là **không có ScriptableObject**, **không có coroutine**, **UI tách thành component rời**, và **TypeScript chạy trên JS engine** (GC khác, không có `struct`). Chi tiết vòng đời và event ở [[cocos-scene-component]].\n\n## 3. Khác biệt 2.x → 3.x hay bị hỏi\n\nĐây là câu \"đã cập nhật gì\" sẽ bị đào. Người từng làm 2.x phải nói trôi được bảng này:\n\n| Chủ đề | 2.x | 3.x |\n|---|---|---|\n| Truy cập API | Global `cc.` (`cc.Node`, `cc.Vec2`) | `import { Node, Vec3 } from 'cc'`, không còn global `cc` làm đường chính |\n| Khai báo component | `cc.Class({...})` hoặc `@ccclass` | `@ccclass` + `_decorator`, TypeScript là chuẩn |\n| Vị trí | `node.x`, `node.y`, `node.position` kiểu `Vec2` | `node.position` là `Vec3`, **chỉ đọc**; ghi bằng `setPosition(...)`; 2D vẫn có z |\n| Kích thước, anchor | Trên `Node` (`node.width`, `node.anchorX`) | Tách sang component `UITransform` (`contentSize`, `anchorPoint`) |\n| Màu, độ trong suốt | `node.color`, `node.opacity` | Màu nằm ở component (`Sprite.color`, `Label.color`); độ trong suốt qua `UIOpacity` |\n| Render UI | Canvas tự có camera | Canvas cần Camera; hiển thị theo `layer` và visibility của camera |\n| Nạp asset | `cc.loader` (đã deprecated từ 2.4) | `assetManager`, `resources`, bundle là đường chính |\n| Event chạm | `node.on(cc.Node.EventType.TOUCH_START)` | `node.on(Node.EventType.TOUCH_START, cb, this)`; thêm `input.on(Input.EventType...)` toàn cục |\n| Tween | `cc.tween` | `tween()` import từ `cc` |\n| Kiểu dữ liệu | JS động là chính | TypeScript strict, phải khai kiểu `@property(Node)` |\n\nCâu chốt khi nói miệng: \"Khác biệt nằm ở **cú pháp và cách tách trách nhiệm**, không phải ở khái niệm. 3.x tách UITransform khỏi Node và đưa mọi thứ về import có kiểu, nên code 2.x không chạy thẳng được, nhưng đọc là hiểu ngay.\"\n\n```ts\nimport { _decorator, Component, Node, Vec3, UITransform } from 'cc';\nconst { ccclass, property } = _decorator;\n\n@ccclass('Mover')\nexport class Mover extends Component {\n    @property(Node) target: Node = null!;\n    private readonly tmp = new Vec3();\n\n    update(dt: number) {\n        // 3.x: position chỉ đọc, ghi qua setPosition\n        const p = this.node.position;\n        this.tmp.set(p.x + 240 * dt, p.y, p.z);\n        this.node.setPosition(this.tmp);\n        // kích thước nằm ở UITransform, không phải node.width\n        const w = this.node.getComponent(UITransform)!.contentSize.width;\n    }\n}\n```\n\n## 4. Kế hoạch ôn 3 ngày và bằng chứng\n\nMục tiêu không phải học hết Cocos, mà là **nói được và làm được vài thứ cụ thể** trước buổi phỏng vấn.\n\n| Ngày | Việc | Xong khi |\n|---|---|---|\n| 1 | Cài 3.8, dựng project 2D. Đọc [[cocos-scene-component]]: vòng đời, boot scene, event, pool. Viết lại component `Mover` ở trên và một nút bấm có `Widget` | Giải thích được thứ tự `onLoad` → `onEnable` → `start` → `update` mà không nhìn tài liệu |\n| 2 | Đọc [[cocos-assets-bundle]] và [[cocos-optimization]]. Chia một bundle, `loadBundle` + `preload`, đo draw call trước và sau khi gom atlas | Nói được con số draw call trước/sau của chính mình |\n| 3 | Dựng mini project (bên dưới), build `web-mobile`, đọc lướt [[cocos-hot-update]] để trả lời được câu cập nhật không qua store | Có link chạy được hoặc video quay màn hình |\n\n**Mini project để chứng minh** (chọn một, đủ nhỏ để xong trong một ngày):\n\n- Theo [[cocos-demo-casino]]: màn quay slot 3 cột, **server quyết kết quả, client chỉ diễn hoạt**, kết quả đọc từ JSON giả lập. Hợp nhất với hồ sơ ME CORP và dễ kể thành một câu chuyện liền mạch.\n- Theo [[cocos-demo-shooter]]: bắn máy bay dọc với pool đạn và wave đọc từ JSON, kèm ảnh chụp panel thống kê.\n\nĐưa lên GitHub kèm README ngắn: dùng bản nào (3.8.x), cấu trúc thư mục, một con số đo được. Một repo nhỏ có thật đáng giá hơn mười câu \"tôi sẽ học nhanh\".",
+      "aiPrompt": "**Dùng AI thế nào để chuẩn bị câu hỏi về một engine mình ít dùng gần đây**\n\nAI giỏi ở ba việc: đóng vai người phỏng vấn đào tiếp từng câu, soạn lại câu trả lời cho ngắn và nói được thành lời, và kiểm tra bảng khác biệt 2.x → 3.x mình tự viết. AI **không** giỏi ở việc nói đúng API Cocos Creator 3.x từ trí nhớ, vì phần lớn dữ liệu về Cocos nó thấy là bản 2.x đã chết. Quy trình ba bước: (1) mình tự viết câu trả lời từ trải nghiệm thật, (2) đưa cho AI đóng vai người phỏng vấn đào tiếp, (3) mọi dòng code hay tên hàm AI nói ra đều đối chiếu với tài liệu 3.8 trước khi thuộc.\n\n**Phải nêu rõ** (thiếu là AI tự bịa):\n- Phiên bản Cocos đã dùng thật, ở công ty nào, khoảng thời gian nào, làm phần nào — để AI không \"thổi phồng\" thành kinh nghiệm 3.x.\n- Phiên bản đích để ôn: Cocos Creator 3.8, TypeScript, 2D.\n- Số tuần mình thật sự cần để bắt nhịp; AI hay chọn con số đẹp.\n- Những chỗ chưa làm bao giờ (native build, jsb, hot update thật) để AI không dạy mình nói như đã làm.\n\n**Mẫu prompt**\n\n```\nĐóng vai kỹ sư senior của studio game Nhật, phỏng vấn tôi về Cocos Creator.\nHồ sơ THẬT của tôi: Unity dev 10+ năm; 2018–06/2019 ở ME CORP làm Unity và\nCocos Creator 1.x/2.x (JS/TS) cho game casino/slot nối SmartFoxServer.\nChưa từng làm Cocos 3.x trong dự án thật; đã tự ôn 3.8 trong 3 ngày.\nHỏi tôi 8 câu, MỖI LẦN MỘT CÂU, chờ tôi trả lời rồi mới đào tiếp.\nSau mỗi câu trả lời, chỉ ra: (a) chỗ nghe như bịa, (b) chỗ trộn API 2.x và 3.x.\nKHÔNG tự bịa kinh nghiệm cho tôi. KHÔNG viết câu trả lời thay tôi.\nMọi API bạn nhắc phải ghi rõ là 2.x hay 3.x; không chắc thì nói \"không chắc\".\nCuối buổi: liệt kê 3 câu tôi trả lời yếu nhất kèm gợi ý đọc tài liệu 3.8.\n```\n\n**Bẫy thường gặp:** AI trộn API 2.x và 3.x trong cùng một câu trả lời nghe rất trôi chảy — ví dụ `cc.loader.loadRes` cạnh `import { resources } from 'cc'`, hoặc `node.x = 10` (đã bỏ ở 3.x). Bẫy thứ hai: nhờ AI \"viết câu trả lời cho tôi\", nó thêm vào những dự án và con số mình chưa từng làm, và đúng thứ đó bị người phỏng vấn hỏi tiếp. Bẫy thứ ba: nó khuyên \"nói mình rất rành Cocos\" cho mạnh, trong khi chiến lược đúng của hồ sơ này là nói thẳng \"bản cũ, đã cập nhật\".",
+      "unity": "",
+      "code": "",
+      "interview": "**Câu hay gặp**\n\n- `Junior` **Trong Cocos Creator, thứ tự vòng đời của một Component là gì?**\n  → `onLoad` chạy khi node được nạp, trước mọi thứ hiển thị; `onEnable` mỗi lần bật; `start` ngay trước frame `update` đầu tiên; sau đó `update(dt)` và `lateUpdate(dt)` mỗi frame; cuối cùng `onDisable` rồi `onDestroy`. Điểm khác Unity là `dt` được truyền vào làm tham số, không có `Time.deltaTime` toàn cục, và `node.destroy()` chỉ thực thi cuối frame. Tôi đăng ký listener ở `onEnable` và gỡ ở `onDisable`, vì không ai gỡ hộ và đó là nguồn rò bộ nhớ số một.\n- `Junior` **Cocos Creator và Unity khác nhau ở mô hình Node/Component chỗ nào?**\n  → Cả hai đều là cây đối tượng mang component và vòng đời gần như một-một, nên tôi chuyển khái niệm rất nhanh. Khác ở ba chỗ: không có ScriptableObject nên dữ liệu thành JSON cộng interface TS; không có coroutine nên dùng `async/await` hoặc `schedule`; UI cũng chỉ là node mang `UITransform`, `Widget`, không có hệ RectTransform riêng. Ngôn ngữ cũng là TypeScript chạy trên JS engine, nên cách nghĩ về GC khác C#.\n- `Mid` **Game tụt fps trên Android tầm thấp, anh giảm draw call trong Cocos thế nào?**\n  → Tôi đo trước bằng panel thống kê của Cocos rồi mới sửa, vì máy dev luôn chạy 60fps. Draw call tăng khi sprite khác atlas chen giữa, `Label` để cache mode `NONE`, dùng `Mask` (mỗi cái cộng khoảng 2 draw call) hoặc `Graphics`. Tôi gom sprite vào Auto Atlas, đổi chữ tĩnh sang `BITMAP`, và đặt mốc dưới khoảng 50 draw call mỗi màn H5; cách tìm thủ phạm nhanh nhất là tắt lần lượt từng lớp UI và xem con số tụt bao nhiêu.\n- `Mid` **Asset Bundle trong Cocos so với Addressables, và giải phóng bộ nhớ thế nào cho an toàn?**\n  → Asset Bundle là cơ chế chính của Cocos, tương đương Addressables về ý tưởng: chia theo \"khi nào cần\", `loadBundle` rồi `preload` trong lúc người chơi còn ở menu. Về giải phóng, tôi dùng đếm tham chiếu `addRef()` và `decRef()` khi giữ asset qua nhiều scene, chứ không rải `releaseAsset` khắp nơi, vì asset có thể đang được node khác dùng và gây ô trắng ngẫu nhiên. Rò hay gặp nhất là listener không gỡ, vì closure giữ cả cây con.\n- `Mid` **Hot update trong Cocos hoạt động thế nào và cần chú ý gì?**\n  → Có hai manifest: `project.manifest` đóng trong gói cài đặt và `version.manifest` trên CDN để so phiên bản nhanh, khác thì tải phần chênh vào thư mục ghi được rồi đổi search path. Quan trọng nhất là có đường lùi: tải hỏng ở 70% thì phải xoá phần dở và vẫn vào được game bằng bản cũ. Tôi cũng tách phiên bản gốc và phiên bản nội dung, phát hành theo tỉ lệ khoảng 5% trước, và rollback bằng cách đẩy lại manifest cũ. Phần này chỉ áp dụng cho bản native, không phải web.\n- `Mid` **Anh từng làm Cocos 2.x, chuyển sang 3.x thì gặp những khác biệt nào?**\n  → Lớn nhất là API: 2.x dùng global `cc.`, 3.x import từ `'cc'` và TypeScript là chuẩn. `node.position` là `Vec3` chỉ đọc nên ghi bằng `setPosition`, kích thước và anchor tách sang `UITransform`, độ trong suốt qua `UIOpacity`, Canvas cần Camera. Nạp asset thì `cc.loader` đã bỏ, dùng `assetManager` và `resources`. Khái niệm không đổi, nên cái cần học lại chủ yếu là cú pháp và cách tách trách nhiệm.\n- `Mid` **TypeScript trong Cocos so với C# trong Unity, anh thấy khác gì khi viết gameplay?**\n  → TypeScript có kiểu tĩnh nên gần C# về cảm giác, nhưng chạy trên JS engine nên không có `struct` hay value type, và `new Vec3()` trong `update` sinh rác mỗi frame. Tôi tái dùng vector ở cấp class, dùng vòng `for` thường trong hot path, cache component ở `onLoad`. Bù lại, vòng lặp sửa–chạy nhanh hơn vì không biên dịch lại domain như Unity, và dữ liệu cấu hình viết thẳng JSON với `interface`.\n- `Senior` **Cho một game casino 2D phát hành trên web và store, anh chọn Unity hay Cocos?**\n  → Tôi chọn theo nơi game được mở ra, không theo engine quen. Nếu đầu ra là link mở trong trình duyệt hay siêu ứng dụng, 2D và máy yếu thì Cocos thắng vì gói nhỏ và khởi động nhanh. Nếu là store native với nhiều plugin bên thứ ba, 3D hoặc hiệu ứng nặng thì Unity. Với slot thì logic và RTP nằm ở server nên client rất mỏng, càng nghiêng về Cocos cho bản H5; cũng có thể dùng cả hai miễn là dữ liệu và kinh tế nằm ở nơi dùng chung.\n- `Senior` **Anh sẽ kiểm chứng và bắt nhịp với codebase Cocos của chúng tôi thế nào trong tháng đầu?**\n  → Tuần một tôi đọc cấu trúc dự án, boot scene, cách chia bundle và quy ước event, chạy thử build rồi sửa một bug nhỏ có review chặt. Tuần hai đến ba tôi nhận một tính năng nhỏ trọn vẹn, đo draw call và bộ nhớ trước và sau. Tôi nói trước thời gian bắt nhịp dự kiến là [điền: 2–3] tuần, vì với nền Unity 10 năm phần khó là quen API chứ không phải khái niệm.\n\n**Khung trả lời 60 giây** — \"Anh có biết Cocos Creator không?\"\n\n> Có. Từ 2018 đến giữa 2019 ở ME CORP, tôi làm cả Unity lẫn Cocos Creator cho game casino và slot nối với SmartFoxServer. Phần Cocos tôi phụ trách là [điền: màn hình hoặc tính năng cụ thể]. Tôi nói thẳng là đó là bản 1.x đến 2.x, nên kinh nghiệm thực chiến của tôi dừng ở đó. Mấy ngày nay tôi đã ôn lại 3.8: import từ `cc`, UITransform tách khỏi Node, vị trí chỉ đọc qua `setPosition`, và dựng lại một mini game để chắc tay. Mô hình Node và Component với vòng đời thì gần như giống Unity, nên cái tôi cần quen là API và TypeScript, không phải khái niệm. Tôi ước tính khoảng [điền: 2–3] tuần để làm việc độc lập, và tuần đầu mong được review code chặt.\n\n**Họ sẽ đào tiếp**\n\n- *\"Cụ thể anh làm gì bằng Cocos ở ME CORP?\"* → nêu một việc cụ thể (lobby, hiệu ứng quay, lớp kết nối SmartFoxServer), không nói \"tham gia dự án\"; nếu không nhớ chi tiết thì nói thẳng phần nhớ rõ nhất.\n- *\"2.x và 3.x khác nhau ở đâu?\"* → import từ `cc`, `position` chỉ đọc, `UITransform` tách khỏi Node, Canvas cần Camera, `cc.loader` thành `assetManager`; kết bằng \"khái niệm không đổi, API đổi\".\n- *\"Sao anh biết ôn vài ngày là đủ?\"* → không khẳng định đủ; nói đây là mức đủ để làm được việc nhỏ có review, và có repo mini project làm bằng chứng.\n- *\"Vì sao Unity dev lại nên làm Cocos?\"* → chạm tới lý do kinh doanh: H5 và máy yếu cần gói nhỏ, khởi động nhanh, và mình chọn công cụ theo nơi phát hành.\n- *\"Anh xử lý ScriptableObject ở Cocos thế nào?\"* → không có tương đương: dữ liệu thành JSON cộng `interface` TS kiểm trong CI, kênh sự kiện thành `EventTarget`.\n\n**Cờ đỏ**\n\n- Nói \"biết Cocos\" rồi khi bị hỏi thì lộ chỉ biết 2.x, không hề nhắc trước: nghe như che giấu, dù kinh nghiệm thật.\n- Chê Cocos là \"engine đồ chơi\" hay chê Cocos2d-x để nâng Unity: studio dùng cả hai sẽ xem đó là thiếu tôn trọng và thiếu linh hoạt.\n- Bịa số liệu của game cũ (doanh thu, lượng người chơi) hoặc tên tính năng không nhớ rõ.\n- Hứa \"một tuần là quen hết\" mà không có cơ sở, hoặc ngược lại nói \"cần vài tháng\" khiến họ ngại rủi ro.\n- Trả lời mọi câu bằng phép so sánh với Unity mà không tự mô tả được cơ chế của Cocos.\n- Dùng API 2.x (`cc.loader`, `node.x`) khi nói về 3.x.\n\n**Số / ví dụ nên thuộc**\n\n- Cocos Creator **3.8**, TypeScript; kinh nghiệm cũ là **2018 – 06/2019, 1.x/2.x**.\n- Vòng đời: `onLoad` → `onEnable` → `start` → `update(dt)` → `lateUpdate(dt)` → `onDisable` → `onDestroy`.\n- Mốc draw call cho một màn H5: dưới khoảng **50**; `Mask` cộng khoảng **+2** draw call mỗi cái.\n- Texture 2048×2048 không nén chiếm khoảng **16 MB** RAM dù file PNG chỉ vài trăm KB.\n- Ngân sách máy Android tầm thấp: node trong scene dưới khoảng **1500**, texture trong RAM dưới **120 MB**.\n- Hot update: hai manifest (`project.manifest`, `version.manifest`); phát hành **5%** trước; rollback dưới **5 phút**.\n- Khác biệt 2.x → 3.x: `import { ... } from 'cc'`, `node.position` là `Vec3` chỉ đọc, `UITransform`, `UIOpacity`, `assetManager`.\n- Thời gian bắt nhịp cam kết: [điền: 2–3 tuần], tuần đầu có review.",
+      "hasAiHowto": true,
+      "i18n": {},
+      "color": "#b197fc",
+      "mapId": "interview"
+    },
+    {
+      "id": "interview-cv",
+      "title": "Vòng 2 — Phỏng vấn theo CV",
+      "summary": "Người phỏng vấn đào từng dòng trong CV để xem bạn thật sự làm tới đâu. Cách biến mỗi dòng CV thành một câu chuyện STAR có số, bốn câu chuyện bắt buộc phải chuẩn bị, và các câu kỹ thuật Unity live-service sẽ bị hỏi theo đúng những gì CV ghi.",
+      "icon": "📄",
+      "parent": "interview",
+      "children": [],
+      "depth": 2,
+      "branch": "interview",
+      "tags": [
+        "interview",
+        "career",
+        "unity",
+        "storytelling",
+        "live-ops"
+      ],
+      "related": [
+        "interview",
+        "project-postmortem",
+        "csharp-interview-kit",
+        "unity-addressables",
+        "unity-network-client"
+      ],
+      "status": "deep",
+      "read": 1120,
+      "readIndex": 170,
+      "level": "intermediate",
+      "refs": [],
+      "order": 20,
+      "collapsed": false,
+      "map": false,
+      "mapLabel": "",
+      "path": "15-interview/interview-cv.md",
+      "words": 2218,
+      "body": "Vòng 2 nguy hiểm theo cách ngược với vòng 1: câu hỏi **dễ**, vì toàn hỏi về việc bạn đã làm — nhưng người hỏi chọn đúng dòng nào trong CV nghe kêu nhất rồi đào ba tầng. Tầng ba là nơi lộ ra ai làm thật, ai đứng cạnh người làm thật.\n\n## Luật một dòng CV = một câu chuyện\n\nTrước buổi phỏng vấn, đọc CV của chính mình và với **mỗi dòng** trả lời được bốn câu:\n\n1. **Phần của tôi** là gì — không phải phần của đội.\n2. **Khó nhất** ở đâu, vì sao khó.\n3. **Con số** trước/sau, hoặc quy mô (bao nhiêu người, bao nhiêu màn hình, bao nhiêu người chơi).\n4. **Nếu làm lại** tôi đổi gì.\n\nDòng nào không trả lời được câu 1 và câu 3 thì **bỏ khỏi CV** hoặc viết lại cho khớp thực tế. Một dòng không đỡ được là đủ để người hỏi nghi cả CV.\n\n## Khung STAR, bản rút gọn để nói\n\n| Chữ | Nói gì | Thời lượng |\n|---|---|---|\n| **S**ituation | Dự án gì, bối cảnh, vì sao có vấn đề | 1–2 câu |\n| **T**ask | Việc **của tôi** cụ thể | 1 câu |\n| **A**ction | Tôi đã làm gì, theo thứ tự, vì sao chọn cách đó | 3–4 câu — phần dài nhất |\n| **R**esult | Con số, và bài học | 1–2 câu |\n\nCả câu chuyện **dưới 2 phút**. Người phỏng vấn sẽ cắt vào phần Action để đào — nên phần đó phải là phần bạn nắm chắc nhất.\n\n## Bốn câu chuyện phải có sẵn\n\n| # | Chủ đề | Lấy từ đâu trong CV | Vì sao họ sẽ hỏi |\n|---|---|---|---|\n| 1 | **Tối ưu hiệu năng** | Game live-service Unity 6/URP, máy tầm trung | Tin tuyển ghi mobile + đồ hoạ; mọi studio đều đau ở đây |\n| 2 | **Sửa một crash/bug khó** | Build iOS/Android, SDK bên thứ ba | Cho thấy cách bạn suy luận khi không có đáp án sẵn |\n| 3 | **Phát hành game một mình** | XOI GAME — 5 game trên store | Hiếm người có; chứng minh hiểu cả vòng đời sản phẩm |\n| 4 | **Dựng hệ AI-agent làm game** | GameDev Hub, Claude Code | Điểm khác biệt; nhưng phải nói được giá trị cho **đội**, không chỉ cho mình |\n\nMỗi câu chuyện viết ra giấy theo STAR, điền **số thật của bạn** (đừng để AI điền hộ), đọc to bấm giờ. Phần 🎤 bên dưới có khung cho cả bốn.\n\n## Câu kỹ thuật sẽ bị hỏi theo CV\n\nCV ghi gì thì kỹ thuật bị hỏi đúng chỗ đó. Bảng ánh xạ:\n\n| CV ghi | Họ sẽ hỏi | Ôn ở |\n|---|---|---|\n| Unity 6 / URP | SRP Batcher là gì, khác static/dynamic batching thế nào | [[unity-optimization]], [[unity-gpu-optimization]] |\n| Addressables | Load/release thế nào, rò bộ nhớ ở đâu, catalog cập nhật ra sao | [[unity-addressables]] |\n| Tối ưu bộ nhớ | Đo bằng gì, texture chiếm bao nhiêu, nén ASTC | [[unity-memory-optimization]], [[unity-profiling]] |\n| GC / C# | Alloc mỗi frame, boxing, pool | [[unity-csharp-memory]], [[csharp-interview-kit]] |\n| gRPC / protobuf | Vì sao chọn gRPC, xử lý mất mạng, retry, idempotency | [[unity-network-client]], [[go-protobuf]] |\n| IAP | Luồng mua, xác thực receipt ở server, giao dịch treo | [[unity-monetization-sdk]], [[project-contract]] |\n| Gacha / guild / ranking | Client hiển thị gì, server quyết gì | [[screen-gacha]], [[screen-ranking]] |\n| Photon / SmartFoxServer | Authority, đồng bộ trạng thái, lag | [[unity-multiplayer]] |\n| Cocos Creator | Biết tới đâu | [[interview-cocos]] |",
+      "aiPrompt": "**Dùng AI thế nào để luyện vòng hỏi theo CV**\n\nDán CV thật vào và bắt AI làm đúng việc của người phỏng vấn vòng 2: **chọn dòng nghe kêu nhất rồi đào ba tầng**. Đừng để AI viết câu chuyện hộ bạn — nó sẽ điền con số đẹp mà bạn không đỡ được khi bị hỏi lại. Dùng AI để **tìm lỗ hổng** trong câu chuyện bạn tự viết.\n\n**Phải nêu rõ**\n- CV đầy đủ, và dòng nào bạn **lo** nhất (để AI tấn công đúng chỗ).\n- Vị trí đang ứng tuyển và tin tuyển — AI sẽ hỏi phần CV khớp với tin.\n- Yêu cầu đào **ba tầng** mỗi dòng: làm gì → vì sao chọn cách đó → nếu điều kiện X đổi thì sao.\n- Cấm AI gợi ý câu trả lời trước khi bạn tự trả lời.\n\n**Mẫu prompt**\n\n```\nĐây là CV của tôi: <dán>. Đây là tin tuyển: <dán>.\nĐóng vai lead kỹ thuật phỏng vấn vòng \"hỏi theo CV\".\n- Chọn 5 dòng trong CV mà một lead sẽ nghi ngờ nhất. Không nói trước là dòng nào.\n- Mỗi dòng hỏi 3 tầng, TỪNG câu một, chờ tôi trả lời.\n- Sau mỗi câu: tôi có nói rõ phần CỦA TÔI không? Có con số không? Có câu nào\n  nghe như đọc từ tài liệu không? Chấm gắt.\n- Cuối buổi: liệt kê dòng CV nào tôi nên viết lại hoặc bỏ.\n```\n\n**Bẫy thường gặp:** AI khen câu chuyện \"rất ấn tượng\" kể cả khi không có số nào — phải bắt nó kiểm riêng tiêu chí con số. Bẫy thứ hai: AI đào sang kiến thức chung (định nghĩa Addressables) thay vì đào **việc bạn đã làm** — nhắc nó hỏi \"anh đã làm gì\" chứ không hỏi \"X là gì\". Bẫy thứ ba: dùng câu chuyện AI viết lại cho \"hay hơn\" — văn hay mà không phải giọng bạn thì nói ra nghe như học thuộc.",
+      "unity": "",
+      "code": "",
+      "interview": "**Câu hay gặp**\n\n- `Mid` **Kể về lần anh tối ưu hiệu năng một game.**\n  → STAR: game live-service Unity 6/URP bị khựng/tràn bộ nhớ trên máy tầm trung; phần của tôi là tìm nguyên nhân và sửa. Tôi đo bằng Profiler và Memory Profiler trên máy thật trước, tìm ra thủ phạm chính (texture không nén đúng, atlas thừa, asset load mà không release), sửa từng thứ một và đo lại sau mỗi lần sửa. Kết quả nói bằng số thật của bạn: bộ nhớ/frame time trước và sau, máy nào.\n- `Mid` **Kể về một crash khó nhất anh từng sửa.**\n  → Chọn crash chỉ xảy ra trên build thật (IL2CPP, iOS, SDK bên thứ ba) vì đó là loại cần suy luận nhất. Kể theo trình tự: tái hiện được bằng cách nào, đọc log/symbolicate ra sao, thu hẹp bằng cách tắt dần SDK hay so với bản build cũ, nguyên nhân gốc là gì. Kết thúc bằng việc tôi làm để nó **không lặp lại** (thêm kiểm tra, log, checklist build) — đó là phần phân biệt senior.\n- `Mid` **Anh tự phát hành 5 game, kể về quá trình đó.**\n  → Một người làm từ ý tưởng tới store: Unity, art/asset, tích hợp AdMob và IAP, build Android + iOS, đưa lên Play Console và App Store, chạy quảng cáo, đọc chỉ số. Nói thật về kết quả (lượt tải, rating, doanh thu dù nhỏ) và một bài học cụ thể, ví dụ retention ngày 1 thấp dạy tôi làm onboarding kỹ hơn. Điều người hỏi muốn nghe là bạn hiểu cả vòng đời sản phẩm, không chỉ phần code.\n- `Senior` **Anh dựng hệ AI-agent làm game thế nào, nó giúp được gì?**\n  → GameDev Hub: một CLI Python điều phối nhiều agent Claude Code theo vai planner / worker / tester / auditor, có bộ nhớ dài hạn, kho asset Unity dùng chung giữ GUID và bộ khung game gắn bằng git submodule. Giá trị không phải \"AI code hộ\" mà là quy trình: có spec, có người kiểm, có luật cấm agent sửa thứ không được sửa. Nói rõ giới hạn — AI sai ở đâu và tôi chặn thế nào — vì người hỏi sẽ lo bạn đẩy code AI chưa kiểm vào dự án của họ.\n- `Mid` **Trong dự án live-service, phần của anh là gì?**\n  → Nêu tên hệ thống cụ thể bạn sở hữu đầu–cuối (ví dụ một màn hình gacha, hệ guild, tích hợp IAP, pipeline Addressables), không liệt kê mọi thứ đội làm. Nói quy mô: số người trong đội client, chu kỳ release/event, và bạn phối hợp với server, planner, artist thế nào. Câu này là cửa vào mọi câu đào sau, nên câu trả lời phải đủ cụ thể để họ có chỗ bám.\n- `Mid` **Anh dùng Addressables thế nào, từng gặp vấn đề gì?**\n  → Chia group theo thời điểm cần (lúc boot, theo màn, theo event), load bằng handle và luôn release đúng số lần đã load, vì Addressables đếm tham chiếu. Vấn đề hay gặp: asset bị kéo trùng vào nhiều bundle do phụ thuộc ngầm, và rò bộ nhớ khi quên release; tôi kiểm bằng Analyze rules và Memory Profiler. Với game live-service còn có cập nhật catalog từ CDN để ra event mà không cần build mới.\n- `Mid` **Vì sao dự án dùng gRPC, client xử lý mất mạng ra sao?**\n  → gRPC + protobuf cho contract chặt giữa client và server, payload nhỏ, sinh code hai phía từ cùng file `.proto`. Phía client mọi lời gọi có timeout, retry có giới hạn cho lời gọi idempotent, còn lời gọi thay đổi tài nguyên (mua, nhận thưởng) đi kèm khoá idempotency để retry không trừ tiền hai lần. Mất mạng thì hiện màn chờ/kết nối lại chứ không để người chơi bấm tiếp trên trạng thái cũ.\n- `Mid` **Luồng IAP anh làm thế nào cho an toàn?**\n  → Client mua qua store, nhận receipt, gửi receipt lên server; **server** xác thực với Apple/Google rồi mới cộng vật phẩm, client chỉ hiển thị kết quả server trả. Giao dịch chỉ được đóng (confirm/finish) sau khi server cộng xong, nên app bị kill giữa chừng thì lần mở sau vẫn xử lý tiếp được. Hai lỗi kinh điển: client tự cộng vật phẩm, và finish giao dịch trước khi server xác nhận.\n- `Senior` **Anh làm việc với spec tiếng Nhật và đội Nhật thế nào?**\n  → Đọc spec, gom câu hỏi thành một danh sách có đánh số thay vì hỏi rải rác, và xác nhận lại bằng chữ những chỗ hiểu có thể lệch. Báo tiến độ và rủi ro **sớm**, vì văn hoá làm việc với Nhật coi trọng không bất ngờ hơn tốc độ. Ví dụ một lần phát hiện spec mâu thuẫn và hỏi trước khi làm đã tiết kiệm được việc làm lại.\n- `Senior` **Mười năm qua anh thấy mình tiến bộ nhất ở đâu?**\n  → Từ \"làm cho chạy\" sang \"làm cho đội vận hành được\": đo trước khi tối ưu, viết để người khác bảo trì, và tự động hoá phần lặp lại. Lấy một ví dụ đối chiếu trước/sau cụ thể của chính bạn, vì câu này họ đang đo khả năng tự nhìn lại.\n\n**Khung trả lời 60 giây** — \"Kể về dự án anh tự hào nhất\"\n\n> Dự án tôi tự hào nhất là một game RPG anime live-service cho đối tác Nhật, Unity, chạy cả Android và iOS. Phần của tôi là client các tính năng meta và tối ưu.\n>\n> Khó nhất là game chạy nặng trên máy tầm trung khi event có nhiều asset mới. Tôi đo trên máy thật bằng Profiler và Memory Profiler, tìm ra ba thủ phạm chính rồi sửa từng thứ và đo lại sau mỗi bước. Kết quả là [số trước] xuống [số sau], và event sau đó ra mà không phát sinh crash vì bộ nhớ.\n>\n> Điều tôi học được là tối ưu không phải mẹo, mà là quy trình: đo, sửa một thứ, đo lại, và để lại công cụ kiểm để lần sau không ai làm hỏng lại.\n\n**Họ sẽ đào tiếp**\n\n- *\"Ba thủ phạm đó là gì cụ thể?\"* → Kể tên đúng kỹ thuật (texture format, atlas, asset không release, alloc mỗi frame) và vì sao mỗi thứ tốn.\n- *\"Sao anh biết đó là nguyên nhân chứ không phải trùng hợp?\"* → Vì sửa từng thứ một và đo lại sau mỗi lần; số đổi theo đúng từng thay đổi.\n- *\"Nếu làm lại từ đầu anh làm khác gì?\"* → Đặt ngân sách bộ nhớ/frame ngay từ đầu dự án và đưa đo hiệu năng vào quy trình build, thay vì chữa cháy khi event đã ra.\n- *\"Đội anh khi đó bao nhiêu người, ai quyết định?\"* → Nói rõ quy mô và ranh giới: phần nào tôi đề xuất, phần nào lead duyệt.\n\n**Cờ đỏ**\n\n- Kể câu chuyện không có con số nào, hoặc con số tròn đẹp mà không nói được đo bằng gì.\n- Dùng \"chúng tôi\" suốt, không tách được phần của mình.\n- Dòng CV ghi một công nghệ nhưng không trả lời nổi câu hỏi thứ hai về nó.\n- Nói về hệ AI-agent như thể AI làm thay mọi thứ — người hỏi nghe thành \"không kiểm code\".\n- Kể lộ thông tin nội bộ của công ty cũ (số doanh thu, code, tài liệu) — bị coi là không giữ bí mật.\n\n**Số / ví dụ nên thuộc**\n\n- Mốc nghề: **2015** ASP.NET → **2016** Unity → **2018–2019** Unity + Cocos Creator (casino/slot) → **2020–2023** game anime cho NPH Nhật (Senior từ 2022) → **2023–10/2026** Unity 6/URP, gRPC.\n- **5 game** tự phát hành: Last Tower, Stickman Archer Duel, Marble Rush, Find Numbers 1-100, Stickman Block Defense.\n- STAR: **S 1–2 câu, T 1 câu, A 3–4 câu, R có số** — tổng dưới **2 phút**.\n- Bốn câu chuyện: **tối ưu · crash khó · tự phát hành · AI-agent**.",
+      "hasAiHowto": true,
+      "i18n": {},
+      "color": "#b197fc",
+      "mapId": "interview"
+    },
+    {
+      "id": "interview-personality",
+      "title": "Vòng 4 — Tính cách, thành công, thất bại và game của họ",
+      "summary": "Vòng cuối hỏi con người: kể một thành công và một thất bại, đã chơi game của công ty chưa, game nào ấn tượng nhất và ấn tượng ở điểm nào. Cách chuẩn bị câu chuyện thất bại không tự bắn vào chân, và cách phân tích một game để nói như người làm game chứ không như người chơi.",
+      "icon": "🌱",
+      "parent": "interview",
+      "children": [],
+      "depth": 2,
+      "branch": "interview",
+      "tags": [
+        "interview",
+        "career",
+        "storytelling",
+        "analysis",
+        "culture"
+      ],
+      "related": [
+        "interview",
+        "interview-cv",
+        "core-loop",
+        "player-motivation",
+        "liveops",
+        "project-postmortem"
+      ],
+      "status": "deep",
+      "read": 1140,
+      "readIndex": 172,
+      "level": "basic",
+      "refs": [],
+      "order": 40,
+      "collapsed": false,
+      "map": false,
+      "mapLabel": "",
+      "path": "15-interview/interview-personality.md",
+      "words": 2124,
+      "body": "Đến vòng 4 thì kỹ năng đã được chấm xong. Câu hỏi còn lại là: **người này có hợp với đội và sản phẩm của mình không**. Hai thứ được nhìn kỹ nhất là cách bạn nói về thất bại, và việc bạn có thật sự quan tâm tới game của họ không.\n\n## Thành công và thất bại\n\n**Câu chuyện thành công** — chọn cái có **phần của bạn rõ ràng** và **có số**, không chọn cái to nhất của đội. Lấy một trong bốn câu chuyện STAR ở [[interview-cv]], kể ngắn hơn, nhấn vào điều bạn học được.\n\n**Câu chuyện thất bại** — chỗ nhiều người trượt nhất. Bốn tiêu chí chọn:\n\n| Tiêu chí | Vì sao |\n|---|---|\n| **Thật**, có hậu quả đo được | Thất bại giả (\"tôi quá cầu toàn\") bị nghe là né |\n| **Lỗi của bạn**, không của người khác | Họ đang xem bạn có nhận trách nhiệm không |\n| **Không chí mạng** cho vị trí đang ứng tuyển | Đừng kể lần làm mất dữ liệu người chơi khi ứng tuyển backend |\n| **Có thay đổi hành vi sau đó** | Bài học phải thấy được trong cách bạn làm việc bây giờ |\n\nMột ứng viên hợp lý cho hồ sơ tự phát hành: một game indie ra mắt mà retention thấp hoặc doanh thu không như kỳ vọng — vì tập trung làm tính năng mà không đo, không thử sớm với người chơi thật. Bài học: làm prototype nhỏ, đưa người chơi thử sớm, đặt chỉ số trước khi làm. Đây là thất bại thật, của chính mình, không chí mạng, và bài học dùng được ngay ở studio. **Dùng câu chuyện thật của bạn**, bảng trên chỉ là cách chọn.\n\n## \"Bạn đã chơi game của chúng tôi chưa?\"\n\nCâu này gần như chắc chắn được hỏi. Trả lời \"chưa\" là mất điểm lớn nhất có thể tránh được của cả buổi. **Cài và chơi thật** trước buổi phỏng vấn, tối thiểu 2–3 ngày, mỗi ngày 30 phút — đủ để qua tutorial, quay gacha, vào một event.\n\nGame đang vận hành của Ateam (tra 2026-11-09, xem [[interview]]): **Valkyrie Connect**, **Unison League**, **FRAGARIAMEMORIES**. Last Cloudia **không** phải game của Ateam.\n\n## Phân tích một game như người làm game\n\nNgười chơi nói \"game hay, đồ hoạ đẹp\". Người làm game nói **cơ chế nào tạo ra cảm giác đó, và tốn gì để làm**. Khung năm lớp, mỗi lớp một câu:\n\n| Lớp | Câu hỏi tự trả lời | Ví dụ áp vào RPG gacha live-service |\n|---|---|---|\n| **Core loop** | Người chơi lặp lại hành động gì mỗi phiên? | Đánh màn → nhận nguyên liệu → nâng nhân vật → đánh màn khó hơn — xem [[core-loop]] |\n| **Động lực** | Vì sao họ quay lại ngày mai? | Nhiệm vụ ngày, login bonus, sưu tầm nhân vật — xem [[player-motivation]] |\n| **Live-ops** | Game sống bằng gì sau năm thứ nhất? | Collab với IP anime/VTuber, event theo mùa — xem [[liveops]] |\n| **Kỹ thuật** | Phần nào khó làm, tốn tài nguyên? | Nhiều nhân vật/skill effect trên máy yếu, real-time co-op, tải asset event |\n| **Điểm muốn cải thiện** | Một chỗ bạn sẽ làm khác, có lý do | Thời gian tải, onboarding, UI một màn cụ thể — nói nhẹ nhàng, có đề xuất |\n\nVới Valkyrie Connect, một điểm rất đáng nói: game **vận hành được 10 năm** và sống bằng collab liên tục. Từ góc developer, điều đó nghĩa là pipeline nội dung và asset phải cho phép đưa nhân vật, effect, event mới vào **mà không cần build lại**, và client phải giữ được hiệu năng khi số nhân vật cứ tăng qua từng năm. Nói được điều này cho thấy bạn nhìn game như một hệ thống đang vận hành, không chỉ như một sản phẩm.\n\n**Chỉ nói những gì bạn đã tự thấy khi chơi.** Bảng trên là khung để quan sát, không phải câu trả lời để học thuộc — họ sẽ hỏi lại chi tiết trong game.",
+      "aiPrompt": "**Dùng AI thế nào để chuẩn bị vòng tính cách**\n\nDùng AI cho hai việc: **chọn và mài câu chuyện thất bại** (AI rất giỏi chỉ ra câu chuyện nào nghe như đổ lỗi), và **đặt câu hỏi phân tích game** để bạn tự trả lời sau khi chơi. Đừng dùng AI để biết game có gì — nó dễ nhầm game giữa các studio và bịa tính năng; thông tin game phải lấy từ việc chơi thật và trang chính thức.\n\n**Phải nêu rõ**\n- Câu chuyện thô của bạn, kể cả phần xấu — AI cần sự thật để chấm.\n- Vị trí ứng tuyển, để AI kiểm thất bại nào là chí mạng cho vị trí đó.\n- Tên game bạn đã chơi và những gì **bạn tự thấy**, để AI hỏi đào chứ không kể hộ.\n- Văn hoá người hỏi (giám đốc người Nhật / HR Việt Nam) — ảnh hưởng mức khiêm tốn mong đợi.\n\n**Mẫu prompt**\n\n```\nTôi phỏng vấn vòng cuối (tính cách) ở một studio game Nhật, vị trí Unity developer.\nĐây là câu chuyện thất bại tôi định kể: <dán, kể cả phần không đẹp>.\n1) Chấm theo 4 tiêu chí: thật / lỗi của tôi / không chí mạng cho vị trí này /\n   có thay đổi hành vi sau đó. Chỉ câu nào nghe như đổ lỗi hoặc né.\n2) Hỏi tôi 3 câu đào sâu mà người phỏng vấn sẽ hỏi.\n\nSau đó: tôi đã chơi <tên game> 3 ngày. Đừng kể gì về game này.\nHãy hỏi tôi 5 câu theo các lớp core loop / động lực / live-ops / kỹ thuật /\nđiểm muốn cải thiện, từng câu một, rồi chấm câu trả lời có nói như người\nlàm game không.\n```\n\n**Bẫy thường gặp:** AI \"đánh bóng\" câu chuyện thất bại thành câu chuyện thành công trá hình — người phỏng vấn nhận ra ngay. Bẫy thứ hai: AI tự tin mô tả tính năng của một game mà nó không biết chắc, hoặc gán game của studio khác cho công ty này (rất hay nhầm giữa các studio Nhật cùng thể loại). Bẫy thứ ba: điểm muốn cải thiện mà AI gợi ý thường thành chê bai — hãy bắt nó viết lại thành đề xuất có lý do.",
+      "unity": "",
+      "code": "",
+      "interview": "**Câu hay gặp**\n\n- `Junior` **Kể về một thành công của anh.**\n  → Chọn một việc có phần của tôi rõ ràng và có số, kể theo STAR trong khoảng 90 giây. Ví dụ tự phát hành một game từ ý tưởng tới hai store một mình, hoặc một lần tối ưu làm event chạy ổn trên máy tầm trung. Kết thúc bằng điều tôi học được, vì họ đang hỏi về cách tôi trưởng thành chứ không phải về thành tích.\n- `Junior` **Kể về một thất bại của anh.**\n  → Chọn một thất bại thật, do mình, có hậu quả đo được, không chí mạng cho vị trí này — ví dụ một game indie ra mắt nhưng giữ chân người chơi kém vì tôi làm tính năng mà không thử sớm với người chơi thật. Nói rõ tôi đã sai ở quyết định nào, hậu quả ra sao. Rồi nói hành vi đã thay đổi: giờ tôi làm prototype nhỏ, đặt chỉ số và đưa người thật thử trước khi làm lớn.\n- `Junior` **Anh đã chơi game của công ty chúng tôi chưa?**\n  → Có, và nói cụ thể: chơi game nào, bao lâu, đã tới đâu (qua tutorial, quay gacha, vào event nào). Thêm một nhận xét ngắn của riêng mình để mở đường cho câu hỏi tiếp. Nếu thật sự mới chơi vài ngày thì nói đúng là vài ngày, đừng nhận là người chơi lâu năm.\n- `Mid` **Game nào của chúng tôi làm anh ấn tượng nhất, ở điểm nào?**\n  → Chọn một game và một điểm, giải thích bằng cơ chế chứ không bằng cảm giác. Ví dụ Valkyrie Connect vận hành 10 năm nhờ collab liên tục: điều đó cho thấy pipeline nội dung đưa được nhân vật, effect, event mới vào mà không cần build lại, và đó là phần tôi đã làm nhiều ở các game live-service trước. Nối điểm ấn tượng về kinh nghiệm của mình là cách biến câu hỏi xã giao thành điểm cộng.\n- `Mid` **Nếu được, anh sẽ cải thiện gì trong game đó?**\n  → Một điểm nhỏ, cụ thể, tự thấy khi chơi, nói dưới dạng đề xuất có lý do — ví dụ thời gian tải một màn, một bước onboarding gây rối, hay một màn UI cần nhiều thao tác. Kèm cách tôi sẽ đo để biết cải thiện có hiệu quả không. Không chê tổng thể, vì người ngồi đối diện có thể chính là người làm ra phần đó.\n- `Mid` **Game yêu thích nhất của anh (không phải của chúng tôi) là gì?**\n  → Chọn game bạn thật sự chơi nhiều, nói vì sao bằng một cơ chế cụ thể, và nếu được thì nối với thể loại của công ty. Câu này kiểm tra bạn có phải người mê game và biết nhìn game bằng mắt người làm không.\n- `Mid` **Đồng nghiệp cũ sẽ mô tả anh thế nào?**\n  → Ba từ kèm một ví dụ cho mỗi từ, ví dụ: chắc tay (ít bug quay lại), chủ động (tự làm công cụ cho đội), dễ hỏi (sẵn sàng giải thích cho người mới). Có thể thêm một điểm họ từng góp ý và bạn đã sửa, nghe thật hơn danh sách toàn ưu điểm.\n- `Mid` **Ngoài giờ làm anh làm gì?**\n  → Trả lời thật và có thể nối với nghề: tự làm game, làm video, dựng công cụ AI làm game. Nhưng nói rõ việc riêng không ảnh hưởng công việc chính, vì người hỏi có thể lo bạn chia sức hoặc sẽ nghỉ để làm riêng.\n- `Senior` **Năm năm nữa anh muốn ở đâu?**\n  → Một hướng phát triển thật, khớp với những gì công ty có thể cho: sâu hơn về kỹ thuật client live-service, hoặc dẫn một nhóm nhỏ. Nói theo hướng muốn đóng góp nhiều hơn cho sản phẩm, vì câu \"muốn mở công ty riêng\" dù thật cũng làm họ lo bạn ở lại ngắn.\n- `Senior` **Anh làm việc tốt nhất trong môi trường thế nào?**\n  → Mô tả điều kiện cụ thể có lý do: spec rõ ràng, có người để hỏi, được tự quyết phần kỹ thuật của mình và chịu trách nhiệm về nó, báo cáo đều đặn. Chọn những điều kiện mà studio này có (đã đọc tin tuyển: remote hoặc văn phòng, không OT), vì đó là câu hỏi về độ hợp.\n\n**Khung trả lời 60 giây** — \"Game nào của chúng tôi ấn tượng nhất, ở điểm nào?\"\n\n> Tôi đã chơi Valkyrie Connect mấy ngày gần đây, qua phần hướng dẫn và vào thử event đang chạy. Điều làm tôi ấn tượng nhất không hẳn là một tính năng, mà là việc game vận hành được mười năm và vẫn ra collab liên tục.\n>\n> Từ góc người làm client, tôi hiểu điều đó khó thế nào: mỗi đợt collab là nhân vật, skill effect, màn hình event mới, và tất cả phải đưa vào qua tải nội dung chứ không thể bắt người chơi cập nhật bản mới liên tục — trong khi số nhân vật cứ tăng mà máy người chơi thì không mạnh lên.\n>\n> Đó chính là mảng tôi làm sáu năm qua với game anime live-service, nên tôi rất muốn biết đội ở đây tổ chức pipeline nội dung đó thế nào.\n\n**Họ sẽ đào tiếp**\n\n- *\"Anh đang ở level/màn nào, nhân vật anh dùng là ai?\"* → Trả lời được ngay nhờ đã chơi thật; không trả lời được là lộ chưa chơi.\n- *\"Theo anh vì sao game giữ được người chơi lâu như vậy?\"* → Nói bằng cơ chế: collab kéo người chơi mới và cũ quay lại, sưu tầm nhân vật, nội dung chơi cùng người khác.\n- *\"Thất bại đó nếu xảy ra ở đây, anh sẽ làm khác gì?\"* → Nêu hành vi cụ thể đã đổi: đo sớm, thử sớm, báo sớm.\n- *\"Anh có câu hỏi gì về văn hoá công ty không?\"* → Hỏi về cách đội Việt Nam làm việc với đội Nhật và cách đánh giá người mới sau ba tháng.\n\n**Cờ đỏ**\n\n- \"Tôi chưa chơi\" hoặc nhầm game của studio khác là của công ty.\n- Thất bại giả: \"tôi quá cầu toàn\", \"tôi làm việc quá chăm\".\n- Thất bại mà lỗi nằm ở đội, sếp hoặc khách hàng.\n- Chê game của họ thay vì đề xuất cải thiện có lý do.\n- Nói ngay rằng mục tiêu dài hạn là nghỉ ra làm riêng.\n\n**Số / ví dụ nên thuộc**\n\n- Valkyrie Connect: **10 năm** (6/2026), **30 triệu+** lượt tải, collab hololive, Fate, Overlord, Konosuba.\n- Unison League: RPG real-time **chơi cùng bạn**, collab **Persona 3/4/5** (3/2026).\n- FRAGARIAMEMORIES: hợp tác **Sanrio**.\n- Phân tích game năm lớp: **core loop · động lực · live-ops · kỹ thuật · điểm muốn cải thiện**.\n- Thất bại tốt: **thật · lỗi của mình · không chí mạng · hành vi đã đổi**.",
+      "hasAiHowto": true,
+      "i18n": {},
+      "color": "#b197fc",
+      "mapId": "interview"
+    },
+    {
+      "id": "interview-situations",
+      "title": "Vòng 3 — Xử lý công việc và tình huống",
+      "summary": "Vòng hỏi \"nếu… thì anh làm gì\": deadline không kịp, bug nóng trên production, spec mơ hồ, bất đồng với đồng nghiệp, việc bị giao chồng. Khung trả lời bốn bước và mười tình huống hay gặp ở studio game làm với đối tác Nhật.",
+      "icon": "🧩",
+      "parent": "interview",
+      "children": [],
+      "depth": 2,
+      "branch": "interview",
+      "tags": [
+        "interview",
+        "teamwork",
+        "process",
+        "communication",
+        "incident"
+      ],
+      "related": [
+        "interview",
+        "project-teamwork",
+        "lead-crisis",
+        "lead-upward",
+        "lead-estimation"
+      ],
+      "status": "deep",
+      "read": 1130,
+      "readIndex": 171,
+      "level": "intermediate",
+      "refs": [],
+      "order": 30,
+      "collapsed": false,
+      "map": false,
+      "mapLabel": "",
+      "path": "15-interview/interview-situations.md",
+      "words": 2048,
+      "body": "Vòng 3 không có đáp án đúng về kỹ thuật. Người hỏi — thường là PM hoặc lead — đang hình dung **ngồi cạnh bạn sáu tháng** sẽ thế nào: bạn có báo sớm khi trễ không, có tự ý sửa spec không, có đổ lỗi không, có biết lúc nào phải hỏi.\n\nVới studio làm cùng đối tác Nhật, ba giá trị được chấm nặng nhất: **báo cáo sớm** (報連相 — hōrensō: báo cáo, liên lạc, bàn bạc), **không bất ngờ**, và **giữ chất lượng** dù gấp.\n\n## Khung trả lời bốn bước\n\n| Bước | Làm gì | Câu mẫu |\n|---|---|---|\n| **1. Làm rõ** | Hỏi lại một hai điều kiện then chốt | \"Bug này ảnh hưởng bao nhiêu người chơi, có dính tới tiền không?\" |\n| **2. Ưu tiên** | Nói cái gì làm trước và **vì sao** | \"Chặn thiệt hại trước, tìm nguyên nhân sau.\" |\n| **3. Hành động + báo** | Việc cụ thể, và báo cho **ai, lúc nào** | \"Tôi báo lead ngay khi xác nhận, kèm ước lượng.\" |\n| **4. Phòng lặp lại** | Thứ để lại sau sự việc | \"Thêm checklist / test / cảnh báo để lần sau bắt sớm.\" |\n\nThiếu bước 1 thì nghe như hấp tấp. Thiếu bước 3 phần \"báo\" thì nghe như làm một mình. Thiếu bước 4 thì nghe như junior. Nhiều tình huống không cần đủ bốn bước dài — nhưng phải chạm cả bốn.\n\n## Mười tình huống hay gặp\n\n| # | Tình huống | Ý chính phải nói |\n|---|---|---|\n| 1 | Task ước 3 ngày, ngày 2 thấy cần 6 ngày | Báo **ngay hôm đó**, kèm phương án cắt phạm vi hoặc lùi hạn — không im đến hạn |\n| 2 | Bug crash trên production lúc event đang chạy | Đánh giá ảnh hưởng → chặn (tắt tính năng bằng cờ server, hotfix) → nguyên nhân gốc → postmortem |\n| 3 | Spec mơ hồ, planner đang nghỉ | Ghi giả định ra chữ, làm phần không phụ thuộc trước, hỏi bằng tin nhắn có đánh số |\n| 4 | Không đồng ý cách làm của lead | Nói riêng, đưa dữ liệu, đề xuất thử nhỏ; lead chốt thì làm theo và ghi lại lo ngại |\n| 5 | Code review thấy đồng nghiệp viết có vấn đề lớn | Bình luận vào code, không vào người; việc lớn thì nói trực tiếp, đề xuất cùng sửa |\n| 6 | Hai người cùng giao việc gấp | Không tự chọn — đưa cả hai lên người có quyền ưu tiên, kèm ước lượng mỗi việc |\n| 7 | Phát hiện bug do chính mình gây ra đã lên store | Nhận ngay, báo, sửa, và nói cách ngăn — giấu là lỗi nặng hơn bug |\n| 8 | Được giao công nghệ chưa biết (vd Cocos) | Ước lượng thời gian học, làm prototype nhỏ trước, báo rủi ro sớm |\n| 9 | Artist/designer đưa asset sai chuẩn làm game nặng | Đưa số đo, đề xuất chuẩn (kích thước, nén), làm công cụ kiểm tự động |\n| 10 | Deadline sát, chất lượng chưa đạt | Đưa lựa chọn rõ ràng (ra đúng hạn bớt tính năng / lùi hạn / ra có lỗi đã biết) cho người quyết định — không tự hạ chất lượng âm thầm |\n\nMô hình sự cố và báo lên trên chi tiết hơn ở [[lead-crisis]] và [[lead-upward]]; ước lượng và báo trễ ở [[lead-estimation]].",
+      "aiPrompt": "**Dùng AI thế nào để luyện vòng tình huống**\n\nCho AI đóng vai PM người Nhật hoặc lead, đưa từng tình huống **có chi tiết gây áp lực** (đang 11 giờ đêm, event còn 2 tiếng, khách hàng đang hỏi) rồi chấm theo khung bốn bước. Tình huống chung chung cho ra câu trả lời chung chung; chi tiết mới làm lộ phản xạ thật.\n\n**Phải nêu rõ**\n- Bối cảnh studio: làm với đối tác/NPH Nhật, game live-service, quy mô đội.\n- Vai của bạn (developer, không phải lead) — câu trả lời đúng khác nhau theo quyền hạn.\n- Tiêu chí chấm: làm rõ / ưu tiên / hành động + báo cho ai / phòng lặp lại.\n- Yêu cầu AI **thêm một biến cố** sau câu trả lời đầu (\"lead không trả lời tin nhắn thì sao?\").\n\n**Mẫu prompt**\n\n```\nĐóng vai PM của một studio game Việt Nam làm game RPG live-service cho đối tác Nhật.\nTôi ứng tuyển Unity developer. Đây là vòng \"xử lý tình huống\".\n- Đưa TỪNG tình huống một, có chi tiết cụ thể (giờ, số người chơi bị ảnh hưởng,\n  ai đang vắng). Dừng chờ tôi trả lời.\n- Chấm theo 4 bước: làm rõ / ưu tiên có lý do / hành động + báo cho ai lúc nào /\n  phòng lặp lại. Chỉ ra bước tôi bỏ sót.\n- Sau đó thêm MỘT biến cố làm tình huống khó hơn và hỏi tiếp.\nLàm 6 tình huống, cuối buổi nói phản xạ xấu nhất của tôi.\n```\n\n**Bẫy thường gặp:** AI chấp nhận câu trả lời \"anh hùng\" — \"tôi thức xuyên đêm sửa xong\" — trong khi người phỏng vấn Nhật nghe thành \"không báo cáo, không biết giới hạn\". Bẫy thứ hai: AI đưa tình huống không có xung đột thật nên câu nào trả lời cũng đúng. Bẫy thứ ba: luyện bằng chữ mà không nói ra — vòng này chấm giọng điệu, phải đọc to.",
+      "unity": "",
+      "code": "",
+      "interview": "**Câu hay gặp**\n\n- `Junior` **Task anh ước 3 ngày, sang ngày 2 anh thấy cần 6 ngày. Anh làm gì?**\n  → Báo lead ngay trong ngày đó, không chờ đến hạn, vì báo sớm thì đội còn lựa chọn còn báo muộn thì chỉ còn trễ. Tôi báo kèm lý do cụ thể (chỗ nào khó hơn dự kiến) và hai phương án: cắt bớt phạm vi để kịp hạn, hoặc lùi hạn bao nhiêu. Sau đó ghi lại vì sao ước lượng sai để lần sau ước sát hơn.\n- `Mid` **Game crash hàng loạt ngay khi event mở. Anh làm gì?**\n  → Việc đầu tiên là đo ảnh hưởng: bao nhiêu người, máy nào, có dính giao dịch tiền không. Rồi chặn thiệt hại bằng cách nhanh nhất có sẵn — tắt tính năng bằng cờ server, rollback dữ liệu event, hoặc hotfix — và báo lead/PM liên tục theo mốc. Khi ổn mới tìm nguyên nhân gốc, viết postmortem không đổ lỗi, và thêm kiểm tra để lần sau bắt trước khi lên production.\n- `Mid` **Spec ghi không rõ, planner đang nghỉ phép. Anh làm gì?**\n  → Không đoán rồi làm ngầm. Tôi ghi giả định của mình ra chữ, gửi cho planner và lead dưới dạng câu hỏi đánh số, và làm trước những phần không phụ thuộc vào chỗ mơ hồ. Nếu buộc phải chọn để kịp tiến độ thì chọn phương án dễ đổi lại nhất và đánh dấu rõ trong code lẫn task.\n- `Mid` **Anh không đồng ý với cách làm lead đã chọn. Anh xử lý thế nào?**\n  → Nói riêng với lead, không nói trong họp đông người, và nói bằng dữ liệu: rủi ro cụ thể, số đo, hoặc một prototype nhỏ. Nếu lead vẫn chốt cách cũ thì tôi làm theo hết sức, vì lead chịu trách nhiệm quyết định, và ghi lại lo ngại của mình để sau này cả đội nhìn lại được. Không làm ngầm theo cách của mình.\n- `Mid` **Hai người cùng giao cho anh hai việc gấp. Anh chọn việc nào?**\n  → Tôi không tự chọn, vì ưu tiên giữa hai việc là quyết định của người có quyền điều phối. Tôi báo cả hai người và lead: hai việc, ước lượng mỗi việc, làm song song thì cả hai trễ bao lâu, và xin người có quyền chốt thứ tự. Trong lúc chờ, tôi làm phần nhỏ chắc chắn cần của việc có ảnh hưởng lớn hơn.\n- `Mid` **Anh phát hiện bug do chính anh gây ra đã lên store. Anh làm gì?**\n  → Báo ngay và nói rõ đó là lỗi của tôi, vì người khác cần biết để đánh giá ảnh hưởng và giấu chỉ làm thiệt hại lớn thêm. Đưa kèm mức độ ảnh hưởng và phương án sửa, làm hotfix nếu được duyệt. Sau đó tìm vì sao review và test không bắt được, và thêm đúng kiểm tra còn thiếu.\n- `Mid` **Đồng nghiệp gửi code có vấn đề lớn để anh review. Anh làm gì?**\n  → Bình luận vào code chứ không vào người, mỗi bình luận nói rõ vấn đề, vì sao, và gợi ý sửa. Nếu vấn đề lớn tới mức phải viết lại thì tôi nói trực tiếp thay vì để hàng chục bình luận, và đề xuất ngồi cùng sửa. Mục tiêu là code tốt lên và người đó học được, không phải thắng cuộc tranh luận.\n- `Senior` **Deadline còn 2 ngày, tính năng chưa đạt chất lượng. Anh làm gì?**\n  → Đưa lựa chọn rõ ràng lên người quyết định: ra đúng hạn nhưng bớt phần chưa ổn, lùi hạn bao nhiêu để làm đủ, hoặc ra kèm danh sách lỗi đã biết và kế hoạch vá. Tôi không tự hạ chất lượng âm thầm, vì người chịu hậu quả với khách hàng là cả công ty. Với đối tác Nhật, báo trước một vấn đề luôn tốt hơn để họ tự phát hiện.\n- `Senior` **Asset của artist làm game nặng, nhưng artist không muốn đổi. Anh làm gì?**\n  → Đưa số đo thay vì ý kiến: texture này chiếm bao nhiêu MB, màn này tụt bao nhiêu fps trên máy tầm trung. Đề xuất một chuẩn chung (kích thước, định dạng nén, atlas) và cùng artist thử bản nhẹ hơn để so chất lượng hình. Lâu dài thì làm công cụ kiểm tự động lúc import để không ai phải cãi lại chuyện này.\n- `Senior` **Anh được giao làm phần dùng công nghệ anh chưa từng dùng. Anh làm gì?**\n  → Nói thật mức hiểu biết hiện tại, rồi đề xuất kế hoạch: một hai ngày làm prototype nhỏ để học và đo rủi ro, sau đó mới ước lượng chính thức. Báo sớm nếu prototype lộ ra vấn đề lớn. Đó là cách tôi sẽ làm nếu được giao Cocos Creator ở đây — xem [[interview-cocos]].\n\n**Khung trả lời 60 giây** — \"Anh xử lý thế nào khi việc không kịp tiến độ?\"\n\n> Nguyên tắc của tôi là không để ai bất ngờ. Ngay khi thấy ước lượng lệch, tôi báo lead trong ngày, kèm lý do cụ thể chỗ nào khó hơn dự kiến.\n>\n> Tôi không chỉ báo vấn đề mà báo kèm lựa chọn: cắt bớt phạm vi để kịp hạn, hoặc lùi hạn bao nhiêu để làm đủ, và tôi nghiêng về phương án nào. Người quyết định là lead hoặc PM, vì họ nhìn được toàn bộ kế hoạch.\n>\n> Sau đó tôi ghi lại vì sao mình ước sai — thường là chưa tính phần tích hợp hoặc test trên máy thật — để lần sau cộng sẵn phần đó vào.\n\n**Họ sẽ đào tiếp**\n\n- *\"Nếu lead không trả lời tin nhắn?\"* → Báo qua kênh thứ hai (gọi, nhắn PM) theo mức độ khẩn, và vẫn làm phần chắc chắn trong lúc chờ.\n- *\"Anh có bao giờ làm thêm giờ để kịp không?\"* → Có khi thật sự cần, nhưng làm thêm giờ là phương án cuối, không phải cách che việc báo trễ.\n- *\"Nếu khách hàng Nhật đổi spec sát ngày ra?\"* → Ước lượng lại ngay, đưa ảnh hưởng tới lịch cho PM, không âm thầm nhận rồi làm ẩu.\n- *\"Postmortem của anh viết gì?\"* → Dòng thời gian, nguyên nhân gốc, vì sao không bắt được sớm, việc phòng lặp lại kèm người chịu trách nhiệm — không có tên người bị trách.\n\n**Cờ đỏ**\n\n- \"Tôi sẽ thức xuyên đêm sửa cho xong\" — nghe thành không báo cáo, không biết giới hạn.\n- Tự chọn ưu tiên giữa hai việc của hai người mà không hỏi ai.\n- Đổ lỗi cho planner, artist hoặc khách hàng khi kể tình huống.\n- Làm ngầm theo ý mình khi không đồng ý với lead.\n- Câu trả lời không có chữ \"báo\" ở đâu cả.\n\n**Số / ví dụ nên thuộc**\n\n- Khung: **làm rõ → ưu tiên → hành động + báo → phòng lặp lại**.\n- **報連相 (hōrensō)**: báo cáo · liên lạc · bàn bạc — giá trị cốt lõi khi làm với Nhật.\n- Báo trễ tiến độ: **trong ngày phát hiện**, kèm **hai phương án**.\n- Sự cố production: **ảnh hưởng → chặn → nguyên nhân gốc → postmortem**.",
+      "hasAiHowto": true,
+      "i18n": {},
+      "color": "#b197fc",
+      "mapId": "interview"
+    },
+    {
       "id": "root",
       "title": "GameDesign Brain",
       "summary": "Kho kiến thức mindmap về Game Design và AI trong game — đồng thời là bộ não thiết kế cho AI agent đọc trước khi sinh code.",
@@ -9274,7 +9554,8 @@
         "backend-go",
         "blueprints",
         "project",
-        "team-lead"
+        "team-lead",
+        "interview"
       ],
       "depth": 0,
       "branch": "root",
@@ -9292,8 +9573,8 @@
       "map": false,
       "mapLabel": "",
       "path": "index.md",
-      "words": 2165,
-      "body": "Đây là **bộ não trung tâm**: một nơi vừa để con người học và tra cứu, vừa để AI agent (Codex, Claude Code, Cursor…) đọc rồi dựng game thật.\n\n## Kho này giải quyết chuyện gì\n\nKhi nhờ AI viết game, vấn đề lớn nhất không phải là AI code kém — mà là **AI không biết bạn muốn gì**. Prompt kiểu \"làm cho tôi game bắn súng\" cho ra thứ generic, vì mọi quyết định thiết kế đều bị AI bịa ra.\n\nKho này lấp đúng khoảng trống đó theo hai lớp:\n\n1. **Lớp kiến thức** (nhánh 1–6, 8–13) — nguyên lý game design và AI in game. Đây là vốn hiểu biết chung: AI đọc để có chung ngôn ngữ và chuẩn mực với bạn.\n2. **Lớp bản thiết kế** ([[blueprints]]) — GDD của game cụ thể bạn đang làm. Đây mới là thứ AI thực thi.\n\nThiếu lớp 1, AI làm ra game \"đúng yêu cầu nhưng chán\". Thiếu lớp 2, AI không có gì để làm.\n\n## Các nhánh\n\n| Nhánh | Nội dung | Dùng khi |\n|---|---|---|\n| [[foundations]] | Nền tảng thiết kế: core loop, động lực người chơi, MDA, game feel | Bắt đầu một ý tưởng game mới |\n| [[systems]] | Systems design: kinh tế, tiến trình, combat, cân bằng số | Thiết kế các hệ thống chạy trong game |\n| [[content-design]] | Level, màn chơi, procedural, narrative | Đổ nội dung vào bộ khung hệ thống |\n| [[presentation]] | Nghe nhìn & UX: art direction, animation, UI, HUD, âm thanh, trợ năng | Biến hệ thống thành thứ người chơi cảm nhận được |\n| [[game-ai]] | AI điều khiển NPC/gameplay: FSM, Behavior Tree, GOAP, Utility AI, pathfinding | Làm cho enemy/NPC thông minh |\n| [[ai-assisted-dev]] | Dùng AI (Codex/Claude) để **làm** game | Muốn AI code hộ mà kết quả dùng được |\n| [[production]] | Kiến trúc, data-driven, đo đạc, hiệu năng | Biến prototype thành sản phẩm |\n| [[unity]] | Unity thực chiến: vật lý, animation, pattern, UI, audio, VFX, shader, ánh sáng, tối ưu, build, multiplayer | Hiện thực hoá trong Unity mà không dính bẫy |\n| [[cocos-creator]] | Cocos Creator 3.x: chọn engine theo nơi phát hành, bản đồ Unity → Cocos, bẫy web và mini game | Làm game H5 hoặc mini game trong siêu ứng dụng |\n| [[backend-go]] | Backend Go & database: API, phòng realtime, Postgres/Redis, dữ liệu kinh tế | Game có tài khoản, IAP hay bảng xếp hạng |\n| [[team-lead]] | Làm team lead đội game 5–15 người: 30 ngày đầu, ước lượng, giao việc, 1:1, báo cáo lên, crunch và sự cố | Bạn chịu trách nhiệm cho thứ mình không tự tay làm |\n| [[blueprints]] | GDD của game thật + template | Bắt tay vào một dự án cụ thể |\n\nPhân biệt quan trọng: **[[game-ai]] là AI *trong* game** (con quái biết né đạn). **[[ai-assisted-dev]] là AI *làm ra* game** (Claude viết script cho con quái đó). Hai thứ hoàn toàn khác nhau, đừng lẫn.\n\n## Cách dùng\n\n**Đọc/duyệt:** `npm run dev` rồi lang thang trên mindmap. Click node để đọc, `/` để tìm kiếm.\n\n**Mở rộng:** tạo file `.md` mới trong `content/<nhánh>/`, khai frontmatter, lưu lại. Mindmap tự cập nhật — không cần khai báo node ở đâu khác. Xem quy ước ở `content/_SCHEMA.md`.\n\n**Cho AI đọc:** nói với agent *\"đọc `AI_CONTEXT.md` trước\"*. File đó chỉ đường tới `KNOWLEDGE_INDEX.md` (mục lục tự sinh) và các file chi tiết. Hoặc bấm **Copy cho AI** ở panel bên phải để lấy đúng một nhánh mà dán vào chat.\n\n## Nguyên tắc bất di bất dịch\n\n> **Markdown trong `content/` là nguồn chân lý duy nhất.**\n> `public/data/graph.json` và `KNOWLEDGE_INDEX.md` đều do máy sinh ra. Sửa tay vào chúng sẽ mất sạch ở lần build kế tiếp.\n\nTrạng thái node: `deep` = đã viết đủ dùng · `stub` = mới có khung, cần bồi đắp. Node stub hiện viền đứt trên mindmap — đó là danh sách việc cần làm của chính kho này.",
+      "words": 2194,
+      "body": "Đây là **bộ não trung tâm**: một nơi vừa để con người học và tra cứu, vừa để AI agent (Codex, Claude Code, Cursor…) đọc rồi dựng game thật.\n\n## Kho này giải quyết chuyện gì\n\nKhi nhờ AI viết game, vấn đề lớn nhất không phải là AI code kém — mà là **AI không biết bạn muốn gì**. Prompt kiểu \"làm cho tôi game bắn súng\" cho ra thứ generic, vì mọi quyết định thiết kế đều bị AI bịa ra.\n\nKho này lấp đúng khoảng trống đó theo hai lớp:\n\n1. **Lớp kiến thức** (nhánh 1–6, 8–13) — nguyên lý game design và AI in game. Đây là vốn hiểu biết chung: AI đọc để có chung ngôn ngữ và chuẩn mực với bạn.\n2. **Lớp bản thiết kế** ([[blueprints]]) — GDD của game cụ thể bạn đang làm. Đây mới là thứ AI thực thi.\n\nThiếu lớp 1, AI làm ra game \"đúng yêu cầu nhưng chán\". Thiếu lớp 2, AI không có gì để làm.\n\n## Các nhánh\n\n| Nhánh | Nội dung | Dùng khi |\n|---|---|---|\n| [[foundations]] | Nền tảng thiết kế: core loop, động lực người chơi, MDA, game feel | Bắt đầu một ý tưởng game mới |\n| [[systems]] | Systems design: kinh tế, tiến trình, combat, cân bằng số | Thiết kế các hệ thống chạy trong game |\n| [[content-design]] | Level, màn chơi, procedural, narrative | Đổ nội dung vào bộ khung hệ thống |\n| [[presentation]] | Nghe nhìn & UX: art direction, animation, UI, HUD, âm thanh, trợ năng | Biến hệ thống thành thứ người chơi cảm nhận được |\n| [[game-ai]] | AI điều khiển NPC/gameplay: FSM, Behavior Tree, GOAP, Utility AI, pathfinding | Làm cho enemy/NPC thông minh |\n| [[ai-assisted-dev]] | Dùng AI (Codex/Claude) để **làm** game | Muốn AI code hộ mà kết quả dùng được |\n| [[production]] | Kiến trúc, data-driven, đo đạc, hiệu năng | Biến prototype thành sản phẩm |\n| [[unity]] | Unity thực chiến: vật lý, animation, pattern, UI, audio, VFX, shader, ánh sáng, tối ưu, build, multiplayer | Hiện thực hoá trong Unity mà không dính bẫy |\n| [[cocos-creator]] | Cocos Creator 3.x: chọn engine theo nơi phát hành, bản đồ Unity → Cocos, bẫy web và mini game | Làm game H5 hoặc mini game trong siêu ứng dụng |\n| [[backend-go]] | Backend Go & database: API, phòng realtime, Postgres/Redis, dữ liệu kinh tế | Game có tài khoản, IAP hay bảng xếp hạng |\n| [[team-lead]] | Làm team lead đội game 5–15 người: 30 ngày đầu, ước lượng, giao việc, 1:1, báo cáo lên, crunch và sự cố | Bạn chịu trách nhiệm cho thứ mình không tự tay làm |\n| [[interview]] | Ôn phỏng vấn game developer theo bốn vòng: giải thuật, CV, tình huống, tính cách — kèm thẻ luyện 🎤 | Sắp đi phỏng vấn |\n| [[blueprints]] | GDD của game thật + template | Bắt tay vào một dự án cụ thể |\n\nPhân biệt quan trọng: **[[game-ai]] là AI *trong* game** (con quái biết né đạn). **[[ai-assisted-dev]] là AI *làm ra* game** (Claude viết script cho con quái đó). Hai thứ hoàn toàn khác nhau, đừng lẫn.\n\n## Cách dùng\n\n**Đọc/duyệt:** `npm run dev` rồi lang thang trên mindmap. Click node để đọc, `/` để tìm kiếm.\n\n**Mở rộng:** tạo file `.md` mới trong `content/<nhánh>/`, khai frontmatter, lưu lại. Mindmap tự cập nhật — không cần khai báo node ở đâu khác. Xem quy ước ở `content/_SCHEMA.md`.\n\n**Cho AI đọc:** nói với agent *\"đọc `AI_CONTEXT.md` trước\"*. File đó chỉ đường tới `KNOWLEDGE_INDEX.md` (mục lục tự sinh) và các file chi tiết. Hoặc bấm **Copy cho AI** ở panel bên phải để lấy đúng một nhánh mà dán vào chat.\n\n## Nguyên tắc bất di bất dịch\n\n> **Markdown trong `content/` là nguồn chân lý duy nhất.**\n> `public/data/graph.json` và `KNOWLEDGE_INDEX.md` đều do máy sinh ra. Sửa tay vào chúng sẽ mất sạch ở lần build kế tiếp.\n\nTrạng thái node: `deep` = đã viết đủ dùng · `stub` = mới có khung, cần bồi đắp. Node stub hiện viền đứt trên mindmap — đó là danh sách việc cần làm của chính kho này.",
       "aiPrompt": "**Dùng AI thế nào với kho này**\n\nBa cách, chi phí và độ chính xác khác nhau rõ:\n\n| Cách | Khi nào | Lưu ý |\n|---|---|---|\n| Agent **đọc file** trong repo | Mặc định. Agent có filesystem. | Rẻ nhất, luôn đúng hiện trạng |\n| **Copy mục này** / **Copy cả nhánh** | Giao đúng một việc | ~1k / ~13k token |\n| **Xuất playbook prompt** | AI không đọc được ổ đĩa | ~15k token |\n\nXem [[ai-tooling]] về tiêu chí chọn công cụ, và [[ai-limits]] về chỗ không nên nhờ.\n\nNode gốc không phải chỗ để viết prompt cụ thể. Nhưng mọi prompt gửi AI về dự án game đều nên mở đầu bằng **một khối định vị** như dưới đây — nó ngăn AI mặc định về \"game trung bình của ngành\".\n\n**Mẫu mở đầu cho mọi phiên làm việc**\n\n```\nKho kiến thức thiết kế: E:/XoiGame/GameDesign\nĐọc AI_CONTEXT.md trước, rồi KNOWLEDGE_INDEX.md để biết có những node nào.\n\nGDD của dự án: content/07-blueprints/<ten-game>.md\nBa mục sau là RÀNG BUỘC CỨNG, vi phạm thì phải dừng và hỏi tôi:\n  - Design Pillars\n  - Bất biến (INV-xx)\n  - Không thuộc phạm vi\n\nTrước khi chọn kỹ thuật cho <việc cần làm>, đọc node liên quan trong kho\nvà nói cho tôi biết bạn chọn cái nào, vì sao.\n```\n\n**Bẫy lớn nhất:** dán cả 22.000 từ kiến thức vào chat. Vừa tốn token vừa làm loãng tín hiệu. Hãy để agent **đọc file theo nhu cầu** — chỉ dán khi agent không truy cập được ổ đĩa.",
       "unity": "Toàn bộ kinh nghiệm Unity nằm ở nhánh [[unity]] — 17 node về vật lý, animation, pattern, UI, audio, VFX, shader, lighting, tối ưu, build, multiplayer.\n\nMục 🎮 ở các nhánh thiết kế **không lặp lại** nội dung đó. Nó chỉ trả lời: *quyết định thiết kế này sống ở đâu trong Unity project?*\n\n**Đọc theo thứ tự nào nếu bạn đang làm Unity**\n\n| Bạn đang ở đâu | Đọc gì |\n|---|---|\n| Chưa mở Unity, còn đang nghĩ ý tưởng | Nhánh [[foundations]] (#2–8) |\n| Đã có ý tưởng, muốn giao việc cho AI | Nhánh [[ai-assisted-dev]] (#9–15) |\n| Vừa `New Project`, chưa viết gì | [[unity-project-structure]], [[unity-game-loop]] |\n| Đang dựng gameplay | [[unity-physics]], [[unity-input]], [[unity-camera]] |\n| Game chạy được, cần \"đã tay\" | [[game-feel]] rồi [[unity-vfx]], [[unity-audio]] |\n| Chuẩn bị phát hành | [[unity-optimization]], [[unity-build-platform]] |\n\n**Ba quyết định Unity không sửa được về sau**\n\nChốt trong tuần đầu, vì đổi nghĩa là làm lại asset hoặc code diện rộng:\n\n1. **Color space = Linear** (`Project Settings > Player`) — xem [[unity-lighting]]\n2. **Input System mới**, không Input Manager cũ — xem [[unity-input]]\n3. **Fixed Timestep = 1/60** nếu game có frame data — xem [[combat-systems]]\n\nVà một quyết định kiến trúc: **`Assets/Scripts/Core/` không `using UnityEngine`**. Nó cho bạn test EditMode chạy trong mili giây và mô phỏng cân bằng ngoài Unity — xem [[unity-project-structure]].\n\n**Kiểm tra nhanh**\n- `Project Settings > Player > Color Space` = Linear?\n- `Time > Fixed Timestep` = 0.01667?\n- `grep -r \"using UnityEngine\" Assets/Scripts/Core/` → rỗng?",
       "code": "",
@@ -12012,6 +12293,141 @@
       "type": "related"
     },
     {
+      "source": "interview",
+      "target": "csharp-interview-kit",
+      "type": "related"
+    },
+    {
+      "source": "interview",
+      "target": "project-postmortem",
+      "type": "related"
+    },
+    {
+      "source": "interview",
+      "target": "cocos-creator",
+      "type": "related"
+    },
+    {
+      "source": "interview",
+      "target": "team-lead",
+      "type": "related"
+    },
+    {
+      "source": "interview-algorithm",
+      "target": "csharp-interview-kit",
+      "type": "related"
+    },
+    {
+      "source": "interview-algorithm",
+      "target": "csharp-collections",
+      "type": "related"
+    },
+    {
+      "source": "interview-algorithm",
+      "target": "pathfinding",
+      "type": "related"
+    },
+    {
+      "source": "interview-cocos",
+      "target": "cocos-creator",
+      "type": "related"
+    },
+    {
+      "source": "interview-cocos",
+      "target": "cocos-scene-component",
+      "type": "related"
+    },
+    {
+      "source": "interview-cocos",
+      "target": "cocos-assets-bundle",
+      "type": "related"
+    },
+    {
+      "source": "interview-cocos",
+      "target": "cocos-optimization",
+      "type": "related"
+    },
+    {
+      "source": "interview-cv",
+      "target": "interview",
+      "type": "related"
+    },
+    {
+      "source": "interview-cv",
+      "target": "project-postmortem",
+      "type": "related"
+    },
+    {
+      "source": "interview-cv",
+      "target": "csharp-interview-kit",
+      "type": "related"
+    },
+    {
+      "source": "interview-cv",
+      "target": "unity-addressables",
+      "type": "related"
+    },
+    {
+      "source": "interview-cv",
+      "target": "unity-network-client",
+      "type": "related"
+    },
+    {
+      "source": "interview-personality",
+      "target": "interview",
+      "type": "related"
+    },
+    {
+      "source": "interview-personality",
+      "target": "interview-cv",
+      "type": "related"
+    },
+    {
+      "source": "interview-personality",
+      "target": "core-loop",
+      "type": "related"
+    },
+    {
+      "source": "interview-personality",
+      "target": "player-motivation",
+      "type": "related"
+    },
+    {
+      "source": "interview-personality",
+      "target": "liveops",
+      "type": "related"
+    },
+    {
+      "source": "interview-personality",
+      "target": "project-postmortem",
+      "type": "related"
+    },
+    {
+      "source": "interview-situations",
+      "target": "interview",
+      "type": "related"
+    },
+    {
+      "source": "interview-situations",
+      "target": "project-teamwork",
+      "type": "related"
+    },
+    {
+      "source": "interview-situations",
+      "target": "lead-crisis",
+      "type": "related"
+    },
+    {
+      "source": "interview-situations",
+      "target": "lead-upward",
+      "type": "related"
+    },
+    {
+      "source": "interview-situations",
+      "target": "lead-estimation",
+      "type": "related"
+    },
+    {
       "source": "core-loop",
       "target": "randomness",
       "type": "mention"
@@ -14032,6 +14448,101 @@
       "type": "mention"
     },
     {
+      "source": "interview",
+      "target": "interview-algorithm",
+      "type": "mention"
+    },
+    {
+      "source": "interview",
+      "target": "interview-cocos",
+      "type": "mention"
+    },
+    {
+      "source": "interview-algorithm",
+      "target": "csharp-linq",
+      "type": "mention"
+    },
+    {
+      "source": "interview-cocos",
+      "target": "cocos-hot-update",
+      "type": "mention"
+    },
+    {
+      "source": "interview-cocos",
+      "target": "cocos-demo-casino",
+      "type": "mention"
+    },
+    {
+      "source": "interview-cocos",
+      "target": "cocos-demo-shooter",
+      "type": "mention"
+    },
+    {
+      "source": "interview-cv",
+      "target": "unity-optimization",
+      "type": "mention"
+    },
+    {
+      "source": "interview-cv",
+      "target": "unity-gpu-optimization",
+      "type": "mention"
+    },
+    {
+      "source": "interview-cv",
+      "target": "unity-memory-optimization",
+      "type": "mention"
+    },
+    {
+      "source": "interview-cv",
+      "target": "unity-profiling",
+      "type": "mention"
+    },
+    {
+      "source": "interview-cv",
+      "target": "unity-csharp-memory",
+      "type": "mention"
+    },
+    {
+      "source": "interview-cv",
+      "target": "go-protobuf",
+      "type": "mention"
+    },
+    {
+      "source": "interview-cv",
+      "target": "unity-monetization-sdk",
+      "type": "mention"
+    },
+    {
+      "source": "interview-cv",
+      "target": "project-contract",
+      "type": "mention"
+    },
+    {
+      "source": "interview-cv",
+      "target": "screen-gacha",
+      "type": "mention"
+    },
+    {
+      "source": "interview-cv",
+      "target": "screen-ranking",
+      "type": "mention"
+    },
+    {
+      "source": "interview-cv",
+      "target": "unity-multiplayer",
+      "type": "mention"
+    },
+    {
+      "source": "interview-cv",
+      "target": "interview-cocos",
+      "type": "mention"
+    },
+    {
+      "source": "interview-situations",
+      "target": "interview-cocos",
+      "type": "mention"
+    },
+    {
       "source": "root",
       "target": "blueprints",
       "type": "mention"
@@ -14089,6 +14600,11 @@
     {
       "source": "root",
       "target": "team-lead",
+      "type": "mention"
+    },
+    {
+      "source": "root",
+      "target": "interview",
       "type": "mention"
     },
     {

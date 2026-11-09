@@ -38,6 +38,7 @@ Thiếu lớp 1, AI làm ra game "đúng yêu cầu nhưng chán". Thiếu lớp
 | [[cocos-creator]] | Cocos Creator 3.x: chọn engine theo nơi phát hành, bản đồ Unity → Cocos, bẫy web và mini game | Làm game H5 hoặc mini game trong siêu ứng dụng |
 | [[backend-go]] | Backend Go & database: API, phòng realtime, Postgres/Redis, dữ liệu kinh tế | Game có tài khoản, IAP hay bảng xếp hạng |
 | [[team-lead]] | Làm team lead đội game 5–15 người: 30 ngày đầu, ước lượng, giao việc, 1:1, báo cáo lên, crunch và sự cố | Bạn chịu trách nhiệm cho thứ mình không tự tay làm |
+| [[interview]] | Ôn phỏng vấn game developer theo bốn vòng: giải thuật, CV, tình huống, tính cách — kèm thẻ luyện 🎤 | Sắp đi phỏng vấn |
 | [[blueprints]] | GDD của game thật + template | Bắt tay vào một dự án cụ thể |
 
 Phân biệt quan trọng: **[[game-ai]] là AI *trong* game** (con quái biết né đạn). **[[ai-assisted-dev]] là AI *làm ra* game** (Claude viết script cho con quái đó). Hai thứ hoàn toàn khác nhau, đừng lẫn.

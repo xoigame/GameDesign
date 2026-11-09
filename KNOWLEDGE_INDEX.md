@@ -4,9 +4,9 @@
 > Đây là mục lục phẳng của toàn bộ kho kiến thức, dành cho AI agent (Codex / Claude Code)
 > đọc nhanh trước khi mở từng file `content/**/*.md` chi tiết.
 
-Cập nhật: `2026-09-17T08:57:08.812Z` · 167 node · 167 deep · 0 stub · 490392 từ
+Cập nhật: `2026-11-09T02:26:15.931Z` · 173 node · 173 deep · 0 stub · 505521 từ
 
-Mức độ: **37 cơ bản** · 82 trung cấp · 48 chuyên sâu
+Mức độ: **38 cơ bản** · 87 trung cấp · 48 chuyên sâu
 
 ## Lộ trình đọc
 
@@ -182,6 +182,12 @@ thức cơ bản (ai cũng nên đọc), trung cấp (cần nền), hay chuyên 
 | 165 | **1:1, kèm cặp và người đang chìm** `#lead-one-on-one` | Trung cấp | deep | `content/13-team-lead/lead-one-on-one.md` |
 | 166 | **Báo cáo lên và đỡ cho đội** `#lead-upward` | Chuyên sâu | deep | `content/13-team-lead/lead-upward.md` |
 | 167 | **Trượt tiến độ, crunch và sự cố** `#lead-crisis` | Chuyên sâu | deep | `content/13-team-lead/lead-crisis.md` |
+| 168 | **Phỏng vấn game developer** `#interview` | Trung cấp | deep | `content/15-interview/index.md` |
+| 169 | **Vòng 1 — Giải thuật code 3 câu** `#interview-algorithm` | Trung cấp | deep | `content/15-interview/interview-algorithm.md` |
+| 170 | **Vòng 2 — Phỏng vấn theo CV** `#interview-cv` | Trung cấp | deep | `content/15-interview/interview-cv.md` |
+| 171 | **Vòng 3 — Xử lý công việc và tình huống** `#interview-situations` | Trung cấp | deep | `content/15-interview/interview-situations.md` |
+| 172 | **Vòng 4 — Tính cách, thành công, thất bại và game của họ** `#interview-personality` | Cơ bản | deep | `content/15-interview/interview-personality.md` |
+| 173 | **Anh có biết Cocos Creator không?** `#interview-cocos` | Trung cấp | deep | `content/15-interview/interview-cocos.md` |
 
 ## Cây kiến thức
 
@@ -352,6 +358,12 @@ thức cơ bản (ai cũng nên đọc), trung cấp (cần nền), hay chuyên 
     - ◐ `#165` **1:1, kèm cặp và người đang chìm** `#lead-one-on-one` 🤖 🎤 — 1:1 30 phút hai tuần một lần mà không biến thành họp status, phản hồi nói trong 48 giờ, bốn nguyên nhân khiến một người chìm và bốn cách can thiệp khác hẳn nhau. → `content/13-team-lead/lead-one-on-one.md`
     - ○ `#166` **Báo cáo lên và đỡ cho đội** `#lead-upward` 🤖 🎤 — Trả lời đúng câu hỏi thật sau câu "bao giờ xong", báo cáo ba dòng thay vì kể task, công thức báo tin xấu có lựa chọn kèm theo, và cách nói "được, vậy đổi cái gì ra" thay vì nói không. → `content/13-team-lead/lead-upward.md`
     - ○ `#167` **Trượt tiến độ, crunch và sự cố** `#lead-crisis` 🤖 🎤 — Năm đòn bẩy khi mốc sắp trượt và thứ tự phải thử chúng, vì sao thêm người làm dự án trễ thêm, cái giá đo được của crunch, và vai thật của lead trong 15 phút đầu một sự cố production. → `content/13-team-lead/lead-crisis.md`
+  - ◐ `#168` **Phỏng vấn game developer** `#interview` 🤖 🎤 🗺 — Nhánh ôn phỏng vấn theo đúng lịch bốn vòng của một studio game Nhật — giải thuật, CV, tình huống công việc, tính cách — kèm câu "có biết Cocos Creator không". Mỗi node có bộ thẻ 🎤 để luyện nói ra miệng. → `content/15-interview/index.md`
+    - ◐ `#169` **Vòng 1 — Giải thuật code 3 câu** `#interview-algorithm` 🤖 💻 🎤 — Đề thi giải thuật ba câu (dễ–vừa–khó, 60–90 phút) thường ra những dạng nào, cách phân giờ, mười dạng bài kèm kỹ thuật và độ phức tạp, lộ trình ôn 5–7 ngày và chín lời giải C# chạy được. → `content/15-interview/interview-algorithm.md`
+    - ◐ `#170` **Vòng 2 — Phỏng vấn theo CV** `#interview-cv` 🤖 🎤 — Người phỏng vấn đào từng dòng trong CV để xem bạn thật sự làm tới đâu. Cách biến mỗi dòng CV thành một câu chuyện STAR có số, bốn câu chuyện bắt buộc phải chuẩn bị, và các câu kỹ thuật Unity live-service sẽ bị hỏi theo đúng những gì CV ghi. → `content/15-interview/interview-cv.md`
+    - ◐ `#171` **Vòng 3 — Xử lý công việc và tình huống** `#interview-situations` 🤖 🎤 — Vòng hỏi "nếu… thì anh làm gì": deadline không kịp, bug nóng trên production, spec mơ hồ, bất đồng với đồng nghiệp, việc bị giao chồng. Khung trả lời bốn bước và mười tình huống hay gặp ở studio game làm với đối tác Nhật. → `content/15-interview/interview-situations.md`
+    - ● `#172` **Vòng 4 — Tính cách, thành công, thất bại và game của họ** `#interview-personality` 🤖 🎤 — Vòng cuối hỏi con người: kể một thành công và một thất bại, đã chơi game của công ty chưa, game nào ấn tượng nhất và ấn tượng ở điểm nào. Cách chuẩn bị câu chuyện thất bại không tự bắn vào chân, và cách phân tích một game để nói như người làm game chứ không như người chơi. → `content/15-interview/interview-personality.md`
+    - ◐ `#173` **Anh có biết Cocos Creator không?** `#interview-cocos` 🤖 🎤 — Cách trả lời trung thực mà mạnh khi nhà tuyển dụng hỏi về Cocos Creator lúc mình chủ yếu là Unity — có kinh nghiệm thật nhưng cũ (2.x), bản đồ Unity → Cocos 3.x, khác biệt 2.x → 3.x, và kế hoạch ôn 3 ngày kèm mini project làm bằng chứng. → `content/15-interview/interview-cocos.md`
 
 > **Ký hiệu:** ● cơ bản · ◐ trung cấp · ○ chuyên sâu · `#N` = thứ tự trong lộ trình đọc
 >
@@ -910,6 +922,33 @@ thức cơ bản (ai cũng nên đọc), trung cấp (cần nền), hay chuyên 
 - `#csharp` ↔ `#unity-csharp-memory` (related)
 - `#csharp` ↔ `#unity-design-patterns` (related)
 - `#csharp` ↔ `#go-for-unity-dev` (related)
+- `#interview` ↔ `#csharp-interview-kit` (related)
+- `#interview` ↔ `#project-postmortem` (related)
+- `#interview` ↔ `#cocos-creator` (related)
+- `#interview` ↔ `#team-lead` (related)
+- `#interview-algorithm` ↔ `#csharp-interview-kit` (related)
+- `#interview-algorithm` ↔ `#csharp-collections` (related)
+- `#interview-algorithm` ↔ `#pathfinding` (related)
+- `#interview-cocos` ↔ `#cocos-creator` (related)
+- `#interview-cocos` ↔ `#cocos-scene-component` (related)
+- `#interview-cocos` ↔ `#cocos-assets-bundle` (related)
+- `#interview-cocos` ↔ `#cocos-optimization` (related)
+- `#interview-cv` ↔ `#interview` (related)
+- `#interview-cv` ↔ `#project-postmortem` (related)
+- `#interview-cv` ↔ `#csharp-interview-kit` (related)
+- `#interview-cv` ↔ `#unity-addressables` (related)
+- `#interview-cv` ↔ `#unity-network-client` (related)
+- `#interview-personality` ↔ `#interview` (related)
+- `#interview-personality` ↔ `#interview-cv` (related)
+- `#interview-personality` ↔ `#core-loop` (related)
+- `#interview-personality` ↔ `#player-motivation` (related)
+- `#interview-personality` ↔ `#liveops` (related)
+- `#interview-personality` ↔ `#project-postmortem` (related)
+- `#interview-situations` ↔ `#interview` (related)
+- `#interview-situations` ↔ `#project-teamwork` (related)
+- `#interview-situations` ↔ `#lead-crisis` (related)
+- `#interview-situations` ↔ `#lead-upward` (related)
+- `#interview-situations` ↔ `#lead-estimation` (related)
 - `#core-loop` ↔ `#randomness` (mention)
 - `#core-loop` ↔ `#gdd-for-ai` (mention)
 - `#core-loop` ↔ `#prompt-patterns` (mention)
@@ -1314,6 +1353,25 @@ thức cơ bản (ai cũng nên đọc), trung cấp (cần nền), hay chuyên 
 - `#csharp` ↔ `#csharp-exception-null` (mention)
 - `#csharp` ↔ `#csharp-modern` (mention)
 - `#csharp` ↔ `#csharp-interview-kit` (mention)
+- `#interview` ↔ `#interview-algorithm` (mention)
+- `#interview` ↔ `#interview-cocos` (mention)
+- `#interview-algorithm` ↔ `#csharp-linq` (mention)
+- `#interview-cocos` ↔ `#cocos-hot-update` (mention)
+- `#interview-cocos` ↔ `#cocos-demo-casino` (mention)
+- `#interview-cocos` ↔ `#cocos-demo-shooter` (mention)
+- `#interview-cv` ↔ `#unity-optimization` (mention)
+- `#interview-cv` ↔ `#unity-gpu-optimization` (mention)
+- `#interview-cv` ↔ `#unity-memory-optimization` (mention)
+- `#interview-cv` ↔ `#unity-profiling` (mention)
+- `#interview-cv` ↔ `#unity-csharp-memory` (mention)
+- `#interview-cv` ↔ `#go-protobuf` (mention)
+- `#interview-cv` ↔ `#unity-monetization-sdk` (mention)
+- `#interview-cv` ↔ `#project-contract` (mention)
+- `#interview-cv` ↔ `#screen-gacha` (mention)
+- `#interview-cv` ↔ `#screen-ranking` (mention)
+- `#interview-cv` ↔ `#unity-multiplayer` (mention)
+- `#interview-cv` ↔ `#interview-cocos` (mention)
+- `#interview-situations` ↔ `#interview-cocos` (mention)
 - `#root` ↔ `#blueprints` (mention)
 - `#root` ↔ `#foundations` (mention)
 - `#root` ↔ `#systems` (mention)
@@ -1326,9 +1384,10 @@ thức cơ bản (ai cũng nên đọc), trung cấp (cần nền), hay chuyên 
 - `#root` ↔ `#cocos-creator` (mention)
 - `#root` ↔ `#backend-go` (mention)
 - `#root` ↔ `#team-lead` (mention)
+- `#root` ↔ `#interview` (mention)
 - `#root` ↔ `#ai-tooling` (mention)
 - `#root` ↔ `#ai-limits` (mention)
 
 ## Tag
 
-`accessibility` · `account` · `addressables` · `ads` · `advanced` · `agent` · `ai` · `ai-dev` · `algorithm` · `analysis` · `analytics` · `animation` · `aot` · `api` · `architecture` · `art` · `asset` · `async` · `audio` · `auth` · `authority` · `automation` · `await` · `backend` · `battle-pass` · `blueprint` · `boxing` · `build` · `bundle` · `burst` · `camera` · `cancellation` · `career` · `case-study` · `casino` · `cdn` · `checklist` · `ci` · `class` · `client-server` · `closure` · `cocos` · `code` · `collections` · `collision` · `combat` · `communication` · `compensation` · `component` · `composition` · `concurrency` · `content` · `context` · `contract` · `core` · `cost` · `cpu` · `crash` · `csharp` · `data` · `data-driven` · `data-structures` · `database` · `debug` · `debugging` · `decision-making` · `delegate` · `demo` · `design` · `design-system` · `devops` · `difficulty` · `docker` · `documentation` · `dotnet` · `dots` · `draw-call` · `economy` · `ecs` · `editor` · `engine` · `environment` · `eval` · `event` · `exception` · `experimental` · `f2p` · `feedback` · `feel` · `flow` · `foundations` · `fundamentals` · `gacha` · `game-feel` · `gameplay` · `gc` · `generic` · `genre` · `git` · `go` · `gpu` · `home` · `hot-update` · `hud` · `iap` · `identity` · `idisposable` · `il2cpp` · `implementation` · `incident` · `industry-standard` · `input` · `interface` · `interview` · `inventory` · `iterator` · `jobs` · `key` · `kickoff` · `knowledge-base` · `label` · `language` · `language-version` · `launch` · `layout` · `leaderboard` · `leadership` · `learning` · `legal` · `level` · `lifecycle` · `lighting` · `limits` · `linq` · `live-coding` · `live-ops` · `liveops` · `llm` · `loading` · `loop` · `mailbox` · `marketing` · `master-data` · `master-user` · `matchmaking` · `math` · `memory` · `memory-leak` · `mentoring` · `meta` · `metrics` · `migration` · `milestone` · `mini-game` · `mission` · `ml` · `mobile` · `mock` · `monetization` · `monitoring` · `movement` · `multiplayer` · `music` · `narrative` · `navigation` · `netcode` · `network` · `npc` · `null` · `offer` · `onboarding` · `oop` · `operations` · `optimization` · `overview` · `pacing` · `pattern` · `pattern-matching` · `payment` · `performance` · `persistence` · `physics` · `piggybank` · `pillar` · `pipeline` · `planning` · `platform` · `plugin` · `polish` · `pool` · `postgres` · `postmortem` · `practical` · `prefab` · `present` · `presentation` · `process` · `procgen` · `production` · `profiling` · `progression` · `project` · `prompt` · `protobuf` · `protocol` · `psychology` · `publish` · `publishing` · `pvp` · `qa` · `quest` · `race-condition` · `randomness` · `ranking` · `realtime` · `record` · `redis` · `reference` · `release` · `rendering` · `repo` · `result` · `retention` · `retry` · `review` · `reward` · `rng` · `safety` · `save` · `scene` · `schema` · `scope` · `screens` · `scrollview` · `season` · `security` · `sequence` · `server` · `server-authoritative` · `shader` · `shooter` · `shop` · `simulation` · `slot` · `social` · `solid` · `span` · `spec` · `spine` · `stakeholder` · `storytelling` · `string` · `struct` · `structure` · `systems` · `task` · `team` · `teamwork` · `tech` · `template` · `testing` · `theory` · `third-party` · `threading` · `token` · `tooling` · `touch` · `tween` · `typescript` · `ui` · `unity` · `upgrade` · `urp` · `ux` · `versioning` · `vfx` · `visual` · `web` · `wechat` · `workflow`
+`accessibility` · `account` · `addressables` · `ads` · `advanced` · `agent` · `ai` · `ai-dev` · `algorithm` · `analysis` · `analytics` · `animation` · `aot` · `api` · `architecture` · `art` · `asset` · `async` · `audio` · `auth` · `authority` · `automation` · `await` · `backend` · `battle-pass` · `blueprint` · `boxing` · `build` · `bundle` · `burst` · `camera` · `cancellation` · `career` · `case-study` · `casino` · `cdn` · `checklist` · `ci` · `class` · `client-server` · `closure` · `cocos` · `code` · `collections` · `collision` · `combat` · `communication` · `compensation` · `component` · `composition` · `concurrency` · `content` · `context` · `contract` · `core` · `cost` · `cpu` · `crash` · `csharp` · `culture` · `data` · `data-driven` · `data-structures` · `database` · `debug` · `debugging` · `decision-making` · `delegate` · `demo` · `design` · `design-system` · `devops` · `difficulty` · `docker` · `documentation` · `dotnet` · `dots` · `draw-call` · `economy` · `ecs` · `editor` · `engine` · `environment` · `eval` · `event` · `exception` · `experimental` · `f2p` · `feedback` · `feel` · `flow` · `foundations` · `fundamentals` · `gacha` · `game-feel` · `gameplay` · `gc` · `generic` · `genre` · `git` · `go` · `gpu` · `home` · `hot-update` · `hud` · `iap` · `identity` · `idisposable` · `il2cpp` · `implementation` · `incident` · `industry-standard` · `input` · `interface` · `interview` · `inventory` · `iterator` · `jobs` · `key` · `kickoff` · `knowledge-base` · `label` · `language` · `language-version` · `launch` · `layout` · `leaderboard` · `leadership` · `learning` · `legal` · `level` · `lifecycle` · `lighting` · `limits` · `linq` · `live-coding` · `live-ops` · `liveops` · `llm` · `loading` · `loop` · `mailbox` · `marketing` · `master-data` · `master-user` · `matchmaking` · `math` · `memory` · `memory-leak` · `mentoring` · `meta` · `metrics` · `migration` · `milestone` · `mini-game` · `mission` · `ml` · `mobile` · `mock` · `monetization` · `monitoring` · `movement` · `multiplayer` · `music` · `narrative` · `navigation` · `netcode` · `network` · `npc` · `null` · `offer` · `onboarding` · `oop` · `operations` · `optimization` · `overview` · `pacing` · `pattern` · `pattern-matching` · `payment` · `performance` · `persistence` · `physics` · `piggybank` · `pillar` · `pipeline` · `planning` · `platform` · `plugin` · `polish` · `pool` · `postgres` · `postmortem` · `practical` · `prefab` · `present` · `presentation` · `process` · `procgen` · `production` · `profiling` · `progression` · `project` · `prompt` · `protobuf` · `protocol` · `psychology` · `publish` · `publishing` · `pvp` · `qa` · `quest` · `race-condition` · `randomness` · `ranking` · `realtime` · `record` · `redis` · `reference` · `release` · `rendering` · `repo` · `result` · `retention` · `retry` · `review` · `reward` · `rng` · `safety` · `save` · `scene` · `schema` · `scope` · `screens` · `scrollview` · `season` · `security` · `sequence` · `server` · `server-authoritative` · `shader` · `shooter` · `shop` · `simulation` · `slot` · `social` · `solid` · `span` · `spec` · `spine` · `stakeholder` · `storytelling` · `string` · `struct` · `structure` · `systems` · `task` · `team` · `teamwork` · `tech` · `template` · `testing` · `theory` · `third-party` · `threading` · `token` · `tooling` · `touch` · `tween` · `typescript` · `ui` · `unity` · `upgrade` · `urp` · `ux` · `versioning` · `vfx` · `visual` · `web` · `wechat` · `workflow`
