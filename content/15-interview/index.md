@@ -22,8 +22,8 @@ Nhánh được dựng quanh một lịch phỏng vấn có thật (Ateam Việt
 | Vòng | Hình thức | Họ thật sự chấm | Node ôn |
 |---|---|---|---|
 | **1. Giải thuật** | Code 3 câu, có giờ | Nhận diện dạng bài, độ phức tạp, code chạy đúng biên | [[interview-algorithm]], [[interview-oop-math]] |
-| **2. Theo CV** | Hỏi đào từng dòng trong CV | Bạn có **thật sự làm** những gì đã ghi, và hiểu nó tới đâu | [[interview-cv]], [[interview-unity-tech]], [[interview-live-service]] |
-| **3. Xử lý công việc** | Tình huống giả định | Cách bạn làm việc trong đội: ưu tiên, báo cáo, bất đồng, sự cố | [[interview-situations]] |
+| **2. Theo CV** | Hỏi đào từng dòng trong CV | Bạn có **thật sự làm** những gì đã ghi, và hiểu nó tới đâu | [[interview-cv]], [[interview-unity-tech]], [[interview-live-service]], [[interview-graphics]], [[interview-mobile-platform]], [[interview-system-design]] |
+| **3. Xử lý công việc** | Tình huống giả định | Cách bạn làm việc trong đội: ưu tiên, báo cáo, bất đồng, sự cố, quy trình | [[interview-situations]], [[interview-process]] |
 | **4. Tính cách** | Trò chuyện | Thành công/thất bại, có hiểu sản phẩm của họ không, có hợp văn hoá không | [[interview-personality]] |
 | Câu phụ | "Có biết Cocos Creator không?" | Trung thực về mức độ + tốc độ bắt nhịp | [[interview-cocos]] |
 
@@ -55,7 +55,8 @@ Last Cloudia **không phải** của Ateam (của AIDIS) — nhầm chỗ này �
 | 2 | Cài Valkyrie Connect hoặc Unison League, chơi mỗi tối 30 phút, ghi sổ quan sát | [[interview-personality]] |
 | 3 | Viết ra 4 câu chuyện STAR, đọc to mỗi câu dưới 2 phút | [[interview-cv]] |
 | 4 | Ngân hàng câu kỹ thuật Unity + client live-service, mỗi ngày một nửa | [[interview-unity-tech]], [[interview-live-service]] |
-| 5 | Luyện tình huống theo khung 4 bước, viết thử 3 tin nhắn báo cáo | [[interview-situations]] |
+| 4–5 | Tối: đồ hoạ/shader, nền tảng mobile, một bài thiết kế hệ thống mỗi ngày | [[interview-graphics]], [[interview-mobile-platform]], [[interview-system-design]] |
+| 5 | Luyện tình huống theo khung 4 bước, viết thử 3 tin nhắn báo cáo; ôn Git và quy trình | [[interview-situations]], [[interview-process]] |
 | 6 | Ôn Cocos 3.x, sửa một demo nhỏ | [[interview-cocos]], [[cocos-creator]] |
 | 7 | Chế độ **🎤 Luyện phỏng vấn** trên web cho cả nhánh, bật đọc to, chấm thật thà | — |
 
