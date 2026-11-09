@@ -62,6 +62,39 @@ CV ghi gì thì kỹ thuật bị hỏi đúng chỗ đó. Bảng ánh xạ:
 | Photon / SmartFoxServer | Authority, đồng bộ trạng thái, lag | [[unity-multiplayer]] |
 | Cocos Creator | Biết tới đâu | [[interview-cocos]] |
 
+## Đào ba tầng — trông thế nào
+
+Người phỏng vấn vòng 2 hiếm khi hỏi câu mới; họ hỏi **tiếp** câu vừa rồi. Ví dụ với dòng "Addressables, tối ưu bộ nhớ":
+
+| Tầng | Câu hỏi | Người làm thật trả lời | Người đứng cạnh trả lời |
+|---|---|---|---|
+| 1 | Anh dùng Addressables làm gì? | Chia group theo event, load từ CDN | Giống hệt — tầng 1 ai cũng qua |
+| 2 | Group chia theo tiêu chí nào, vì sao? | Theo thời điểm cần và theo vòng đời event, để gỡ được cả bundle khi event hết | "Theo loại asset" — không nói được vì sao |
+| 3 | Một texture dùng chung cho hai event thì nằm bundle nào? | Kéo ra group dùng chung, nếu không sẽ bị nhân đôi; kiểm bằng Analyze | Im lặng hoặc đoán |
+
+Chuẩn bị cho **tầng 3** của mỗi dòng CV. Tầng 1–2 tự đến.
+
+## Câu hỏi theo từng chặng nghề
+
+CV mười năm qua năm công ty cho người hỏi nhiều cửa để đào. Chuẩn bị một ý cho mỗi chặng:
+
+| Chặng | Họ sẽ tò mò | Ý nên chạm |
+|---|---|---|
+| ASP.NET (2015–2016) | Vì sao chuyển từ web sang game | Nền C#/SQL giúp gì khi làm client–server sau này |
+| Casual game (2016–2018) | Ads, IAP, tự làm trọn game nhỏ | Hiểu monetization từ sớm |
+| Casino/slot + Cocos (2018–2019) | Cocos tới đâu, SmartFoxServer | Kết nối realtime, hai engine — xem [[interview-cocos]] |
+| Game anime cho NPH Nhật (2020–2023) | Lên Senior vì sao, mentor ai, shader, multiplayer | Trách nhiệm tăng dần, có người kèm |
+| Unity 6/URP live-service (2023–2026) | Codebase lớn, gRPC, SDK, tối ưu | Làm việc trong hệ thống lớn có sẵn mà không phá |
+| Tự làm (song song) | Có ảnh hưởng việc chính không, có định nghỉ làm riêng không | Làm ngoài giờ, là nơi thử công nghệ mới |
+
+## Câu hỏi khó về chính CV
+
+Ba câu ít người chuẩn bị nhưng hay bị hỏi với hồ sơ hơn mười năm:
+
+- **"Mười năm sao chưa làm lead?"** — Trả lời thật về lựa chọn: thích ở gần code, đã kèm người mới, sẵn sàng nhận nhóm nhỏ khi phù hợp. Không xin lỗi cho lựa chọn của mình. Xem [[team-lead]] nếu họ hỏi sâu về quản lý.
+- **"Anh đang nghỉ việc, đã bao lâu, làm gì trong lúc đó?"** — Nói rõ mốc nghỉ, và những gì đang làm có sản phẩm thấy được (game, công cụ, ôn luyện).
+- **"Anh có nhận việc ở mức lương thấp hơn trước không, sao lại ứng tuyển vị trí này?"** — Nói vì sao vị trí này khớp (sản phẩm, đội, remote), và khoảng lương đã cân nhắc — họ đang lo bạn sẽ đi ngay khi có chỗ trả cao hơn.
+
 ## 🤖 Prompt cho AI
 
 **Dùng AI thế nào để luyện vòng hỏi theo CV**
@@ -112,6 +145,34 @@ Dán CV thật vào và bắt AI làm đúng việc của người phỏng vấn
   → Đọc spec, gom câu hỏi thành một danh sách có đánh số thay vì hỏi rải rác, và xác nhận lại bằng chữ những chỗ hiểu có thể lệch. Báo tiến độ và rủi ro **sớm**, vì văn hoá làm việc với Nhật coi trọng không bất ngờ hơn tốc độ. Ví dụ một lần phát hiện spec mâu thuẫn và hỏi trước khi làm đã tiết kiệm được việc làm lại.
 - `Senior` **Mười năm qua anh thấy mình tiến bộ nhất ở đâu?**
   → Từ "làm cho chạy" sang "làm cho đội vận hành được": đo trước khi tối ưu, viết để người khác bảo trì, và tự động hoá phần lặp lại. Lấy một ví dụ đối chiếu trước/sau cụ thể của chính bạn, vì câu này họ đang đo khả năng tự nhìn lại.
+- `Junior` **Vì sao anh chuyển từ lập trình web ASP.NET sang làm game?**
+  → Nói một lý do thật về đam mê sản phẩm và một lý do thực tế: game cho thấy kết quả việc mình làm ngay trên tay người chơi. Rồi nối với lợi thế: nền C#, SQL và web giúp tôi hiểu phía server, nên khi làm client live-service với gRPC tôi nói chuyện được với đội backend. Đó là cách biến một chặng "lạc đề" trong CV thành điểm cộng.
+- `Junior` **Anh làm game casual có quảng cáo và IAP ở công ty đầu tiên thế nào?**
+  → Kể quy mô (đội mấy người, mấy game) và phần của mình: gameplay, tích hợp SDK quảng cáo, IAP, build lên store. Điều đáng nói nhất là bài học sớm về monetization: vị trí đặt quảng cáo ảnh hưởng retention thế nào. Kinh nghiệm này nối thẳng sang 5 game tự phát hành sau này.
+- `Mid` **Ở công ty casino/slot anh làm gì với SmartFoxServer?**
+  → SmartFoxServer là server realtime cho game nhiều người; phía client tôi xử lý kết nối, gửi nhận sự kiện phòng chơi, và cập nhật UI theo trạng thái server gửi về. Bài học chính là client không bao giờ tự quyết kết quả quay — server quyết, client chỉ diễn hoạt cảnh cho khớp. Đây cũng là chỗ tôi làm cả Unity lẫn Cocos Creator.
+- `Mid` **Anh lên Senior năm 2022 — điều gì thay đổi trong công việc?**
+  → Từ nhận task sang chịu trách nhiệm một mảng: tôi review code, kèm người mới, ước lượng cho phần mình, và trao đổi trực tiếp với phía Nhật về spec. Nói một ví dụ cụ thể về việc kèm một bạn junior hoặc một quyết định kỹ thuật bạn chốt. Họ đang xem bạn có làm được việc của Senior chứ không chỉ mang chức danh.
+- `Mid` **Anh từng viết shader gì, vì sao phải viết tay?**
+  → Kể một hiệu ứng cụ thể (outline nhân vật, dissolve, hiệu ứng UI, post-processing) và lý do không dùng sẵn: cần nhẹ hơn trên mobile, hoặc cần đúng phong cách art. Nói thêm cách kiểm hiệu năng: số variant, chi phí trên GPU máy tầm trung. Shader viết đẹp mà làm tụt fps là câu chuyện ngược.
+- `Mid` **Anh làm multiplayer với Photon thế nào, xử lý lag ra sao?**
+  → Nói rõ mô hình: ai có quyền quyết định (master client hay server), đồng bộ gì bằng RPC, gì bằng state. Với lag thì nội suy vị trí của người chơi khác, dự đoán phía client cho chính mình, và để server/master quyết kết quả quan trọng. Nêu một lỗi đồng bộ thật bạn đã gặp và cách sửa.
+- `Mid` **Codebase hàng nghìn script, anh làm quen và sửa thế nào mà không phá?**
+  → Tuần đầu đọc luồng chính (boot, đăng nhập, một màn hình điển hình) thay vì đọc hết, và hỏi người cũ về chỗ "đừng đụng vào". Khi sửa, tôi tìm mọi chỗ gọi tới, sửa nhỏ, có review, và test lại trên máy thật các màn liên quan. Codebase lớn không đáng sợ bằng việc sửa mà không biết ai đang dùng code đó.
+- `Mid` **Anh tích hợp những SDK nào, cái nào khó nhất?**
+  → Kể tên: Firebase, Adjust, IAP, CRIWare cho âm thanh/video, Utage cho phần kể chuyện. Chọn một cái khó và nói vì sao — xung đột thư viện native Android, cấu hình iOS, hay phiên bản SDK vỡ khi nâng Unity. Kèm cách làm cho lần nâng sau an toàn hơn: tách lớp bọc SDK, ghi checklist build.
+- `Mid` **Anh dùng CI để build thế nào?**
+  → Mô tả pipeline đã dùng (Jenkins hoặc Drone): build tự động theo nhánh, đánh số version, đẩy bản thử cho QA. Giá trị chính là bản build không phụ thuộc máy của một người, và lỗi build bị phát hiện ngay khi merge chứ không phải lúc sắp ra bản. Nếu chỉ tham gia dùng chứ không dựng, nói rõ như vậy.
+- `Mid` **Anh làm việc từ xa có kỷ luật thế nào?**
+  → Giờ làm cố định, báo đầu ngày việc sẽ làm và cuối ngày việc đã xong, đẩy code nhỏ và thường xuyên để người khác thấy tiến độ. Hỏi bằng chữ rõ ràng, có đánh số, để người ở múi giờ khác trả lời được không cần họp. Mấy năm làm với đội Nhật và tự làm game ở nhà là bằng chứng tôi đã quen nhịp này.
+- `Senior` **Anh dùng AI trong công việc thế nào, có lo lộ code của công ty không?**
+  → Tôi dùng AI để đọc code nhanh, viết test, viết công cụ và việc lặp lại; mọi đoạn code AI viết đều qua review và test như code người viết. Về bảo mật: tuân thủ quy định của công ty, không đưa code hay tài liệu nội bộ lên công cụ không được phép. Chủ động hỏi chính sách AI của công ty trước là điểm cộng.
+- `Senior` **Mười năm sao anh chưa làm lead?**
+  → Trả lời thật về lựa chọn: tôi muốn ở gần code và sản phẩm, trong lúc vẫn kèm người mới và chịu trách nhiệm một mảng kỹ thuật. Nói rõ sẵn sàng dẫn nhóm nhỏ khi có cơ hội, kèm bằng chứng đã làm một phần việc của lead. Không xin lỗi cho lựa chọn của mình, vì nghe như tự ti.
+- `Senior` **Thời gian gần đây anh không đi làm, anh đã làm gì?**
+  → Nói mốc nghỉ rõ ràng và những gì có sản phẩm thấy được: phát triển game riêng, hệ công cụ AI làm game, ôn kỹ thuật cho bước tiếp theo. Người hỏi muốn biết kỹ năng có bị mai một không, nên đưa ra thứ cụ thể đã làm trong thời gian đó.
+- `Senior` **Nếu vào công ty, ba tháng đầu anh sẽ làm gì?**
+  → Tháng đầu học codebase và quy trình, nhận bug và task nhỏ để hiểu hệ thống. Tháng hai nhận một tính năng nhỏ trọn vẹn. Tháng ba bắt đầu đóng góp ngoài task: đo hiệu năng, công cụ cho đội, cải tiến quy trình build. Câu trả lời cho thấy bạn không vội phá cái có sẵn nhưng cũng không thụ động.
 
 **Khung trả lời 60 giây** — "Kể về dự án anh tự hào nhất"
 

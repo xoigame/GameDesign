@@ -43,6 +43,51 @@ Thiếu bước 1 thì nghe như hấp tấp. Thiếu bước 3 phần "báo" th
 
 Mô hình sự cố và báo lên trên chi tiết hơn ở [[lead-crisis]] và [[lead-upward]]; ước lượng và báo trễ ở [[lead-estimation]].
 
+## Làm việc với đội Nhật — năm điều người hỏi ngầm chấm
+
+| Khái niệm | Nghĩa trong công việc | Câu trả lời thể hiện nó |
+|---|---|---|
+| **報告 hōkoku** (báo cáo) | Báo kết quả và tiến độ **trước khi được hỏi** | "Cuối ngày tôi gửi tình trạng, kể cả khi không có gì mới" |
+| **連絡 renraku** (liên lạc) | Báo sự thay đổi ngay khi biết | "Spec đổi thì tôi báo người liên quan trong ngày" |
+| **相談 sōdan** (bàn bạc) | Hỏi ý **trước** khi quyết điều ngoài quyền của mình | "Tôi đề xuất hai phương án và xin lead chốt" |
+| **根回し nemawashi** | Trao đổi riêng trước cuộc họp để không ai bất ngờ | "Tôi nói riêng với lead trước khi đưa vấn đề ra họp" |
+| **報告は結論から** | Báo cáo **kết luận trước**, chi tiết sau | Mở đầu tin nhắn bằng "Trễ 2 ngày" chứ không phải bằng quá trình |
+
+Không cần dùng thuật ngữ tiếng Nhật trong buổi phỏng vấn — nhưng câu trả lời phải **thể hiện** được những điều này.
+
+## Mẫu tin nhắn báo cáo — kết luận trước
+
+Rất nhiều câu vòng 3 thực chất là hỏi "anh sẽ báo thế nào". Có sẵn một mẫu thì trả lời trôi chảy:
+
+```
+[Kết luận]   Task X dự kiến trễ 2 ngày (hạn cũ thứ 4 → thứ 6).
+[Lý do]      API phía server trả dữ liệu khác spec, cần chờ xác nhận.
+[Ảnh hưởng]  Màn hình Y chưa test được; các task khác không bị ảnh hưởng.
+[Phương án]  A) Làm trước với dữ liệu giả, ghép khi server sửa — giữ hạn thứ 5.
+             B) Chờ server sửa xong — hạn thứ 6.
+[Đề xuất]    Tôi chọn A. Xin anh/chị chốt trước 15h hôm nay.
+```
+
+Năm dòng, đọc trong 20 giây, người nhận quyết được ngay. So với một tin nhắn kể quá trình ba đoạn rồi mới tới "nên chắc sẽ trễ".
+
+## Ước lượng — câu hỏi hay đi kèm vòng 3
+
+| Câu họ hỏi | Ý phải có |
+|---|---|
+| "Anh ước lượng thế nào?" | Chia nhỏ task tới mức nửa ngày–một ngày, cộng phần tích hợp, test máy thật, review |
+| "Có cộng dự phòng không?" | Có, và nói rõ cộng cho rủi ro nào, không phải nhân đôi cho chắc |
+| "Ước sai thì sao?" | Báo sớm, ghi lại nguyên nhân để lần sau ước sát hơn |
+
+Chi tiết ở [[lead-estimation]].
+
+## Postmortem không đổ lỗi — khung năm mục
+
+1. **Dòng thời gian**: lúc nào phát hiện, ai làm gì, lúc nào hết ảnh hưởng.
+2. **Ảnh hưởng**: bao nhiêu người chơi, bao lâu, có dính tiền không.
+3. **Nguyên nhân gốc**: hỏi "vì sao" tới khi chạm tới quy trình, không dừng ở một người.
+4. **Vì sao không bắt được sớm**: review, test, giám sát thiếu ở đâu.
+5. **Việc phòng lặp lại**: mỗi việc có người phụ trách và hạn.
+
 ## 🤖 Prompt cho AI
 
 **Dùng AI thế nào để luyện vòng tình huống**
@@ -94,6 +139,34 @@ Làm 6 tình huống, cuối buổi nói phản xạ xấu nhất của tôi.
   → Đưa số đo thay vì ý kiến: texture này chiếm bao nhiêu MB, màn này tụt bao nhiêu fps trên máy tầm trung. Đề xuất một chuẩn chung (kích thước, định dạng nén, atlas) và cùng artist thử bản nhẹ hơn để so chất lượng hình. Lâu dài thì làm công cụ kiểm tự động lúc import để không ai phải cãi lại chuyện này.
 - `Senior` **Anh được giao làm phần dùng công nghệ anh chưa từng dùng. Anh làm gì?**
   → Nói thật mức hiểu biết hiện tại, rồi đề xuất kế hoạch: một hai ngày làm prototype nhỏ để học và đo rủi ro, sau đó mới ước lượng chính thức. Báo sớm nếu prototype lộ ra vấn đề lớn. Đó là cách tôi sẽ làm nếu được giao Cocos Creator ở đây — xem [[interview-cocos]].
+- `Junior` **Anh được giao task nhưng không hiểu yêu cầu. Anh hỏi lúc nào?**
+  → Hỏi sớm, ngay sau khi đọc kỹ spec và tự tìm trong tài liệu, vì hỏi ngày đầu rẻ hơn làm sai ba ngày. Tôi gom câu hỏi thành danh sách đánh số, kèm cách mình đang hiểu, để người trả lời chỉ cần xác nhận đúng hay sai. Hỏi một câu mỗi lần rải rác cả ngày làm phiền người khác hơn.
+- `Junior` **Anh làm xong task sớm hơn dự kiến. Anh làm gì tiếp?**
+  → Báo ngay để lead điều phối lại, vì thời gian dư cũng là thông tin kế hoạch cần. Trong lúc chờ, tôi tự kiểm lại phần vừa làm trên máy thật, viết thêm test, hoặc nhận bug nhỏ trong backlog. Không âm thầm "đánh bóng" thêm tính năng ngoài spec.
+- `Junior` **QA báo một bug mà anh không tái hiện được. Anh làm gì?**
+  → Hỏi QA đủ điều kiện: máy, phiên bản build, tài khoản, các bước, có video không. Thử đúng môi trường đó, thêm log quanh chỗ nghi ngờ để lần sau xảy ra thì có dữ liệu. Không đóng bug với lý do "không tái hiện được" khi chưa thử hết, vì người chơi thật sẽ gặp lại nó.
+- `Mid` **Lead giao một cách làm mà anh thấy sẽ gây vấn đề hiệu năng. Anh làm gì?**
+  → Đo trước khi cãi: làm nhanh một bản thử, chạy Profiler trên máy tầm trung, đưa số cho lead. Đề xuất cách khác kèm cái giá của nó. Nếu lead vẫn chọn cách cũ vì lý do tiến độ, tôi làm theo và ghi rõ rủi ro trong task để sau này có cơ sở quay lại.
+- `Mid` **Server đổi API mà không báo, client hỏng ngay trước bản build. Anh làm gì?**
+  → Báo ngay cho lead và đội server, kèm request/response cụ thể đang lỗi, vì cần người có quyền quyết định giữ build hay lùi lại. Trong lúc chờ, tìm cách tạm an toàn: giữ phiên bản API cũ nếu server còn hỗ trợ, hoặc chặn tính năng đó. Sau sự việc đề xuất thống nhất contract chung (ví dụ file `.proto`) và báo trước khi đổi.
+- `Mid` **Planner yêu cầu thêm tính năng giữa sprint. Anh xử lý thế nào?**
+  → Không từ chối, cũng không nhận ngay. Tôi ước lượng tính năng mới, nói rõ sẽ đẩy lùi việc gì, và đưa cho lead hoặc PM quyết thứ tự ưu tiên. Nếu nhỏ và không ảnh hưởng gì thì vẫn báo để mọi người biết phạm vi đã đổi.
+- `Mid` **Một đồng nghiệp liên tục trễ phần việc mà anh đang chờ. Anh làm gì?**
+  → Nói chuyện riêng trước, hỏi họ đang vướng gì và mình giúp được không — nhiều khi họ bị chặn bởi thứ khác. Thống nhất mốc cụ thể và phần mình có thể làm trước với dữ liệu giả. Nếu vẫn ảnh hưởng tiến độ chung thì báo lead dưới dạng rủi ro của dự án, không dưới dạng phàn nàn về người.
+- `Mid` **Anh nhận ra bug ở code của người khác đã nghỉ việc. Anh làm gì?**
+  → Sửa như code của mình, không đổ lỗi người cũ. Trước khi sửa, đọc lịch sử commit và task để hiểu vì sao họ viết như vậy, vì có thể có ràng buộc mình chưa biết. Thêm test hoặc ghi chú để người sau không gặp lại.
+- `Mid` **Anh phát hiện một lỗ hổng cho phép người chơi gian lận tiền trong game. Anh làm gì?**
+  → Báo ngay cho lead và đội server qua kênh riêng, không công khai trong nhóm chat lớn, vì lỗ hổng lộ ra trước khi vá sẽ bị khai thác. Đánh giá đã có ai khai thác chưa qua log. Bản vá chuẩn là chặn ở server, vì client luôn bị coi là không đáng tin.
+- `Mid` **Bản build sắp nộp store thì phát hiện một bug nhỏ về hiển thị. Anh làm gì?**
+  → Báo cho người quyết định cùng đánh giá: ảnh hưởng tới bao nhiêu người, có làm hỏng trải nghiệm hay chỉ khó chịu, sửa mất bao lâu và có rủi ro gây lỗi khác không. Bug nhỏ có thể ra kèm và vá ở bản sau, còn bug chạm tới tiền hoặc dữ liệu thì không. Tôi không tự sửa lén sát giờ nộp mà không có test.
+- `Senior` **Khách hàng Nhật phản hồi gắt về chất lượng một bản build. Anh xử lý thế nào?**
+  → Nhận phản hồi trước, không giải thích ngay. Phân loại từng điểm: lỗi thật, hiểu khác spec, hay mong đợi chưa được viết ra. Trả lời bằng kế hoạch cụ thể: sửa gì, khi nào, và thay đổi quy trình gì để không lặp lại — với đối tác Nhật, cam kết phòng lặp lại quan trọng ngang bản sửa.
+- `Senior` **Đội đang áp lực, mọi người làm thêm giờ liên tục. Anh làm gì?**
+  → Làm phần của mình cho xong và chắc, rồi đưa dữ liệu lên lead: khối lượng còn lại, tốc độ thực tế, ngày về đích thật. Đề xuất cắt phạm vi thay vì kéo dài làm thêm giờ, vì làm mệt kéo dài sinh bug và bug lại tạo thêm việc. Quyết định cắt gì là của người phụ trách sản phẩm.
+- `Senior` **Anh và một đồng nghiệp senior khác bất đồng về kiến trúc, cả hai đều có lý. Giải quyết thế nào?**
+  → Viết ra hai phương án với tiêu chí chung: hiệu năng, độ khó bảo trì, thời gian làm, rủi ro. Nếu được thì làm một thử nghiệm nhỏ đo cả hai. Nếu vẫn hoà thì để lead quyết, và người thua làm theo hết sức — tranh luận về ý tưởng, không về cái tôi.
+- `Senior` **Người mới trong đội liên tục hỏi anh khiến anh chậm việc. Anh làm gì?**
+  → Gom câu hỏi vào khung giờ cố định trong ngày thay vì trả lời từng câu ngay. Chỉ cách tự tìm (tài liệu, code mẫu, ai phụ trách gì) thay vì đưa đáp án, và ghi lại câu hỏi hay gặp thành tài liệu cho người sau. Kèm người mới là việc của senior, nhưng phải có cách làm để không chặn việc của cả hai.
 
 **Khung trả lời 60 giây** — "Anh xử lý thế nào khi việc không kịp tiến độ?"
 

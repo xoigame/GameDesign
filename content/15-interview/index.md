@@ -21,8 +21,8 @@ Nhánh được dựng quanh một lịch phỏng vấn có thật (Ateam Việt
 
 | Vòng | Hình thức | Họ thật sự chấm | Node ôn |
 |---|---|---|---|
-| **1. Giải thuật** | Code 3 câu, có giờ | Nhận diện dạng bài, độ phức tạp, code chạy đúng biên | [[interview-algorithm]] |
-| **2. Theo CV** | Hỏi đào từng dòng trong CV | Bạn có **thật sự làm** những gì đã ghi, và hiểu nó tới đâu | [[interview-cv]] |
+| **1. Giải thuật** | Code 3 câu, có giờ | Nhận diện dạng bài, độ phức tạp, code chạy đúng biên | [[interview-algorithm]], [[interview-oop-math]] |
+| **2. Theo CV** | Hỏi đào từng dòng trong CV | Bạn có **thật sự làm** những gì đã ghi, và hiểu nó tới đâu | [[interview-cv]], [[interview-unity-tech]], [[interview-live-service]] |
 | **3. Xử lý công việc** | Tình huống giả định | Cách bạn làm việc trong đội: ưu tiên, báo cáo, bất đồng, sự cố | [[interview-situations]] |
 | **4. Tính cách** | Trò chuyện | Thành công/thất bại, có hiểu sản phẩm của họ không, có hợp văn hoá không | [[interview-personality]] |
 | Câu phụ | "Có biết Cocos Creator không?" | Trung thực về mức độ + tốc độ bắt nhịp | [[interview-cocos]] |
@@ -51,12 +51,33 @@ Last Cloudia **không phải** của Ateam (của AIDIS) — nhầm chỗ này �
 
 | Ngày | Việc | Node |
 |---|---|---|
-| 1–3 | Mỗi ngày 3 bài giải thuật, bấm giờ 25 phút/bài | [[interview-algorithm]] |
-| 2 | Cài Valkyrie Connect hoặc Unison League, chơi mỗi tối 30 phút | [[interview-personality]] |
+| 1–3 | Mỗi ngày 3 bài giải thuật, bấm giờ 25 phút/bài; tối ôn OOP, pattern, vector | [[interview-algorithm]], [[interview-oop-math]] |
+| 2 | Cài Valkyrie Connect hoặc Unison League, chơi mỗi tối 30 phút, ghi sổ quan sát | [[interview-personality]] |
 | 3 | Viết ra 4 câu chuyện STAR, đọc to mỗi câu dưới 2 phút | [[interview-cv]] |
-| 4 | Luyện 10 tình huống, trả lời theo khung 4 bước | [[interview-situations]] |
-| 5 | Ôn Cocos 3.x, sửa một demo nhỏ | [[interview-cocos]], [[cocos-creator]] |
-| 6 | Chế độ **🎤 Luyện phỏng vấn** trên web cho cả nhánh, bật đọc to | — |
+| 4 | Ngân hàng câu kỹ thuật Unity + client live-service, mỗi ngày một nửa | [[interview-unity-tech]], [[interview-live-service]] |
+| 5 | Luyện tình huống theo khung 4 bước, viết thử 3 tin nhắn báo cáo | [[interview-situations]] |
+| 6 | Ôn Cocos 3.x, sửa một demo nhỏ | [[interview-cocos]], [[cocos-creator]] |
+| 7 | Chế độ **🎤 Luyện phỏng vấn** trên web cho cả nhánh, bật đọc to, chấm thật thà | — |
+
+## Ngày phỏng vấn
+
+| Lúc | Việc |
+|---|---|
+| Tối hôm trước | Đọc lại 4 câu chuyện STAR và sổ ghi chép game; **không** học thêm kiến thức mới |
+| Trước 30 phút | Kiểm mic, camera, mạng (nếu online); mở sẵn CV, giấy bút để ghi câu hỏi |
+| Đầu buổi | Hỏi lại hình thức: bao lâu, ai hỏi, có code trực tiếp không |
+| Trong buổi | Không hiểu câu thì hỏi lại; cần nghĩ thì xin 10 giây — im lặng có báo trước không bị trừ điểm |
+| Cuối buổi | Hai câu hỏi lại đã chuẩn bị; hỏi bước tiếp theo và khi nào có kết quả |
+| Sau buổi | Ghi ngay các câu đã bị hỏi và chỗ trả lời chưa tốt — dùng cho vòng sau |
+
+## Câu nên hỏi lại, theo vòng
+
+| Vòng | Câu hỏi |
+|---|---|
+| 1 | "Đề thi có chấm cả độ phức tạp và cách trình bày code không?" |
+| 2 | "Đội Việt Nam phụ trách phần nào, của game nào, dùng Unity hay Cocos?" · "Đội đo hiệu năng bằng gì, máy yếu nhất phải hỗ trợ là gì?" |
+| 3 | "Quy trình review và release/hotfix cho event diễn ra thế nào?" · "Đội Việt Nam làm việc với đội Nhật qua kênh nào?" |
+| 4 | "Ba tháng đầu, người ở vị trí này được kỳ vọng làm được gì?" · "Điều anh/chị thích nhất khi làm ở đây là gì?" |
 
 Phần kỹ thuật C#/Unity sâu hơn (struct/class, GC, async, live-coding pool/LRU) đã có ở [[csharp-interview-kit]] — vòng 2 rất dễ rẽ sang đó.
 
@@ -105,6 +126,22 @@ Luật:
   → Đưa một khoảng có cơ sở, không đưa một con số đơn lẻ, và hỏi lại tổng gói (thưởng, review lương, remote). Nếu tin tuyển đã ghi trần thì nói rõ mình biết trần đó và nằm ở đâu trong khoảng, vì trả lời lệch hẳn khỏi trần làm hồ sơ bị loại trước khi ai kịp đàm phán.
 - `Senior` **Anh có câu hỏi gì cho chúng tôi không?**
   → Luôn có hai câu: một về sản phẩm ("đội Việt Nam đang phụ trách phần nào của game nào"), một về cách làm ("ba tháng đầu người ở vị trí này được giao gì, đo thành công bằng gì"). Không hỏi gì bị hiểu là không quan tâm.
+- `Junior` **Anh biết gì về công ty chúng tôi?**
+  → Ba ý ngắn: công ty Nhật, mảng game tách thành Ateam Entertainment, và tên hai ba game đang vận hành với một điểm cụ thể — Valkyrie Connect đã chạy mười năm và sống bằng collab. Kết bằng lý do điều đó hấp dẫn bạn. Trả lời được câu này chứng tỏ bạn ứng tuyển có chủ đích, không rải hồ sơ.
+- `Junior` **Anh thấy mình hợp với vị trí này ở điểm nào?**
+  → Đối chiếu thẳng với tin tuyển: hơn ba năm làm game (tôi có hơn mười), Unity hoặc Cocos (tôi dùng cả hai), sản phẩm đã ra mắt, client–server, đồ hoạ và shader. Nói thêm một điểm tin tuyển không yêu cầu nhưng có ích, như kinh nghiệm làm với đối tác Nhật. Câu này họ chờ bạn nối CV với nhu cầu của họ.
+- `Junior` **Anh làm remote hay lên văn phòng?**
+  → Nói rõ mong muốn và sự linh hoạt: tôi ở TP.HCM, làm remote được và lên văn phòng khi cần, theo đúng những gì tin tuyển mô tả. Hỏi lại nhịp lên văn phòng thường lệ của đội. Câu trả lời cứng nhắc kiểu "chỉ làm remote" làm hẹp cơ hội không cần thiết.
+- `Mid` **Anh có câu hỏi gì về công việc trước khi chúng ta bắt đầu không?**
+  → Hỏi hình thức buổi phỏng vấn: bao lâu, có code trực tiếp không, ai sẽ tham gia. Câu hỏi ngắn này giúp bạn phân bổ thời gian, và cho thấy bạn chuẩn bị có phương pháp.
+- `Mid` **Anh có biết tiếng Nhật không?**
+  → Nói thật mức độ và cách đã làm việc với spec tiếng Nhật: đọc với sự hỗ trợ công cụ, hỏi lại bằng chữ những chỗ không chắc. Nếu chưa có JLPT thì nói rõ, kèm sẵn sàng học nếu vị trí cần. Bịa mức tiếng Nhật là thứ bị kiểm tra ngay tại chỗ.
+- `Mid` **Tiếng Anh của anh thế nào?**
+  → Nói thật: đọc tài liệu kỹ thuật và viết trao đổi công việc được, nói và nghe còn hạn chế. Nhấn vào cách bù: trao đổi bằng chữ rõ ràng, có đánh số, và đang luyện thêm. Trả lời thật lúc này tốt hơn nhiều so với bị lộ khi họ chuyển sang hỏi tiếng Anh.
+- `Senior` **Nếu có hai offer cùng lúc, anh chọn dựa trên gì?**
+  → Nêu tiêu chí theo thứ tự thật của bạn: sản phẩm và đội, cơ hội phát triển, điều kiện làm việc, rồi mới tới lương. Không cần nói tên công ty khác. Câu trả lời cho thấy bạn quyết định có cân nhắc, không chạy theo con số.
+- `Senior` **Anh mong đợi gì từ người quản lý trực tiếp?**
+  → Mục tiêu rõ ràng, phản hồi thẳng và thường xuyên, được tin tưởng trong phần kỹ thuật của mình. Đổi lại tôi báo cáo đều và sớm, không để quản lý phải đi hỏi. Câu này đo xem bạn có cần quản lý sát hay tự chủ được.
 
 **Khung trả lời 60 giây** — "Giới thiệu về bản thân anh"
 

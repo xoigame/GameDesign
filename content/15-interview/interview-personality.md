@@ -50,6 +50,46 @@ Với Valkyrie Connect, một điểm rất đáng nói: game **vận hành đư
 
 **Chỉ nói những gì bạn đã tự thấy khi chơi.** Bảng trên là khung để quan sát, không phải câu trả lời để học thuộc — họ sẽ hỏi lại chi tiết trong game.
 
+## Sổ ghi chép khi chơi game của họ
+
+Chơi mà không ghi thì vào phòng phỏng vấn chỉ còn "game hay". Mỗi tối chơi xong, ghi vào bảng này — một dòng mỗi ô là đủ:
+
+| Ô | Ghi gì | Câu hỏi nó trả lời |
+|---|---|---|
+| **Phút đầu** | Từ lúc mở app tới lúc được tự chơi mất bao lâu, bao nhiêu màn tải | "Anh thấy onboarding thế nào?" |
+| **Vòng lặp một phiên** | 15 phút chơi, mình làm gì lặp lại | "Core loop của game là gì?" |
+| **Gacha & tiền tệ** | Mấy loại tiền, tỉ lệ công bố, cơ chế bảo hiểm (pity) nếu có | "Anh nghĩ gì về monetization?" |
+| **Lý do quay lại** | Nhiệm vụ ngày, login bonus, sự kiện có hạn | "Vì sao người chơi giữ lại?" |
+| **Event đang chạy** | Tên event/collab, phần thưởng, cách chơi khác thường ngày | "Live-ops của chúng tôi thế nào?" |
+| **Cảm nhận kỹ thuật** | Máy có nóng không, fps, thời gian tải, có giật khi nhiều hiệu ứng | "Nếu vào đội, anh để ý gì đầu tiên?" |
+| **Một điểm muốn cải thiện** | Cụ thể, có lý do, có cách đo | "Anh sẽ cải thiện gì?" |
+
+Ghi cả **tên nhân vật bạn dùng và màn bạn đang ở** — câu hỏi kiểm tra đã chơi thật thường đơn giản đến thế.
+
+## Nhóm câu về giá trị và độ hợp
+
+Studio gốc Nhật thường quan tâm **gắn bó lâu dài** và **làm việc nhóm** hơn tài năng cá nhân nổi bật. Những câu dưới đây nghe như trò chuyện nhưng đều đang chấm điều đó:
+
+| Câu nghe như trò chuyện | Họ thật sự hỏi |
+|---|---|
+| "Ngoài giờ anh làm gì?" | Anh có đang làm riêng và sẽ nghỉ không |
+| "Anh thích làm một mình hay làm nhóm?" | Anh có hợp quy trình nhiều người duyệt không |
+| "Anh xử lý căng thẳng thế nào?" | Lúc crunch anh có bùng nổ hay bỏ cuộc không |
+| "Ai là người ảnh hưởng tới anh nhiều nhất?" | Anh học từ đâu, có biết tôn trọng người đi trước không |
+| "Anh muốn sếp như thế nào?" | Anh có cần quản lý sát hay tự chủ được |
+
+Trả lời thật, nhưng chọn phần thật **hợp** với môi trường của họ. Ví dụ "tôi làm tốt cả một mình lẫn trong nhóm — tự làm game cho tôi trách nhiệm trọn vẹn, còn làm với đội Nhật dạy tôi theo quy trình duyệt nhiều tầng".
+
+## Câu chuyện thành công và thất bại — viết sẵn thành ba độ dài
+
+Người hỏi vòng 4 có khi muốn nghe 30 giây, có khi để bạn nói 3 phút. Chuẩn bị mỗi câu chuyện ở ba độ dài:
+
+1. **Một câu** — "Tôi tự phát hành một game ra hai store nhưng giữ chân người chơi kém, và học được phải thử với người thật từ sớm."
+2. **Ba mươi giây** — thêm bối cảnh, hậu quả bằng số, và hành vi đã đổi.
+3. **Hai phút** — STAR đủ, có chi tiết quyết định sai nằm ở đâu và vì sao lúc đó nó có vẻ hợp lý.
+
+Bắt đầu luôn bằng bản một câu; họ muốn nghe thêm sẽ hỏi.
+
 ## 🤖 Prompt cho AI
 
 **Dùng AI thế nào để chuẩn bị vòng tính cách**
@@ -103,6 +143,34 @@ làm game không.
   → Một hướng phát triển thật, khớp với những gì công ty có thể cho: sâu hơn về kỹ thuật client live-service, hoặc dẫn một nhóm nhỏ. Nói theo hướng muốn đóng góp nhiều hơn cho sản phẩm, vì câu "muốn mở công ty riêng" dù thật cũng làm họ lo bạn ở lại ngắn.
 - `Senior` **Anh làm việc tốt nhất trong môi trường thế nào?**
   → Mô tả điều kiện cụ thể có lý do: spec rõ ràng, có người để hỏi, được tự quyết phần kỹ thuật của mình và chịu trách nhiệm về nó, báo cáo đều đặn. Chọn những điều kiện mà studio này có (đã đọc tin tuyển: remote hoặc văn phòng, không OT), vì đó là câu hỏi về độ hợp.
+- `Junior` **Anh tự mô tả mình bằng ba từ.**
+  → Ba từ, mỗi từ một bằng chứng ngắn: ví dụ "kiên trì" (một bug theo ba ngày tới tận gốc), "chủ động" (tự làm công cụ cho đội), "tò mò" (tự học và thử công nghệ mới qua game riêng). Ba từ không có bằng chứng là ba tính từ ai cũng nói được.
+- `Junior` **Vì sao anh chọn làm game?**
+  → Một kỷ niệm thật với game làm bạn muốn làm nghề, rồi một lý do vẫn còn đúng sau mười năm: thấy người chơi dùng thứ mình làm ra mỗi ngày. Câu này chấm độ bền của động lực, nên nối được với việc bạn vẫn tự làm game ngoài giờ là bằng chứng mạnh nhất.
+- `Junior` **Anh thường chơi game thể loại gì, đang chơi game nào?**
+  → Nói thật game đang chơi, và nếu được thì có một game cùng thể loại RPG gacha để chứng tỏ hiểu thị trường của họ. Nói kèm một điều bạn để ý khi chơi bằng mắt người làm game. Đừng nói "không có thời gian chơi game" ở công ty game.
+- `Mid` **Anh nghĩ gì về gacha và monetization trong game mobile?**
+  → Trả lời cân bằng: gacha là mô hình nuôi được game vận hành nhiều năm, nhưng phải minh bạch tỉ lệ, có cơ chế bảo hiểm để người chơi không thấy bị lừa, và người không nạp vẫn chơi được. Phía client, tôi hiểu phải hiển thị đúng tỉ lệ và kết quả do server quyết. Đừng chê gacha ở công ty sống bằng gacha, cũng đừng nói như thể không có vấn đề đạo đức nào.
+- `Mid` **Anh xử lý căng thẳng và áp lực deadline thế nào?**
+  → Nói cách làm cụ thể: chia việc nhỏ, làm phần rủi ro nhất trước, báo sớm khi thấy không kịp thay vì ôm. Ngoài giờ có cách xả cụ thể (thể thao, chơi game, việc riêng). Kể ngắn một lần áp lực thật và bạn đã giữ chất lượng ra sao.
+- `Mid` **Anh thích làm một mình hay làm theo nhóm?**
+  → Cả hai, và nói khi nào mỗi cách hiệu quả: tự làm game cho tôi trách nhiệm trọn vẹn từ đầu tới cuối, còn làm trong đội live-service dạy tôi theo quy trình review và phối hợp nhiều bộ phận. Nhấn vào việc trong công ty tôi ưu tiên nhịp của đội hơn tốc độ cá nhân.
+- `Mid` **Anh từng bất đồng với sếp chưa, kết thúc thế nào?**
+  → Kể một bất đồng về công việc, không về con người: tôi đưa dữ liệu, nói riêng, sếp quyết, tôi làm theo. Nếu sau đó hoá ra tôi đúng thì kể nhẹ nhàng như bài học chung của đội, không kể như chiến thắng. Người hỏi đang xem bạn có biết tôn trọng thứ bậc mà vẫn nói thẳng không.
+- `Mid` **Ai hoặc điều gì ảnh hưởng tới anh nhiều nhất trong nghề?**
+  → Một người cụ thể (lead cũ, đồng nghiệp người Nhật) hoặc một trải nghiệm cụ thể, và điều bạn học được mà vẫn đang áp dụng. Ví dụ học được thói quen đo trước khi tối ưu, hay cách viết báo cáo kết luận trước. Câu này cho thấy bạn biết học từ người khác.
+- `Mid` **Anh học kỹ năng mới thế nào gần đây?**
+  → Một ví dụ mới, có sản phẩm: tự dựng hệ AI-agent làm game, ôn lại Cocos Creator 3.x, hay một kỹ thuật tối ưu mới trong Unity 6. Nói cách học: làm một dự án nhỏ, đo, ghi chép lại. Cho thấy bạn vẫn học đều sau mười năm.
+- `Mid` **Nếu nhận offer, khi nào anh bắt đầu được?**
+  → Trả lời thật mốc có thể bắt đầu (đang rảnh thì nói được ngay hoặc sau vài ngày chuẩn bị). Hỏi lại quy trình nhận việc tuần đầu. Câu ngắn, nhưng trả lời mơ hồ làm họ nghi bạn đang chờ offer khác.
+- `Senior` **Anh có đang phỏng vấn ở công ty khác không?**
+  → Có thể nói thật là đang trao đổi với vài nơi, không cần nêu tên, và nói rõ vì sao vị trí này là ưu tiên của bạn. Nói dối "không" rồi bị lộ là mất tin tưởng, còn khoe nhiều offer thì nghe như ép giá.
+- `Senior` **Anh có định gắn bó lâu dài không, hay sẽ quay lại làm game riêng?**
+  → Thật lòng và cụ thể: game riêng là việc ngoài giờ để thử ý tưởng, không cạnh tranh với công việc chính, và điều bạn tìm ở đây là một đội làm game live-service lâu năm. Nói điều làm bạn muốn ở lại (sản phẩm, đội, hướng phát triển). Họ đang tính chi phí đào tạo, nên cần nghe kế hoạch hơn là lời hứa.
+- `Senior` **Thành công nào anh tự hào nhất mà không nằm trong CV?**
+  → Một việc nhỏ mà ý nghĩa: kèm một bạn junior lên được việc, làm một công cụ cả đội dùng hằng ngày, hay một game riêng được người chơi viết đánh giá cảm ơn. Câu này cho thấy bạn đánh giá thành công bằng gì — tác động lên người khác thường ăn điểm hơn thành tích cá nhân.
+- `Senior` **Nếu được làm một game mới ở công ty, anh muốn làm game gì?**
+  → Một ý tưởng ngắn khớp với thế mạnh của công ty (RPG, collab IP, live-service), nói được core loop và lý do người chơi quay lại. Đừng đưa ý tưởng xa rời hoàn toàn với những gì họ làm. Câu này kiểm tra tư duy sản phẩm, không phải độ sáng tạo bay bổng.
 
 **Khung trả lời 60 giây** — "Game nào của chúng tôi ấn tượng nhất, ở điểm nào?"
 
